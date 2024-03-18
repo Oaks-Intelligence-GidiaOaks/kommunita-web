@@ -9,7 +9,7 @@ import BgGroup from "../../assets/images/BgGroup.svg";
 import Ellipse from "../../assets/images/Ellipse.svg";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { InputField, PasswordField } from "../../components/ui";
+import { InputField, PasswordField } from "../../components/auth-form";
 import { Form, Field } from "react-final-form";
 import validate from "validate.js";
 import logo from "../../assets/images/logo.svg";
