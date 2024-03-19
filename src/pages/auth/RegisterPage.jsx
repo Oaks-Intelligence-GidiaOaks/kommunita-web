@@ -88,11 +88,11 @@ const RegisterPage = () => {
           </div>
         </div>
       </div>
-      <div className="w-full h-screen lg:w-2/5 rounded-tl-[10%]  lg:rounded-tl-[20%] mx-auto pt-20 px-8 lg:p-16 bg-white overflow-y-scroll scrollbar-thin bar  scrollbar-thumb-[#AEAEAE] scrollbar-track-gray-200">
-        <div className=" lg:mt-10 2xl:mt-40">
-          <div className="flex justify-end mb-10">
-            <img src={logo} alt="Logo" />
-          </div>
+      <div className="w-full h-screen lg:w-2/5 rounded-tl-[10%]  lg:rounded-tl-[20%] mx-auto px-8 lg:p-16 bg-white overflow-y-scroll scrollbar-thin bar  scrollbar-thumb-[#AEAEAE] scrollbar-track-gray-200">
+        <div className="flex justify-end">
+          <img src={logo} alt="Logo" />
+        </div>
+        <div className="2xl:mt-12">
           <div className="">
             <Form
               onSubmit={onSubmit}

@@ -70,10 +70,10 @@ const LoginPage = () => {
       </div>
 
       <div className="w-full h-screen lg:w-2/5 rounded-tl-[10%]  lg:rounded-tl-[20%]  mx-auto pt-20 px-8 lg:p-16 bg-white">
+        <div className="flex justify-end">
+          <img src={logo} alt="Logo" />
+        </div>
         <div className="sm:mt-20 lg:mt-0 2xl:mt-40">
-          <div className="flex justify-end mb-10">
-            <img src={logo} alt="Logo" />
-          </div>
           <div className="">
             <h1 className="font-Inter mb-7 lg:py-0  text-primary-dark-green font-medium text-3xl">
               Sign In
