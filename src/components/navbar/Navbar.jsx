@@ -7,7 +7,7 @@ import "./style.css";
 
 function Navbar() {
   return (
-    <section className="container mx-auto px-2 h-auto bg-white w-full flex items-center justify-between">
+    <section className="container h-auto bg-white w-full flex items-center justify-between">
       <div className="logo">
         <img src={logo} alt="logo" />
       </div>

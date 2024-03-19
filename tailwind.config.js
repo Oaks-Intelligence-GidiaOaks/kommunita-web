@@ -6,6 +6,10 @@ export default {
     "node_modules/flowbite-react/lib/esm/**/*.js",
   ],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+    },
     fontFamily: {
       Inter: ["Inter", "san-serif"],
       Montserrat: ["Montserrat", "san-serif"],

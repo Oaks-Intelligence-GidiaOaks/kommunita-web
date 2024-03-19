@@ -8,7 +8,7 @@ function Homepage() {
     <>
       <Nav />
       <section className="bg-[#EFF2FC]">
-        <div className="container mx-auto px-2 flex justify-between items-center w-full">
+        <div className="container flex justify-between items-center w-full">
           <SideNav />
           <MainSection />
           <AdsSection />
