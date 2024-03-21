@@ -13,7 +13,7 @@ function Navbar() {
       </div>
       <div className="menu-items flex gap-14 pt-5">
         <div className="items flex flex-col justify-center items-center">
-          <div className="flex justify-center items-center active h-[28.327px] w-[28.327px] rounded-full bg-[#2CC84A]">
+          <div className="flex justify-center items-center h-[28.327px] w-[28.327px] rounded-full bg-[#2CC84A]">
             <img src={feeds} alt="feeds" />
           </div>
           <p className="text-[#2CC84A] pt-1 pb-2">My Feed</p>
