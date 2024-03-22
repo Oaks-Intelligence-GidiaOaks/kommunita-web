@@ -7,7 +7,7 @@ import story4 from "../../assets/images/main/story4.svg";
 
 function Story() {
   return (
-    <div className="stories flex justify-center gap-2 items-center">
+    <div className="stories flex justify-start gap-2 items-center w-full">
       <div className="go-live flex flex-col justify-center items-center">
         <p className="go-live-text pb-1">Go live</p>
         <button className="w-[26.753px] h-[26.753px]">

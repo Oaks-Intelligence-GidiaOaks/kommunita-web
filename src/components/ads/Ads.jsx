@@ -1,5 +1,6 @@
 import "./style.css";
 import ads1 from "../../assets/images/ads/ad1.svg";
+import Category from "./Category";
 
 function Ads() {
   return (
@@ -8,14 +9,7 @@ function Ads() {
         <img src={ads1} alt="" />
       </div>
 
-      <div className="category-section mt-4">
-        <div className="p-4">
-          <div className="flex justify-between">
-            <p className="category">Categories</p>
-            <button className="category-btn">See all</button>
-          </div>
-        </div>
-      </div>
+      <Category />
     </div>
   );
 }

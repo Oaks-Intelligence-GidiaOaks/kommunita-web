@@ -26,3 +26,31 @@
   font-weight: 600;
   line-height: normal;
 }
+.makepost {
+  border-radius: 3.934px;
+  background: #fff;
+}
+.post-input {
+  color: #979797;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+.btn-draft {
+  display: flex;
+  height: 17.417px;
+  padding: 0px 5.5px;
+  justify-content: center;
+  align-items: center;
+  gap: 3.667px;
+  border-radius: 1.833px;
+  background: #eff2fc;
+  color: #838383;
+  font-family: Inter;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
