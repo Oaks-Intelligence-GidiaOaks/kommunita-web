@@ -15,6 +15,10 @@ export default {
       Montserrat: ["Montserrat", "san-serif"],
     },
     extend: {
+      backgroundImage: {
+        "hero-pattern": "url('/src/assets/images/green_bg.jpeg')",
+        // 'footer-texture': "url('/img/footer-texture.png')",
+      },
       textColor: {
         "primary-dark-green": "#3D7100",
         "primary-bright-green": "#7ADD02",
@@ -37,6 +41,7 @@ export default {
         "primary--bright-green": "#7ADD02",
         "primary-gray": "#AEAEAE",
         "primary-black": "#091001",
+        "primary-light-gray": "#ADADAD",
       },
       fontFamily: {
         "pt-serif": "'PT Serif Caption', serif",
