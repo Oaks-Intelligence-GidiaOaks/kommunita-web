@@ -1,6 +1,6 @@
 import React from "react";
 
-const PostHeader = ({ verified }) => {
+const PostHeader = ({ verified, diary }) => {
   return (
     <div className="text-primary-dark-gray flex justify-between items-center">
       <div className="flex gap-2 items-center">
@@ -21,6 +21,7 @@ const PostHeader = ({ verified }) => {
               height={8}
               alt="user-thumbnail"
             />
+            {diary && <p>Diary</p>}
           </div>
           <p className="text-xs mt-1">
             @Larry9jaWhix . <span className="font-bold">h5</span>
