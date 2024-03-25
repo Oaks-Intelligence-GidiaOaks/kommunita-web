@@ -14,6 +14,7 @@ function Post({
   content,
   imageSrc,
   avatar,
+  videoSrc, // addded by joseph
 }) {
   return (
     <div className="pt-4 post-wrapper w-full">
@@ -54,6 +55,21 @@ function Post({
           </div>
         )}
 
+        {/* START - added by joseph */}
+        {videoSrc && (
+          <div className="img-post flex w-full pb-5">
+            <iframe
+              className="w-full h-[250px] object-cover"
+              frameborder="0"
+              src={videoSrc}
+              allow="autoplay; encrypted-media"
+              allowfullscreen
+              title={content}
+            />{" "}
+          </div>
+        )}
+        {/* END - added by joseph */}
+
         <div className="post-buttons flex gap-3 justify-end">
           <button className="flex gap-1 items-center">
             <img src={fav} alt="" />
@@ -84,6 +100,7 @@ Post.propTypes = {
   postTime: PropTypes.string.isRequired,
   content: PropTypes.string,
   imageSrc: PropTypes.string,
+  videoSrc: PropTypes.string, // addded by joseph
   avatar: PropTypes.string.isRequired,
 };
 

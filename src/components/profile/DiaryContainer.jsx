@@ -6,7 +6,7 @@ import MainComment from "./comments/MainComment";
 const DiaryContainer = ({ comment }) => {
   return (
     <div className="max-w-[491px] rounded-lg bg-white p-8 mb-5">
-      <PostHeader />
+      <PostHeader diary={true} />
       <p className="text-sm mt-5 text-primary-dark-gray">
         Lorem ipsum dolor sit amet consectetur. Habitant pellentesque elementum
         aliquam hendrerit netus. Vestibulum consectetur tortor at nisi sit. Mi
