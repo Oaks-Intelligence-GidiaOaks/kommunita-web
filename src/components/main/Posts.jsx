@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 import post_action from "../../assets/images/main/post-action.svg";
 import verified from "../../assets/images/main/verified.svg";
-import fav from "../../assets/images/main/fav.svg";
-import message from "../../assets/images/main/message.svg";
-import retweet from "../../assets/images/main/retweet.svg";
-import wishlist from "../../assets/images/main/wishlist.svg";
+import PostButtons from "./PostButtons";
 
 function Post({
   fullname,
@@ -14,11 +13,22 @@ function Post({
   content,
   imageSrc,
   avatar,
-  videoSrc, // addded by joseph
+  videoSrc,
 }) {
+  const { ref, inView } = useInView({
+    // triggerOnce: true,
+    threshold: 0.5,
+  });
+
   return (
-    <div className="pt-4 post-wrapper w-full">
-      <div className="post-card p-4">
+    <motion.div
+      className="pt-4 post-wrapper w-full"
+      ref={ref}
+      initial={{ opacity: 0 }}
+      animate={inView ? { opacity: 1 } : { opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div className="post-card p-4">
         <div className="flex items-center justify-between">
           <div className="flex gap-3 items-center">
             <img src={avatar} alt="" />
@@ -55,7 +65,6 @@ function Post({
           </div>
         )}
 
-        {/* START - added by joseph */}
         {videoSrc && (
           <div className="img-post flex w-full pb-5">
             <iframe
@@ -68,28 +77,10 @@ function Post({
             />{" "}
           </div>
         )}
-        {/* END - added by joseph */}
 
-        <div className="post-buttons flex gap-3 justify-end">
-          <button className="flex gap-1 items-center">
-            <img src={fav} alt="" />
-            12k
-          </button>
-          <button className="flex gap-1 items-center">
-            <img src={message} alt="" />
-            12k
-          </button>
-          <button className="flex gap-1 items-center">
-            <img src={retweet} alt="" />
-            12k
-          </button>
-          <button className="flex gap-1 items-center">
-            <img src={wishlist} alt="" />
-            234
-          </button>
-        </div>
-      </div>
-    </div>
+        <PostButtons />
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -100,7 +91,7 @@ Post.propTypes = {
   postTime: PropTypes.string.isRequired,
   content: PropTypes.string,
   imageSrc: PropTypes.string,
-  videoSrc: PropTypes.string, // addded by joseph
+  videoSrc: PropTypes.string,
   avatar: PropTypes.string.isRequired,
 };
 
