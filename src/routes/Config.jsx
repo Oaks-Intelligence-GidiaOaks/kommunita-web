@@ -7,6 +7,8 @@ import {
   ProfileDiaries,
   ProfileLikes,
   ProfileMedia,
+  FavoriteHome,
+  Explore,
 } from "../pages";
 import * as routes from "./routes";
 
@@ -21,6 +23,8 @@ const Config = () => {
         <Route path={routes.LIKES} element={<ProfileLikes />} />
         <Route path={routes.MEDIA} element={<ProfileMedia />} />
         <Route path={routes.PROFILE} element={<ProfileHome />} />
+        <Route path={routes.FAVORITE} element={<FavoriteHome />} />
+        <Route path={routes.EXPLORE} element={<Explore />} />
       </Routes>
     </>
   );

@@ -5,3 +5,5 @@ export { default as ProfileHome } from "./profile/ProfileHome";
 export { default as ProfileDiaries } from "./profile/ProfileDiaries";
 export { default as ProfileLikes } from "./profile/ProfileLikes";
 export { default as ProfileMedia } from "./profile/ProfileMedia";
+export { default as FavoriteHome } from "./favorites/FavoriteHome";
+export { default as Explore } from "./explore/ExploreHome";
