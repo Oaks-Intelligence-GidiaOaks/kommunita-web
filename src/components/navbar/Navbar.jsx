@@ -29,12 +29,14 @@ function Navbar() {
           </div>
         </Link>
 
+        <Link to="/diary">
         <div className="items flex flex-col justify-center items-center">
           <div className="flex justify-center items-center active h-[28.327px] w-[28.327px] rounded-full">
             <img src={diaries} alt="diaries" />
           </div>
           <p className="pt-1 pb-2">Diaries</p>
         </div>
+        </Link>
       </div>
       <div className="search">
         <div className="flex search-box">
