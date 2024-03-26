@@ -7,7 +7,7 @@ import actionPlus from "../../assets/images/sidebar/action-plus.svg";
 
 function Likes() {
   return (
-    <div className="main-sidebar-section mt-8 pb-5">
+    <div className="main-sidebar-section mt-8 pb-5 w-80">
       <div className="py-3 px-4">
         <p className="text-like mb-4">You might like</p>
 

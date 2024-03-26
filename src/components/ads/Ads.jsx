@@ -16,4 +16,14 @@ function Ads() {
   );
 }
 
+export function AdsOnly() {
+  return (
+    <div className="ads-container">
+      <div className="ads mt-3">
+        <ScrollAdds />
+      </div>
+
+    </div>
+  );
+}
 export default Ads;
