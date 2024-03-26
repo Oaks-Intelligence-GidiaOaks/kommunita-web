@@ -5,6 +5,8 @@ import ExploreMain from "../../components/explore/Main";
 import Likes from "./../../components/sidebar/Likes";
 import ExploreNav from "../../components/explore/ExploreNav";
 import CategoryCard from "../../components/explore/CategoryCard";
+// import ScrollAdds from './../../components/ads/ScrollAdds';
+import {AdsOnly} from './../../components/ads/Ads';
 
 const ExploreHome = () => {
   const [selectedCategory, setCategory] = useState("");
@@ -55,7 +57,8 @@ const ExploreHome = () => {
             <div>
               <Likes />
               <div className="mt-3">
-                <img src="src/assets/images/ads/ad1.svg" alt="advert" />
+                <AdsOnly />
+                {/* <img src="src/assets/images/ads/ad1.svg" alt="advert" /> */}
               </div>
             </div>
           </div>
