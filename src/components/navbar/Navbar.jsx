@@ -3,6 +3,7 @@ import feeds from "../../assets/images/menu/feeds.svg";
 import explore from "../../assets/images/menu/explore.svg";
 import diaries from "../../assets/images/menu/diaries.svg";
 import search from "../../assets/images/menu/search.svg";
+import { Link } from "react-router-dom";
 import "./style.css";
 
 function Navbar() {
@@ -19,13 +20,14 @@ function Navbar() {
           <p className="text-[#2CC84A] pt-1 pb-2">My Feed</p>
           <div className="active-border"></div>
         </div>
-
-        <div className="items flex flex-col justify-center items-center">
-          <div className="flex justify-center items-center active h-[28.327px] w-[28.327px] rounded-full">
-            <img src={explore} alt="explore" />
+        <Link to="/explore">
+          <div className="items flex flex-col justify-center items-center">
+            <div className="flex justify-center items-center active h-[28.327px] w-[28.327px] rounded-full">
+              <img src={explore} alt="explore" />
+            </div>
+            <p className="pt-1 pb-2">Explore</p>
           </div>
-          <p className="pt-1 pb-2">Explore</p>
-        </div>
+        </Link>
 
         <div className="items flex flex-col justify-center items-center">
           <div className="flex justify-center items-center active h-[28.327px] w-[28.327px] rounded-full">

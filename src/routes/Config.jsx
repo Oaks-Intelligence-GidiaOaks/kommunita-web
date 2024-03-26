@@ -9,6 +9,7 @@ import {
   ProfileMedia,
   FavoriteHome,
   Explore,
+  Diaries,
 } from "../pages";
 import * as routes from "./routes";
 
@@ -19,7 +20,8 @@ const Config = () => {
         <Route path={routes.INDEX} element={<Homepage />} />
         <Route path={routes.LOGIN} element={<LoginPage />} />
         <Route path={routes.REGISTER} element={<RegisterPage />} />
-        <Route path={routes.DIARIES} element={<ProfileDiaries />} />
+        <Route path={routes.PROFILEDIARIES} element={<ProfileDiaries />} />
+        <Route path={routes.DIARIES} element={<Diaries />} />
         <Route path={routes.LIKES} element={<ProfileLikes />} />
         <Route path={routes.MEDIA} element={<ProfileMedia />} />
         <Route path={routes.PROFILE} element={<ProfileHome />} />

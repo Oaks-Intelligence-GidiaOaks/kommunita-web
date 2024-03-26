@@ -17,7 +17,7 @@ const ExploreHome = () => {
     <>
       <section className="bg-[#EFF2FC] pt-5">
         <div className="container flex flex-col justify-between w-full px-48">
-          <Link onClick={() => setCategory("")} to="/explore">
+          <Link onClick={() => setCategory("")} to="/">
             <div className="flex gap-2 items-center mb-10">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
