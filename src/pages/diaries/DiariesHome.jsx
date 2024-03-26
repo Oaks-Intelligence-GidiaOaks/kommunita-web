@@ -2,6 +2,7 @@ import { Nav } from "../../components/navbar";
 import { SideNav } from "../../components/sidebar";
 import { AdsSection } from "../../components/ads";
 import { MainSection } from "../../components/main";
+import DiaryMain from "../../components/diary/Main";
 
 function DiariesHome() {
   return (
@@ -10,7 +11,7 @@ function DiariesHome() {
       <section className="bg-[#EFF2FC]">
         <div className="container flex justify-between w-full">
           <SideNav />
-          <MainSection />
+          <DiaryMain />
           <AdsSection />
         </div>
       </section>

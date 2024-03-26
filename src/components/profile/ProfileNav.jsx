@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+ 
 const ProfileNav = () => {
   const currentPath = window.location.pathname;
   // const nonActiveLink =
