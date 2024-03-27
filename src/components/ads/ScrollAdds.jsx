@@ -9,8 +9,6 @@ import ads2 from "../../assets/images/ads/nivea.jpg";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-
-
 // const slideImages = [
 //   {
 //     url: "https://images.unsplash.com/photo-1509721434272-b79147e0e708?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80",
@@ -26,28 +24,17 @@ import "slick-carousel/slick/slick-theme.css";
 //   },
 // ];
 
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 2000,
-    autoplaySpeed: 2000,
-    cssEase: "linear"
-  };
-
 const ScrollAdds = ({ adds }) => {
   const settings = {
     dots: false,
+    arrows: false,
     infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    speed: 2000,
-    autoplaySpeed: 1000,
-    cssEase: "linear"
+    speed: 5000,
+    // autoplaySpeed: 5000,
+    cssEase: "linear",
   };
 
   return (
@@ -69,17 +56,17 @@ const ScrollAdds = ({ adds }) => {
     //     ))}
     //   </Slide>
     // </div>
-    <div className="slider-container">
+    <div className="max-w-[300px]">
       <Slider {...settings}>
-      <a href="https://www.google.com" target="_blank">
-        <div>
-          <img src={ads1} alt="" />
-        </div>
+        <a href="https://www.google.com" target="_blank">
+          <div className="lg:max-w-[400px]">
+            <img src={ads1} alt="" width={300} />
+          </div>
         </a>
         <a href="https://www.google.com" target="_blank">
-        <div>
-          <img src={ads2} alt="" />
-        </div>
+          <div className="lg:max-w-[400px]">
+            <img src={ads2} alt="" width={300} />
+          </div>
         </a>
       </Slider>
     </div>

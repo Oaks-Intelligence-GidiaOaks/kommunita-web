@@ -8,7 +8,7 @@ const ExploreNav = () => {
   const activeLink =
     "border-b-[5px] border-primary-dark-green text-primary-dark-green pb-4";
   return (
-    <div className="flex text-primary-dark-gray items-center gap-10 text-xl font-semibold border-b-[3px] border-b-primary-dark-gray">
+    <div className="flex text-primary-dark-gray items-center gap-10 lg:text-xl font-semibold border-b-[3px] border-b-primary-dark-gray">
       <Link
         onClick={() => setLink("")}
         className={link == "" ? activeLink : "pb-5"}
