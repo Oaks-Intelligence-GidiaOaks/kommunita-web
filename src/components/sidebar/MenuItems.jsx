@@ -118,7 +118,7 @@ function MenuItems() {
           <img src={logout} alt="logout" /> Log out
         </button>
 
-        <p className="flex justify-between items-center oaks-text pt-5">
+        <p className="flex justify-between gap-1 items-center oaks-text pt-5">
           <img src={logo} alt="" /> Back to Oaks Intelligence
         </p>
       </div>

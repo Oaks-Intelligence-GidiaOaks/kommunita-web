@@ -8,7 +8,7 @@ import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 
 function Main() {
   return (
-    <div className="mt-3 px-3 main-wrapper w-full pb-10">
+    <div className="mt-3 px-3 w-full">
       <Header />
       <Posts
         avatar={avatar1}

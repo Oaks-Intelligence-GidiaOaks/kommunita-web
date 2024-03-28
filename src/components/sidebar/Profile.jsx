@@ -4,8 +4,8 @@ import emoji from "../../assets/images/sidebar/emoji.svg";
 
 function Profile() {
   return (
-    <div className="mt-3">
-      <img src={coverImage} alt="" />
+    <div className="mt-3 flex items-center flex-col w-full">
+      <img className="w-[100%] lg:w-auto " src={coverImage} alt="" />
 
       <div className="flex justify-center z-10 -mt-5">
         <div className="profile-avatar-img-box flex justify-center items-center">
@@ -15,9 +15,9 @@ function Profile() {
       <p className="text-center profile-name mt-3">Godspower Ogbonna</p>
       <p className="text-center profile-title">UI/UX Designer</p>
       <div className="flex justify-center">
-        <p className="text-center mt-1 profile-bio w-[204px]">
-          I want to redesign the world but I want everyone to go out of it for a
-          while{" "}
+        <p className="text-center mt-1 profile-bio p-2">
+          {/* <p className="text-center mt-1 profile-bio w-[204px]"> */}I want
+          to redesign the world but I want everyone to go out of it for a while{" "}
           <span className="inline-flex">
             <img src={emoji} alt="" />
           </span>

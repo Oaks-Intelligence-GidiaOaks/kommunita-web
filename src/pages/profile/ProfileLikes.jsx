@@ -13,8 +13,9 @@ import avatar2 from "../../assets/images/sidebar/avatar2.svg";
 const ProfileLikes = () => {
   return (
     <Layout>
-      <div className="grid grid-cols-5 w-full gap-3">
-        <div className="w-full col-span-3">
+      {/* <div className="flex w-full gap-3"> */}
+      <div className="grid grid-cols-12 w-full gap-3">
+        <div className="w-full col-span-12 lg:col-span-8">
           <Posts
             avatar={avatar1}
             fullname="Larry_the_Nigerian_Whiz"
@@ -45,7 +46,7 @@ const ProfileLikes = () => {
           {/* <DiaryContainer comment={true} />
           <MediaContainer /> */}
         </div>
-        <div className="w-full col-span-2">
+        <div className="w-full hidden lg:block col-span-4">
           <Likes />
         </div>
       </div>

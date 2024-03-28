@@ -2,18 +2,24 @@ import { Nav } from "../../components/navbar";
 import { SideNav } from "../../components/sidebar";
 import { AdsSection } from "../../components/ads";
 import { FavoriteMainSection } from "../../components/favorite";
+import MainLayout from "../../components/main/MainLayout";
 
 function FavoriteHome() {
   return (
     <>
-      <Nav />
-      <section className="bg-[#EFF2FC]">
-        <div className="container flex justify-between w-full">
+      <MainLayout>
+        <FavoriteMainSection />
+      </MainLayout>
+
+      {/* <section className="bg-[#EFF2FC]">
+        <div className="mx-auto px-8 flex justify-between w-full">
           <SideNav />
-          <FavoriteMainSection />
-          <AdsSection />
+          <section className="hidden lg:block w-full">
+            <AdsSection />
+          </section>
+       
         </div>
-      </section>
+      </section> */}
     </>
   );
 }

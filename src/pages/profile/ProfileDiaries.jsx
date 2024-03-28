@@ -12,8 +12,9 @@ import Posts from "../../components/main/Posts";
 const ProfileDiaries = () => {
   return (
     <Layout>
-      <div className="grid grid-cols-5 w-full gap-3">
-        <div className="w-full col-span-3">
+      {/* <div className="flex w-full gap-3"> */}
+      <div className="grid grid-cols-12 w-full gap-3">
+        <div className="w-full col-span-12 lg:col-span-8">
           <Posts
             avatar={avatar1}
             fullname="Larry_the_Nigerian_Whiz"
@@ -41,7 +42,7 @@ const ProfileDiaries = () => {
             imageSrc={postImage}
           />
         </div>
-        <div className="col-span-2 w-full">
+        <div className="hidden lg:block w-full col-span-4">
           <p className="mb-3">Trending Diary Posts</p>
           <Posts
             avatar={avatar1}

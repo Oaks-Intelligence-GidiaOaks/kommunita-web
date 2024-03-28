@@ -14,8 +14,9 @@ import { Link } from "react-router-dom";
 const ProfileHome = () => {
   return (
     <Layout>
-      <div className="grid grid-cols-5 w-full gap-3">
-        <div className="w-full col-span-3">
+      {/* <div className="flex w-full justify-between gap-3"> */}
+      <div className="grid grid-cols-12 w-full gap-3">
+        <div className="w-full col-span-12 lg:col-span-8">
           <Posts
             avatar={avatar2}
             fullname="Perl Rosy"
@@ -24,6 +25,14 @@ const ProfileHome = () => {
             postTime="10m"
             content="Check out this cool image!"
             videoSrc="https://www.youtube.com/embed/EQJsr2OvVx4"
+          />
+          <Posts
+            avatar={avatar1}
+            fullname="Larry_the_Nigerian_Whiz"
+            username="Larry9jaWhiz"
+            verifiedUser={true}
+            postTime="5h"
+            content="Lorem ipsum dolor sit amet consectetur. Habitant pellentesque elementum aliquam hendrerit netus. Vestibulum consectetur tortor at nisi sit. Mi laoreet elementum ut pellentesque interdum diam viverra sit."
           />
           <Posts
             avatar={avatar1}
@@ -36,7 +45,7 @@ const ProfileHome = () => {
           />
           {/* <MediaContainer /> */}
         </div>
-        <div className="w-full col-span-2">
+        <div className="hidden lg:block col-span-4">
           <p className="mb-3">Trending Diary Posts</p>
           {/* <DiaryContainer /> */}
           <Posts
