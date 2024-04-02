@@ -1,6 +1,4 @@
 import React from "react";
-// import { Slide } from "react-slideshow-image";
-// import "react-slideshow-image/dist/styles.css";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import ads1 from "../../assets/images/ads/ad1.svg";
