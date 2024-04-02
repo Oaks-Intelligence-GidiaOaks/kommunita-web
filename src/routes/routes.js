@@ -14,3 +14,9 @@ export const FAVORITE = "/favorites";
 //EXPLORE PAGE RPUTES
 export const EXPLORE = "/explore";
 export const DIARIES = "/diary";
+
+export const SETTINGS = "/settings";
+export const MESSAGES = "/messages";
+export const LIVE = "/live";
+export const NOTIFICATION = "/notifications";
+export const POST = "/post";
