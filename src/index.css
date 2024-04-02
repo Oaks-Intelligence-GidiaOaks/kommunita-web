@@ -40,3 +40,7 @@
 .loading-dots-dot:nth-child(3) {
   animation-delay: 0.4s;
 }
+
+html {
+  scroll-behavior: smooth;
+}
