@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { GoPerson } from "react-icons/go";
 import facebook from "../../assets/images/facebook.svg";
 import goggle from "../../assets/images/goggle.svg";
@@ -7,12 +7,16 @@ import linkedin from "../../assets/images/linkedin.svg";
 import { AiOutlineMail } from "react-icons/ai";
 import BgGroup from "../../assets/images/BgGroup.svg";
 import Ellipse from "../../assets/images/Ellipse.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { InputField, PasswordField } from "../../components/auth-form";
 import { Form, Field } from "react-final-form";
 import validate from "validate.js";
 import logo from "../../assets/images/logo.svg";
+import rtkMutation from "../../utils/rtkMutation";
+import { showAlert } from "../../static/alert";
+import { useRegisterUserMutation } from "../../service/user.service";
+import { LOGIN } from "../../routes/routes";
 
 const constraints = {
   display_name: {
@@ -46,6 +50,8 @@ const constraints = {
 };
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
   const [eyeState, setEyeState] = useState(false);
 
   const toggleEye = (e) => {
@@ -57,9 +63,32 @@ const RegisterPage = () => {
     return validate(values, constraints) || {};
   };
 
-  const onSubmit = (values) => {
-    console.log(values);
+  const [registerUser, { error, isSuccess }] = useRegisterUserMutation({
+    provideTag: ["User"],
+  });
+
+  const onSubmit = async (values) => {
+    try {
+      // console.log(values);
+      await rtkMutation(registerUser, values);
+    } catch (error) {
+      // console.log(error);
+      showAlert("Oops", error.message || "An error occurred", "error");
+    }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate(LOGIN);
+      showAlert(
+        "Account created successfully!",
+        "Pls login to continue",
+        "success"
+      );
+    } else if (error) {
+      showAlert("Oops", error.data.message || "An error occurred", "error");
+    }
+  }, [error, isSuccess, navigate]);
 
   return (
     <div className="flex lg:h-screen bg-[#001900]  flex-col lg:flex-row ">
