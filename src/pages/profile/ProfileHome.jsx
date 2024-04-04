@@ -16,7 +16,7 @@ const ProfileHome = () => {
     <Layout>
       {/* <div className="flex w-full justify-between gap-3"> */}
       <div className="grid grid-cols-12 w-full gap-3">
-        <div className="w-full col-span-12 lg:col-span-8">
+        <div className="w-full col-span-12 md:col-span-8">
           <Posts
             avatar={avatar2}
             fullname="Perl Rosy"
@@ -45,7 +45,7 @@ const ProfileHome = () => {
           />
           {/* <MediaContainer /> */}
         </div>
-        <div className="hidden lg:block col-span-4">
+        <div className="hidden md:block col-span-4">
           <p className="mb-3">Trending Diary Posts</p>
           {/* <DiaryContainer /> */}
           <Posts

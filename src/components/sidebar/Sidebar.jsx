@@ -10,8 +10,9 @@ function Sidebar() {
         <Profile />
         <MenuItems />
       </div>
-
-      <Likes />
+      <div className="hidden lg:block">
+        <Likes />
+      </div>
     </div>
   );
 }
