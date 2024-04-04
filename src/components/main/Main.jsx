@@ -6,8 +6,12 @@ import postImage from "../../assets/images/main/post-image.svg";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import avatar2 from "../../assets/images/sidebar/avatar2.svg";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
+import { useGetFeedsQuery } from "../../service/feeds.service";
 
 function Main() {
+  const { data } = useGetFeedsQuery();
+  console.log(data);
+
   return (
     <div className="mt-3 px-3 main-wrapper w-full pb-10">
       <Story />

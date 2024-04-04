@@ -15,16 +15,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
         try {
           const data = await queryFulfilled;
           // const { accessToken, user } = data;
-          const accessToken = data.accessToken;
-          const user = data.user;
-          const refreshToken = data.user.refreshToken;
+          const accessToken = data.data.data.accessToken;
+          const user = data.data.data.user;
 
-          // console.log(refreshToken, "refreshToken");
+          // console.log(data.data.data, "data");
           dispatch(
             updateUser({
               token: accessToken,
               user,
-              refreshToken: refreshToken,
             })
           );
         } catch (error) {
@@ -46,11 +44,34 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: userData,
         method: "POST",
       }),
+      onQueryStarted: async (credentials, { dispatch, queryFulfilled }) => {
+        try {
+          const data = await queryFulfilled;
+          // const { accessToken, user } = data;
+          const accessToken = data.data.data.accessToken;
+          const user = data.data.data.user;
+
+          // console.log(data.data.data, "data");
+          dispatch(
+            updateUser({
+              token: accessToken,
+              user,
+            })
+          );
+        } catch (error) {
+          console.log(error);
+          return;
+        }
+      },
+      transformResponse: (response) => {
+        // console.log(response, "rtk");
+        return response;
+      },
       invalidatesTags: ["User"],
     }),
 
     // Get user route
-    getUser: builder.query({
+    getUserProfiile: builder.query({
       query: () => ({
         url: GETUSER,
         method: "GET",
@@ -83,6 +104,5 @@ export const userApiSlice = apiSlice.injectEndpoints({
 export const {
   useLoginUserMutation,
   useRegisterUserMutation,
-  useGetUserQuery,
-  useDeActivateUserMutation,
+  useGetUserProfiileQuery,
 } = userApiSlice;

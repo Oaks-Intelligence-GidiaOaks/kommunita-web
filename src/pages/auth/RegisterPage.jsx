@@ -9,14 +9,19 @@ import BgGroup from "../../assets/images/BgGroup.svg";
 import Ellipse from "../../assets/images/Ellipse.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { InputField, PasswordField } from "../../components/auth-form";
+import {
+  InputField,
+  PasswordField,
+  DropDownMenu,
+} from "../../components/auth-form";
 import { Form, Field } from "react-final-form";
 import validate from "validate.js";
 import logo from "../../assets/images/logo.svg";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
 import { useRegisterUserMutation } from "../../service/user.service";
-import { LOGIN } from "../../routes/routes";
+import { useGetAllOrganizationQuery } from "../../service/organization.service";
+import { INDEX } from "../../routes/routes";
 
 const constraints = {
   display_name: {
@@ -50,6 +55,12 @@ const constraints = {
 };
 
 const RegisterPage = () => {
+  const { data: Organization } = useGetAllOrganizationQuery();
+  const orgData = Organization;
+
+  const [organization, setOrganization] = useState("");
+  const orgId = organization?._id;
+
   const navigate = useNavigate();
 
   const [eyeState, setEyeState] = useState(false);
@@ -69,22 +80,29 @@ const RegisterPage = () => {
 
   const onSubmit = async (values) => {
     try {
-      // console.log(values);
-      await rtkMutation(registerUser, values);
+      const organizationId = orgId;
+
+      const formData = {
+        ...values,
+        organization_id: organizationId,
+      };
+
+      console.log(formData);
+      // Submit the form data
+      await rtkMutation(registerUser, formData);
     } catch (error) {
-      // console.log(error);
       showAlert("Oops", error.message || "An error occurred", "error");
     }
   };
 
   useEffect(() => {
     if (isSuccess) {
-      navigate(LOGIN);
       showAlert(
         "Account created successfully!",
-        "Pls login to continue",
+        "Welcome to Kommunita",
         "success"
       );
+      navigate(INDEX);
     } else if (error) {
       showAlert("Oops", error.data.message || "An error occurred", "error");
     }
@@ -131,6 +149,12 @@ const RegisterPage = () => {
                   <h1 className="font-Inter mb-7 lg:py-0 text-primary-dark-green font-medium text-3xl">
                     Create Account
                   </h1>
+
+                  <DropDownMenu
+                    options={orgData?.data}
+                    onSelect={(option) => setOrganization(option)}
+                    displayText="Select Organization"
+                  />
 
                   <InputField
                     id="display_name"

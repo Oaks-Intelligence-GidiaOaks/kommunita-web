@@ -3,7 +3,6 @@ import { createSlice, createSelector } from "@reduxjs/toolkit";
 const initialState = {
   user: null,
   token: null,
-  refreshToken: null,
 };
 
 const userSlice = createSlice({
@@ -20,7 +19,6 @@ const userSlice = createSlice({
       let newState = { ...state };
       newState.user = null;
       newState.token = null;
-      newState.refreshToken = null;
       return newState;
     },
   },

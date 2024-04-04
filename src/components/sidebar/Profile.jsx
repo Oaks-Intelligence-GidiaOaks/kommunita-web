@@ -1,8 +1,15 @@
 import coverImage from "../../assets/images/sidebar/bg-image.svg";
 import avatarImage from "../../assets/images/sidebar/avatar-img.svg";
 import emoji from "../../assets/images/sidebar/emoji.svg";
+import { useSelector } from "react-redux";
+import { useGetUserProfiileQuery } from "../../service/user.service";
 
 function Profile() {
+  const { data: profile } = useGetUserProfiileQuery();
+  console.log(profile);
+
+  const display_name = useSelector((state) => state.user.user.display_name);
+
   return (
     <div className="mt-3 flex items-center flex-col w-full">
       <img className="w-[100%] lg:w-auto " src={coverImage} alt="" />
@@ -12,7 +19,7 @@ function Profile() {
           <img src={avatarImage} width={64} height={62} alt="" />
         </div>
       </div>
-      <p className="text-center profile-name mt-3">Godspower Ogbonna</p>
+      <p className="text-center profile-name mt-3">{display_name}</p>
       <p className="text-center profile-title">UI/UX Designer</p>
       <div className="flex justify-center">
         <p className="text-center mt-1 profile-bio p-2">
@@ -26,7 +33,7 @@ function Profile() {
 
       <div className="stats flex gap-3 justify-center items-center mt-4">
         <div className="flex flex-col">
-          <p className="stats-number">123</p>
+          <p className="stats-number">{profile?.data?.posts_count}</p>
           <p className="stats-title">Posts</p>
         </div>
         <div className="w-[1px] h-[26px] bg-[#D9D9D9]"></div>
