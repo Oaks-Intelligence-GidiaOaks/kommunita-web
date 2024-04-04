@@ -22,6 +22,8 @@ import profileActive from "../../assets/images/sidebar/profileActive.svg";
 import settingsActive from "../../assets/images/sidebar/settingsActive.svg";
 import favoriteActive from "../../assets/images/sidebar/favoriteActive.svg";
 import liveActive from "../../assets/images/sidebar/liveActive.svg";
+import { handleLogout } from "../../static/logout";
+import { useDispatch } from "react-redux";
 
 function MenuItems() {
   const location = useLocation();
@@ -91,6 +93,12 @@ function MenuItems() {
     },
   ];
 
+  const dispatch = useDispatch();
+
+  const Logout = () => {
+    handleLogout(dispatch);
+  };
+
   return (
     <div className="mt-5 pb-5 w-full">
       <div className="px-5">
@@ -114,7 +122,10 @@ function MenuItems() {
           </NavLink>
         ))}
 
-        <button className="logout-btn flex justify-between gap-3 items-center mt-3">
+        <button
+          className="logout-btn flex justify-between gap-3 items-center mt-3"
+          onClick={() => Logout()}
+        >
           <img src={logout} alt="logout" /> Log out
         </button>
 

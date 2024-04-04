@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiOutlineMail } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import facebook from "../../assets/images/facebook.svg";
 import goggle from "../../assets/images/goggle.svg";
 import instagram from "../../assets/images/instagram.svg";
@@ -12,9 +12,13 @@ import { motion } from "framer-motion";
 import { InputField, PasswordField } from "../../components/auth-form";
 import { Form } from "react-final-form";
 import validate from "validate.js";
-import { REGISTER } from "../../routes/routes";
+import { REGISTER, INDEX } from "../../routes/routes";
+import rtkMutation from "../../utils/rtkMutation";
+import { showAlert } from "../../static/alert";
+import { useLoginUserMutation } from "../../service/user.service";
+
 const constraints = {
-  email: {
+  identifier: {
     presence: true,
   },
   password: {
@@ -33,13 +37,29 @@ const LoginPage = () => {
     setEyeState((prev) => !prev);
   };
 
+  const [loginUser, { error, isSuccess }] = useLoginUserMutation({
+    provideTag: ["User"],
+  });
+
+  const navigate = useNavigate();
+
   const onSubmit = async (values) => {
     console.log(values);
+    await rtkMutation(loginUser, values);
   };
 
   const validateForm = (values) => {
     return validate(values, constraints) || {};
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      showAlert("", "Login Successful!", "success");
+      navigate(INDEX);
+    } else if (error) {
+      showAlert("Oops", error.data.message || "An error occurred", "error");
+    }
+  }, [isSuccess, error, navigate]);
 
   return (
     <div className="flex lg:h-screen bg-[#001900]  flex-col lg:flex-row ">
@@ -84,18 +104,18 @@ const LoginPage = () => {
               render={({ handleSubmit, form, submitting }) => (
                 <form onSubmit={handleSubmit}>
                   <InputField
-                    id="email"
+                    id="identifier"
                     type="email"
-                    name="email"
+                    name="identifier"
                     label="Email"
                     component="input"
                     icon={AiOutlineMail}
                     placeholder=" "
                   />
                   {form.getState().submitFailed &&
-                    form.getState().errors.email && (
+                    form.getState().errors.identifier && (
                       <small className="text-red-600">
-                        {form.getState().errors.email}
+                        {form.getState().errors.identifier}
                       </small>
                     )}
                   <PasswordField
