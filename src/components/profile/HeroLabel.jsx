@@ -6,7 +6,7 @@ const HeroLabel = ({ icon, label }) => {
       <div className="flex items-center justify-center bg-[#02BA09] bg-opacity-25 h-[18px] w-[18px]">
         {icon}
       </div>
-      <p className="text-sm font-semibold">{label}</p>
+      <p className="text-xs lg:text-sm font-semibold">{label}</p>
     </div>
   );
 };

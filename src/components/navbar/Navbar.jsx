@@ -4,18 +4,48 @@ import explore from "../../assets/images/menu/explore.svg";
 import diaries from "../../assets/images/menu/diaries.svg";
 import search from "../../assets/images/menu/search.svg";
 import { Link } from "react-router-dom";
+import miniLogo from "../../assets/images/k-logo.png";
 import "./style.css";
+import { SideNav } from "../sidebar";
+import { useState } from "react";
 
 function Navbar() {
+  const [showMobileNav, setShowMobileNav] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+
   const currentPath = window.location.pathname;
   const nAL = "pt-1 pb-2";
   const aL = nAL + " text-[#2CC84A]";
   return (
-    <section className="container h-auto bg-white w-full flex items-center justify-center sm:justify-between">
-      <div className="logo hidden sm:block">
+    <section className="container h-auto bg-white w-full flex items-center justify-between">
+      {/* <Link to="/"> */}
+      <div
+        onClick={() => {
+          window.location.href = "/";
+        }}
+        className="logo hidden lg:block cursor-pointer"
+      >
         <img src={logo} alt="logo" />
       </div>
-      <div className="menu-items flex gap-14 pt-5">
+      {/* </Link>
+      <Link to="/"> */}
+      <div
+        onClick={() => {
+          window.location.href = "/";
+        }}
+        className="logo lg:hidden cursor-pointer"
+      >
+        <img src={miniLogo} alt="logo" />
+      </div>
+      {/* </Link> */}
+
+      {showMobileNav && (
+        <div className="absolute z-50 top-16 left-0 lg:hidden ">
+          <SideNav />
+        </div>
+      )}
+
+      <div className="menu-items flex gap-4 md:gap-8 lg:gap-14 pt-5">
         <Link to="/">
           <div className="items flex flex-col justify-center items-center">
             <div className="flex justify-center items-center h-[28.327px] w-[28.327px] rounded-full bg-[#2CC84A]">
@@ -61,11 +91,50 @@ function Navbar() {
         <div className="flex search-box">
           <input
             type="text"
-            className="search-input w-full focus:outline-none focus:ring-0"
+            className="search-input w-full focus:outline-none focus:ring-0 "
             placeholder="Search"
           />
           <img src={search} alt="" />
         </div>
+      </div>
+      <div className="search lg:hidden flex items-center gap-2 ">
+        {!showSearch && (
+          <div
+            onClick={() => setShowSearch(!showSearch)}
+            className="flex w-[30px] h-[30px] bg-primary-light-gray bg-opacity-50 cursor-pointer rounded-full items-center justify-center"
+          >
+            <img src={search} alt="" width={16} />
+          </div>
+        )}
+        {showSearch && (
+          <div className="flex search-box-mobile lg:hidden">
+            <input
+              type="text"
+              className="search-input w-full focus:outline-none focus:ring-0 "
+              placeholder="Search"
+            />
+            <img
+              onClick={() => setShowSearch(!showSearch)}
+              src={search}
+              alt=""
+            />
+          </div>
+        )}
+        <svg
+          onClick={() => setShowMobileNav(!showMobileNav)}
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6 lg:hidden cursor-pointer"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+          />
+        </svg>
       </div>
     </section>
   );

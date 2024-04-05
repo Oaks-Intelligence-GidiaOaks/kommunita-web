@@ -15,7 +15,7 @@ const ProfileLikes = () => {
     <Layout>
       {/* <div className="flex w-full gap-3"> */}
       <div className="grid grid-cols-12 w-full gap-3">
-        <div className="w-full col-span-12 lg:col-span-8">
+        <div className="w-full col-span-12 md:col-span-8">
           <Posts
             avatar={avatar1}
             fullname="Larry_the_Nigerian_Whiz"
@@ -46,7 +46,7 @@ const ProfileLikes = () => {
           {/* <DiaryContainer comment={true} />
           <MediaContainer /> */}
         </div>
-        <div className="w-full hidden lg:block col-span-4">
+        <div className="w-full hidden md:block col-span-4">
           <Likes />
         </div>
       </div>
