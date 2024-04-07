@@ -11,12 +11,10 @@ function Post({
   verifiedUser,
   postTime,
   content,
-  imageSrc,
+  media_urls,
   avatar,
-  videoSrc,
 }) {
   const { ref, inView } = useInView({
-    // triggerOnce: true,
     threshold: 0.5,
   });
 
@@ -52,31 +50,35 @@ function Post({
           </button>
         </div>
 
-        <div className="post-content text-justify flex flex-row flex-wrap pt-3 pb-3">
+        <div className="post-content text-justify flex flex-row flex-wrap pt-3 pb-2">
           {content && <p>{content}</p>}
         </div>
-        {imageSrc && (
-          <div className="img-post flex w-full pb-5">
-            <img
-              src={imageSrc}
-              className="w-full h-full object-cover"
-              alt="post image"
-            />
-          </div>
-        )}
 
-        {videoSrc && (
-          <div className="img-post flex w-full pb-5">
-            <iframe
-              className="w-full h-[250px] object-cover"
-              frameborder="0"
-              src={videoSrc}
-              allow="autoplay; encrypted-media"
-              allowfullscreen
-              title={content}
-            />{" "}
-          </div>
-        )}
+        <div className="uploaded-items-container  rounded-md max-h-80 overflow-y-auto mt-2 flex flex-wrap mb-4">
+          {media_urls.map((media, index) => (
+            <div
+              key={index}
+              className={`media-item-wrapper ${
+                media_urls.length === 1 ? "w-full" : "w-1/2"
+              } p-2`}
+            >
+              {media.media_type.startsWith("image") ||
+              media.media_type.startsWith("svg") ? (
+                <img
+                  src={media.media_url}
+                  className="w-full h-auto object-cover"
+                  alt="post image"
+                />
+              ) : (
+                <video
+                  src={media.media_url}
+                  className="w-full h-[250px] object-cover"
+                  controls
+                />
+              )}
+            </div>
+          ))}
+        </div>
 
         <PostButtons />
       </motion.div>
@@ -90,8 +92,12 @@ Post.propTypes = {
   verifiedUser: PropTypes.bool.isRequired,
   postTime: PropTypes.string.isRequired,
   content: PropTypes.string,
-  imageSrc: PropTypes.string,
-  videoSrc: PropTypes.string,
+  media_urls: PropTypes.arrayOf(
+    PropTypes.shape({
+      media_type: PropTypes.string.isRequired,
+      media_url: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   avatar: PropTypes.string.isRequired,
 };
 

@@ -21,7 +21,7 @@ import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
 import { useRegisterUserMutation } from "../../service/user.service";
 import { useGetAllOrganizationQuery } from "../../service/organization.service";
-import { INDEX } from "../../routes/routes";
+import { LOGIN } from "../../routes/routes";
 
 const constraints = {
   display_name: {
@@ -102,7 +102,7 @@ const RegisterPage = () => {
         "Welcome to Kommunita",
         "success"
       );
-      navigate(INDEX);
+      navigate(LOGIN);
     } else if (error) {
       showAlert("Oops", error.data.message || "An error occurred", "error");
     }

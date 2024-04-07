@@ -107,7 +107,7 @@ const LoginPage = () => {
                     id="identifier"
                     type="email"
                     name="identifier"
-                    label="Email"
+                    label="Email or Username"
                     component="input"
                     icon={AiOutlineMail}
                     placeholder=" "
