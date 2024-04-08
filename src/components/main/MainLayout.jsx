@@ -2,7 +2,6 @@ import React from "react";
 import { Nav } from "../navbar";
 import { SideNav } from "../sidebar";
 import { AdsSection } from "../ads";
-import MobileProfile from "./../mobile/MobileProfile";
 
 const MainLayout = ({ children, showNav }) => {
   return (
