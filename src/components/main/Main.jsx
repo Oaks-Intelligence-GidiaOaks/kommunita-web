@@ -13,7 +13,7 @@ import getTimeAgoString from "./../../utils/getTimeAgoString";
 function Main() {
   const { data } = useGetFeedsQuery();
   const post = data;
-  // console.log(data?.data);
+  console.log(data?.data);
 
   return (
     <div className="mt-3 px-3 main-wrapper w-full pb-10">
@@ -29,6 +29,8 @@ function Main() {
           // postTime={moment(post.createdAt).fromNow()} // Assuming createdAt is the post time
           content={post.content}
           media_urls={post.media_urls}
+          post_id={post._id}
+          comment={post.comment}
           avatar={avatar1} // You need to provide the avatar source
         />
       ))}

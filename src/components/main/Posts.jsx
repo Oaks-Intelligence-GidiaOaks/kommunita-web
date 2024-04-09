@@ -8,7 +8,8 @@ import PostButtons from "./PostButtons";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-
+import MainComment from "../profile/comments/MainComment";
+import Comment from "./Comment";
 function Post({
   fullname,
   username,
@@ -17,6 +18,8 @@ function Post({
   content,
   media_urls,
   avatar,
+  post_id,
+  comment,
 }) {
   const settings = {
     className: "center",
@@ -65,11 +68,7 @@ function Post({
           </button>
         </div>
 
-        <div className="post-content text-justify flex flex-row flex-wrap pt-3 pb-2">
-          {content && <p>{content}</p>}
-        </div>
-
-        <div className="rounded-md max-h-80 mt-2 mb-4">
+        <div className="rounded-md mt-2 mb-4">
           <Slider {...settings}>
             {media_urls.map((media, index) => (
               <div
@@ -86,7 +85,7 @@ function Post({
                 media.media_type.startsWith("png") ? (
                   <img
                     src={media.media_url}
-                    className="object-contain w-full max-h-[350px]"
+                    className="object-contain w-full h-[350px] lg:h-[400px]"
                     alt="post image"
                   />
                 ) : (
@@ -96,7 +95,7 @@ function Post({
                   //   controls
                   // />
                   <video
-                    className=" max-h-[350px] object-cover p-4"
+                    className="h-[350px] lg:h-[400px] object-cover"
                     controls
                     width="100%"
                   >
@@ -108,8 +107,14 @@ function Post({
             ))}
           </Slider>
         </div>
+        <div className="post-content text-justify flex flex-row flex-wrap pt-3 pb-2">
+          {content && <p>{content}</p>}
+        </div>
 
         <PostButtons />
+        {comment.length > 0 &&
+          comment.map((cm, id) => <MainComment key={id} comment={cm} />)}
+        <Comment post_id={post_id} />
       </motion.div>
     </motion.div>
   );

@@ -26,6 +26,8 @@ function Main() {
           // postTime={moment(post.createdAt).fromNow()} // Assuming createdAt is the post time
           content={post.content}
           media_urls={post.media_urls}
+          post_id={post._id}
+          comment={post.comment}
           avatar={avatar1} // You need to provide the avatar source
         />
       ))}

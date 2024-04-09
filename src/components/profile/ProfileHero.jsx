@@ -1,9 +1,21 @@
 import React, { useState } from "react";
 import HeroLabel from "./HeroLabel";
 import MenuItems from "./../sidebar/MenuItems";
+import { useGetUserProfiileQuery } from "../../service/user.service";
+import { useSelector } from "react-redux";
+import getTimeAgoString from "./../../utils/getTimeAgoString";
 
-const ProfileHero = ({ user }) => {
+const ProfileHero = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
+  const { data: profile } = useGetUserProfiileQuery();
+  // console.log(profile);
+
+  // const display_name = useSelector((state) => state.user.user.display_name);
+  const user = useSelector((state) => state.user.user);
+
+  const createdAt = new Date(user.createdAt);
+  const month = createdAt.toLocaleString("default", { month: "long" });
+  const year = createdAt.getFullYear();
 
   return (
     <div className="lg:h-[300px] text-primary-dark-gray">
@@ -53,12 +65,12 @@ const ProfileHero = ({ user }) => {
               <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-3 lg:gap-20">
                 <div className="flex flex-col items-center lg:block">
                   <h1 className="font-bold text-3xl xl:text-5xl mb-5">
-                    {user.name}
+                    {user.display_name}
                   </h1>
                   <div className="flex gap-5">
                     <div>
                       <HeroLabel
-                        label={user.designation}
+                        label={user.email}
                         icon={
                           <svg
                             width="14"
@@ -67,7 +79,7 @@ const ProfileHero = ({ user }) => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                            <g clip-path="url(#clip0_1324_14746)">
+                            <g clipPath="url(#clip0_1324_14746)">
                               <path
                                 d="M11.4453 3.88794H2.55642C1.94277 3.88794 1.44531 4.3854 1.44531 4.99905V10.5546C1.44531 11.1683 1.94277 11.6657 2.55642 11.6657H11.4453C12.059 11.6657 12.5564 11.1683 12.5564 10.5546V4.99905C12.5564 4.3854 12.059 3.88794 11.4453 3.88794Z"
                                 stroke="#34B53A"
@@ -97,7 +109,7 @@ const ProfileHero = ({ user }) => {
                     </div>
                     <div>
                       <HeroLabel
-                        label={user.location}
+                        label="Lagos, Nigeria"
                         icon={
                           <svg
                             width="14"
@@ -124,7 +136,8 @@ const ProfileHero = ({ user }) => {
                     </div>
                     <div>
                       <HeroLabel
-                        label={user.date}
+                        // label={getTimeAgoString(user.createdAt)}
+                        label={`Joined ${month}, ${year}`}
                         icon={
                           <svg
                             width="14"
@@ -136,8 +149,8 @@ const ProfileHero = ({ user }) => {
                             <path
                               d="M10.6738 2.22168H2.89794C2.28445 2.22168 1.78711 2.71902 1.78711 3.33251V11.1083C1.78711 11.7218 2.28445 12.2192 2.89794 12.2192H10.6738C11.2873 12.2192 11.7846 11.7218 11.7846 11.1083V3.33251C11.7846 2.71902 11.2873 2.22168 10.6738 2.22168Z"
                               stroke="#34B53A"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                             <path
                               d="M9.00781 1.11084V3.33251"
@@ -178,7 +191,9 @@ const ProfileHero = ({ user }) => {
                 </div>
                 <div className="flex items-center justify-between gap-5">
                   <div className="">
-                    <h2 className="font-bold lg:text-2xl">{user.followers}</h2>
+                    <h2 className="font-bold lg:text-2xl">
+                      {user.followers.length}
+                    </h2>
                     <p>Followers</p>
                   </div>
                   <div>
@@ -194,7 +209,9 @@ const ProfileHero = ({ user }) => {
                     </svg>{" "}
                   </div>
                   <div className="">
-                    <h2 className="font-bold lg:text-2xl">{user.following}</h2>
+                    <h2 className="font-bold lg:text-2xl">
+                      {user.following.length}
+                    </h2>
                     <p>Following</p>
                   </div>
                   <div></div>
@@ -208,16 +225,16 @@ const ProfileHero = ({ user }) => {
   );
 };
 
-ProfileHero.defaultProps = {
-  user: {
-    name: "Godspower Ogbona",
-    designation: "UI/UX Designer",
-    location: "Lagos, Nigeria",
-    date: "Joined March, 2024",
-    followers: "123k",
-    following: "56",
-    thumbnail: null,
-  },
-};
+// ProfileHero.defaultProps = {
+//   user: {
+//     name: "Godspower Ogbona",
+//     designation: "UI/UX Designer",
+//     location: "Lagos, Nigeria",
+//     joinedDate: "Joined March, 2024",
+//     followers: "123k",
+//     following: "56",
+//     thumbnail: null,
+//   },
+// };
 
 export default ProfileHero;
