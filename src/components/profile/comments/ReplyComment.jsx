@@ -1,6 +1,6 @@
 import React from "react";
 
-const ReplyComment = () => {
+const ReplyComment = ({ reply }) => {
   return (
     <div className="relative bg-primary-light-gray bg-opacity-10 p-2 rounded-lg mt-5 text-primary-dark-gray">
       <div className="flex justify-between items-center">
@@ -16,10 +16,12 @@ const ReplyComment = () => {
 
           <div className="">
             <div>
-              <h2 className="font-semibold -mt-[6px]">Shan Alam</h2>
+              <h2 className="font-semibold -mt-[6px]">
+                {reply.user_id.display_name}
+              </h2>
             </div>
             <div>
-              <p className="text-xs mt-1  font-semibold">Thankz!!</p>
+              <p className="text-xs mt-1  font-semibold">{reply.content}</p>
             </div>
             <div className="flex text-[7px] gap-2 text-primary-gray">
               <p className="cursor-pointer">Like</p>

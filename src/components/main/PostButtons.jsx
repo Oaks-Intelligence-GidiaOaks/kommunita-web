@@ -11,7 +11,7 @@ function PostButtons() {
   return (
     <motion.div
       ref={ref}
-      className="post-buttons flex gap-3 justify-end"
+      className="post-buttons flex gap-3 justify-end z-50"
       initial={{ opacity: 0, x: 100 }}
       animate={{ opacity: inView ? 1 : 0, x: inView ? 0 : 100 }}
       transition={{ duration: 0.5 }}

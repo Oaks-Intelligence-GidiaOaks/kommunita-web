@@ -6,7 +6,7 @@ import { useGetUserProfiileQuery } from "../../service/user.service";
 
 function Profile() {
   const { data: profile } = useGetUserProfiileQuery();
-  console.log(profile);
+  // console.log(profile);
 
   const display_name = useSelector((state) => state.user.user.display_name);
 

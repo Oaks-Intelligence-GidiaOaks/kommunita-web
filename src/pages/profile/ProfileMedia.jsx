@@ -3,8 +3,13 @@ import Layout from "./Layout";
 import GaleryBox from "../../components/profile/GaleryBox";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import MediaModal from "../../components/main/MediaModal";
+import { useGetFeedsQuery } from "../../service/feeds.service";
 
 const ProfileMedia = () => {
+  const { data } = useGetFeedsQuery();
+  const post = data;
+  console.log(data?.data);
+
   const [show, setShow] = useState(false);
   const [imgSrc, setImgSrc] = useState(null);
   const [vidSrc, setVidSrc] = useState(null);
