@@ -3,10 +3,10 @@ import Layout from "./Layout";
 import GaleryBox from "../../components/profile/GaleryBox";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import MediaModal from "../../components/main/MediaModal";
-import { useGetFeedsQuery } from "../../service/feeds.service";
+import { useGetMediaQuery } from "../../service/media.service";
 
 const ProfileMedia = () => {
-  const { data } = useGetFeedsQuery();
+  const { data } = useGetMediaQuery();
   const post = data;
   console.log(data?.data);
 
@@ -22,43 +22,21 @@ const ProfileMedia = () => {
   return (
     <Layout>
       <div className="flex flex-wrap flex-row gap-2">
-        {/* <div className="grid grid-cols-3 gap-2"> */}
-        <div
-          className="cursor-pointer"
-          onClick={() => showModal("/src/assets/images/lady-in-yellow.jpeg")}
-        >
-          <GaleryBox img="/src/assets/images/lady-in-yellow.jpeg" />
-        </div>
-        <div
-          className="cursor-pointer"
-          onClick={() => showModal("/src/assets/video-2.mp4")}
-        >
-          <GaleryBox img="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.brightedge.com%2Fsites%2Fdefault%2Ffiles%2Fvideo%2520thumbnail.jpg&f=1&nofb=1&ipt=b3ea593a342aa7853181ba31f1bdfba25727814474bb65eeb51c9edb8bdcf7f6&ipo=images" />
-        </div>
-        <div
-          className="cursor-pointer"
-          onClick={() => showModal("/src/assets/images/lady-in-yellow.jpeg")}
-        >
-          <GaleryBox img="/src/assets/images/lady-in-yellow.jpeg" />
-        </div>
-        <div
+        {post?.data.map((dt, id) => (
+          <div
+            key={id}
+            className="cursor-pointer"
+            onClick={() => showModal(dt.downloadUrl)}
+          >
+            <GaleryBox img={dt.downloadUrl} />
+          </div>
+        ))}
+        {/* <div
           className="cursor-pointer"
           onClick={() => showModal("/src/assets/video-2.mp4")}
         >
           <GaleryBox img="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.brightedge.com%2Fsites%2Fdefault%2Ffiles%2Fvideo%2520thumbnail.jpg&f=1&nofb=1&ipt=b3ea593a342aa7853181ba31f1bdfba25727814474bb65eeb51c9edb8bdcf7f6&ipo=images" />
-        </div>
-        <div
-          className="cursor-pointer"
-          onClick={() => showModal("/src/assets/images/lady-in-yellow.jpeg")}
-        >
-          <GaleryBox img="/src/assets/images/lady-in-yellow.jpeg" />
-        </div>
-        <div
-          className="cursor-pointer"
-          onClick={() => showModal("/src/assets/video-2.mp4")}
-        >
-          <GaleryBox img="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.brightedge.com%2Fsites%2Fdefault%2Ffiles%2Fvideo%2520thumbnail.jpg&f=1&nofb=1&ipt=b3ea593a342aa7853181ba31f1bdfba25727814474bb65eeb51c9edb8bdcf7f6&ipo=images" />
-        </div>
+        </div> */}
       </div>
       {show && (
         <div

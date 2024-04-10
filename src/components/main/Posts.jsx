@@ -85,7 +85,7 @@ function Post({
                 media.media_type.startsWith("png") ? (
                   <img
                     src={media.media_url}
-                    className="object-contain w-full h-[350px] lg:h-[400px]"
+                    className="object-cover w-full h-[350px] lg:h-[400px]"
                     alt="post image"
                   />
                 ) : (

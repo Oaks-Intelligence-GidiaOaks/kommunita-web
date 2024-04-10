@@ -57,10 +57,10 @@ const ExploreHome = () => {
 
         {/* <div className="flex justify-between w-full"> */}
         <div className="grid grid-cols-12 justify-between w-full">
-          <div className="col-span-12 md:col-span-8">
+          <div className="col-span-12 md:col-span-9">
             <ExploreMain />
           </div>
-          <div className="hidden md:block col-span-4">
+          <div className="hidden md:block col-span-3">
             <Likes />
             <div className="mt-3">
               <AdsOnly />

@@ -1,7 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useGetPostQuery } from "../../service/post.service";
 
 const ProfileNav = () => {
+  const { data } = useGetPostQuery();
+
   const currentPath = window.location.pathname;
   // const nonActiveLink =
 
@@ -13,7 +16,7 @@ const ProfileNav = () => {
         className={currentPath == "/profile" ? activeLink : "pb-5"}
         to="/profile"
       >
-        Posts (123)
+        Posts {data?.data?.length}
       </Link>
       <Link
         className={currentPath == "/profile/diaries" ? activeLink : "pb-5"}

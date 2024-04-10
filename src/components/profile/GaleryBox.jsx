@@ -2,7 +2,7 @@ import React from "react";
 
 const GaleryBox = ({ img }) => {
   return (
-    <div className="w-[300px] h-[284px] overflow-hidden rounded">
+    <div className="w-[300px] h-[284px] overflow-hidden rounded object-cover">
       {img && (
         <img
           src={img}
@@ -12,16 +12,6 @@ const GaleryBox = ({ img }) => {
           alt="personal media post"
         />
       )}
-      {/* {videoSrc && (
-        <iframe
-          className="w-full h-[2px]"
-          src="https://www.youtube.com/embed/EQJsr2OvVx4"
-          frameborder="0"
-          allow="autoplay; encrypted-media"
-          allowfullscreen
-          title="video"
-        />
-      )} */}
     </div>
   );
 };
