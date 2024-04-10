@@ -52,6 +52,9 @@ const ProfileHome = () => {
                 media_urls={post.media_urls}
                 post_id={post._id}
                 comment={post.comment}
+                repost={post.repost}
+                share={post.share}
+                reaction={post.reaction}
                 avatar={avatar1} // You need to provide the avatar source
               />
             ))}
@@ -72,6 +75,9 @@ const ProfileHome = () => {
                 media_urls={sidePost[0].media_urls}
                 post_id={sidePost[0]._id}
                 comment={sidePost[0].comment}
+                repost={sidePost[0].repost}
+                share={sidePost[0].share}
+                reaction={sidePost[0].reaction}
                 avatar={avatar1} // You need to provide the avatar source
               />
             )}

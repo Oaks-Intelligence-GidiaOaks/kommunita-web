@@ -29,6 +29,9 @@ function DiaryMain() {
           media_urls={post.media_urls}
           post_id={post._id}
           comment={post.comment}
+          repost={post.repost}
+          share={post.share}
+          reaction={post.reaction}
           avatar={avatar1} // You need to provide the avatar source
         />
       ))}

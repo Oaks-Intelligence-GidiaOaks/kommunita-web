@@ -15,7 +15,7 @@ function Main() {
   const { data } = useGetFeedsQuery();
   const { data: diary } = useGetDiaryQuery();
   const post = data;
-  console.log("DIARIES: ", diary);
+  console.log("DIARIES: ", post.data);
 
   return (
     <div className="mt-3 px-3 main-wrapper w-full pb-10">
@@ -33,6 +33,9 @@ function Main() {
           media_urls={post.media_urls}
           post_id={post._id}
           comment={post.comment}
+          repost={post.repost}
+          share={post.share}
+          reaction={post.reaction}
           avatar={avatar1} // You need to provide the avatar source
         />
       ))}
