@@ -13,10 +13,11 @@ const Layout = ({ children }) => {
       </div>
       <div className="mx-auto px-4 md:px-8">
         <div className="xl:mt-20 pt-5 xl:pt-0 grid grid-cols-12 gap-3">
-          <div className=" bg-red-400">
-            {/* <div className="col-span-4 lg:col-span-3 xl:col-span-2 bg-[#fff] max-w-[277px] w-full rounded border-r-[0.5px] hidden lg:block max-h-[auto] overflow-hidden bg-red-400"> */}
-            <MenuItems />
-            Jesus is Lord
+          {/* <div className=" bg-red-400"> */}
+          <div className="col-span-4 lg:col-span-3 xl:col-span-2 max-w-[277px] w-full rounded border-r-[0.5px] hidden lg:block max-h-[auto] overflow-hidden">
+            <div className="bg-[#fff]">
+              <MenuItems />
+            </div>
           </div>
           <div className="col-span-12 lg:col-span-9 xl:col-span-10 border-b-[3px] border-b-primary-dark-gray">
             <div className="flex items-center justify-center ">

@@ -68,6 +68,9 @@ const ProfileDiaries = () => {
                 media_urls={sideDiary[0].media_urls}
                 post_id={sideDiary[0]._id}
                 comment={sideDiary[0].comment}
+                repost={sideDiary[0].repost}
+                share={sideDiary[0].share}
+                reaction={sideDiary[0].reaction}
                 avatar={avatar1} // You need to provide the avatar source
               />
             )}
