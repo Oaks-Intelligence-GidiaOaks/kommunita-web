@@ -7,3 +7,5 @@ export const FEEDS = "user/feeds";
 export const POST = "user/post";
 export const DIARY = "user/diary";
 export const MEDIA = "user/media";
+export const CATEGORY = "user/categories";
+
