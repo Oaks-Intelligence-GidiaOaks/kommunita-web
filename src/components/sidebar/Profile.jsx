@@ -8,7 +8,7 @@ function Profile() {
   const { data: profile } = useGetUserProfiileQuery();
   // console.log(profile);
 
-  const display_name = useSelector((state) => state.user.user.display_name);
+  const user = useSelector((state) => state.user.user);
 
   return (
     <div className="mt-3 flex items-center flex-col w-full">
@@ -19,7 +19,7 @@ function Profile() {
           <img src={avatarImage} width={64} height={62} alt="" />
         </div>
       </div>
-      <p className="text-center profile-name mt-3">{display_name}</p>
+      <p className="text-center profile-name mt-3">{user.display_name}</p>
       <p className="text-center profile-title">UI/UX Designer</p>
       <div className="flex justify-center">
         <p className="text-center mt-1 profile-bio p-2">
@@ -38,12 +38,12 @@ function Profile() {
         </div>
         <div className="w-[1px] h-[26px] bg-[#D9D9D9]"></div>
         <div className="flex flex-col">
-          <p className="stats-number">123k</p>
+          <p className="stats-number">{profile?.data?.followers.length}</p>
           <p className="stats-title">Followers</p>
         </div>
         <div className="w-[1px] h-[26px] bg-[#D9D9D9]"></div>
         <div className="flex flex-col">
-          <p className="stats-number">56</p>
+          <p className="stats-number">{profile?.data?.following.length}</p>
           <p className="stats-title">Following</p>
         </div>
       </div>

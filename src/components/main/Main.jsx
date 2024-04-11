@@ -9,11 +9,13 @@ import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 // import moment from "moment";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
+import { useGetDiaryQuery } from "../../service/diary.service";
 
 function Main() {
   const { data } = useGetFeedsQuery();
+  // const { data: diary } = useGetDiaryQuery();
   const post = data;
-  console.log(data?.data);
+  // console.log("FEEDS: ", post);
 
   return (
     <div className="mt-3 px-3 main-wrapper w-full pb-10">
@@ -31,6 +33,9 @@ function Main() {
           media_urls={post.media_urls}
           post_id={post._id}
           comment={post.comment}
+          repost={post.repost}
+          share={post.share}
+          reaction={post.reaction}
           avatar={avatar1} // You need to provide the avatar source
         />
       ))}

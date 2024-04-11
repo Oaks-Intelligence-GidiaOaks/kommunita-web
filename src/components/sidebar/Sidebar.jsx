@@ -10,9 +10,11 @@ function Sidebar() {
         <Profile />
         <MenuItems />
       </div>
-      <div className="hidden lg:block">
-        <Likes />
-      </div>
+      {window.location.href != "/explore" && (
+        <div className="hidden lg:block">
+          <Likes />
+        </div>
+      )}
     </div>
   );
 }

@@ -10,6 +10,8 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import MainComment from "../profile/comments/MainComment";
 import Comment from "./Comment";
+import { ShimmerSocialPost } from "react-shimmer-effects";
+
 function Post({
   fullname,
   username,
@@ -20,6 +22,9 @@ function Post({
   avatar,
   post_id,
   comment,
+  repost,
+  share,
+  reaction,
 }) {
   const settings = {
     className: "center",
@@ -44,78 +49,79 @@ function Post({
       animate={inView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <motion.div className="post-card p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex gap-3 items-center">
-            <img src={avatar} alt="" />
-            <div>
-              <div className="flex gap-2">
-                <p className="post-name pb-1">{fullname}</p>{" "}
-                {verifiedUser && (
-                  <span>
-                    <img src={verified} alt="" className="pb-1" />
-                  </span>
-                )}
+      {content ? (
+        <motion.div className="post-card p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex gap-3 items-center">
+              <img src={avatar} alt="" />
+              <div>
+                <div className="flex gap-2">
+                  <p className="post-name pb-1">{fullname}</p>{" "}
+                  {verifiedUser && (
+                    <span>
+                      <img src={verified} alt="" className="pb-1" />
+                    </span>
+                  )}
+                </div>
+                <p className="username">
+                  @{username}{" "}
+                  <span className="post-time ml-2 font-bold">{postTime}</span>
+                </p>
               </div>
-              <p className="username">
-                @{username}{" "}
-                <span className="post-time ml-2 font-bold">{postTime}</span>
-              </p>
             </div>
+            <button>
+              <img src={post_action} alt="" />
+            </button>
           </div>
-          <button>
-            <img src={post_action} alt="" />
-          </button>
-        </div>
 
-        <div className="rounded-md mt-2 mb-4">
-          <Slider {...settings}>
-            {media_urls.map((media, index) => (
-              <div
-                key={index}
-                className={` w-full p-2 flex items-center justify-center`}
-                // className={`media-item-wrapper ${
-                //   media_urls.length === 1 ? "w-full" : "w-1/2"
-                // } p-2`}
-              >
-                {media.media_type.startsWith("image") ||
-                media.media_type.startsWith("svg") ||
-                media.media_type.startsWith("jp") ||
-                media.media_type.startsWith("webp") ||
-                media.media_type.startsWith("png") ? (
-                  <img
-                    src={media.media_url}
-                    className="object-contain w-full h-[350px] lg:h-[400px]"
-                    alt="post image"
-                  />
-                ) : (
-                  // <video
-                  //   src={media.media_url}
-                  //   className="w-full h-[250px] object-cover"
-                  //   controls
-                  // />
-                  <video
-                    className="h-[350px] lg:h-[400px] object-cover"
-                    controls
-                    width="100%"
-                  >
-                    <source src={media.media_url} type="video/mp4" />
-                    Sorry, your browser doesn't support embedded videos.
-                  </video>
-                )}
-              </div>
-            ))}
-          </Slider>
-        </div>
-        <div className="post-content text-justify flex flex-row flex-wrap pt-3 pb-2">
-          {content && <p>{content}</p>}
-        </div>
+          <div className="rounded-md mt-2 mb-4">
+            <Slider {...settings}>
+              {media_urls.map((media, index) => (
+                <div
+                  key={index}
+                  className={` w-full p-2 flex items-center justify-center`}
+                >
+                  {media.media_type.startsWith("image") ||
+                  media.media_type.startsWith("svg") ||
+                  media.media_type.startsWith("jp") ||
+                  media.media_type.startsWith("webp") ||
+                  media.media_type.startsWith("png") ? (
+                    <img
+                      src={media.media_url}
+                      className="object-cover w-full h-[350px] lg:h-[400px]"
+                      alt="post image"
+                    />
+                  ) : (
+                    <video
+                      className="h-[350px] lg:h-[400px] object-cover"
+                      controls
+                      width="100%"
+                    >
+                      <source src={media.media_url} type="video/mp4" />
+                      Sorry, your browser doesn't support embedded videos.
+                    </video>
+                  )}
+                </div>
+              ))}
+            </Slider>
+          </div>
+          <div className="post-content text-justify flex flex-row flex-wrap pt-3 pb-2">
+            {content && <p>{content}</p>}
+          </div>
 
-        <PostButtons />
-        {comment.length > 0 &&
-          comment.map((cm, id) => <MainComment key={id} comment={cm} />)}
-        <Comment post_id={post_id} />
-      </motion.div>
+          <PostButtons
+            comment={comment.length}
+            repost={repost.length}
+            share={share.length}
+            reaction={reaction}
+          />
+          {comment.length > 0 &&
+            comment.map((cm, id) => <MainComment key={id} comment={cm} />)}
+          <Comment post_id={post_id} />
+        </motion.div>
+      ) : (
+        <ShimmerSocialPost type="both" />
+      )}
     </motion.div>
   );
 }
