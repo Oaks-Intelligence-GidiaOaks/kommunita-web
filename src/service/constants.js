@@ -14,3 +14,5 @@ export const WHOTOFOLLOW = "user/follow";
 =======
 export const CATEGORY = "user/categories";
 >>>>>>> 51884412508fe273a12e7e2890ce7f24cffae654
+export const CATEGORY = "user/categories";
+
