@@ -9,8 +9,11 @@ import CategoryCard from "../../components/explore/CategoryCard";
 import { AdsOnly } from "./../../components/ads/Ads";
 import MainLayout from "../../components/main/MainLayout";
 import MobileProfile from "./../../components/mobile/MobileProfile";
+import { useGetCategoriesQuery } from "../../service/categories.service";
 
 const ExploreHome = () => {
+  const { data: Category } = useGetCategoriesQuery();
+  // console.log(Category);
   const [selectedCategory, setCategory] = useState("");
 
   const selectCategory = (cat) => {
@@ -47,7 +50,7 @@ const ExploreHome = () => {
             <p className="font-semibold text-lg mb-5">Categories</p>
             {/* <div className="grid grid-cols-4 gap-5 items-center w-full mb-10"> */}
             <div className="flex flex-wrap lg:grid lg:grid-cols-4 gap-2 items-center w-full mb-10">
-              {data.map((dt) => (
+              {Category?.data.map((dt) => (
                 <CategoryCard cat={dt} onclick={selectCategory} />
               ))}
             </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import ads1 from "../../assets/images/ads/ad1.svg";
@@ -6,6 +6,8 @@ import ads2 from "../../assets/images/ads/nivea.jpg";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useGetAdvertQuery } from "../../service/advert.service";
+import { ShimmerSocialPost } from "react-shimmer-effects";
 
 // const slideImages = [
 //   {
@@ -22,7 +24,17 @@ import "slick-carousel/slick/slick-theme.css";
 //   },
 // ];
 
-const ScrollAdds = ({ adds }) => {
+const ScrollAdds = () => {
+  const { data } = useGetAdvertQuery();
+  const [advert, setAdvert] = useState(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setAdvert(data?.data);
+      // console.log(data?.data);
+    }, 5000);
+  }, [data]);
+
   const settings = {
     dots: false,
     arrows: false,
@@ -30,33 +42,45 @@ const ScrollAdds = ({ adds }) => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    speed: 5000,
+    speed: 7000,
     // autoplaySpeed: 5000,
     cssEase: "linear",
   };
 
+  function isToday(date) {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  }
+
   return (
-    // <div className="slide-container">
-    //   <Slide>
-    //     {slideImages.map((slideImage, index) => (
-    //       <a href={slideImage.url} target="_blank">
-    //         <div key={index}>
-    //           <div
-    //             style={{
-    //               ...divStyle,
-    //               backgroundImage: `url(${slideImage.url})`,
-    //             }}
-    //           >
-    //             {/* <span style={spanStyle}>{slideImage.caption}</span> */}
-    //           </div>
-    //         </div>
-    //       </a>
-    //     ))}
-    //   </Slide>
-    // </div>
     <div className="max-w-[300px]">
-      <Slider {...settings}>
-        <a href="https://www.google.com" target="_blank">
+      {advert ? (
+        <Slider {...settings}>
+          {advert
+            ?.filter((dt) => !isToday(new Date(dt.end_date)))
+            .map((ads, id) => (
+              <div key={id} className="relative lg:max-w-[400px] h-[400px]">
+                <img
+                  className="object-cover w-[300px] h-[400px]"
+                  src={ads.media_urls[0].media_url}
+                  alt=""
+                  width={300}
+                />
+                <div className="absolute bottom-0 p-1 bg-white w-11/12">
+                  <h2 className="font-semibold">{ads.headline}:</h2>
+                  <p className="text-sm">{ads.description}</p>
+                </div>
+              </div>
+            ))}
+        </Slider>
+      ) : (
+        <ShimmerSocialPost type="image" />
+      )}
+      {/* <a href="https://www.google.com" target="_blank">
           <div className="lg:max-w-[400px]">
             <img src={ads1} alt="" width={300} />
           </div>
@@ -65,8 +89,7 @@ const ScrollAdds = ({ adds }) => {
           <div className="lg:max-w-[400px]">
             <img src={ads2} alt="" width={300} />
           </div>
-        </a>
-      </Slider>
+        </a> */}
     </div>
   );
 };
