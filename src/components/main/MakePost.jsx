@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Modals from "../modals/Modal";
 import avatar2 from "../../assets/images/sidebar/avatar2.svg";
 import more_btn from "../../assets/images/main/more.svg";
@@ -21,6 +21,8 @@ import UploadedItem from "./UploadedItem";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { showAlert } from "../../static/alert";
+import Resizer from "react-image-file-resizer";
+import { useGetCategoriesQuery } from "../../service/categories.service";
 
 // import Carousel from "react-multi-carousel";
 // import "react-multi-carousel/lib/styles.css";
@@ -35,16 +37,61 @@ function MakePost() {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
 
-  const handleImageChange = (event) => {
+  const { data: Category } = useGetCategoriesQuery();
+  console.log(Category);
+
+  // Handle image change
+  const handleImageChange = async (event) => {
     const files = Array.from(event.target.files);
-    setSelectedImages([...selectedImages, ...files]);
+    const optimizedImages = [];
+
+    const resizeFile = (file) =>
+      new Promise((resolve) => {
+        if (file.type === "image/svg+xml") {
+          // If it's an SVG file, no need to resize
+          resolve(file);
+        } else {
+          Resizer.imageFileResizer(file, 1080, 1080, "PNG", 100, 0, (uri) => {
+            const resizedFile = new File([uriToFile(uri)], file.name, {
+              type: file.type,
+              lastModified: file.lastModified,
+              lastModifiedDate: file.lastModifiedDate,
+            });
+            resolve(resizedFile);
+          });
+        }
+      });
+
+    for (const file of files) {
+      try {
+        const resizedImage = await resizeFile(file);
+        optimizedImages.push(resizedImage);
+      } catch (error) {
+        console.error("Error resizing image:", error);
+      }
+    }
+
+    setSelectedImages([...selectedImages, ...optimizedImages]);
   };
 
-  const handleVideoChange = (event) => {
+  // Helper function to convert base64 URI to Blob
+  const uriToFile = (uri) => {
+    const byteString = atob(uri.split(",")[1]);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: "image/jpeg" });
+  };
+
+  //video upload
+  const handleVideoChange = async (event) => {
     const files = Array.from(event.target.files);
     setSelectedVideos([...selectedVideos, ...files]);
   };
 
+  // Remove selected item
   const handleRemove = (item) => {
     if (selectedImages.includes(item)) {
       setSelectedImages(selectedImages.filter((image) => image !== item));
@@ -53,57 +100,62 @@ function MakePost() {
     }
   };
 
+  // Handle item selection
   const handleItemSelect = (item) => {
     setSelectedItem(item);
     setViewModalOpen(true);
   };
 
+  // Handle content change
   const handleContentChange = (event) => {
     setContent(event.target.value);
   };
 
+  // Handle category change
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
   };
 
+  //get token
   const token = useSelector((state) => state.user?.token);
 
+  // Handle form submission
   const handleSubmit = async () => {
-    // Prepare form data
     const formData = new FormData();
     selectedImages.forEach((image) => {
       formData.append("media", image);
     });
+
     selectedVideos.forEach((video) => {
       formData.append("media", video);
     });
     formData.append("content", content);
     formData.append("category", category);
+    // console.log(selectedImages, "images");
+    console.log(selectedVideos, "videos");
 
     const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
-    try {
-      // Send form data to the server
-      const response = await axios.post(`${apiUrl}/user/post`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          // Set the authorization header with the token
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-      });
-      console.log("Post submitted successfully:", response.data);
-      // Clear selected items and textarea content after submission
-      setSelectedImages([]);
-      setSelectedVideos([]);
-      setContent("");
-      setCategory("");
-      if (response.data.success == true) {
-        showAlert("Great!", "Post created successfully", "success");
-      }
-    } catch (error) {
-      console.error("Error submitting post:", error);
-      showAlert("Great!", error, "error");
-    }
+    // try {
+    //   const response = await axios.post(`${apiUrl}/user/post`, formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //       ...(token && { Authorization: `Bearer ${token}` }),
+    //     },
+    //   });
+    //   console.log("Post submitted successfully:", response.data);
+    //   setSelectedImages([]);
+    //   setSelectedVideos([]);
+    //   setContent("");
+    //   setCategory("");
+    //   if (response.data.success) {
+    //     showAlert("Great!", "Post created successfully", "success");
+    //   }
+    // } catch (error) {
+    //   console.error("Error submitting post:", error);
+    //   showAlert("Oops!", error?.response?.data?.message, "error");
+    //   // console.log(error);
+    // }
   };
 
   return (
@@ -128,12 +180,7 @@ function MakePost() {
             </div>
 
             <div className="flex pb-4 ">
-              <input
-                type="text"
-                placeholder="Category"
-                value={category}
-                onChange={handleCategoryChange}
-              />
+              <select value={category} onChange={handleCategoryChange}></select>
             </div>
 
             <div className="uploaded-items-container p-4 border border-gray-200 rounded-md max-h-80 overflow-y-auto mt-4 flex flex-wrap">
