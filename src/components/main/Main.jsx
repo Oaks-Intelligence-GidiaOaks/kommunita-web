@@ -15,7 +15,7 @@ function Main() {
   const { data } = useGetFeedsQuery();
   // const { data: diary } = useGetDiaryQuery();
   const post = data;
-  console.log("DIARIES: ", post);
+  console.log("FEEDS: ", post);
 
   return (
     <div className="mt-3 px-3 main-wrapper w-full pb-10">

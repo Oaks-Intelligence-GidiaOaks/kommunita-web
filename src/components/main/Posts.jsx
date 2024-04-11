@@ -49,9 +49,7 @@ function Post({
       animate={inView ? { opacity: 1 } : { opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {!content ? (
-        <ShimmerSocialPost type="both" />
-      ) : (
+      {content ? (
         <motion.div className="post-card p-4">
           <div className="flex items-center justify-between">
             <div className="flex gap-3 items-center">
@@ -82,9 +80,6 @@ function Post({
                 <div
                   key={index}
                   className={` w-full p-2 flex items-center justify-center`}
-                  // className={`media-item-wrapper ${
-                  //   media_urls.length === 1 ? "w-full" : "w-1/2"
-                  // } p-2`}
                 >
                   {media.media_type.startsWith("image") ||
                   media.media_type.startsWith("svg") ||
@@ -97,11 +92,6 @@ function Post({
                       alt="post image"
                     />
                   ) : (
-                    // <video
-                    //   src={media.media_url}
-                    //   className="w-full h-[250px] object-cover"
-                    //   controls
-                    // />
                     <video
                       className="h-[350px] lg:h-[400px] object-cover"
                       controls
@@ -129,6 +119,8 @@ function Post({
             comment.map((cm, id) => <MainComment key={id} comment={cm} />)}
           <Comment post_id={post_id} />
         </motion.div>
+      ) : (
+        <ShimmerSocialPost type="both" />
       )}
     </motion.div>
   );
