@@ -6,6 +6,7 @@ import photo_btn from "../../assets/images/main/photo.svg";
 import video_btn from "../../assets/images/main/video.svg";
 import go_live_btn from "../../assets/images/main/go-live.svg";
 import diary from "../../assets/images/main/diary.svg";
+import polls from "../../assets/images/main/polls.svg";
 import schedule from "../../assets/images/main/schedule.svg";
 import draft from "../../assets/images/main/draft.svg";
 import Date from "../../assets/images/modals/date.svg";
@@ -17,12 +18,23 @@ import location from "../../assets/images/modals/location.svg";
 import left from "../../assets/images/modals/left.svg";
 import right from "../../assets/images/modals/right.svg";
 import { FaTimes } from "react-icons/fa";
+import {
+  BiGlobe,
+  BiLock,
+  BiGroup,
+  BiChevronDown,
+  BiChevronUp,
+} from "react-icons/bi";
 import UploadedItem from "./UploadedItem";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { showAlert } from "../../static/alert";
 import Resizer from "react-image-file-resizer";
 import { useGetCategoriesQuery } from "../../service/categories.service";
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import { fetchFile, toBlobURL } from "@ffmpeg/util";
+import { useCreatePostMutation } from "../../service/post.service";
+import { ClipLoader, BeatLoader } from "react-spinners";
 
 // import Carousel from "react-multi-carousel";
 // import "react-multi-carousel/lib/styles.css";
@@ -36,9 +48,23 @@ function MakePost() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
+  const [audience, setAudience] = useState("Public");
+  const [isExpanded, setIsExpanded] = useState(false);
 
+  const toggleCollapse = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const [loaded, setLoaded] = useState(false);
+  const ffmpegRef = useRef(new FFmpeg());
+  const videoRef = useRef(null);
+  const messageRef = useRef(null);
+  const [submitting, setSubmitting] = useState(false);
   const { data: Category } = useGetCategoriesQuery();
-  console.log(Category);
+
+  const handleAudienceChange = (event) => {
+    setAudience(event.target.value);
+  };
 
   // Handle image change
   const handleImageChange = async (event) => {
@@ -88,7 +114,42 @@ function MakePost() {
   //video upload
   const handleVideoChange = async (event) => {
     const files = Array.from(event.target.files);
-    setSelectedVideos([...selectedVideos, ...files]);
+    const compressedVideos = [];
+
+    // Map each video file to a compression promise
+    const compressionPromises = files.map(async (file) => {
+      const compressedData = await compressVideo(file);
+      compressedVideos.push(new File([compressedData], "compressed_video.mp4"));
+    });
+
+    // Wait for all compression promises to resolve
+    await Promise.all(compressionPromises);
+
+    // Once all videos are compressed, update selectedVideos state
+    setSelectedVideos([...selectedVideos, ...compressedVideos]);
+  };
+
+  const compressVideo = async (videoFile) => {
+    try {
+      const ffmpeg = ffmpegRef.current;
+      await ffmpeg.load();
+
+      await ffmpeg.writeFile("input.mp4", await fetchFile(videoFile));
+      await ffmpeg.exec([
+        "-i",
+        "input.mp4",
+        "-vf",
+        "scale=w=480:h=-1",
+        "-c:a",
+        "copy",
+        "output.mp4",
+      ]);
+      const compressedData = await ffmpeg.readFile("output.mp4");
+      return compressedData;
+    } catch (error) {
+      console.error("Error compressing video:", error);
+      return null;
+    }
   };
 
   // Remove selected item
@@ -116,46 +177,50 @@ function MakePost() {
     setCategory(event.target.value);
   };
 
-  //get token
   const token = useSelector((state) => state.user?.token);
 
-  // Handle form submission
   const handleSubmit = async () => {
-    const formData = new FormData();
-    selectedImages.forEach((image) => {
-      formData.append("media", image);
-    });
+    setSubmitting(true);
 
-    selectedVideos.forEach((video) => {
-      formData.append("media", video);
-    });
+    const formData = new FormData();
+    selectedImages.forEach((image) => formData.append("media", image));
+    selectedVideos.forEach((video) => formData.append("media", video));
     formData.append("content", content);
     formData.append("category", category);
-    // console.log(selectedImages, "images");
-    console.log(selectedVideos, "videos");
+    formData.append("audience", audience);
+
+    if (!content.trim()) {
+      showAlert("", "Post content cannot be empty", "error");
+      setSubmitting(false);
+      return;
+    }
 
     const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
-    // try {
-    //   const response = await axios.post(`${apiUrl}/user/post`, formData, {
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //       ...(token && { Authorization: `Bearer ${token}` }),
-    //     },
-    //   });
-    //   console.log("Post submitted successfully:", response.data);
-    //   setSelectedImages([]);
-    //   setSelectedVideos([]);
-    //   setContent("");
-    //   setCategory("");
-    //   if (response.data.success) {
-    //     showAlert("Great!", "Post created successfully", "success");
-    //   }
-    // } catch (error) {
-    //   console.error("Error submitting post:", error);
-    //   showAlert("Oops!", error?.response?.data?.message, "error");
-    //   // console.log(error);
-    // }
+    try {
+      const response = await axios.post(`${apiUrl}/user/post`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
+
+      console.log("Post submitted successfully:", response.data);
+      setSelectedImages([]);
+      setSelectedVideos([]);
+      setContent("");
+      setCategory("");
+      showAlert("Great!", "Post created successfully", "success");
+    } catch (error) {
+      console.error("Error submitting post:", error);
+      showAlert(
+        "Oops!",
+        error?.response?.data?.message || "An error occurred",
+        "error"
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -172,15 +237,11 @@ function MakePost() {
             <div className="flex pb-4 ">
               {/* <img src={avatar2} alt="" /> */}
               <textarea
-                className="post-input focus:outline-none focus:ring-0 border-0 w-full text-wrap"
+                className="post-input focus:outline-none focus:ring-0 border-0 w-full text-wrap h-auto"
                 placeholder="Start a post..."
                 value={content}
                 onChange={handleContentChange}
               />
-            </div>
-
-            <div className="flex pb-4 ">
-              <select value={category} onChange={handleCategoryChange}></select>
             </div>
 
             <div className="uploaded-items-container p-4 border border-gray-200 rounded-md max-h-80 overflow-y-auto mt-4 flex flex-wrap">
@@ -194,13 +255,9 @@ function MakePost() {
               ))}
             </div>
 
-            <div className="flex justify-center">
-              <button onClick={handleSubmit}>Submit Post</button>
-            </div>
-
-            <div className="flex justify-between pb-2 pt-2">
-              <div className="buttons flex flex-row flex-wrap items-center justify-start gap-3">
-                <label className="hover:shadow-md">
+            <div className="pb-5 pt-5">
+              <div className="buttons flex flex-row flex-wrap items-center justify-start gap-3 pb-5">
+                <label className="shadow-md hover:shadow-lg">
                   <img src={photo_btn} alt="" />
                   <input
                     type="file"
@@ -210,7 +267,7 @@ function MakePost() {
                     style={{ display: "none" }}
                   />
                 </label>
-                <label className="hover:shadow-md">
+                <label className="shadow-md hover:shadow-lg">
                   <img src={video_btn} alt="" />
                   <input
                     type="file"
@@ -220,27 +277,101 @@ function MakePost() {
                     style={{ display: "none" }}
                   />
                 </label>
-                <button className="hover:shadow-md">
+                <button className="shadow-md hover:shadow-lg">
                   <img src={go_live_btn} alt="" />
                 </button>
-                <button
-                  className="hover:shadow-md"
-                  onClick={() => setOpenDiaryModal(true)}
-                >
-                  <img src={diary} alt="" />
-                </button>
-                <button
-                  className="hover:shadow-md"
-                  onClick={() => setOpenScheduleModal(true)}
-                >
-                  <img src={schedule} alt="" />
-                </button>
+              </div>
 
-                <button className="hover:shadow-md btn-draft flex">
-                  <img src={draft} alt="" />
-                  Drafts
+              <div className="flex justify-center">
+                <button className="mb-2" onClick={toggleCollapse}>
+                  {isExpanded ? (
+                    <div className="flex justify-center items-center">
+                      See less <BiChevronUp size={20} />
+                    </div>
+                  ) : (
+                    <div className="flex justify-center items-center">
+                      See more <BiChevronDown size={20} />
+                    </div>
+                  )}
                 </button>
               </div>
+
+              {isExpanded && (
+                <div className="flex justify-center gap-5 items-center mt-2 mb-2">
+                  <button
+                    className="shadow-md hover:shadow-lg"
+                    onClick={() => setOpenScheduleModal(true)}
+                  >
+                    <img src={schedule} alt="" />
+                  </button>
+
+                  <button
+                    className="shadow-md hover:shadow-lg"
+                    onClick={() => setOpenDiaryModal(true)}
+                  >
+                    <img src={diary} alt="" />
+                  </button>
+
+                  <button className="shadow-md hover:shadow-lg">
+                    <img src={draft} alt="" />
+                  </button>
+
+                  <button className="shadow-md hover:shadow-lg">
+                    <img src={polls} alt="" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-end py-4 gap-4 items-center">
+              <div className="bg-[#F4F4F4] h-[33px] flex justify-center items-center">
+                <select
+                  value={category}
+                  onChange={handleCategoryChange}
+                  className="focus:outline-none focus:ring-0 border-0 bg-transparent"
+                >
+                  <option value="">Category</option>
+                  {Category?.data?.map((data, index) => (
+                    <option value={data?._id} key={index}>
+                      {data.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="custom-select-box bg-[#F4F4F4] h-[33px] flex justify-center items-center">
+                <div className="p-3 flex justify-center items-center">
+                  <div className="select-image">
+                    {audience === "Public" ? (
+                      <BiGlobe size={20} />
+                    ) : audience === "Private" ? (
+                      <BiLock size={20} />
+                    ) : (
+                      <BiGroup size={20} />
+                    )}
+                  </div>
+                  <select
+                    value={audience}
+                    onChange={handleAudienceChange}
+                    className="focus:outline-none focus:ring-0 border-0 bg-transparent"
+                  >
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                    <option value="Followers">Followers</option>
+                  </select>
+                </div>
+              </div>
+
+              <button
+                onClick={handleSubmit}
+                className="text-[#fff] bg-[#2CC84A] w-[121px] h-[33px] rounded-sm"
+              >
+                {submitting ? (
+                  <BeatLoader color="#ffffff" loading={true} />
+                ) : (
+                  "Post"
+                )}
+              </button>
             </div>
           </div>
         </div>
