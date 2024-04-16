@@ -33,7 +33,8 @@ const persistConfig = {
     }),
   ],
   stateReconciler: hardSet,
-  blacklist: apiSlice.reducerPath,
+  // blacklist: apiSlice.reducerPath,
+  blacklist: [apiSlice.reducerPath],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -46,10 +47,10 @@ const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
+      // serializableCheck: false,
     }).concat(apiSlice.middleware),
 });
 
 const persistor = persistStore(store);
 
-export default store;
-export { persistor };
+export { store, persistor };

@@ -15,7 +15,7 @@ function UploadedItem({ item, onRemove, onItemSelect }) {
   };
 
   return (
-    <div className="w-40 h-40 relative overflow-hidden shadow-md mr-4 mb-4 rounded-lg">
+    <div className="h-40 relative overflow-hidden shadow-md mr-4 mb-4 rounded-lg">
       {item.type.startsWith("image") ? (
         <img
           src={URL.createObjectURL(item)}

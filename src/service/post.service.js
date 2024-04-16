@@ -11,7 +11,17 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Post"],
     }),
+    createPost: builder.mutation({
+      query: (postData) => ({
+        url: "/user/post",
+        method: "POST",
+        body: postData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetPostQuery } = organizationApiSlice;
+export const { useGetPostQuery, useCreatePostMutation } = organizationApiSlice;
