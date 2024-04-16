@@ -180,7 +180,12 @@ function MakePost() {
             </div>
 
             <div className="flex pb-4 ">
-              <select value={category} onChange={handleCategoryChange}></select>
+              <select value={category} onChange={handleCategoryChange}>
+                <option value="">select category</option>
+                {Category?.data.map((cat) => (
+                  <option value={cat}>{cat.name}</option>
+                ))}
+              </select>
             </div>
 
             <div className="uploaded-items-container p-4 border border-gray-200 rounded-md max-h-80 overflow-y-auto mt-4 flex flex-wrap">

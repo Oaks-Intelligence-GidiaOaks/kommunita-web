@@ -4,7 +4,7 @@ const environment = {
     API_BASE_URL: "https://media-space-api-93ae1a0c4354.herokuapp.com/api/v1",
   },
   development: {
-    API_BASE_URL: "http://localhost:5000/api/v1/",
+    API_BASE_URL: "http://localhost:3001/api/v1/",
   },
 };
 

@@ -28,7 +28,11 @@ function Main() {
           media_urls={post.media_urls}
           post_id={post._id}
           comment={post.comment}
-          avatar={avatar1} // You need to provide the avatar source
+          repost={post.repost}
+          share={post.share}
+          reaction={post.reaction}
+          avatar={post.user_id.photo_url || avatar1}
+          // avatar={avatar1} // You need to provide the avatar source
         />
       ))}
     </div>

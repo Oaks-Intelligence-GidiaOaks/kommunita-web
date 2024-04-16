@@ -34,7 +34,7 @@ const ProfileLikes = () => {
               repost={post.repost}
               share={post.share}
               reaction={post.reaction}
-              avatar={avatar1} // You need to provide the avatar source
+              avatar={post.user_id.photo_url || avatar1} // You need to provide the avatar source
             />
           ))}
           {/* <DiaryContainer comment={true} />

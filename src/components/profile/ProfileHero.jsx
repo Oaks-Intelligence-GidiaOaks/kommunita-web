@@ -8,7 +8,7 @@ import getTimeAgoString from "./../../utils/getTimeAgoString";
 const ProfileHero = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { data: profile } = useGetUserProfiileQuery();
-  console.log(profile);
+  // console.log(profile);
 
   // const display_name = useSelector((state) => state.user.user.display_name);
   const user = useSelector((state) => state.user.user);
@@ -39,7 +39,7 @@ const ProfileHero = () => {
             </div>
             <div
               onClick={() => setShowMobileNav(!showMobileNav)}
-              className="absolute lg:hidden top-0 left-5 h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center cursor-pointer"
+              className="absolute top-0 left-5 h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center cursor-pointer lg:hidden"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -59,8 +59,8 @@ const ProfileHero = () => {
             </div>
 
             <div className="flex lg:items-end gap-5 -mt-[50px] flex-col items-center lg:flex-row">
-              <div className="border-white border-[5px]  w-[140px] h-[136px] overflow-hidden rounded-lg">
-                <img src="/src/assets/images/gp-thumbnail.jpeg" />
+              <div className="border-white border-[5px] bg-white  w-[140px] h-[136px] overflow-hidden rounded-lg">
+                <img src={profile?.data.photo_url} />
               </div>
               <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-3 lg:gap-20">
                 <div className="flex flex-col items-center lg:block">
@@ -70,7 +70,7 @@ const ProfileHero = () => {
                   <div className="flex gap-5">
                     <div>
                       <HeroLabel
-                        label={user.email}
+                        label={profile?.data.tech_title}
                         icon={
                           <svg
                             width="14"

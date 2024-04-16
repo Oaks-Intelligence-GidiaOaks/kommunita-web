@@ -11,6 +11,7 @@ import Slider from "react-slick";
 import MainComment from "../profile/comments/MainComment";
 import Comment from "./Comment";
 import { ShimmerSocialPost } from "react-shimmer-effects";
+import { useEffect, useState } from "react";
 
 function Post({
   fullname,
@@ -37,9 +38,19 @@ function Post({
     adaptiveHeight: true,
   };
 
+  const [allComment, setAllComment] = useState([]);
+  const [addComment, setAddComment] = useState(false);
   const { ref, inView } = useInView({
     threshold: 0.5,
   });
+
+  useEffect(() => {
+    setAllComment(comment);
+  }, [addComment]);
+
+  const onComment = () => {
+    setAddComment(!addComment);
+  };
 
   return (
     <motion.div
@@ -53,7 +64,7 @@ function Post({
         <motion.div className="post-card p-4">
           <div className="flex items-center justify-between">
             <div className="flex gap-3 items-center">
-              <img src={avatar} alt="" />
+              <img src={avatar} className="w-[40px] h-[40px]" alt="" />
               <div>
                 <div className="flex gap-2">
                   <p className="post-name pb-1">{fullname}</p>{" "}
@@ -110,14 +121,16 @@ function Post({
           </div>
 
           <PostButtons
+            id={post_id}
             comment={comment.length}
             repost={repost.length}
             share={share.length}
             reaction={reaction}
+            onComment={onComment}
           />
-          {comment.length > 0 &&
-            comment.map((cm, id) => <MainComment key={id} comment={cm} />)}
-          <Comment post_id={post_id} />
+          {allComment.length > 0 &&
+            allComment.map((cm, id) => <MainComment key={id} comment={cm} />)}
+          {addComment && <Comment id={post_id} onComment={onComment} />}
         </motion.div>
       ) : (
         <ShimmerSocialPost type="both" />
