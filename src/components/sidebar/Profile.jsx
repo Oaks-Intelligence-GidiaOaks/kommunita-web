@@ -16,15 +16,15 @@ function Profile() {
 
       <div className="flex justify-center z-10 -mt-5">
         <div className="profile-avatar-img-box flex justify-center items-center">
-          <img src={avatarImage} width={64} height={62} alt="" />
+          <img src={profile?.data?.photo_url} width={64} height={62} alt="" />
         </div>
       </div>
       <p className="text-center profile-name mt-3">{user.display_name}</p>
-      <p className="text-center profile-title">UI/UX Designer</p>
+      <p className="text-center profile-title">{profile?.data?.tech_title}</p>
       <div className="flex justify-center">
         <p className="text-center mt-1 profile-bio p-2">
-          {/* <p className="text-center mt-1 profile-bio w-[204px]"> */}I want
-          to redesign the world but I want everyone to go out of it for a while{" "}
+          {/* <p className="text-center mt-1 profile-bio w-[204px]"> */}
+          {profile?.data?.about}{" "}
           <span className="inline-flex">
             <img src={emoji} alt="" />
           </span>

@@ -51,7 +51,7 @@ const ProfileDiaries = () => {
                 repost={post.repost}
                 share={post.share}
                 reaction={post.reaction}
-                avatar={avatar2} // You need to provide the avatar source
+                avatar={post.user_id.photo_url || avatar2} // You need to provide the avatar source
               />
             ))}
           </div>

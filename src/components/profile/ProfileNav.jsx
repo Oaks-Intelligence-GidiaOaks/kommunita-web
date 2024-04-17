@@ -16,7 +16,7 @@ const ProfileNav = () => {
         className={currentPath == "/profile" ? activeLink : "pb-5"}
         to="/profile"
       >
-        Posts {data?.data?.length}
+        Posts ({data?.data?.length})
       </Link>
       <Link
         className={currentPath == "/profile/diaries" ? activeLink : "pb-5"}

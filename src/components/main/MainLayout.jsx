@@ -20,12 +20,9 @@ const MainLayout = ({ children, showNav }) => {
             className={
               showNav
                 ? "col-span-12 md:col-span-8 lg:col-span-6 xl:col-span-7"
-                : "col-span-12  lg:col-span-9"
+                : "col-span-12  lg:col-span-9 xl:col-span-10"
             }
           >
-            {/* <div className="md:hidden">
-              <MobileProfile />
-            </div> */}
             <div className="w-full">{children}</div>
           </div>
           {showNav && (
