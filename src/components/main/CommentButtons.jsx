@@ -8,7 +8,7 @@ import wishlist from "../../assets/images/main/wishlist.svg";
 
 function CommentButtons({ comment, onComment }) {
   const [ref, inView] = useInView();
-  console.log(comment);
+  // console.log(comment);
 
   // const likes = comment.like.length + comment.love.length;
   return (

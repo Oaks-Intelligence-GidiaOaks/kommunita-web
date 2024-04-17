@@ -3,8 +3,10 @@ import { showAlert } from "../../static/alert";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useGetUserProfiileQuery } from "../../service/user.service";
+import { useGetFeedsQuery } from "../../service/feeds.service";
 
 const Comment = ({ id, onComment, reply }) => {
+  const { data, refetch } = useGetFeedsQuery();
   const { data: profile } = useGetUserProfiileQuery();
   // console.log(profile);
   const token = useSelector((state) => state.user?.token);
@@ -41,6 +43,7 @@ const Comment = ({ id, onComment, reply }) => {
         // Clear selected items and textarea content after submission
         setContent("");
         if (response.data.success == true) {
+          refetch();
           showAlert("Great!", "Comment added successfully", "success");
         }
       } catch (error) {

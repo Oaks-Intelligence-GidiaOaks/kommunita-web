@@ -66,18 +66,18 @@ const ProfileHome = () => {
 
             {sidePost && (
               <Posts
-                fullname={sidePost[0].user_id.display_name}
-                username={sidePost[0].user_id.username}
+                fullname={sidePost[0]?.user_id.display_name}
+                username={sidePost[0]?.user_id.username}
                 verifiedUser={false} // You need to adjust this based on your data
-                postTime={getTimeAgoString(sidePost[0].createdAt)} // Assuming createdAt is the post time
-                // postTime={moment(sidePost[0].createdAt).fromNow()} // Assuming createdAt is the post time
-                content={sidePost[0].content}
-                media_urls={sidePost[0].media_urls}
-                post_id={sidePost[0]._id}
-                comment={sidePost[0].comment}
-                repost={sidePost[0].repost}
-                share={sidePost[0].share}
-                reaction={sidePost[0].reaction}
+                postTime={getTimeAgoString(sidePost[0]?.createdAt)} // Assuming createdAt is the post time
+                // postTime={moment(sidePost[0]?.createdAt).fromNow()} // Assuming createdAt is the post time
+                content={sidePost[0]?.content}
+                media_urls={sidePost[0]?.media_urls}
+                post_id={sidePost[0]?._id}
+                comment={sidePost[0]?.comment}
+                repost={sidePost[0]?.repost}
+                share={sidePost[0]?.share}
+                reaction={sidePost[0]?.reaction}
                 avatar={avatar1} // You need to provide the avatar source
               />
             )}

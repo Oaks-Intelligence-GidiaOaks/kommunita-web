@@ -8,6 +8,7 @@ import wishlist from "../../assets/images/main/wishlist.svg";
 import axios from "axios";
 import { showAlert } from "../../static/alert";
 import { useSelector } from "react-redux";
+import { useGetFeedsQuery } from "../../service/feeds.service";
 function PostButtons({
   id,
   comment,
@@ -17,6 +18,7 @@ function PostButtons({
   reply,
   onComment,
 }) {
+  const { data, refetch } = useGetFeedsQuery();
   const [ref, inView] = useInView();
   const token = useSelector((state) => state.user?.token);
   const likes = reaction.like.length + reaction.love.length;
@@ -33,11 +35,13 @@ function PostButtons({
           ...(token && { Authorization: `Bearer ${token}` }),
         },
       });
+
       console.log("Post liked successfully:", response.data);
       // Clear selected items and textarea content after submission
 
       if (response.data.success == true) {
-        showAlert("Great!", "Comment added successfully", "success");
+        refetch();
+        // showAlert("Great!", "Comment added successfully", "success");
       }
     } catch (error) {
       console.error("Error Liking:", error);

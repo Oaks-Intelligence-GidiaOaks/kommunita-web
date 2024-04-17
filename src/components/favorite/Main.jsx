@@ -9,9 +9,9 @@ import { useGetFeedsQuery } from "../../service/feeds.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 
 function Main() {
-  const { data } = useGetFeedsQuery();
+  const { data, refetch } = useGetFeedsQuery();
   const post = data;
-  console.log(data?.data);
+  // console.log(data?.data);
 
   return (
     <div className="mt-3 px-3 w-full">
