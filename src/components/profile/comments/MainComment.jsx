@@ -5,7 +5,7 @@ import CommentButtons from "./../../main/CommentButtons";
 import Comment from "../../main/Comment";
 const MainComment = ({ comment }) => {
   const [addReply, setAddReply] = useState(false);
-  console.log(comment);
+  // console.log(comment);
   const onReply = () => {
     setAddReply(!addReply);
   };

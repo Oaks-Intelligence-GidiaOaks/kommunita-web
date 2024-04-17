@@ -27,6 +27,40 @@ function Post({
   share,
   reaction,
 }) {
+  function SampleNextArrow(props) {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={className}
+        style={{
+          ...style,
+          display: "block",
+          background: "gray",
+          marginRight: "15px",
+          color: "black",
+        }}
+        onClick={onClick}
+      />
+    );
+  }
+
+  function SamplePrevArrow(props) {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={className}
+        style={{
+          ...style,
+          display: "block",
+          background: "gray",
+          marginLeft: "15px",
+          color: "black",
+        }}
+        onClick={onClick}
+      />
+    );
+  }
+
   const settings = {
     className: "center",
     dots: true,
@@ -36,6 +70,8 @@ function Post({
     slidesToScroll: 1,
     swipeToSlide: true,
     adaptiveHeight: true,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
   };
 
   const [allComment, setAllComment] = useState([]);

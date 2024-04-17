@@ -10,7 +10,7 @@ import { ShimmerSocialPost } from "react-shimmer-effects";
 const ProfileMedia = () => {
   const { data } = useGetMediaQuery();
   const post = data;
-  console.log(data?.data);
+  // console.log(data?.data);
 
   const [show, setShow] = useState(false);
   const [showShimer, setShowShimer] = useState(true);
