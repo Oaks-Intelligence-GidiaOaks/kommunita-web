@@ -82,10 +82,27 @@ function Post({
 
   useEffect(() => {
     setAllComment(comment);
-  }, [addComment]);
+  }, [addComment, comment]);
 
   const onComment = () => {
     setAddComment(!addComment);
+  };
+
+  const handleSeeMore = () => {
+    console.log("Post Data:", {
+      fullname,
+      username,
+      verifiedUser,
+      postTime,
+      content,
+      media_urls,
+      avatar,
+      post_id,
+      comment,
+      repost,
+      share,
+      reaction,
+    });
   };
 
   return (
@@ -165,8 +182,20 @@ function Post({
             onComment={onComment}
           />
           {allComment.length > 0 &&
-            allComment.map((cm, id) => <MainComment key={id} comment={cm} />)}
+            allComment
+              .slice(-2)
+              .map((cm, id) => <MainComment key={id} comment={cm} />)}
+
           {addComment && <Comment id={post_id} onComment={onComment} />}
+          <hr className="mt-5" />
+          <div className="flex justify-center items-center py-4">
+            <button
+              className="text-sm view-likes w-auto"
+              onClick={handleSeeMore}
+            >
+              see more
+            </button>
+          </div>
         </motion.div>
       ) : (
         <ShimmerSocialPost type="both" />

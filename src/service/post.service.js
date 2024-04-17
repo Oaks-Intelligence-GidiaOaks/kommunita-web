@@ -21,7 +21,16 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
         },
       }),
     }),
+    lovePost: builder.mutation({
+      query: (postData) => ({
+        url: "/user/reaction/post",
+        method: "POST",
+        body: postData,
+      }),
+      invalidatesTags: ["Feeds"],
+    }),
   }),
 });
 
-export const { useGetPostQuery, useCreatePostMutation } = organizationApiSlice;
+export const { useGetPostQuery, useCreatePostMutation, useLovePostMutation } =
+  organizationApiSlice;

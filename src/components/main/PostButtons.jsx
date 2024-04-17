@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import fav from "../../assets/images/main/fav.svg";
+import favRed from "../../assets/images/main/favRed.svg";
 import message from "../../assets/images/main/message.svg";
 import retweet from "../../assets/images/main/retweet.svg";
 import reply from "../../assets/images/reply.png";
@@ -8,7 +9,11 @@ import wishlist from "../../assets/images/main/wishlist.svg";
 import axios from "axios";
 import { showAlert } from "../../static/alert";
 import { useSelector } from "react-redux";
-import { useGetFeedsQuery } from "../../service/feeds.service";
+import { useLovePostMutation } from "../../service/post.service";
+import rtkMutation from "../../utils/rtkMutation";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+
 function PostButtons({
   id,
   comment,
@@ -18,36 +23,37 @@ function PostButtons({
   reply,
   onComment,
 }) {
-  const { data, refetch } = useGetFeedsQuery();
+  const [isLoved, setIsLoved] = useState(false);
+  const login_user_id = useSelector((state) => state.user?.user?._id);
+
   const [ref, inView] = useInView();
-  const token = useSelector((state) => state.user?.token);
   const likes = reaction.like.length + reaction.love.length;
+  const likeUserIds = reaction.like.map((user) => user._id);
+
+  const isLikedByCurrentUser = likeUserIds.includes(login_user_id);
+
+  const [lovePost, { error, isSuccess }] = useLovePostMutation();
+
   const handleLike = async () => {
-    const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
-    const url = `${apiUrl}/user/reaction/post`;
-    const body = { post_id: id, reaction_type: "like" };
+    const postData = { post_id: id, reaction_type: "like" };
     try {
-      // Send form data to the server
-      const response = await axios.post(url, body, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          // Set the authorization header with the token
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-      });
-
-      console.log("Post liked successfully:", response.data);
-      // Clear selected items and textarea content after submission
-
-      if (response.data.success == true) {
-        refetch();
-        // showAlert("Great!", "Comment added successfully", "success");
-      }
+      await rtkMutation(lovePost, postData);
+      setIsLoved((prevIsLoved) => !prevIsLoved);
     } catch (error) {
-      console.error("Error Liking:", error);
-      showAlert("Error", error, "error");
+      console.error("Error liking post:", error);
+      showAlert("Oops", "An error occurred while liking the post", "error");
     }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("success");
+    } else if (error) {
+      // showAlert("Oops", error.data.message || "An error occurred", "error");
+      showAlert("Oops", "An error occurred", "error");
+    }
+  }, [isSuccess, error]);
+
   return (
     <motion.div
       ref={ref}
@@ -68,7 +74,7 @@ function PostButtons({
         whileHover={{ scale: 1.1 }}
         onClick={handleLike}
       >
-        <img src={fav} alt="" />
+        <img src={isLoved || isLikedByCurrentUser ? favRed : fav} alt="" />{" "}
         {likes}
       </motion.button>
       <motion.button
@@ -95,5 +101,17 @@ function PostButtons({
     </motion.div>
   );
 }
+
+PostButtons.propTypes = {
+  id: PropTypes.string.isRequired,
+  comment: PropTypes.number.isRequired,
+  reaction: PropTypes.shape({
+    like: PropTypes.array.isRequired,
+    love: PropTypes.array.isRequired,
+  }).isRequired,
+  repost: PropTypes.number.isRequired,
+  share: PropTypes.number.isRequired,
+  onComment: PropTypes.func.isRequired,
+};
 
 export default PostButtons;
