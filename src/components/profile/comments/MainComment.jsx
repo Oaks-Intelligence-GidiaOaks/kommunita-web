@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ReplyComment from "./ReplyComment";
 import getTimeAgoString from "../../../utils/getTimeAgoString";
 import CommentButtons from "./../../main/CommentButtons";
 import Comment from "../../main/Comment";
+import avatar4 from "../../../assets/images/sidebar/avatar4.svg";
+import PropTypes from "prop-types";
+
 const MainComment = ({ comment }) => {
   const [addReply, setAddReply] = useState(false);
   // console.log(comment);
@@ -13,12 +16,12 @@ const MainComment = ({ comment }) => {
     <div className="relative mt-5 text-primary-dark-gray ">
       {/* <Comment id={comment._id} onComment={onReply} /> */}
       <div className="flex justify-between items-center">
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 justify-center items-center">
           <div className="border-white w-[40px] h-[38px] overflow-hidden rounded">
             <img
-              src={comment.user_id.photo_url}
-              width={40}
-              height={38}
+              src={comment.user_id.photo_url || avatar4}
+              width={35}
+              height={34}
               alt="user-thumbnail"
             />
           </div>
@@ -76,7 +79,12 @@ const MainComment = ({ comment }) => {
 
       {addReply && (
         <div className="ml-11 mt-0">
-          <Comment reply={true} id={comment?._id} onComment={onReply} />
+          <Comment
+            reply={true}
+            id={comment?._id}
+            onComment={onReply}
+            placeholder={"Reply"}
+          />
         </div>
       )}
       {comment.replies.length > 0 &&
@@ -87,6 +95,23 @@ const MainComment = ({ comment }) => {
         ))}
     </div>
   );
+};
+
+MainComment.propTypes = {
+  comment: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    user_id: PropTypes.shape({
+      photo_url: PropTypes.string,
+      display_name: PropTypes.string.isRequired,
+    }).isRequired,
+    createdAt: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    replies: PropTypes.arrayOf(
+      PropTypes.shape({
+        // Define shape of each reply if needed
+      })
+    ),
+  }).isRequired,
 };
 
 export default MainComment;

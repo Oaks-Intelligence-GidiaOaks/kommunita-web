@@ -1,5 +1,6 @@
-import React from "react";
 import CommentButtons from "./../../main/CommentButtons";
+import image4 from "../../../assets/images/sidebar/avatar4.svg";
+import PropTypes from "prop-types";
 
 const ReplyComment = ({ reply }) => {
   return (
@@ -8,7 +9,7 @@ const ReplyComment = ({ reply }) => {
         <div className="flex gap-2 items-start">
           <div className="border-white w-[13px] h-[13px] overflow-hidden rounded">
             <img
-              src={reply.user_id.photo_url}
+              src={reply.user_id.photo_url || image4}
               width={13}
               height={13}
               alt="user-thumbnail"
@@ -53,6 +54,21 @@ const ReplyComment = ({ reply }) => {
       </div>
     </div>
   );
+};
+
+ReplyComment.propTypes = {
+  reply: PropTypes.shape({
+    user_id: PropTypes.shape({
+      photo_url: PropTypes.string,
+      display_name: PropTypes.string.isRequired,
+    }).isRequired,
+    content: PropTypes.string.isRequired,
+    replies: PropTypes.arrayOf(
+      PropTypes.shape({
+        // Define shape of each reply if needed
+      })
+    ),
+  }).isRequired,
 };
 
 export default ReplyComment;

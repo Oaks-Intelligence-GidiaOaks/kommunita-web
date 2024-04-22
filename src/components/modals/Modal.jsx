@@ -20,9 +20,11 @@ function Modals({ openModal, modalSize, onClose, btnText, children }) {
       <Modal.Body>
         <div className="pb-5 p-3">{children}</div>
 
-        <div className="flex justify-center pb-10 p-3">
-          <button className="modal-btn w-full">{btnText}</button>
-        </div>
+        {btnText && ( // Check if btnText is provided
+          <div className="flex justify-center pb-10 p-3">
+            <button className="modal-btn w-full">{btnText}</button>
+          </div>
+        )}
       </Modal.Body>
     </Modal>
   );
@@ -32,7 +34,7 @@ function Modals({ openModal, modalSize, onClose, btnText, children }) {
 Modals.propTypes = {
   openModal: PropTypes.bool.isRequired,
   modalSize: PropTypes.string.isRequired,
-  btnText: PropTypes.string.isRequired,
+  btnText: PropTypes.string,
   onClose: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
 };

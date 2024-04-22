@@ -29,8 +29,27 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Feeds"],
     }),
+
+    postComment: builder.mutation({
+      query: ({ content, id, reply }) => {
+        const url = reply ? `/user/reply` : `/user/comment/post`;
+        const body = reply
+          ? { content, comment_id: id }
+          : { content, post_id: id };
+        return {
+          url,
+          method: "POST",
+          body,
+        };
+      },
+      invalidatesTags: ["Feeds"],
+    }),
   }),
 });
 
-export const { useGetPostQuery, useCreatePostMutation, useLovePostMutation } =
-  organizationApiSlice;
+export const {
+  useGetPostQuery,
+  useCreatePostMutation,
+  useLovePostMutation,
+  usePostCommentMutation,
+} = organizationApiSlice;

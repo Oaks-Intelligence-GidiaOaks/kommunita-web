@@ -12,21 +12,21 @@ function CommentButtons({ comment, onComment }) {
 
   // const likes = comment.like.length + comment.love.length;
   return (
-    <motion.div
-      ref={ref}
+    <div
+      // ref={ref}
       className="post-buttons flex gap-3 justify-end z-50"
-      initial={{ opacity: 0, x: 100 }}
-      animate={{ opacity: inView ? 1 : 0, x: inView ? 0 : 100 }}
-      transition={{ duration: 0.5 }}
+      // initial={{ opacity: 0, x: 100 }}
+      // animate={{ opacity: inView ? 1 : 0, x: inView ? 0 : 100 }}
+      // transition={{ duration: 0.5 }}
     >
-      <motion.button
+      <button
         className="flex gap-1 items-center"
-        whileHover={{ scale: 1.1 }}
+        // whileHover={{ scale: 1.1 }}
         onClick={onComment}
       >
         <img className="w-[20px]" src={reply} alt="" />
         {comment?.length}
-      </motion.button>
+      </button>
 
       {/* <motion.button
         className="flex gap-1 items-center"
@@ -36,14 +36,14 @@ function CommentButtons({ comment, onComment }) {
         {repost}
       </motion.button> */}
 
-      <motion.button
+      <button
         className="flex gap-1 items-center"
-        whileHover={{ scale: 1.1 }}
+        // whileHover={{ scale: 1.1 }}
       >
         <img src={fav} alt="" />
         {/* {likes} */}
-      </motion.button>
-    </motion.div>
+      </button>
+    </div>
   );
 }
 

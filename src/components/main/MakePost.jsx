@@ -77,7 +77,7 @@ function MakePost() {
           // If it's an SVG file, no need to resize
           resolve(file);
         } else {
-          Resizer.imageFileResizer(file, 1080, 1080, "PNG", 100, 0, (uri) => {
+          Resizer.imageFileResizer(file, 1080, 1080, "WEBP", 100, 0, (uri) => {
             const resizedFile = new File([uriToFile(uri)], file.name, {
               type: file.type,
               lastModified: file.lastModified,
