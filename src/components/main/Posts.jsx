@@ -68,6 +68,17 @@ function Post({
     console.log("Post Data:", postData);
   }, [postData]);
 
+  const [visibleComments, setVisibleComments] = useState(5);
+
+  // Sort comments by latest first
+  const sortedComments = [...allComment].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  const loadMoreComments = () => {
+    setVisibleComments((prevVisibleComments) => prevVisibleComments + 5);
+  };
+
   return (
     <>
       <div
@@ -157,12 +168,20 @@ function Post({
               reaction={reaction}
               onComment={onComment}
             />
+
             {allComment.length > 0 &&
-              allComment
+              [...allComment]
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                 .slice(-2)
                 .map((cm, id) => <MainComment key={id} comment={cm} />)}
 
-            {addComment && <Comment id={post_id} onComment={onComment} />}
+            {addComment && (
+              <Comment
+                id={post_id}
+                onComment={onComment}
+                placeholder={"Comment"}
+              />
+            )}
             <hr className="mt-5" />
             <div className="flex justify-center items-center py-4">
               <button
@@ -256,8 +275,17 @@ function Post({
         {addComment && (
           <Comment id={post_id} onComment={onComment} placeholder={"Comment"} />
         )}
-        {allComment.length > 0 &&
-          allComment.map((cm, id) => <MainComment key={id} comment={cm} />)}
+        <div>
+          {sortedComments.slice(0, visibleComments).map((comment, id) => (
+            <MainComment key={id} comment={comment} />
+          ))}
+
+          {sortedComments.length > visibleComments && (
+            <button className="text-sm" onClick={loadMoreComments}>
+              Load more comments
+            </button>
+          )}
+        </div>
       </Modals>
     </>
   );
