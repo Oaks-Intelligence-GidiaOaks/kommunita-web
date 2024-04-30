@@ -28,7 +28,7 @@ import { useGetUserProfiileQuery } from "../../service/user.service";
 
 function MenuItems() {
   const { data: profile } = useGetUserProfiileQuery();
-  console.log(profile);
+  console.log(profile, "profile");
 
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(null);
@@ -136,9 +136,9 @@ function MenuItems() {
           href={profile?.data?.current_organization?.website_url}
           target="_blank"
         >
-          <p className="flex gap-2 items-center oaks-text pt-5">
-            <img src={logo} alt="" />{" "}
-            {profile?.data?.current_organization?.organization_name}
+          <p className="flex gap-2 items-center oaks-text pt-5 text-sm">
+            <img src={profile?.data?.current_organization?.logo_url} alt="" />{" "}
+            Back to {profile?.data?.current_organization?.organization_name}
           </p>
         </a>
       </div>
