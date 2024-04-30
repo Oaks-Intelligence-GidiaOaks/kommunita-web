@@ -19,6 +19,8 @@ import {
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
 import PublicRoute from "../components/protected/PublicRoute";
+import PollsHome from "../pages/polls/PollsHome";
+import SurveyHome from "../pages/survey/SurveyHome";
 
 const Config = () => {
   return (
@@ -80,6 +82,14 @@ const Config = () => {
         <Route
           path={routes.POST}
           element={<ProtectedRoute component={Post} />}
+        />
+        <Route
+          path={routes.POLLS}
+          element={<ProtectedRoute component={PollsHome} />}
+        />
+        <Route
+          path={routes.SURVEY}
+          element={<ProtectedRoute component={SurveyHome} />}
         />
         <Route
           path={routes.NOTIFICATION}
