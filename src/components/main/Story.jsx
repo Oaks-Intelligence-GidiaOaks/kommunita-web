@@ -1,12 +1,17 @@
 import liveText from "../../assets/images/main/live.svg";
 import liveBtn from "../../assets/images/main/live-btn.svg";
-import story1 from "../../assets/images/main/story1.svg";
-import story2 from "../../assets/images/main/story2.svg";
-import story3 from "../../assets/images/main/story3.svg";
-import story4 from "../../assets/images/main/story4.svg";
 import ModalImage from "react-modal-image";
+import { useGetStoriesQuery } from "../../service/stories.service";
+import { useEffect } from "react";
+import { ShimmerThumbnail } from "react-shimmer-effects";
 
 function Story() {
+  const { data: storyData, isLoading } = useGetStoriesQuery();
+
+  useEffect(() => {
+    console.log(storyData);
+  }, [storyData]);
+
   return (
     <div className="stories-container overflow-x-auto whitespace-nowrap w-full flex">
       <div className="stories flex justify-start gap-2 items-center">
@@ -16,199 +21,49 @@ function Story() {
             <img src={liveBtn} alt="liveBtn" />
           </button>
         </div>
-        <div className="story-cards relative">
-          <ModalImage
-            small={story1}
-            large={story1}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Sherrilyn Kenyon
-          </p>
-        </div>
 
-        <div className="story-cards relative">
-          <ModalImage
-            small={story2}
-            large={story2}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Edgar Poe
-          </p>
-        </div>
-
-        <div className="story-cards relative">
-          <ModalImage
-            small={story3}
-            large={story3}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Nora Roberts
-          </p>
-        </div>
-
-        <div className="story-cards relative">
-          <ModalImage
-            small={story4}
-            large={story4}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Nora Roberts
-          </p>
-        </div>
-
-        <div className="story-cards relative">
-          <ModalImage
-            small={story4}
-            large={story4}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Nora Roberts
-          </p>
-        </div>
-
-        <div className="story-cards relative">
-          <ModalImage
-            small={story1}
-            large={story1}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Nora Roberts
-          </p>
-        </div>
-        <div className="story-cards relative">
-          <ModalImage
-            small={story4}
-            large={story4}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Nora Roberts
-          </p>
-        </div>
-
-        <div className="story-cards relative">
-          <ModalImage
-            small={story1}
-            large={story1}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Charles Dickens
-          </p>
-        </div>
-
-        <div className="story-cards relative">
-          <ModalImage
-            small={story4}
-            large={story4}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Charles Dickens
-          </p>
-        </div>
-
-        <div className="story-cards relative">
-          <ModalImage
-            small={story1}
-            large={story1}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Charles Dickens
-          </p>
-        </div>
-
-        <div className="story-cards relative">
-          <ModalImage
-            small={story4}
-            large={story4}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />{" "}
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Charles Dickens
-          </p>
-        </div>
-
-        <div className="story-cards relative">
-          <ModalImage
-            small={story1}
-            large={story1}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Charles Dickens
-          </p>
-        </div>
-
-        <div className="story-cards relative">
-          <ModalImage
-            small={story4}
-            large={story4}
-            alt="story"
-            className="w-[91.276px] h-[110px]"
-          />
-          <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
-            <img src={liveText} />
-          </div>
-          <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
-            Charles Dickens
-          </p>
-        </div>
+        {isLoading ? (
+          <ShimmerThumbnail width={92} height={110} />
+        ) : storyData && storyData.data ? (
+          storyData.data.map(
+            (story, index) =>
+              // Check if story has media_url
+              story.media_url && (
+                <div key={index} className="story-cards relative">
+                  {story?.media_url?.media_type.startsWith("image") ||
+                  story?.media_url?.media_type === "jpeg" ||
+                  story?.media_url?.media_type === "svg" ||
+                  story?.media_url?.media_type === "jpg" ||
+                  story?.media_url?.media_type === "webp" ||
+                  story?.media_url?.media_type === "octet-stream" ||
+                  story?.media_url?.media_type === "png" ? (
+                    <ModalImage
+                      small={story?.media_url.media_url}
+                      large={story.media_url.media_url}
+                      alt="story"
+                      className="w-[91.276px] h-[110px]"
+                    />
+                  ) : (
+                    <video className="w-[91.276px] h-[110px]" controls>
+                      <source
+                        src={story.media_url.media_url}
+                        type={story.media_url.media_type}
+                      />
+                      Your browser does not support the video tag.
+                    </video>
+                  )}
+                  <div className="absolute top-1 right-0 z-20 mr-1 -mt-3">
+                    <img src={liveText} alt="live" />
+                  </div>
+                  <p className="story-name absolute bottom-0 left-0 z-20 ml-2 mb-1">
+                    {story.user_id.display_name}
+                  </p>
+                </div>
+              )
+          )
+        ) : (
+          <p>No stories available</p>
+        )}
       </div>
     </div>
   );

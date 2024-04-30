@@ -19,7 +19,7 @@ function Profile() {
           <img src={profile?.data?.photo_url} width={64} height={62} alt="" />
         </div>
       </div>
-      <p className="text-center profile-name mt-3">{user.display_name}</p>
+      <p className="text-center profile-name mt-3">{user?.display_name}</p>
       <p className="text-center profile-title">{profile?.data?.tech_title}</p>
       <div className="flex justify-center">
         <p className="text-center mt-1 profile-bio p-2">

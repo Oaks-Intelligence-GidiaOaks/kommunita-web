@@ -11,3 +11,4 @@ export const MEDIA = "user/media";
 export const CATEGORY = "user/categories";
 export const WHOTOFOLLOW = "user/follow";
 export const ADVERT = "user/advert";
+export const STORIES = "user/stories";
