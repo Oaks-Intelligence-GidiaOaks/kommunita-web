@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import home from "../../assets/images/sidebar/home.svg";
 import notifications from "../../assets/images/sidebar/notifications.svg";
@@ -24,8 +24,12 @@ import favoriteActive from "../../assets/images/sidebar/favoriteActive.svg";
 import liveActive from "../../assets/images/sidebar/liveActive.svg";
 import { handleLogout } from "../../static/logout";
 import { useDispatch } from "react-redux";
+import { useGetUserProfiileQuery } from "../../service/user.service";
 
 function MenuItems() {
+  const { data: profile } = useGetUserProfiileQuery();
+  console.log(profile);
+
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(null);
 
@@ -128,10 +132,15 @@ function MenuItems() {
         >
           <img src={logout} alt="logout" /> Log out
         </button>
-
-        <p className="flex justify-between gap-1 items-center oaks-text pt-5">
-          <img src={logo} alt="" /> Back to Oaks Intelligence
-        </p>
+        <a
+          href={profile?.data?.current_organization?.website_url}
+          target="_blank"
+        >
+          <p className="flex gap-2 items-center oaks-text pt-5">
+            <img src={logo} alt="" />{" "}
+            {profile?.data?.current_organization?.organization_name}
+          </p>
+        </a>
       </div>
     </div>
   );
