@@ -9,7 +9,12 @@ function Modals({ openModal, modalSize, onClose, btnText, children }) {
       show={openModal}
       size={modalSize}
       onClose={onClose}
-      style={{ borderRadius: "5.489px", background: "#FFF", padding: "0" }}
+      style={{
+        borderRadius: "5.489px",
+        background: "#FFF",
+        padding: "0",
+        zIndex: "20",
+      }}
     >
       <div className="flex justify-end mr-6 py-4">
         <button className="modal-close rounded-full ring-1" onClick={onClose}>

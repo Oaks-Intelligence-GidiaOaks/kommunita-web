@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { FaTimes } from "react-icons/fa";
 
 function UploadedItem({ item, onRemove, onItemSelect }) {
+  // console.log(item);
   if (!item || !item.name) {
     return null;
   }

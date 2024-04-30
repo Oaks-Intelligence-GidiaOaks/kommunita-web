@@ -56,4 +56,12 @@
 }
 .stories-container {
   scroll-behavior: smooth;
+  z-index: 2 !important;
+}
+.ellipsis-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
 }

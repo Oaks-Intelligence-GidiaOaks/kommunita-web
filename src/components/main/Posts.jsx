@@ -121,6 +121,14 @@ function Post({
             <div className="post-content text-justify flex flex-row flex-wrap pt-3 pb-2">
               {content && <p>{content}</p>}
             </div>
+            <div className="flex justify-start items-center pb-2">
+              <p
+                className="text-sm cursor-pointer text-[#3D7100]"
+                onClick={handleSeeMore}
+              >
+                see more
+              </p>
+            </div>
             <div className="rounded-md mt-2 mb-4 w-full">
               <Glider
                 draggable
@@ -135,19 +143,21 @@ function Post({
                     className={` w-full flex items-center justify-center rounded-sm`}
                   >
                     {media.media_type.startsWith("image") ||
-                    media.media_type.startsWith("svg") ||
-                    media.media_type.startsWith("jp") ||
-                    media.media_type.startsWith("webp") ||
-                    media.media_type.startsWith("png") ? (
+                    media.media_type === "jpeg" ||
+                    media.media_type === "svg" ||
+                    media.media_type === "jpg" ||
+                    media.media_type === "webp" ||
+                    media.media_type === "octet-stream" ||
+                    media.media_type === "png" ? (
                       <LazyLoadImage
-                        className="object-cover w-full h-[300px]"
+                        className="w-full h-[300px]"
                         alt="post image"
                         effect="blur"
                         src={media.media_url}
                       />
                     ) : (
                       <video
-                        className="h-[350px] object-cover"
+                        className="w-full h-[350px] object-cover"
                         controls
                         width="100%"
                       >
@@ -182,15 +192,6 @@ function Post({
                 placeholder={"Comment"}
               />
             )}
-            <hr className="mt-5" />
-            <div className="flex justify-center items-center py-4">
-              <button
-                className="text-sm view-likes w-auto"
-                onClick={handleSeeMore}
-              >
-                see more
-              </button>
-            </div>
           </div>
         ) : (
           <ShimmerSocialPost type="both" />
@@ -240,12 +241,14 @@ function Post({
                 className={` w-full flex items-center justify-center`}
               >
                 {media.media_type.startsWith("image") ||
-                media.media_type.startsWith("svg") ||
-                media.media_type.startsWith("jp") ||
-                media.media_type.startsWith("webp") ||
-                media.media_type.startsWith("png") ? (
+                media.media_type === "jpeg" ||
+                media.media_type === "svg" ||
+                media.media_type === "jpg" ||
+                media.media_type === "webp" ||
+                media.media_type === "octet-stream" ||
+                media.media_type === "png" ? (
                   <img
-                    className="object-cover w-full h-[250px]"
+                    className="w-full aspect-video"
                     alt="post image"
                     // effect="blur"
                     src={media.media_url}

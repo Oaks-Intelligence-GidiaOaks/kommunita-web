@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import Modals from "../modals/Modal";
-import avatar2 from "../../assets/images/sidebar/avatar2.svg";
 import more_btn from "../../assets/images/main/more.svg";
 import photo_btn from "../../assets/images/main/photo.svg";
 import video_btn from "../../assets/images/main/video.svg";
@@ -31,13 +30,8 @@ import { useSelector } from "react-redux";
 import { showAlert } from "../../static/alert";
 import Resizer from "react-image-file-resizer";
 import { useGetCategoriesQuery } from "../../service/categories.service";
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { fetchFile, toBlobURL } from "@ffmpeg/util";
-import { useCreatePostMutation } from "../../service/post.service";
-import { ClipLoader, BeatLoader } from "react-spinners";
-
-// import Carousel from "react-multi-carousel";
-// import "react-multi-carousel/lib/styles.css";
+import { BeatLoader } from "react-spinners";
+import { useGetFeedsQuery } from "../../service/feeds.service";
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
@@ -49,16 +43,15 @@ function MakePost() {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
   const [audience, setAudience] = useState("Public");
+  const [scheduleDate, setScheduleDate] = useState("");
+  const [scheduleTime, setScheduleTime] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
+  const { refetch } = useGetFeedsQuery();
 
   const toggleCollapse = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const [loaded, setLoaded] = useState(false);
-  const ffmpegRef = useRef(new FFmpeg());
-  const videoRef = useRef(null);
-  const messageRef = useRef(null);
   const [submitting, setSubmitting] = useState(false);
   const { data: Category } = useGetCategoriesQuery();
 
@@ -114,42 +107,7 @@ function MakePost() {
   //video upload
   const handleVideoChange = async (event) => {
     const files = Array.from(event.target.files);
-    const compressedVideos = [];
-
-    // Map each video file to a compression promise
-    const compressionPromises = files.map(async (file) => {
-      const compressedData = await compressVideo(file);
-      compressedVideos.push(new File([compressedData], "compressed_video.mp4"));
-    });
-
-    // Wait for all compression promises to resolve
-    await Promise.all(compressionPromises);
-
-    // Once all videos are compressed, update selectedVideos state
-    setSelectedVideos([...selectedVideos, ...compressedVideos]);
-  };
-
-  const compressVideo = async (videoFile) => {
-    try {
-      const ffmpeg = ffmpegRef.current;
-      await ffmpeg.load();
-
-      await ffmpeg.writeFile("input.mp4", await fetchFile(videoFile));
-      await ffmpeg.exec([
-        "-i",
-        "input.mp4",
-        "-vf",
-        "scale=w=480:h=-1",
-        "-c:a",
-        "copy",
-        "output.mp4",
-      ]);
-      const compressedData = await ffmpeg.readFile("output.mp4");
-      return compressedData;
-    } catch (error) {
-      console.error("Error compressing video:", error);
-      return null;
-    }
+    setSelectedVideos([...selectedVideos, ...files]);
   };
 
   // Remove selected item
@@ -177,6 +135,14 @@ function MakePost() {
     setCategory(event.target.value);
   };
 
+  const handleScheduleDateChange = (event) => {
+    setScheduleDate(event.target.value);
+  };
+
+  const handleScheduleTimeChange = (event) => {
+    setScheduleTime(event.target.value);
+  };
+
   const token = useSelector((state) => state.user?.token);
 
   const handleSubmit = async () => {
@@ -188,6 +154,8 @@ function MakePost() {
     formData.append("content", content);
     formData.append("category", category);
     formData.append("audience", audience);
+    formData.append("schedule_date", scheduleDate);
+    formData.append("schedule_time", scheduleTime);
 
     if (!content.trim()) {
       showAlert("", "Post content cannot be empty", "error");
@@ -210,7 +178,10 @@ function MakePost() {
       setSelectedVideos([]);
       setContent("");
       setCategory("");
+      setScheduleDate("");
+      setScheduleTime("");
       showAlert("Great!", "Post created successfully", "success");
+      refetch();
     } catch (error) {
       console.error("Error submitting post:", error);
       showAlert(
@@ -258,7 +229,7 @@ function MakePost() {
             <div className="pb-5 pt-5">
               <div className="buttons flex flex-row flex-wrap items-center justify-start gap-3 pb-5">
                 <label className="shadow-md hover:shadow-lg">
-                  <img src={photo_btn} alt="" />
+                  <img src={photo_btn} alt="" className="cursor-pointer" />
                   <input
                     type="file"
                     onChange={handleImageChange}
@@ -268,11 +239,11 @@ function MakePost() {
                   />
                 </label>
                 <label className="shadow-md hover:shadow-lg">
-                  <img src={video_btn} alt="" />
+                  <img src={video_btn} alt="" className="cursor-pointer" />
                   <input
                     type="file"
                     onChange={handleVideoChange}
-                    accept="video/*, audio/mpeg"
+                    accept="video/*"
                     multiple
                     style={{ display: "none" }}
                   />
@@ -441,83 +412,137 @@ function MakePost() {
         openModal={openScheduleModal}
         modalSize="3xl"
         onClose={() => setOpenScheduleModal(false)}
-        btnText="Schedule"
+        // btnText="Schedule"
       >
-        <textarea className="post-box focus:outline-none focus:ring-0 pb-4 flex-wrap"></textarea>
+        <textarea
+          className="post-box focus:outline-none focus:ring-0 pb-4 flex-wrap"
+          placeholder="Start a post..."
+          value={content}
+          onChange={handleContentChange}
+        ></textarea>
+
+        <div className="uploaded-items-container p-4 border border-gray-200 rounded-md max-h-80 overflow-y-auto mt-4 flex flex-wrap">
+          {[...selectedImages, ...selectedVideos].map((item, index) => (
+            <UploadedItem
+              key={index}
+              item={item}
+              onRemove={handleRemove}
+              onItemSelect={handleItemSelect}
+            />
+          ))}
+        </div>
 
         <div className="flex justify-between pb-5 pt-5">
           <div className="text-add-post">Add to your post</div>
-          <div className="post-buttons-add flex gap-3">
-            <button className="hover:shadow-lg">
-              <img src={photos} alt="" />
-            </button>
-            <button className="hover:shadow-lg">
-              <img src={videoIcon} alt="" />
-            </button>
-            <button className="hover:shadow-lg">
+
+          <div className="buttons flex flex-row flex-wrap items-center justify-start gap-3 pb-5">
+            <label className="shadow-md hover:shadow-lg">
+              <img src={photos} alt="" className="cursor-pointer" />
+              <input
+                type="file"
+                onChange={handleImageChange}
+                accept="image/*"
+                multiple
+                style={{ display: "none" }}
+              />
+            </label>
+            <label className="shadow-md hover:shadow-lg">
+              <img src={videoIcon} alt="" className="cursor-pointer" />
+              <input
+                type="file"
+                onChange={handleVideoChange}
+                accept="video/*"
+                multiple
+                style={{ display: "none" }}
+              />
+            </label>
+            <button className="shadow-md hover:shadow-lg">
               <img src={location} alt="" />
             </button>
           </div>
         </div>
 
         <div className="flex justify-between pb-4">
-          <flex className="flex-col">
+          <div className="flex-col">
             <label htmlFor="date" className="modal-label">
               Schedule date
             </label>
             <div className="input-bg-modal flex">
               <img src={Date} alt="" />
               <input
-                type="text"
+                type="Date"
                 className="w-[278px] modal-input border-0 bg-[#f4f4f4] focus:outline-none focus:ring-0"
+                onChange={handleScheduleDateChange}
                 placeholder="Select date"
               />
             </div>
-          </flex>
+          </div>
 
-          <flex className="flex-col">
+          <div className="flex-col">
             <label htmlFor="date" className="modal-label">
               Schedule time
             </label>
             <div className="input-bg-modal flex">
               <img src={time} alt="" />
               <input
-                type="text"
+                type="time"
                 className="w-[278px] modal-input border-0 bg-[#f4f4f4] focus:outline-none focus:ring-0"
+                onChange={handleScheduleTimeChange}
                 placeholder="Select time"
               />
             </div>
-          </flex>
+          </div>
         </div>
 
-        <div className="flex justify-between pb-2">
-          <flex className="flex-col">
-            <label htmlFor="date" className="modal-label">
-              Categories
+        <div className="flex gap-10 pb-2">
+          <div className="flex flex-col w-full">
+            <label htmlFor="date" className="modal-label pb-1">
+              Select Category
             </label>
             <div className="input-bg-modal flex">
               <img src={time} alt="" />
-              <input
-                type="text"
-                className="w-[278px] modal-input border-0 bg-[#f4f4f4] focus:outline-none focus:ring-0"
-                placeholder="Select Category"
-              />
+              <select
+                value={category}
+                onChange={handleCategoryChange}
+                className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full"
+              >
+                <option value="">select category</option>
+                {Category?.data?.map((data, index) => (
+                  <option value={data?.name} key={index}>
+                    {data?.name}
+                  </option>
+                ))}
+              </select>
             </div>
-          </flex>
+          </div>
 
-          <flex className="flex-col">
-            <label htmlFor="date" className="modal-label">
+          <div className="flex flex-col w-full">
+            <label htmlFor="date" className="modal-label pb-1">
               Choose Audience
             </label>
-            <div className="input-bg-modal flex">
+            <div className="input-bg-modal flex justify-between">
               <img src={globe} alt="" />
-              <input
-                type="text"
-                className="w-[278px] modal-input border-0 bg-[#f4f4f4] focus:outline-none focus:ring-0"
-                placeholder="Public"
-              />
+              <select
+                value={audience}
+                onChange={handleAudienceChange}
+                className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full"
+              >
+                <option value="Public">Public</option>
+                <option value="Private">Private</option>
+                <option value="Followers">Followers</option>
+              </select>
             </div>
-          </flex>
+          </div>
+        </div>
+
+        <div className="flex justify-center pt-5">
+          <button onClick={handleSubmit} className="modal-btn w-full">
+            {submitting ? (
+              <BeatLoader color="#ffffff" loading={true} />
+            ) : (
+              "Schedule"
+            )}
+          </button>
         </div>
       </Modals>
     </>
