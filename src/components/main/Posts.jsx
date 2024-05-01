@@ -235,7 +235,7 @@ function Post({
             slidesToShow={1}
             slidesToScroll={1}
           >
-            {media_urls.map((media, index) => (
+            {media_urls?.map((media, index) => (
               <div
                 key={index}
                 className={` w-full flex items-center justify-center`}
@@ -269,9 +269,9 @@ function Post({
         </div>
         <PostButtons
           id={post_id}
-          comment={comment.length}
-          repost={repost.length}
-          share={share.length}
+          comment={comment?.length}
+          repost={repost?.length}
+          share={share?.length}
           reaction={reaction}
           onComment={onComment}
         />

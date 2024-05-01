@@ -18,6 +18,8 @@ import { useGetPostQuery } from "../../service/post.service";
 const ProfileHome = () => {
   // const { data } = useGetFeedsQuery();
   const { data } = useGetPostQuery();
+  const posts = data?.data || [];
+  console.log(posts);
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sidePost, setSidePost] = useState(null);
@@ -26,8 +28,12 @@ const ProfileHome = () => {
     setTimeout(() => {
       setPost(data);
       setLoading(false);
-      setSidePost(data?.data?.filter((fd) => fd.comment.length == 0));
-    }, 3000);
+      setSidePost(
+        data?.data?.filter(
+          (fd) => fd.comment.length == 0 || fd.comment.length == 1
+        )
+      );
+    }, 5000);
   }, [data]);
 
   // console.log("profile: ", post);
@@ -35,12 +41,31 @@ const ProfileHome = () => {
   return (
     <Layout>
       {/* <div className="flex w-full justify-between gap-3"> */}
-      {loading && post == null ? (
+      {loading && posts == null ? (
         <ShimmerSocialPost type="both" />
       ) : (
         <div className="grid grid-cols-12 w-full gap-3">
           <div className="w-full col-span-12 md:col-span-8">
-            {post?.data.map((post, index) => (
+            {[...posts]
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort posts by latest first
+              .map((post, index) => (
+                <Posts
+                  key={index}
+                  fullname={post.user_id.display_name}
+                  username={post.user_id.username}
+                  verifiedUser={false} // You need to adjust this based on your data
+                  postTime={getTimeAgoString(post.createdAt)}
+                  content={post.content}
+                  media_urls={post.media_urls}
+                  post_id={post._id}
+                  comment={post.comment}
+                  repost={post.repost}
+                  share={post.share}
+                  reaction={post.reaction}
+                  avatar={post.user_id.photo_url || avatar1} // You need to provide the avatar source
+                />
+              ))}
+            {/* {post?.data.map((post, index) => (
               <Posts
                 key={index}
                 fullname={post.user_id.display_name}
@@ -57,7 +82,7 @@ const ProfileHome = () => {
                 reaction={post.reaction}
                 avatar={post.user_id.photo_url || avatar1} // You need to provide the avatar source
               />
-            ))}
+            ))} */}
 
             {/* <MediaContainer /> */}
           </div>
@@ -78,7 +103,7 @@ const ProfileHome = () => {
                 repost={sidePost[0]?.repost}
                 share={sidePost[0]?.share}
                 reaction={sidePost[0]?.reaction}
-                avatar={avatar1} // You need to provide the avatar source
+                avatar={sidePost[0]?.user_id.photo_url || avatar1} // You need to provide the avatar source
               />
             )}
 
