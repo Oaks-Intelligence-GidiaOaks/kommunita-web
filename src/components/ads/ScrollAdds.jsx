@@ -31,7 +31,7 @@ const ScrollAdds = () => {
   useEffect(() => {
     setTimeout(() => {
       setAdvert(data?.data);
-      console.log(data?.data);
+      // console.log(data?.data);
     }, 5000);
   }, [data]);
 
