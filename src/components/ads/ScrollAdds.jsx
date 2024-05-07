@@ -57,39 +57,31 @@ const ScrollAdds = () => {
   }
 
   return (
-    <div className="max-w-[300px]">
+    <div className="w-full">
       {advert ? (
         <Slider {...settings}>
           {advert
             ?.filter((dt) => !isToday(new Date(dt.end_date)))
             .map((ads, id) => (
-              <div key={id} className="relative lg:max-w-[400px] h-[400px]">
-                <img
-                  className="object-cover w-[300px] h-[400px]"
-                  src={ads.media_urls[0].media_url}
-                  alt=""
-                  width={300}
-                />
-                <div className="absolute bottom-0 p-1 bg-white w-11/12">
-                  <h2 className="font-semibold">{ads.headline}:</h2>
-                  <p className="text-sm">{ads.description}</p>
+              <a href={ads.landing_page_link} key={id} target="_blank">
+                <div className="relative lg:max-w-[400px] h-[400px]">
+                  <img
+                    className="object-cover w-[300px] h-[400px]"
+                    src={ads.media_urls[0].media_url}
+                    alt=""
+                    width={300}
+                  />
+                  <div className="absolute bottom-0 p-1 bg-white w-11/12">
+                    <h2 className="font-semibold">{ads.headline}:</h2>
+                    <p className="text-sm">{ads.description}</p>
+                  </div>
                 </div>
-              </div>
+              </a>
             ))}
         </Slider>
       ) : (
         <ShimmerSocialPost type="image" />
       )}
-      {/* <a href="https://www.google.com" target="_blank">
-          <div className="lg:max-w-[400px]">
-            <img src={ads1} alt="" width={300} />
-          </div>
-        </a>
-        <a href="https://www.google.com" target="_blank">
-          <div className="lg:max-w-[400px]">
-            <img src={ads2} alt="" width={300} />
-          </div>
-        </a> */}
     </div>
   );
 };

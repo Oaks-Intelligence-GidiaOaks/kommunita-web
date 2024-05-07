@@ -7,7 +7,7 @@ import play from "../../assets/images/sidebar/play.svg";
 import live from "../../assets/images/sidebar/live.svg";
 import mail from "../../assets/images/sidebar/mail.svg";
 import diaries from "../../assets/images/sidebar/diaries.svg";
-import profile from "../../assets/images/sidebar/profile.svg";
+import profileIcon from "../../assets/images/sidebar/profile.svg";
 import settings from "../../assets/images/sidebar/settings.svg";
 import logout from "../../assets/images/sidebar/logout.svg";
 import logo from "../../assets/images/sidebar/oaks-logo.svg";
@@ -28,7 +28,7 @@ import { useGetUserProfiileQuery } from "../../service/user.service";
 
 function MenuItems() {
   const { data: profile } = useGetUserProfiileQuery();
-  console.log(profile, "profile");
+  // console.log(profile, "profile");
 
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(null);
@@ -66,7 +66,7 @@ function MenuItems() {
       text: "Start a post",
       to: "/post",
     },
-    { id: 5, icon: live, activeIcon: liveActive, text: "Live", to: "/live" },
+    // { id: 5, icon: live, activeIcon: liveActive, text: "Live", to: "/live" },
     {
       id: 6,
       icon: mail,
@@ -83,7 +83,7 @@ function MenuItems() {
     },
     {
       id: 8,
-      icon: profile,
+      icon: profileIcon,
       activeIcon: profileActive,
       text: "Profile",
       to: "/profile",

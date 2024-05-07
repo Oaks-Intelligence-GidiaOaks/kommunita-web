@@ -39,7 +39,7 @@ const ProfileHero = () => {
             </div>
             <div
               onClick={() => setShowMobileNav(!showMobileNav)}
-              className="absolute top-0 left-5 h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center cursor-pointer lg:hidden"
+              className="absolute top-0 left-5 h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center cursor-pointer lg:!hidden"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

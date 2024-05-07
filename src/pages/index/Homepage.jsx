@@ -12,9 +12,6 @@ function Homepage() {
   return (
     <MainLayout>
       <MainSection />
-      {/* <div className="fixed z-50 bg-gray-300 bg-opacity-50 top-0 left-0 w-screen h-screen">
-       
-      </div> */}
     </MainLayout>
   );
 }

@@ -32,6 +32,7 @@ import Resizer from "react-image-file-resizer";
 import { useGetCategoriesQuery } from "../../service/categories.service";
 import { BeatLoader } from "react-spinners";
 import { useGetFeedsQuery } from "../../service/feeds.service";
+import PollSchedule from "../polls/PollSchedule";
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
@@ -57,6 +58,12 @@ function MakePost() {
 
   const handleAudienceChange = (event) => {
     setAudience(event.target.value);
+  };
+
+  const [openPoll, setOpenPoll] = useState(false);
+
+  const handleClosePoll = () => {
+    setOpenPoll(false);
   };
 
   // Handle image change
@@ -287,7 +294,10 @@ function MakePost() {
                     <img src={draft} alt="" />
                   </button>
 
-                  <button className="shadow-md hover:shadow-lg">
+                  <button
+                    className="shadow-md hover:shadow-lg"
+                    onClick={() => setOpenPoll(true)}
+                  >
                     <img src={polls} alt="" />
                   </button>
                 </div>
@@ -545,6 +555,11 @@ function MakePost() {
           </button>
         </div>
       </Modals>
+      {openPoll && (
+        <div className="fixed z-50 bg-gray-300 bg-opacity-50 top-0 left-0 w-screen h-screen">
+          <PollSchedule onclick={handleClosePoll} />
+        </div>
+      )}
     </>
   );
 }
