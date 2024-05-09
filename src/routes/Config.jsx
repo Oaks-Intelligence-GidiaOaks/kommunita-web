@@ -15,6 +15,7 @@ import {
   Live,
   Post,
   Notifications,
+  PollHistory,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -86,6 +87,10 @@ const Config = () => {
         <Route
           path={routes.POLLS}
           element={<ProtectedRoute component={PollsHome} />}
+        />
+        <Route
+          path={routes.POLLHISTORY}
+          element={<ProtectedRoute component={PollHistory} />}
         />
         <Route
           path={routes.SURVEY}

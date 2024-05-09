@@ -21,4 +21,5 @@ export const LIVE = "/live";
 export const NOTIFICATION = "/notifications";
 export const POST = "/post";
 export const POLLS = "/polls";
+export const POLLHISTORY = "/polls/history";
 export const SURVEY = "/survey";

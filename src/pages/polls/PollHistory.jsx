@@ -7,7 +7,7 @@ import { useGetPollsQuery } from "../../service/polls.service";
 import getTimeAgoString from "../../utils/getTimeAgoString";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 
-const PollsHome = () => {
+const PollHistory = () => {
   const { data: polls } = useGetPollsQuery();
   const { refetch } = useGetFeedsQuery();
   console.log(polls?.data);
@@ -25,7 +25,7 @@ const PollsHome = () => {
         {/* Navigation */}
         <div className="flex text-primary-dark-gray items-center gap-10 lg:text-xl font-semibold border-b-[3px] border-b-primary-dark-gray">
           <Link
-            onClick={() => setLink("")}
+            onClick={() => setLink("polls")}
             className={link == "" ? activeLink : "pb-5"}
             to="/polls"
           >
@@ -43,7 +43,7 @@ const PollsHome = () => {
         {/* Polls content */}
         <div className="mt-5">
           {polls?.data
-            .filter((it) => !it.expired)
+            .filter((it) => it.expired)
             .map((poll, id) => (
               <PollDisplay
                 key={id}
@@ -66,4 +66,4 @@ const PollsHome = () => {
   );
 };
 
-export default PollsHome;
+export default PollHistory;

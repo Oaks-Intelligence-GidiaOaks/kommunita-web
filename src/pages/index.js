@@ -14,4 +14,5 @@ export { default as Live } from "./live/LiveHome";
 export { default as Post } from "./post/PostHome";
 export { default as Notifications } from "./notifications/NotificationsHome";
 export { default as Polls } from "./polls/PollsHome";
+export { default as PollHistory } from "./polls/PollHistory";
 export { default as Survey } from "./survey/SurveyHome";
