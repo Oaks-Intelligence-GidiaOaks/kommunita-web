@@ -6,12 +6,13 @@ import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import PollDisplay from "../polls/PollDisplay";
+import SurveyDisplay from "./../polls/SurveyDisplay";
 
 function Main() {
   const { data } = useGetFeedsQuery();
   const { refetch } = useGetFeedsQuery();
   const posts = data?.data || []; // Ensure data is an array
-  console.log(posts);
+  // console.log(posts);
 
   return (
     <div className="mt-3 px-3 main-wrapper w-full pb-10">
@@ -39,19 +40,23 @@ function Main() {
             />
           ) : (
             <div className="mt-4">
-              <PollDisplay
-                key={index}
-                expired={post.expired}
-                question={post?.question}
-                fullname={post.created_by.display_name}
-                username={post.created_by.username}
-                pollId={post._id}
-                votes={post.votes}
-                result={post.result}
-                onRefresh={refetch}
-                totalVotes={post.totalVotes}
-                postTime={getTimeAgoString(post.createdAt)}
-              />
+              {post.topic ? (
+                <SurveyDisplay data={post} />
+              ) : (
+                <PollDisplay
+                  key={index}
+                  expired={post.expired}
+                  question={post?.question}
+                  fullname={post.created_by.display_name}
+                  username={post.created_by.username}
+                  pollId={post._id}
+                  votes={post.votes}
+                  result={post.result}
+                  onRefresh={refetch}
+                  totalVotes={post.totalVotes}
+                  postTime={getTimeAgoString(post.createdAt)}
+                />
+              )}
             </div>
           )
         )}
