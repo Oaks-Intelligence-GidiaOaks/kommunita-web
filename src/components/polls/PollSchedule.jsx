@@ -57,6 +57,7 @@ const PollSchedule = ({ onclick }) => {
       );
     } finally {
       setSubmitting(false);
+      onclick();
     }
   };
 

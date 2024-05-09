@@ -7,6 +7,7 @@ const ProtectedRoute = ({ component: Component }) => {
   const token = useSelector((state) => state.user.token);
 
   const isAuthenticated = token !== null && token !== undefined;
+  // const isAuthenticated = true;
 
   return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
 };

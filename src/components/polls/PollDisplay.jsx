@@ -1,6 +1,14 @@
 import React from "react";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 import verified from "../../assets/images/main/verified.svg";
+import { LeafPoll } from "react-leaf-polls";
+import "react-leaf-polls/dist/index.css";
+import { useEffect } from "react";
+import { useState } from "react";
+import { showAlert } from "../../static/alert";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { useGetUserProfiileQuery } from "../../service/user.service";
 
 const PollDisplay = ({
   question,
@@ -9,8 +17,143 @@ const PollDisplay = ({
   username,
   verifiedUser,
   postTime,
-  options,
+  pollId,
+  votes,
+  totalVotes,
+  result,
+  onRefresh,
+  expired,
 }) => {
+  const { data: user } = useGetUserProfiileQuery();
+  // console.log(user?.data?._id);
+  const [poll, setPoll] = useState({
+    question,
+    answers: result,
+    pollCount: totalVotes,
+    answersWeight: votes.map((sm) => {
+      return sm.count;
+    }),
+    selectedAnswer: -1,
+  });
+  const [poll_id, setPoll_id] = useState(pollId);
+  const [voted, setVoted] = useState(false);
+  const [votedId, setVotedId] = useState("");
+  // console.log(expired);
+  useEffect(() => {
+    if (votes.length != 0) {
+      votes.map((vt) => {
+        if (vt.user_id == user?.data?._id) {
+          setVoted(true);
+          setVotedId(vt.option_index);
+        }
+      });
+    }
+  }, [user]);
+
+  const token = useSelector((state) => state.user?.token);
+
+  const handleSubmitPoll = async (idx) => {
+    console.log(poll_id, idx);
+    if ((poll_id && idx != undefined) || null) {
+      const data = {
+        poll_id,
+        option_index: idx,
+      };
+      console.log(data);
+      // setSubmitting(true);
+      const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+      try {
+        const response = await axios.post(`${apiUrl}/user/poll/vote`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+        });
+
+        console.log("Post submitted successfully:", response.data);
+      } catch (error) {
+        console.error("Error submitting post:", error);
+        showAlert(
+          "Oops!",
+          error?.response?.data?.message || "An error occurred",
+          "error"
+        );
+      } finally {
+        onRefresh();
+        // setSubmitting(false);
+      }
+    }
+  };
+
+  function markAnswer(i) {
+    const newCount = voted ? poll.pollCount : poll.pollCount + 1;
+    if (voted) {
+      let op_index = 0;
+      const newAns = poll.answers.map((ans) => {
+        if (
+          ans.option_index === votedId &&
+          ans.option_index !== i.option_index
+        ) {
+          const ct = ans.count - 1;
+          const np = {
+            ...ans,
+            count: ct,
+            percentage: (ct * 100) / newCount,
+          };
+          return np;
+          // console.log(np);
+        } else if (
+          ans.option_index === votedId &&
+          ans.option_index === i.option_index
+        ) {
+          return ans;
+        } else if (
+          ans.option_index !== votedId &&
+          ans.option_index === i.option_index
+        ) {
+          op_index = i.option_index;
+          const ct = ans.count + 1;
+          const np = {
+            ...ans,
+            count: ct,
+            percentage: (ct * 100) / newCount,
+          };
+          setVotedId(i.option_index);
+          return np;
+        } else {
+          const ct = ans.count;
+          const np = { ...ans, percentage: (ct * 100) / newCount };
+          return np;
+        }
+      });
+      setPoll({ ...poll, answers: newAns, pollCount: newCount });
+      handleSubmitPoll(op_index);
+      return;
+    }
+
+    // console.log(i);
+    let op_index = 0;
+    const newAns = poll.answers.map((ans) => {
+      if (ans.option === i.option) {
+        op_index = i.option_index;
+        const ct = ans.count + 1;
+        const np = { ...ans, count: ct, percentage: (ct * 100) / newCount };
+        setVoted(true);
+        setVotedId(i.option_index);
+        return np;
+        // console.log(np);
+      } else {
+        const ct = ans.count;
+        const np = { ...ans, percentage: (ct * 100) / newCount };
+        return np;
+      }
+    });
+    // console.log(newAns);
+    setPoll({ ...poll, answers: newAns, pollCount: newCount });
+
+    handleSubmitPoll(op_index);
+  }
   return (
     <>
       <div className="flex items-center justify-center rounded-lg mb-5">
@@ -45,58 +188,43 @@ const PollDisplay = ({
             </div>
           </div>
           <div className="flex justify-between items-center mb-5">
-            <h2 className="font-semibold text-xl">
-              {question || "Enter Question Prop"}
-            </h2>
-            <p className="text-[#2D2B2B]">04:32</p>
+            <h2 className="font-semibold text-xl">{poll.question}</h2>
+            {/* <p className="text-[#2D2B2B]">04:32</p> */}
           </div>
           <section>
-            <div className="flex items-center mb-4 justify-between border-b-2 pb-2 px-3 text-[#a6a6a6]">
-              <div className="flex items-center gap-4 flex-1">
-                <p>1.</p>
-                <input
-                  type="text"
-                  className="bg-transparent border-none flex-1"
-                  placeholder="Option #1"
-                />
+            {poll.answers?.map((option, id) => (
+              <div
+                key={id}
+                onClick={() => !expired && markAnswer(option)}
+                className="flex relative cursor-pointer items-center mb-4 justify-between border-2 rounded-lg text-white bg-slate-400"
+              >
+                <div
+                  style={{
+                    width:
+                      option.percentage === 0 ? "0" : option.percentage + "%",
+                    backgroundColor: option.percentage === 0 && "#94a3b8d9",
+                  }}
+                  className={`flex ${
+                    expired ? "bg-gray-600" : "bg-primary-dark-green"
+                  } justify-between h-[50px] items-center gap-4 p-1 rounded-lg px-2`}
+                >
+                  <p>{option.option_index + 1}.</p>
+                  <p className="bg- border-none !w-[150px] flex-1 ">
+                    {option.option}
+                  </p>
+                  <span style={{}} className="text-black">
+                    {Math.round(option.percentage) + "%"}
+                  </span>
+                </div>
+                <span className="absolute right-0 bottom-0 percentage-value mr-2">
+                  {option.count} votes
+                </span>
               </div>
-              <div className="flex items-center gap-2">
-                <p className="text-xs">3124 votes</p>
-                <p className="text-[#2D2B2B]">20%</p>
-              </div>
-            </div>
-            <div className="flex items-center mb-4 justify-between border-b-2 pb-2 px-3 text-[#a6a6a6]">
-              <div className="flex items-center gap-4 flex-1">
-                <p>2.</p>
-                <input
-                  type="text"
-                  className="bg-transparent border-none flex-1"
-                  placeholder="Option #2"
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <p className="text-xs">3124 votes</p>
-                <p className="text-[#2D2B2B]">20%</p>
-              </div>
-            </div>
-            <div className="flex items-center mb-4 justify-between border-b-2 pb-2 px-3 text-[#a6a6a6]">
-              <div className="flex items-center gap-4 flex-1">
-                <p>3.</p>
-                <input
-                  type="text"
-                  className="bg-transparent border-none flex-1"
-                  placeholder="Option #3"
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <p className="text-xs">3124 votes</p>
-                <p className="text-[#2D2B2B]">20%</p>
-              </div>
-            </div>
+            ))}
 
             <div className="flex justify-end">
               <button className="flex text-[#2D2B2B] self-end mb-4 items-center gap-2">
-                3042 Votes
+                {poll.pollCount} Votes
               </button>
             </div>
           </section>
