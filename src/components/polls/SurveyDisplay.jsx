@@ -1,18 +1,13 @@
 import React from "react";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 import verified from "../../assets/images/main/verified.svg";
+import { useGetUserProfiileQuery } from "../../service/user.service";
+import getTimeAgoString from "../../utils/getTimeAgoString";
 
-const SurveyDisplay = ({
-  question,
-  avatar,
-  fullname,
-  username,
-  verifiedUser,
-  postTime,
-  options,
-  data,
-}) => {
-  console.log(data);
+const SurveyDisplay = ({ data }) => {
+  // console.log(data);
+  const { data: user } = useGetUserProfiileQuery();
+  console.log(user.data);
   return (
     <>
       <div className="flex items-center justify-center rounded-lg mb-5">
@@ -20,27 +15,21 @@ const SurveyDisplay = ({
           <div className="flex items-center justify-between mb-11">
             <div className="flex gap-3 items-center">
               <div className="rounded-full border-red-100 border">
-                <img
-                  src={avatar || avatar4}
-                  className="w-[40px] h-[40px]"
-                  alt=""
-                />
+                <img src={avatar4} className="w-[40px] h-[40px]" alt="" />
               </div>
               <div>
                 <div className="flex gap-2">
-                  <p className="post-name pb-1">
-                    {fullname || "Peterson Lake"}
-                  </p>{" "}
-                  {verifiedUser && (
+                  <p className="post-name pb-1">{user?.data?.display_name}</p>{" "}
+                  {user?.data?.isEmailVerified && (
                     <span>
                       <img src={verified} alt="" className="pb-1" />
                     </span>
                   )}
                 </div>
                 <p className="username">
-                  @{username || "malenxe"}{" "}
+                  @{user?.data?.username}{" "}
                   <span className="post-time ml-2 font-bold">
-                    {postTime || "5h"}
+                    {getTimeAgoString(data.createdAt)}
                   </span>
                 </p>
               </div>
