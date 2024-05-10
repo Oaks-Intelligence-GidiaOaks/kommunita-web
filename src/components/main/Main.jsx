@@ -59,7 +59,7 @@ function Main() {
           ) : (
             <div className="mt-4">
               {post.topic ? (
-                <SurveyDisplay data={post} />
+                <SurveyDisplay key={index} data={post} />
               ) : (
                 <PollDisplay
                   key={index}
