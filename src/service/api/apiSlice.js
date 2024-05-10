@@ -16,6 +16,7 @@ const apiSlice = createApi({
     "Story",
     "Polls",
     "WhoToFollow",
+    "Survey",
   ],
 
   endpoints: (builder) => ({}),

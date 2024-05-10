@@ -57,7 +57,7 @@ function Main() {
               avatar={post.user_id.photo_url || avatar1} // You need to provide the avatar source
             />
           ) : (
-            <div className="mt-4">
+            <div className="mt-4" key={index}>
               {post.topic ? (
                 <SurveyDisplay key={index} data={post} />
               ) : (
