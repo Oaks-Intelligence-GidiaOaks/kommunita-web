@@ -6,10 +6,16 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { ShimmerSocialPost } from "react-shimmer-effects";
 import { Link } from "react-router-dom";
+import { useGetUserProfiileQuery } from "../../service/user.service";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 function Likes() {
   const { data } = useGetWhoToFollowQuery();
+  const { data: user, refetch } = useGetUserProfiileQuery();
   const [likes, setLikes] = useState(null);
+
+  const token = useSelector((state) => state.user?.token);
 
   useEffect(() => {
     if (data && data.data.length > 5) {
@@ -18,6 +24,53 @@ function Likes() {
       setLikes(data.data);
     }
   }, [data]);
+
+  const handleFollow = async (followers, id) => {
+    // console.log(id);
+    let data = {};
+    let route = "follow";
+
+    const fl = followers.filter((f) => f == user?.data._id);
+    if (fl.length == 1) {
+      data = {
+        user_to_unfollow_id: id,
+      };
+      route = "unfollow";
+    }
+
+    if (fl.length == 0) {
+      data = {
+        user_to_follow_id: id,
+      };
+    }
+
+    if (data) {
+      // console.log(data);
+      // setSubmitting(true);
+      const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+      try {
+        const response = await axios.post(`${apiUrl}/user/${route}`, data, {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+        });
+
+        console.log("Post submitted successfully:", response.data);
+      } catch (error) {
+        console.error("Error submitting post:", error);
+        showAlert(
+          "Oops!",
+          error?.response?.data?.message || "An error occurred",
+          "error"
+        );
+      } finally {
+        refetch();
+        // setSubmitting(false);
+      }
+    }
+  };
 
   return (
     <div className="main-sidebar-section mt-8 pb-5 w-full">
@@ -40,10 +93,20 @@ function Likes() {
                   </div>
                 </div>
 
-                <button>
-                  <img src={actions} alt="" />
-                  {/* <img src={actionPlus} alt="" /> */}
-                </button>
+                {!like.followers.filter((fl) => fl == user?.data._id).length ==
+                1 ? (
+                  <button
+                    onClick={() => handleFollow(like.followers, like._id)}
+                  >
+                    <img src={actions} alt="" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleFollow(like.followers, like._id)}
+                  >
+                    <img src={actionPlus} alt="" />
+                  </button>
+                )}
               </div>
             ))}
           </div>

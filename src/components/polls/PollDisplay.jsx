@@ -206,13 +206,16 @@ const PollDisplay = ({
                   }}
                   className={`flex ${
                     expired ? "bg-gray-600" : "bg-primary-dark-green"
-                  } justify-between h-[50px] items-center gap-4 p-1 rounded-lg px-2`}
+                  } justify-between h-[50px] relative items-center gap-4 p-1 rounded-lg px-2`}
                 >
                   <p>{option.option_index + 1}.</p>
-                  <p className="bg- border-none !w-[150px] flex-1 ">
+                  <div
+                    style={{ width: "200px" }}
+                    className="bg-border-none absolute left-10 flex-1 "
+                  >
                     {option.option}
-                  </p>
-                  <span style={{}} className="text-black">
+                  </div>
+                  <span style={{}} className="text-black ml-20">
                     {Math.round(option.percentage) + "%"}
                   </span>
                 </div>
