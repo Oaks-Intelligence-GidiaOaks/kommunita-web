@@ -2,16 +2,35 @@ import "../main/style.css";
 import Story from "./Story";
 import MakePost from "./MakePost";
 import Posts from "./Posts";
+import search from "../../assets/images/Home/Search.png";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import PollDisplay from "../polls/PollDisplay";
+import SurveyDisplay from "./../polls/SurveyDisplay";
+import { Link } from "react-router-dom";
 
 function Main() {
   const { data } = useGetFeedsQuery();
+  // const data = null;
   const { refetch } = useGetFeedsQuery();
   const posts = data?.data || []; // Ensure data is an array
-  console.log(posts);
+  // console.log(posts);
+
+  if (!data) {
+    return (
+      <div className="flex items-center flex-col mt-10">
+        <img src={search} alt="" srcset="" />
+        <h2 className="font-bold text-4xl  mt-5 mb-5">NO POST</h2>
+        <p>Follow other users to begin to see post</p>
+        <Link to={"/follow"}>
+          <p className="text-primary-bright-green mt-2 font-semibold">
+            Click here to follow suggested users
+          </p>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-3 px-3 main-wrapper w-full pb-10">
@@ -39,19 +58,23 @@ function Main() {
             />
           ) : (
             <div className="mt-4">
-              <PollDisplay
-                key={index}
-                expired={post.expired}
-                question={post?.question}
-                fullname={post.created_by.display_name}
-                username={post.created_by.username}
-                pollId={post._id}
-                votes={post.votes}
-                result={post.result}
-                onRefresh={refetch}
-                totalVotes={post.totalVotes}
-                postTime={getTimeAgoString(post.createdAt)}
-              />
+              {post.topic ? (
+                <SurveyDisplay data={post} />
+              ) : (
+                <PollDisplay
+                  key={index}
+                  expired={post.expired}
+                  question={post?.question}
+                  fullname={post.created_by.display_name}
+                  username={post.created_by.username}
+                  pollId={post._id}
+                  votes={post.votes}
+                  result={post.result}
+                  onRefresh={refetch}
+                  totalVotes={post.totalVotes}
+                  postTime={getTimeAgoString(post.createdAt)}
+                />
+              )}
             </div>
           )
         )}

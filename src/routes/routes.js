@@ -10,6 +10,7 @@ export const MEDIA = "/profile/media";
 
 //FAVORITE PAGE RPUTES
 export const FAVORITE = "/favorites";
+export const FOLLOW = "/follow";
 
 //EXPLORE PAGE RPUTES
 export const EXPLORE = "/explore";

@@ -114,14 +114,15 @@ function MenuItems() {
             className="flex items-center justify-between py-3 menu-items"
             onMouseEnter={() => setActiveLink(id)}
             onMouseLeave={() => {
-                const activeMenu = links.find(
-                  (item) => item.url === location.pathname
-                );
-                if (activeMenu) {
-                  setActiveLink(activeMenu.id);
-                } else {
-                  setActiveLink(null);
-                }
+              const activeMenu = links.find(
+                (item) => item.url === location.pathname
+              );
+              if (activeMenu) {
+                setActiveLink(activeMenu.id);
+              } else {
+                setActiveLink(null);
+              }
+            }}
           >
             <div className="flex items-center">
               <img

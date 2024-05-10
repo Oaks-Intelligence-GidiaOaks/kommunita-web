@@ -16,10 +16,10 @@ function Story() {
     <div className="stories-container overflow-x-auto whitespace-nowrap w-full flex">
       <div className="stories flex justify-start gap-2 items-center">
         <div className="go-live flex flex-col justify-center items-center">
-          <p className="go-live-text pb-1">Go live</p>
+          {/* <p className="go-live-text pb-1">Go live</p>
           <button className="w-[26.753px] h-[26.753px]">
             <img src={liveBtn} alt="liveBtn" />
-          </button>
+          </button> */}
         </div>
 
         {isLoading ? (
