@@ -5,14 +5,27 @@ import postImage from "../../assets/images/main/post-image.svg";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import avatar2 from "../../assets/images/sidebar/avatar2.svg";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
+import search from "../../assets/images/Home/Search.png";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import PollDisplay from "../polls/PollDisplay";
+import { useGetFavoritesQuery } from "../../service/favorite.service";
+import SurveyDisplay from "./../polls/SurveyDisplay";
 
 function Main() {
-  const { data, refetch } = useGetFeedsQuery();
+  const { data, refetch } = useGetFavoritesQuery();
+  // const { data, refetch } = useGetFeedsQuery();
   const post = data;
   // console.log(data?.data);
+
+  if (!data) {
+    return (
+      <div className="flex items-center flex-col mt-10">
+        <img src={search} alt="" srcset="" />
+        <h2 className="font-semibold text-3xl mt-5 ml-5">No favorites feeds</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-3 px-3 w-full">
@@ -36,19 +49,23 @@ function Main() {
           />
         ) : (
           <div className="mt-4">
-            <PollDisplay
-              key={index}
-              expired={post.expired}
-              question={post?.question}
-              fullname={post.created_by.display_name}
-              username={post.created_by.username}
-              pollId={post._id}
-              votes={post.votes}
-              result={post.result}
-              onRefresh={refetch}
-              totalVotes={post.totalVotes}
-              postTime={getTimeAgoString(post.createdAt)}
-            />
+            {post.topic ? (
+              <SurveyDisplay data={post} />
+            ) : (
+              <PollDisplay
+                key={index}
+                expired={post.expired}
+                question={post?.question}
+                fullname={post.created_by.display_name}
+                username={post.created_by.username}
+                pollId={post._id}
+                votes={post.votes}
+                result={post.result}
+                onRefresh={refetch}
+                totalVotes={post.totalVotes}
+                postTime={getTimeAgoString(post.createdAt)}
+              />
+            )}
           </div>
         )
       )}

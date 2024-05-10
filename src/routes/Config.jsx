@@ -16,6 +16,7 @@ import {
   Post,
   Notifications,
   PollHistory,
+  FollowHome,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -63,6 +64,10 @@ const Config = () => {
         <Route
           path={routes.FAVORITE}
           element={<ProtectedRoute component={FavoriteHome} />}
+        />
+        <Route
+          path={routes.FOLLOW}
+          element={<ProtectedRoute component={FollowHome} />}
         />
         <Route
           path={routes.EXPLORE}

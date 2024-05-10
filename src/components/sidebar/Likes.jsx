@@ -5,6 +5,7 @@ import { useGetWhoToFollowQuery } from "../../service/whotofollow.service";
 import { useState } from "react";
 import { useEffect } from "react";
 import { ShimmerSocialPost } from "react-shimmer-effects";
+import { Link } from "react-router-dom";
 
 function Likes() {
   const { data } = useGetWhoToFollowQuery();
@@ -16,7 +17,7 @@ function Likes() {
     } else if (data && data.data.length > 0) {
       setLikes(data.data);
     }
-  }, []);
+  }, [data]);
 
   return (
     <div className="main-sidebar-section mt-8 pb-5 w-full">
@@ -51,10 +52,11 @@ function Likes() {
             <ShimmerSocialPost type="text" />
           </div>
         )}
-
-        <div className="flex justify-center">
-          <button className="view-likes">View more</button>
-        </div>
+        <Link to={"/follow"}>
+          <div className="flex justify-center">
+            <button className="view-likes">View more</button>
+          </div>
+        </Link>
       </div>
     </div>
   );

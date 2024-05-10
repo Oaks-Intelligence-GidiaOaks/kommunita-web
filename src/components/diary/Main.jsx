@@ -7,11 +7,21 @@ import avatar2 from "../../assets/images/sidebar/avatar2.svg";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 import { useGetDiaryQuery } from "../../service/diary.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
+import search from "../../assets/images/Home/Search.png";
 
 function DiaryMain() {
   const { data } = useGetDiaryQuery();
   const post = data;
   // console.log(data?.data);
+
+  if (!data) {
+    return (
+      <div className="flex items-center flex-col mt-10">
+        <img src={search} alt="" srcset="" />
+        <h2 className="font-semibold text-3xl mt-5 ml-5">No Diaries feeds</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-3 px-3 main-wrapper w-full pb-10">
