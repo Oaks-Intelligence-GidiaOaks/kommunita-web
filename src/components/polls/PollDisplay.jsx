@@ -209,15 +209,15 @@ const PollDisplay = ({
                   } justify-between h-[50px] relative items-center gap-4 p-1 rounded-lg px-2 overflow-visible `}
                 >
                   <p className="mr-3">{option.option_index + 1}.</p>
-                  <div className="absolute left-10 bg-border-none w-[200px] flex-1 ">
+                  <div className="absolute left-7 lg:left-10 bg-border-none w-[300px] flex-1 ">
                     {option.option}
                   </div>
                 </div>
-                <div>
+                <div className="z-50 absolute right-0">
                   <span style={{}} className="text-gray-400 text-sm">
                     {Math.round(option.percentage) + "%"}
                   </span>
-                  <span className="lg:ml-10 ml-5 percentage-value text-sm mr-2">
+                  <span className="lg:ml-6 ml-2 percentage-value text-sm mr-2">
                     {option.count} votes
                   </span>
                 </div>

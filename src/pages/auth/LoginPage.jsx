@@ -105,7 +105,7 @@ const LoginPage = () => {
                 <form onSubmit={handleSubmit}>
                   <InputField
                     id="identifier"
-                    type="email"
+                    type="text"
                     name="identifier"
                     label="Email or Username"
                     component="input"

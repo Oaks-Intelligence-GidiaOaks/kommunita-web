@@ -6,7 +6,11 @@ import { BeatLoader } from "react-spinners";
 import { showAlert } from "../../static/alert";
 import DateTimePicker from "react-datetime-picker";
 import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
+import rtkMutation from "../../utils/rtkMutation";
+import { useCreatePollMutation } from "../../service/polls.service";
+
 const PollSchedule = ({ onclick }) => {
+  const [createPoll, { error, isSuccess }] = useCreatePollMutation();
   // let count = 1;
   // let ops = ["Option"];
   const [options, setOptions] = useState([]);
@@ -19,47 +23,66 @@ const PollSchedule = ({ onclick }) => {
 
   const [openAddOption, setOpenAddOption] = useState(false);
 
-  const token = useSelector((state) => state.user?.token);
+  // const token = useSelector((state) => state.user?.token);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
+    const postData = {
       question: pollQuestion,
       options,
       audience,
       duration,
     };
-    console.log(data);
+    // console.log(data);
     setSubmitting(true);
-    const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+    // const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
+    // try {
+    //   const response = await axios.post(`${apiUrl}/user/poll`, data, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       ...(token && { Authorization: `Bearer ${token}` }),
+    //     },
+    //   });
+
+    //   console.log("Post submitted successfully:", response.data);
+
+    //   setOptions([]);
+    //   setAudience("");
+    //   setDuration("");
+    //   setPollQuestion("");
+    // } catch (error) {
+    //   console.error("Error submitting post:", error);
+    //   showAlert(
+    //     "Oops!",
+    //     error?.response?.data?.message || "An error occurred",
+    //     "error"
+    //   );
     try {
-      const response = await axios.post(`${apiUrl}/user/poll`, data, {
-        headers: {
-          "Content-Type": "application/json",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-      });
-
-      console.log("Post submitted successfully:", response.data);
-
+      await rtkMutation(createPoll, postData);
       setOptions([]);
       setAudience("");
       setDuration("");
       setPollQuestion("");
+      // setIsLoved((prevIsLoved) => !prevIsLoved);
     } catch (error) {
-      console.error("Error submitting post:", error);
-      showAlert(
-        "Oops!",
-        error?.response?.data?.message || "An error occurred",
-        "error"
-      );
+      console.error("Error liking post:", error);
+      showAlert("Oops", "An error occurred while liking the post", "error");
     } finally {
       setSubmitting(false);
       onclick();
     }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("success");
+    } else if (error) {
+      // showAlert("Oops", error.data.message || "An error occurred", "error");
+      showAlert("Oops", "An error occurred", "error");
+    }
+  }, [isSuccess, error]);
 
   const handleCloseAddOption = () => {
     setOpenAddOption(false);
@@ -79,10 +102,6 @@ const PollSchedule = ({ onclick }) => {
   const handleSubmit1 = (e) => {
     e.preventDefault();
   };
-
-  // useEffect(() => {
-  //   setOptions[ops];
-  // }, [ops, render]);
 
   return (
     <div className="w-screen h-screen flex items-center justify-center rounded-lg">
