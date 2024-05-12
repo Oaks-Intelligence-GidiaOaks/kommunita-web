@@ -7,7 +7,7 @@ import getTimeAgoString from "../../utils/getTimeAgoString";
 const SurveyDisplay = ({ data }) => {
   // console.log(data);
   const { data: user } = useGetUserProfiileQuery();
-  console.log(user.data);
+  // console.log(user.data);
   return (
     <>
       <div className="flex items-center justify-center rounded-lg mb-5">
