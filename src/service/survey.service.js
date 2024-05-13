@@ -1,4 +1,4 @@
-import { SUBMIT_SURVEY_RESPONSE } from "./constants";
+import { SUBMIT_SURVEY_RESPONSE, SURVEY_FEEDS } from "./constants";
 import apiSlice from "./api/apiSlice";
 
 export const organizationApiSlice = apiSlice.injectEndpoints({
@@ -12,7 +12,14 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Survey"],
     }),
+    getSurveyFeeds: builder.query({
+      query: () => ({
+        url: SURVEY_FEEDS,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useSubmitSurveyMutation } = organizationApiSlice;
+export const { useSubmitSurveyMutation, useGetSurveyFeedsQuery } =
+  organizationApiSlice;

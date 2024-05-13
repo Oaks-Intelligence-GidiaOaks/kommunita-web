@@ -15,12 +15,12 @@ function Main() {
   // const data = null;
   const { refetch } = useGetFeedsQuery();
   const posts = data?.data || []; // Ensure data is an array
-  // console.log(posts);
+  console.log(posts);
 
   if (!data) {
     return (
       <div className="flex items-center flex-col mt-10">
-        <img src={search} alt="" srcset="" />
+        <img src={search} alt="" />
         <h2 className="font-bold text-4xl  mt-5 mb-5">NO POST</h2>
         <p>Follow other users to begin to see post</p>
         <Link to={"/follow"}>
@@ -58,9 +58,8 @@ function Main() {
             />
           ) : (
             <div className="mt-4" key={index}>
-              {post.topic ? (
-                <SurveyDisplay key={index} data={post} />
-              ) : (
+              {post.options ? (
+                // <SurveyDisplay key={index} data={post} />
                 <PollDisplay
                   key={index}
                   expired={post.expired}
@@ -74,6 +73,8 @@ function Main() {
                   totalVotes={post.totalVotes}
                   postTime={getTimeAgoString(post.createdAt)}
                 />
+              ) : (
+                ""
               )}
             </div>
           )

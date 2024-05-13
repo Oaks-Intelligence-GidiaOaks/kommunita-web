@@ -1,5 +1,5 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import home from "../../assets/images/sidebar/home.svg";
 import notifications from "../../assets/images/sidebar/notifications.svg";
 import favorite from "../../assets/images/sidebar/favorite.svg";
@@ -11,6 +11,7 @@ import profileIcon from "../../assets/images/sidebar/profile.svg";
 import settings from "../../assets/images/sidebar/settings.svg";
 import logout from "../../assets/images/sidebar/logout.svg";
 import logo from "../../assets/images/sidebar/oaks-logo.svg";
+import small_logo from "../../assets/images/sidebar/small-logo.svg";
 
 // active icons
 import homeActive from "../../assets/images/sidebar/homeActive.svg";
@@ -33,6 +34,63 @@ function MenuItems() {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(null);
 
+  const links = useMemo(
+    () => [
+      { id: 1, icon: home, activeIcon: homeActive, text: "Home", to: "/" },
+      {
+        id: 2,
+        icon: notifications,
+        activeIcon: notificationsActive,
+        text: "Notifications",
+        to: "/notifications",
+      },
+      {
+        id: 3,
+        icon: favorite,
+        activeIcon: favoriteActive,
+        text: "Favourites",
+        to: "/favorites",
+      },
+      {
+        id: 4,
+        icon: play,
+        activeIcon: playActive,
+        text: "Start a post",
+        to: "/post",
+      },
+      // { id: 5, icon: live, activeIcon: liveActive, text: "Live", to: "/live" },
+      {
+        id: 6,
+        icon: mail,
+        activeIcon: mailActive,
+        text: "Direct Messages",
+        to: "/messages",
+      },
+      {
+        id: 7,
+        icon: diaries,
+        activeIcon: diariesActive,
+        text: "My Diary",
+        to: "/diary",
+      },
+      {
+        id: 8,
+        icon: profileIcon,
+        activeIcon: profileActive,
+        text: "Profile",
+        to: "/profile",
+      },
+      {
+        id: 9,
+        icon: settings,
+        activeIcon: settingsActive,
+        text: "Settings",
+        to: "/settings",
+      },
+    ],
+    []
+  );
+
   useEffect(() => {
     // Set active link based on the current URL
     const activeLinkIndex = links.findIndex(
@@ -41,61 +99,7 @@ function MenuItems() {
     if (activeLinkIndex !== -1) {
       setActiveLink(links[activeLinkIndex].id);
     }
-  }, [location]);
-
-  const links = [
-    { id: 1, icon: home, activeIcon: homeActive, text: "Home", to: "/" },
-    {
-      id: 2,
-      icon: notifications,
-      activeIcon: notificationsActive,
-      text: "Notifications",
-      to: "/notifications",
-    },
-    {
-      id: 3,
-      icon: favorite,
-      activeIcon: favoriteActive,
-      text: "Favourites",
-      to: "/favorites",
-    },
-    {
-      id: 4,
-      icon: play,
-      activeIcon: playActive,
-      text: "Start a post",
-      to: "/post",
-    },
-    // { id: 5, icon: live, activeIcon: liveActive, text: "Live", to: "/live" },
-    {
-      id: 6,
-      icon: mail,
-      activeIcon: mailActive,
-      text: "Direct Messages",
-      to: "/messages",
-    },
-    {
-      id: 7,
-      icon: diaries,
-      activeIcon: diariesActive,
-      text: "My Diary",
-      to: "/diary",
-    },
-    {
-      id: 8,
-      icon: profileIcon,
-      activeIcon: profileActive,
-      text: "Profile",
-      to: "/profile",
-    },
-    {
-      id: 9,
-      icon: settings,
-      activeIcon: settingsActive,
-      text: "Settings",
-      to: "/settings",
-    },
-  ];
+  }, [location, links]);
 
   const dispatch = useDispatch();
 
@@ -145,10 +149,18 @@ function MenuItems() {
           href={profile?.data?.current_organization?.website_url}
           target="_blank"
         >
-          <p className="flex gap-2 items-center oaks-text pt-5 text-sm">
-            <img src={profile?.data?.current_organization?.logo_url} alt="" />{" "}
-            Back to {profile?.data?.current_organization?.organization_name}
-          </p>
+          {profile?.data?.current_organization?.organization_name && (
+            <p className="flex gap-2 items-center oaks-text pt-5 text-sm">
+              <img
+                src={
+                  profile?.data?.current_organization?.logo_url || small_logo
+                }
+                className="w-[24.96px] h-[28.87px]"
+                alt=""
+              />{" "}
+              Back to {profile?.data?.current_organization?.organization_name}
+            </p>
+          )}
         </a>
       </div>
     </div>

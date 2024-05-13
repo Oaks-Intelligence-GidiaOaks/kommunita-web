@@ -15,3 +15,4 @@ export const ADVERT = "user/advert";
 export const STORIES = "user/stories";
 export const POLLS = "user/poll";
 export const SUBMIT_SURVEY_RESPONSE = "user/survey/response";
+export const SURVEY_FEEDS = "user/feeds/survey";

@@ -1,17 +1,22 @@
 import "./style.css";
-import ads1 from "../../assets/images/ads/ad1.svg";
 import Category from "./Category";
+import Survey from "./Survey";
 import ScrollAdds from "./ScrollAdds";
+import { useGetSurveyFeedsQuery } from "../../service/survey.service.js";
 
 function Ads() {
+  const { data } = useGetSurveyFeedsQuery();
+  const surveyFeeds = data?.data;
+
   return (
     <div className="ads-container">
-      <div className="ads mt-3">
-        {/* <img src={ads1} alt="" /> */}
-        <ScrollAdds />
+      <div className="mt-3">
+        <div className="ads">
+          <ScrollAdds />
+        </div>
+        <Survey feeds={surveyFeeds} />
+        <Category />
       </div>
-
-      <Category />
     </div>
   );
 }
@@ -22,7 +27,6 @@ export function AdsOnly() {
       <div className="ads mt-3">
         <ScrollAdds />
       </div>
-
     </div>
   );
 }
