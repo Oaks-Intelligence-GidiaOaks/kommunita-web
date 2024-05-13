@@ -59,7 +59,7 @@ const PollDisplay = ({
         poll_id,
         option_index: idx,
       };
-      console.log(data);
+      // console.log(data);
       // setSubmitting(true);
       const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -196,37 +196,36 @@ const PollDisplay = ({
               <div
                 key={id}
                 onClick={() => !expired && markAnswer(option)}
-                className="flex relative cursor-pointer items-center mb-4 justify-between border-2 rounded-lg text-white bg-slate-400"
+                className="flex relative cursor-pointer items-center mb-4 justify-between rounded-lg text-gray-400 border-b-2"
               >
                 <div
                   style={{
                     width:
                       option.percentage === 0 ? "0" : option.percentage + "%",
-                    backgroundColor: option.percentage === 0 && "#94a3b8d9",
+                    backgroundColor: option.percentage === 0 && "#fff",
                   }}
                   className={`flex ${
-                    expired ? "bg-gray-600" : "bg-primary-dark-green"
-                  } justify-between h-[50px] relative items-center gap-4 p-1 rounded-lg px-2`}
+                    expired ? "bg-gray-600" : "bg-[#2CC84A4D] bg-opacity-30"
+                  } justify-between h-[50px] relative items-center gap-4 p-1 rounded-lg px-2 overflow-visible `}
                 >
-                  <p>{option.option_index + 1}.</p>
-                  <div
-                    style={{ width: "200px" }}
-                    className="bg-border-none absolute left-10 flex-1 "
-                  >
+                  <p className="mr-3">{option.option_index + 1}.</p>
+                  <div className="absolute left-7 lg:left-10 bg-border-none w-[300px] flex-1 ">
                     {option.option}
                   </div>
-                  <span style={{}} className="text-black ml-20">
+                </div>
+                <div className="z-50 absolute right-0">
+                  <span style={{}} className="text-gray-400 text-sm">
                     {Math.round(option.percentage) + "%"}
                   </span>
+                  <span className="lg:ml-6 ml-2 percentage-value text-sm mr-2">
+                    {option.count} votes
+                  </span>
                 </div>
-                <span className="absolute right-0 bottom-0 percentage-value mr-2">
-                  {option.count} votes
-                </span>
               </div>
             ))}
 
             <div className="flex justify-end">
-              <button className="flex text-[#2D2B2B] self-end mb-4 items-center gap-2">
+              <button className="flex text-gray-400 self-end mb-4 items-center gap-2">
                 {poll.pollCount} Votes
               </button>
             </div>

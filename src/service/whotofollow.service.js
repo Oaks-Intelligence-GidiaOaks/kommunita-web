@@ -11,7 +11,31 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["WhoToFollow"],
     }),
+    followUser: builder.mutation({
+      query: (postData) => ({
+        url: "/user/follow",
+        method: "POST",
+        body: postData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    unfollowUser: builder.mutation({
+      query: (postData) => ({
+        url: "/user/unfollow",
+        method: "POST",
+        body: postData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetWhoToFollowQuery } = organizationApiSlice;
+export const {
+  useGetWhoToFollowQuery,
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+} = organizationApiSlice;

@@ -11,7 +11,17 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Polls"],
     }),
+    createPoll: builder.mutation({
+      query: (postData) => ({
+        url: "/user/poll",
+        method: "POST",
+        body: postData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
   }),
 });
 
-export const { useGetPollsQuery } = organizationApiSlice;
+export const { useGetPollsQuery, useCreatePollMutation } = organizationApiSlice;
