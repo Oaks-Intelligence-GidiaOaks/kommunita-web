@@ -7,6 +7,7 @@ import SurveyDisplay from "../polls/SurveyDisplay";
 const Survey = ({ feeds }) => {
   const [openModal, setOpenModal] = useState(false);
   const [surveyData, setSurveyData] = useState({});
+
   const closeModal = () => {
     setOpenModal(false);
   };
@@ -14,12 +15,11 @@ const Survey = ({ feeds }) => {
   const openSurvey = (row) => {
     setOpenModal(true);
     setSurveyData(row);
-    console.log(row);
   };
 
   return (
     <>
-      {feeds && feeds.length > 0 && (
+      {feeds?.length > 0 && (
         <div className="category-section mt-4 mb-5">
           <div className="p-4">
             <div className="flex justify-start">

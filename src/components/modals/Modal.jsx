@@ -9,7 +9,7 @@ function Modals({ openModal, modalSize, onClose, btnText, children }) {
       show={openModal}
       size={modalSize}
       onClose={onClose}
-      backdropStyle={{ zIndex: 20 }}
+      // backdropStyle={{ zIndex: 20 }}
       style={{
         borderRadius: "5.489px",
         background: "#FFF",
