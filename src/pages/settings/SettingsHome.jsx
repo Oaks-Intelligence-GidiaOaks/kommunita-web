@@ -26,7 +26,8 @@ const SettingsHome = () => {
   const [techtitle, setTechtitle] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [location, setLocation] = useState("");
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
   const [bio, setBio] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState("");
@@ -37,6 +38,8 @@ const SettingsHome = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isFieldsFilled, setIsFieldsFilled] = useState(false);
+  const [code, setCode] = useState("");
+  const [codeRequested, setCodeRequested] = useState(false);
   // const [selectedImages, setSelectedImages] = useState([]);
 
   const { refetch } = useGetFeedsQuery();
@@ -44,8 +47,10 @@ const SettingsHome = () => {
 
   useEffect(() => {
     // Check if all fields are filled
-    setIsFieldsFilled(!!currentPassword && !!newPassword && !!confirmPassword);
-  }, [currentPassword, newPassword, confirmPassword]);
+    setIsFieldsFilled(
+      !!currentPassword && !!newPassword && !!confirmPassword && !!code
+    );
+  }, [currentPassword, newPassword, confirmPassword, code]);
 
   // State variable for checking if all fields are filled
   const [isAllFieldsFilled, setIsAllFieldsFilled] = useState(false);
@@ -57,26 +62,29 @@ const SettingsHome = () => {
       !!username &&
         !!email &&
         !!phoneNumber &&
-        !!location &&
+        !!country &&
+        !!state &&
         !!bio &&
         !!fullname &&
         !!techtitle
     );
-  }, [username, email, phoneNumber, location, bio, techtitle, fullname]);
+  }, [username, email, phoneNumber, country, state, bio, techtitle, fullname]);
 
   // Set values once profile data is available
   useEffect(() => {
     if (profile) {
       setUsername(profile.data.username || "");
+      setState(profile.data.location.state || "");
+      setCountry(profile.data.location.country || "");
       setEmail(profile.data.email || "");
       setPhoneNumber(profile.data.phone_number || "");
       setFullname(profile.data.fullname || "");
       setTechtitle(profile.data.tech_title || "");
-      setLocation(
-        profile.data.location && Object.keys(profile.data.location).length !== 0
-          ? JSON.stringify(profile.data.location)
-          : ""
-      );
+      // setLocation(
+      //   profile.data.location && Object.keys(profile.data.location).length !== 0
+      //     ? JSON.stringify(profile.data.location)
+      //     : ""
+      // );
       setBio(profile.data.about || "");
     }
   }, [profile]);
@@ -101,6 +109,8 @@ const SettingsHome = () => {
     e.preventDefault();
     setSubmitting(true);
 
+    const location = { country, state };
+
     const formData = new FormData();
     formData.append("photo", imageFile);
     formData.append("about", bio);
@@ -109,7 +119,9 @@ const SettingsHome = () => {
     formData.append("username", username);
     formData.append("email", email);
     formData.append("fullname", fullname);
-    formData.append("location", location);
+    formData.append("location", JSON.stringify(location));
+
+    // console.log(formData);
 
     const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -124,11 +136,6 @@ const SettingsHome = () => {
       console.log("Profile updated successfully:", response.data);
 
       showAlert("Great!", "Profile updated successfully", "success");
-      // setBio("")
-      // setPhoneNumber("")
-      // setEmail("");
-      // setFullname("")
-      // setUsername("");
       refetch();
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -141,39 +148,43 @@ const SettingsHome = () => {
       setSubmitting(false);
     }
   };
+
   const handlePasswordUpdate = async (e) => {
     e.preventDefault();
     setSubmitting(true);
 
-    const pwd = newPassword == confirmPassword && newPassword;
+    const data = {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+      code,
+    };
 
-    if (!pwd) {
+    if (!data) {
       setSubmitting(false);
       return;
     }
-
-    const formData = new FormData();
-    formData.append("password", pwd);
-
     const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
-
     try {
-      const response = await axios.patch(`${apiUrl}/user/me`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
-      });
-
+      const response = await axios.patch(
+        `${apiUrl}/user/settings/password`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+        }
+      );
       console.log("Password updated successfully:", response.data);
 
       showAlert("Great!", "Password updated successfully", "success");
-      // setBio("")
-      // setPhoneNumber("")
-      // setEmail("");
-      // setFullname("")
-      // setUsername("");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setCode("");
       refetch();
+      // window.location.href = "/";
     } catch (error) {
       console.error("Error updating password:", error);
       showAlert(
@@ -186,7 +197,34 @@ const SettingsHome = () => {
     }
   };
 
-  console.log(currentPassword);
+  const requestCode = async (e) => {
+    e.preventDefault();
+    // setSubmitting(true);
+
+    const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+    try {
+      const response = await axios.get(`${apiUrl}/user/settings/reset-code`, {
+        headers: {
+          // "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
+      console.log("Password updated successfully:", response.data);
+
+      showAlert("Great!", "Code has been sent to your mail", "success");
+    } catch (error) {
+      console.error("Error Getting Code:", error);
+      showAlert(
+        "Oops!",
+        error?.response?.data?.message || "An error occurred",
+        "error"
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // console.log(currentPassword);
   return (
     <SettingsLayout>
       <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
@@ -263,13 +301,13 @@ const SettingsHome = () => {
                   </p>
                   <img src={edit_line} alt="" className="cursor-pointer" />
                 </div>
-                <p className="flex gap-2">
+                <div className="flex gap-2">
                   <p className="settings-profile-title">
                     {" "}
                     {profile?.data?.tech_title}
                   </p>
                   <img src={edit_line} alt="" className="cursor-pointer" />
-                </p>
+                </div>
               </div>
             </div>
             <div className="pt-10 mt-10">
@@ -318,12 +356,21 @@ const SettingsHome = () => {
                     />
                   </div>
                 </div>
-                <div className="flex items-center lg:gap-16 lg:flex-row flex-col  justify-between pb-3">
+                <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
-                    <label className="settings-label">Location</label>
+                    <label className="settings-label">Country</label>
                     <input
-                      value={location || ""}
-                      onChange={(e) => setLocation(e.target.value)}
+                      value={country || ""}
+                      onChange={(e) => setCountry(e.target.value)}
+                      className="settings-input outline-none"
+                      type="text"
+                    />
+                  </div>
+                  <div className="flex flex-col mb-5 w-full">
+                    <label className="settings-label">State</label>
+                    <input
+                      value={state || ""}
+                      onChange={(e) => setState(e.target.value)}
                       className="settings-input outline-none"
                       type="text"
                     />
@@ -413,7 +460,7 @@ const SettingsHome = () => {
             </div>
             <div className="pt-10 mt-10">
               <form onSubmit={handlePasswordUpdate}>
-                <div className="flex items-center lg:gap-16 lg:flex-row flex-col  justify-between pb-3">
+                <div className="flex items-center lg:gap-10 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Current Password</label>
                     <input
@@ -435,7 +482,7 @@ const SettingsHome = () => {
                     />
                   </div>
                 </div>
-                <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
+                <div className="flex relative items-center lg:gap-10 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Re-enter Password</label>
                     <input
@@ -446,9 +493,25 @@ const SettingsHome = () => {
                       placeholder="Please re-enter Password"
                     />
                   </div>
+                  <div className="flex flex-col mb-5 w-full">
+                    <label className="settings-label">Enter Code</label>
+                    <input
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                      className="settings-input outline-none"
+                      type="text"
+                      placeholder="Please Enter code"
+                    />
+                  </div>
+                  <div
+                    onClick={requestCode}
+                    className="absolute bottom-0 right-0 bg-primary--bright-green rounded-lg p-1 text-xs text-white cursor-pointer"
+                  >
+                    {codeRequested ? "Code sent" : "request code"}
+                  </div>
                 </div>
                 <button
-                  className={`w-full ${
+                  className={`w-full mt-10 ${
                     isFieldsFilled ? "setting-btn-active" : "settings-btn"
                   }`}
                   disabled={!isFieldsFilled}
@@ -456,7 +519,7 @@ const SettingsHome = () => {
                   {submitting ? (
                     <BeatLoader color="#ffffff" loading={true} />
                   ) : (
-                    "Save"
+                    "Update Password"
                   )}
                 </button>{" "}
               </form>
