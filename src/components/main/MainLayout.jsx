@@ -7,9 +7,9 @@ const MainLayout = ({ children, showNav }) => {
   return (
     <>
       <Nav />
-      <section className="bg-[#EFF2FC]">
+      <section className="bg-[#EFF2FC] w-full mx-auto">
         {/* <div className="mx-auto px-8 flex justify-between w-full"> */}
-        <div className="mx-auto px-4 sm:px-4 lg:px-12 grid grid-cols-12 justify-between w-full">
+        <div className="flex justify-center w-full">
           <div className="hidden lg:block col-span-3 xl:col-span-2">
             <SideNav />
             {/* <section className="lg:hidden">
@@ -26,9 +26,9 @@ const MainLayout = ({ children, showNav }) => {
             <div className="w-full">{children}</div>
           </div>
           {showNav && (
-            <section className="hidden md:block w-full col-span-4 lg:col-span-3">
+            <div className="w-[410px]">
               <AdsSection />
-            </section>
+            </div>
           )}
         </div>
       </section>

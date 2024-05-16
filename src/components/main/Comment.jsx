@@ -54,7 +54,7 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
           className="rounded-md"
         />
       </div>
-      <div className="w-full rounded-md flex items-center bg-gray-300 pr-2 h-[34px]">
+      <div className="w-full rounded-md flex items-center bg-white pr-2 h-[36px] mt-2 border-2">
         <input
           className="w-full outline-none focus:ring-0  p-2 border-none bg-transparent text-sm"
           type="text"

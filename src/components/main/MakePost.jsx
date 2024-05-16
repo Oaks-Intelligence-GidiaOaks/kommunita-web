@@ -203,7 +203,7 @@ function MakePost() {
 
   return (
     <>
-      <div className="w-full mt-3 makepost">
+      <div className="w-[491px] h-auto mt-3 makepost">
         <div className="post-box p-4">
           <div className="post-content w-full">
             <div className="more flex justify-end">

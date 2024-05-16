@@ -12,7 +12,7 @@ function Story() {
       {storyData?.data &&
         storyData?.data.length >
           0(
-            <div className="stories-container overflow-x-auto whitespace-nowrap w-full flex mb-2">
+            <div className="stories-container overflow-x-auto whitespace-nowrap w-[491px] flex mb-2">
               <div className="stories flex justify-start gap-2 items-center">
                 {/* <div className="go-live flex flex-col justify-center items-center">
           <p className="go-live-text pb-1">Go live</p>

@@ -15,7 +15,7 @@ function Main() {
   // const data = null;
   const { refetch } = useGetFeedsQuery();
   const posts = data?.data || []; // Ensure data is an array
-  // console.log(posts);
+  // console.log(posts, "posts");
 
   if (!data) {
     return (
