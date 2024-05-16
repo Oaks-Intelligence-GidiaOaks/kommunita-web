@@ -14,6 +14,12 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import Glider from "react-glider";
 import "glider-js/glider.min.css";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
+import left from "../../assets/carousel/left.svg";
+import right from "../../assets/carousel/right.svg";
+import dotsactive from "../../assets/carousel/dotsactive.svg";
+import dotsinactive from "../../assets/carousel/dotsinactive.svg";
+import CustomCarousel from "./CustomCarousel";
+import "./style.css";
 
 function Post({
   fullname,
@@ -81,15 +87,9 @@ function Post({
 
   return (
     <>
-      <div
-        className="pt-4 post-wrapper w-full mb-10"
-        // ref={ref}
-        // initial={{ opacity: 0 }}
-        // animate={inView ? { opacity: 1 } : { opacity: 0 }}
-        // transition={{ duration: 0.5 }}
-      >
+      <div className="pt-3 post-wrapper w-full">
         {content ? (
-          <div className="post-card p-5">
+          <div className="post-card p-5 h-auto w-[491px]">
             <div className="flex items-center justify-between">
               <div className="flex gap-3 items-center">
                 <div className="rounded-full border-red-100 border">
@@ -118,56 +118,34 @@ function Post({
                 <img src={post_action} alt="" />
               </button>
             </div>
-            <div className="post-content text-justify flex flex-row flex-wrap pt-3 pb-2">
-              {content && <p>{content}</p>}
+            <div className="post-content pt-3 pb-2 w-[431.99px] h-auto">
+              {content && (
+                <p className="text-justify flex flex-row flex-wrap">
+                  {content.length > 177
+                    ? content.slice(0, 177) + "..."
+                    : content}
+                </p>
+              )}
             </div>
-            <div className="flex justify-start items-center pb-2">
-              <p
-                className="text-sm cursor-pointer text-[#3D7100]"
-                onClick={handleSeeMore}
-              >
-                see more
-              </p>
-            </div>
-            <div className="rounded-md mt-2 mb-4 w-full">
-              <Glider
-                draggable
-                // hasArrows
-                hasDots
-                slidesToShow={1}
-                slidesToScroll={1}
-              >
-                {media_urls.map((media, index) => (
-                  <div
-                    key={index}
-                    className={` w-full flex items-center justify-center rounded-sm`}
-                  >
-                    {media.media_type.startsWith("image") ||
-                    media.media_type === "jpeg" ||
-                    media.media_type === "svg" ||
-                    media.media_type === "jpg" ||
-                    media.media_type === "webp" ||
-                    media.media_type === "octet-stream" ||
-                    media.media_type === "png" ? (
-                      <LazyLoadImage
-                        className="w-full h-[300px]"
-                        alt="post image"
-                        effect="blur"
-                        src={media.media_url}
-                      />
-                    ) : (
-                      <video
-                        className="w-full h-[350px] object-cover"
-                        controls
-                        width="100%"
-                      >
-                        <source src={media.media_url} type="video/mp4" />
-                        Sorry, your browser doesn't support embedded videos.
-                      </video>
-                    )}
-                  </div>
-                ))}
-              </Glider>
+            {content && content.length > 177 && (
+              <div className="flex justify-end items-center py-3">
+                <p
+                  className="text-sm cursor-pointer hover:text-blue-600 text-gray-400"
+                  onClick={handleSeeMore}
+                >
+                  see more
+                </p>
+              </div>
+            )}
+
+            <div className="post-media rounded-md w-full py-3">
+              <CustomCarousel
+                media_urls={media_urls}
+                left={left}
+                right={right}
+                dotsinactive={dotsinactive}
+                dotsactive={dotsactive}
+              />
             </div>
 
             <PostButtons
@@ -182,7 +160,7 @@ function Post({
             {allComment.length > 0 &&
               [...allComment]
                 .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .slice(-2)
+                .slice(-1)
                 .map((cm, id) => <MainComment key={id} comment={cm} />)}
 
             {addComment && (
