@@ -3,10 +3,17 @@ import SettingsLayout from "../../components/settings/SettingsLayout";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import "./style.css";
 import edit_line from "../../assets/images/edit_line.svg";
+import Resizer from "react-image-file-resizer";
+import UploadedItem from "../../components/main/UploadedItem";
+import axios from "axios";
+import { showAlert } from "../../static/alert";
+import { useGetFeedsQuery } from "../../service/feeds.service";
+import { useSelector } from "react-redux";
+import { BeatLoader } from "react-spinners";
 
 const SettingsHome = () => {
   const { data: profile } = useGetUserProfiileQuery();
-  console.log(profile);
+  // console.log(profile);
   const [activeTab, setActiveTab] = useState("profile");
 
   const handleTabClick = (tabId) => {
@@ -15,16 +22,25 @@ const SettingsHome = () => {
 
   // State variables for form fields
   const [username, setUsername] = useState("");
+  const [fullname, setFullname] = useState("");
+  const [techtitle, setTechtitle] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [location, setLocation] = useState("");
   const [bio, setBio] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [previewSrc, setPreviewSrc] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   //- second tab
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isFieldsFilled, setIsFieldsFilled] = useState(false);
+  // const [selectedImages, setSelectedImages] = useState([]);
+
+  const { refetch } = useGetFeedsQuery();
+  const token = useSelector((state) => state.user?.token);
 
   useEffect(() => {
     // Check if all fields are filled
@@ -38,16 +54,24 @@ const SettingsHome = () => {
   useEffect(() => {
     // Check if all fields are filled
     setIsAllFieldsFilled(
-      !!username && !!email && !!phoneNumber && !!location && !!bio
+      !!username &&
+        !!email &&
+        !!phoneNumber &&
+        !!location &&
+        !!bio &&
+        !!fullname &&
+        !!techtitle
     );
-  }, [username, email, phoneNumber, location, bio]);
+  }, [username, email, phoneNumber, location, bio, techtitle, fullname]);
 
   // Set values once profile data is available
   useEffect(() => {
     if (profile) {
       setUsername(profile.data.username || "");
       setEmail(profile.data.email || "");
-      setPhoneNumber(profile.data.phone || "");
+      setPhoneNumber(profile.data.phone_number || "");
+      setFullname(profile.data.fullname || "");
+      setTechtitle(profile.data.tech_title || "");
       setLocation(
         profile.data.location && Object.keys(profile.data.location).length !== 0
           ? JSON.stringify(profile.data.location)
@@ -57,6 +81,112 @@ const SettingsHome = () => {
     }
   }, [profile]);
 
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImageFile(file);
+      previewImage(file);
+    }
+  };
+
+  const previewImage = (file) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setPreviewSrc(event.target.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    const formData = new FormData();
+    formData.append("photo", imageFile);
+    formData.append("about", bio);
+    formData.append("tech_title", techtitle);
+    formData.append("phone_number", phoneNumber);
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("fullname", fullname);
+    formData.append("location", location);
+
+    const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+    try {
+      const response = await axios.patch(`${apiUrl}/user/me`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
+
+      console.log("Profile updated successfully:", response.data);
+
+      showAlert("Great!", "Profile updated successfully", "success");
+      // setBio("")
+      // setPhoneNumber("")
+      // setEmail("");
+      // setFullname("")
+      // setUsername("");
+      refetch();
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      showAlert(
+        "Oops!",
+        error?.response?.data?.message || "An error occurred",
+        "error"
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+  const handlePasswordUpdate = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    const pwd = newPassword == confirmPassword && newPassword;
+
+    if (!pwd) {
+      setSubmitting(false);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("password", pwd);
+
+    const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+    try {
+      const response = await axios.patch(`${apiUrl}/user/me`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
+
+      console.log("Password updated successfully:", response.data);
+
+      showAlert("Great!", "Password updated successfully", "success");
+      // setBio("")
+      // setPhoneNumber("")
+      // setEmail("");
+      // setFullname("")
+      // setUsername("");
+      refetch();
+    } catch (error) {
+      console.error("Error updating password:", error);
+      showAlert(
+        "Oops!",
+        error?.response?.data?.message || "An error occurred",
+        "error"
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  console.log(currentPassword);
   return (
     <SettingsLayout>
       <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
@@ -110,19 +240,20 @@ const SettingsHome = () => {
               <div>
                 <div className="rounded-lg w-[100px] h-[100px] border flex flex-col gap-3 items-center">
                   <img
-                    className="object-cover w-[100px]"
-                    src={profile?.data?.photo_url}
+                    className="object-cover w-[100px] cursor-pointer"
+                    src={previewSrc || profile?.data?.photo_url}
                     alt=""
                   />
-                  <p className="cursor-pointer settings-change-text text-[#398DEE]">
+                  <label className="cursor-pointer settings-change-text text-[#398DEE]">
                     Change
                     <input
-                      style={{ display: "none" }}
                       type="file"
-                      name=""
-                      id=""
+                      onChange={handleImageChange}
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      // className="hidden w-[100px] h-[100px]"
                     />
-                  </p>
+                  </label>
                 </div>
               </div>
               <div>
@@ -141,8 +272,30 @@ const SettingsHome = () => {
                 </p>
               </div>
             </div>
-            <div className="pt-10">
-              <form>
+            <div className="pt-10 mt-10">
+              <form onSubmit={handleSubmit}>
+                <div className="flex items-center lg:gap-16 lg:flex-row flex-col  justify-between pb-3">
+                  <div className="flex flex-col mb-5 w-full">
+                    <label className="settings-label">Full Name</label>
+                    <input
+                      value={fullname}
+                      onChange={(e) => setFullname(e.target.value)}
+                      className="settings-input outline-none"
+                      type="text"
+                      placeholder={"Please enter your fullname"}
+                    />
+                  </div>
+                  <div className="flex flex-col mb-5 w-full">
+                    <label className="settings-label">Tech Title</label>
+                    <input
+                      value={techtitle}
+                      onChange={(e) => setTechtitle(e.target.value)}
+                      className="settings-input outline-none"
+                      type="text"
+                      placeholder={"Please enter your techtitle"}
+                    />
+                  </div>
+                </div>
                 <div className="flex items-center lg:gap-16 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Username</label>
@@ -203,7 +356,11 @@ const SettingsHome = () => {
                   }`}
                   disabled={!isAllFieldsFilled}
                 >
-                  Save
+                  {submitting ? (
+                    <BeatLoader color="#ffffff" loading={true} />
+                  ) : (
+                    "Save"
+                  )}
                 </button>{" "}
               </form>
             </div>
@@ -223,18 +380,19 @@ const SettingsHome = () => {
                 <div className="rounded-lg w-[100px] h-[100px] border flex flex-col gap-3 items-center">
                   <img
                     className="object-cover w-[100px]"
-                    src={profile?.data?.photo_url}
                     alt=""
+                    src={previewSrc || profile?.data?.photo_url}
                   />
-                  <p className="cursor-pointer settings-change-text text-[#398DEE]">
+                  <label className="cursor-pointer settings-change-text text-[#398DEE]">
                     Change
                     <input
-                      style={{ display: "none" }}
                       type="file"
-                      name=""
-                      id=""
+                      onChange={handleImageChange}
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      // className="hidden w-[100px] h-[100px]"
                     />
-                  </p>
+                  </label>
                 </div>
               </div>
               <div>
@@ -253,8 +411,8 @@ const SettingsHome = () => {
                 </p>
               </div>
             </div>
-            <div className="pt-10">
-              <form>
+            <div className="pt-10 mt-10">
+              <form onSubmit={handlePasswordUpdate}>
                 <div className="flex items-center lg:gap-16 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Current Password</label>
@@ -295,7 +453,11 @@ const SettingsHome = () => {
                   }`}
                   disabled={!isFieldsFilled}
                 >
-                  Save
+                  {submitting ? (
+                    <BeatLoader color="#ffffff" loading={true} />
+                  ) : (
+                    "Save"
+                  )}
                 </button>{" "}
               </form>
             </div>
