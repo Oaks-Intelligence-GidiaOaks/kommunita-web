@@ -16,7 +16,7 @@ import {
 } from "../../components/auth-form";
 import { Form, Field } from "react-final-form";
 import validate from "validate.js";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/new-logo.svg";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
 import {
