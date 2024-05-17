@@ -59,7 +59,14 @@ const constraints = {
 const RegisterPage = () => {
   const { data } = useGetOrganizationQuery();
   const orgData = data?.data;
-  console.log(orgData);
+  // console.log(orgData);
+
+  const [org, setOrg] = useState("");
+
+  useEffect(() => {
+    setOrg(orgData);
+    console.log(orgData, "just fetched!");
+  }, [orgData]);
 
   const [organization, setOrganization] = useState("");
   const orgId = organization?._id;
@@ -154,7 +161,7 @@ const RegisterPage = () => {
                   </h1>
 
                   <DropDownMenu
-                    options={orgData}
+                    options={org || ""}
                     onSelect={(option) => setOrganization(option)}
                     displayText="Select Organization"
                   />
