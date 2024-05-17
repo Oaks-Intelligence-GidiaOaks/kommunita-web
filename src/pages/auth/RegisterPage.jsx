@@ -57,6 +57,7 @@ const constraints = {
 const RegisterPage = () => {
   const { data: Organization } = useGetAllOrganizationQuery();
   const orgData = Organization;
+  console.log(orgData);
 
   const [organization, setOrganization] = useState("");
   const orgId = organization?._id;
