@@ -44,7 +44,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (values) => {
-    console.log(values);
+    // console.log(values);
     await rtkMutation(loginUser, values);
   };
 
