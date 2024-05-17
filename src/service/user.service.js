@@ -1,4 +1,4 @@
-import { GETUSER, LOGIN, REGISTER } from "./constants";
+import { GETUSER, LOGIN, REGISTER, ALL_ORGANIZATIONS } from "./constants";
 import apiSlice from "./api/apiSlice";
 import { updateUser } from "../redux/slices/user.slice";
 
@@ -75,6 +75,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
     //   }),
     //   invalidatesTags: ["User"],
     // }),
+
+    getOrganization: builder.query({
+      query: () => ({
+        url: ALL_ORGANIZATIONS,
+        method: "GET",
+      }),
+      providesTags: ["Organization"],
+    }),
   }),
 });
 
@@ -82,4 +90,5 @@ export const {
   useLoginUserMutation,
   useRegisterUserMutation,
   useGetUserProfiileQuery,
+  useGetOrganizationQuery,
 } = userApiSlice;

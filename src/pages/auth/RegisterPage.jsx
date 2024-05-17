@@ -19,8 +19,10 @@ import validate from "validate.js";
 import logo from "../../assets/images/logo.svg";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
-import { useRegisterUserMutation } from "../../service/user.service";
-import { useGetAllOrganizationQuery } from "../../service/organization.service";
+import {
+  useRegisterUserMutation,
+  useGetOrganizationQuery,
+} from "../../service/user.service";
 import { LOGIN } from "../../routes/routes";
 
 const constraints = {
@@ -55,8 +57,8 @@ const constraints = {
 };
 
 const RegisterPage = () => {
-  const { data: Organization } = useGetAllOrganizationQuery();
-  const orgData = Organization;
+  const { data } = useGetOrganizationQuery();
+  const orgData = data?.data;
   console.log(orgData);
 
   const [organization, setOrganization] = useState("");
@@ -152,7 +154,7 @@ const RegisterPage = () => {
                   </h1>
 
                   <DropDownMenu
-                    options={orgData?.data}
+                    options={orgData}
                     onSelect={(option) => setOrganization(option)}
                     displayText="Select Organization"
                   />
