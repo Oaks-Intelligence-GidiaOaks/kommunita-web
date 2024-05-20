@@ -18,9 +18,9 @@ function Likes() {
   const token = useSelector((state) => state.user?.token);
 
   useEffect(() => {
-    if (data && data.data.length > 5) {
+    if (data && data?.data?.length > 5) {
       setLikes(data.data.slice(-4));
-    } else if (data && data.data.length > 0) {
+    } else if (data && data?.data?.length > 0) {
       setLikes(data.data);
     }
   }, [data]);

@@ -72,10 +72,6 @@ function Post({
     setModalOpenPost(true);
   };
 
-  useEffect(() => {
-    console.log("Post Data:", postData);
-  }, [postData]);
-
   const [visibleComments, setVisibleComments] = useState(5);
 
   // Sort comments by latest first

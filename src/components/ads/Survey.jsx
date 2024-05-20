@@ -30,7 +30,7 @@ const Survey = ({ feeds }) => {
               <Glider
                 draggable
                 // hasArrows
-                hasDots
+                // hasDots
                 slidesToShow={1}
                 slidesToScroll={1}
               >

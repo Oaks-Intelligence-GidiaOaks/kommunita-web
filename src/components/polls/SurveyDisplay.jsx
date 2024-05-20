@@ -317,7 +317,7 @@ const renderQuestion = (question, handleAnswer, index) => {
 
 SurveyDisplay.propTypes = {
   data: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
+    _id: PropTypes.string,
     description: PropTypes.string,
     createdAt: PropTypes.string,
     questions: PropTypes.arrayOf(
