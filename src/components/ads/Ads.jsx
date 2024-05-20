@@ -6,9 +6,10 @@ import { useGetSurveyFeedsQuery } from "../../service/survey.service.js";
 import { useSelector } from "react-redux";
 
 function Ads() {
-  const { data } = useGetSurveyFeedsQuery();
+  const { data, refetch } = useGetSurveyFeedsQuery();
   const surveyFeeds = data?.data;
   const user_id = useSelector((state) => state.user.user._id);
+  console.log(surveyFeeds);
 
   // Filter out surveys where the user ID already exists in the list of respondents
   const filteredSurveyFeeds = surveyFeeds?.filter((survey) => {

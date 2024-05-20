@@ -5,9 +5,12 @@ import { useSubmitSurveyMutation } from "../../service/survey.service";
 import { BeatLoader } from "react-spinners";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
+import { useGetSurveyFeedsQuery } from "../../service/survey.service";
 
 const SurveyDisplay = ({ data, closeModal }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const { data: surveyData, refetch } = useGetSurveyFeedsQuery();
+
   const [answers, setAnswers] = useState({});
   const { questions } = data;
 
@@ -69,11 +72,12 @@ const SurveyDisplay = ({ data, closeModal }) => {
   useEffect(() => {
     if (isSuccess) {
       showAlert("", "Survey completed Successfully!", "success");
+      refetch();
       closeModal();
     } else if (error) {
       showAlert("Oops", error.data.message || "An error occurred", "error");
     }
-  }, [isSuccess, error, closeModal]);
+  }, [isSuccess, error, closeModal, refetch]);
 
   // Determine if submit button should be disabled
   const isSubmitDisabled =

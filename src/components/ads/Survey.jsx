@@ -28,11 +28,12 @@ const Survey = ({ feeds }) => {
 
             <div className="flex justify-center flex-col gap-3 pt-4 pb-5">
               <Glider
-                draggable
+                // draggable
                 // hasArrows
                 // hasDots
+                scrollLock
                 slidesToShow={1}
-                slidesToScroll={1}
+                // slidesToScroll={1}
               >
                 {feeds.map((row, index) => (
                   <div key={index} className="border shadow-lg rounded-md">
