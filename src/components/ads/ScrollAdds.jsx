@@ -5,7 +5,7 @@ import { useGetAdvertQuery } from "../../service/advert.service";
 
 const ScrollAdds = () => {
   const { data: advertData, error, isLoading } = useGetAdvertQuery();
-  const ads = advertData?.data.filter((ad) => ad.status === "active") || [];
+  const ads = advertData?.data?.filter((ad) => ad.status === "active") || [];
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading adverts</div>;
@@ -13,10 +13,10 @@ const ScrollAdds = () => {
   const imageTypes = ["jpeg", "svg+xml", "jpg", "webp", "png", "octet-stream"];
 
   return (
-    <div className="w-[410px] h-[503px]">
-      <Glider draggable hasArrows hasDots slidesToShow={1} slidesToScroll={1}>
+    <div className="w-[410px] h-[410px]">
+      <Glider slidesToShow={1} slidesToScroll={1} draggable>
         {ads.map((ad) => (
-          <div key={ad._id} className="relative w-[410px] h-[400px]">
+          <div key={ad._id} className="relative w-[410px] h-auto">
             <a
               href={ad.landing_page_link}
               target="_blank"
@@ -24,12 +24,12 @@ const ScrollAdds = () => {
             >
               {imageTypes.includes(ad.media_urls[0]?.media_type) ? (
                 <img
-                  className="object-cover w-[410px] h-[400px]"
+                  className="object-cover w-[410px] h-[410px]"
                   src={ad.media_urls[0]?.media_url}
                   alt={ad.description}
                 />
               ) : ad.media_urls[0]?.media_type === "mp4" ? (
-                <video className="object-cover w-[410px] h-[400px]" controls>
+                <video className="object-cover w-[410px] h-[503px]" controls>
                   <source src={ad.media_urls[0]?.media_url} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
