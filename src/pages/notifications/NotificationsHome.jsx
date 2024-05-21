@@ -19,7 +19,7 @@ const NotificationsHome = () => {
     if (data) {
       SetNotifications(data.data);
     }
-  }, [data]);
+  }, [data, refetch]);
 
   // console.log(data?.data);
   return (
@@ -29,8 +29,11 @@ const NotificationsHome = () => {
           <Spinner />
         </div>
       ) : (
-        ntf.map((ntf) => (
-          <div className="flex gap-3 items-start bg-white border-b-2 p-5 w-full mt-4">
+        ntf.map((ntf, id) => (
+          <div
+            key={id}
+            className="flex gap-3 items-start bg-white border-b-2 p-5 w-full mt-4"
+          >
             <div
               className={`rounded-full border-4 w-[40px] h-[40px]`}
               // style={{ borderColor: badgeColor || {post.user_id?.department[0]?.badge?.color} }}
