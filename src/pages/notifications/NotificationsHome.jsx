@@ -24,7 +24,7 @@ const NotificationsHome = () => {
   console.log(data?.data);
   return (
     <MainLayout>
-      {isLoading ? (
+      {ntf.length <= 0 ? (
         <div className="flex justify-center pt-10">
           <Spinner />
         </div>
