@@ -34,14 +34,14 @@ const CustomCarousel = ({
             media.media_type
           ) ? (
             <img
-              // className="w-full h-[194.35px] object-cover"
-              className="w-full h-[350px] object-cover"
+              className="w-full h-[200px] object-cover"
+              // className="w-full h-[350px] object-cover"
               alt="post media"
               src={media.media_url}
             />
           ) : media.media_type === "mp4" ? (
-            // <video className="h-[194.35px] w-full object-cover" controls>
-            <video className="h-[350px] w-full object-cover" controls>
+            <video className="h-[200px] w-full object-cover" controls>
+              {/* <video className="h-[350px] w-full object-cover" controls> */}
               <source src={media.media_url} type="video/mp4" />
               Sorry, your browser doesn't support embedded videos.
             </video>
