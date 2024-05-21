@@ -10,7 +10,7 @@ import "./style.css";
 
 const MainComment = ({ comment }) => {
   const [addReply, setAddReply] = useState(false);
-  console.log(comment);
+  // console.log(comment);
   const onReply = () => {
     setAddReply(!addReply);
   };

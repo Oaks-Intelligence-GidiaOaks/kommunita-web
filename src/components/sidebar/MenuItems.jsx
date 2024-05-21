@@ -37,13 +37,13 @@ function MenuItems() {
   const links = useMemo(
     () => [
       { id: 1, icon: home, activeIcon: homeActive, text: "Home", to: "/" },
-      // {
-      //   id: 2,
-      //   icon: notifications,
-      //   activeIcon: notificationsActive,
-      //   text: "Notifications",
-      //   to: "/notifications",
-      // },
+      {
+        id: 2,
+        icon: notifications,
+        activeIcon: notificationsActive,
+        text: "Notifications",
+        to: "/notifications",
+      },
       // {
       //   id: 3,
       //   icon: favorite,

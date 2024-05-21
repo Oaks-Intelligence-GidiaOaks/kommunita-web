@@ -4,6 +4,7 @@ export const REGISTER = "user/register";
 export const GETUSER = "user/me";
 export const ALL_ORGANIZATIONS = "user/organizations";
 export const FEEDS = "user/feeds";
+export const NOTIFICATIONS = "user/notifications";
 export const FAVORITE = "user/feeds/favorite";
 export const POST = "user/post";
 export const LIKEDPOST = "user/post/liked";

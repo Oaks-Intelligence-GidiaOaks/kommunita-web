@@ -58,11 +58,11 @@ const ProfileHero = () => {
               </svg>
             </div>
 
-            <div className="flex lg:items-end gap-5 -mt-[50px] flex-col items-center lg:flex-row">
-              <div className="border-white border-[5px] bg-white  w-[140px] h-[136px] overflow-hidden rounded-lg">
-                <img src={profile?.data.photo_url} />
-              </div>
-              <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-3 lg:gap-20">
+            <div className="flex lg:items-end gap-5 -mt-[50px] flex-col items-center lg:flex-row lg:justify-between w-full">
+              <div className="flex flex-col lg:flex-row items-center lg:items-end gap-5 lg:ml-10">
+                <div className="border-white border-[5px] bg-white  w-[140px] h-[136px] overflow-hidden rounded-lg">
+                  <img src={profile?.data.photo_url} />
+                </div>
                 <div className="flex flex-col items-center lg:block">
                   <h1 className="font-bold text-3xl xl:text-5xl mb-5">
                     {user.display_name}
@@ -176,19 +176,21 @@ const ProfileHero = () => {
                     </div>
                   </div>
                 </div>
-                <div>
-                  {" "}
-                  <svg
-                    className="hidden lg:block"
-                    width="3"
-                    height="82"
-                    viewBox="0 0 3 82"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M1.5 0V81.5" stroke="#E8E8E8" strokeWidth="3" />
-                  </svg>{" "}
-                </div>
+              </div>
+              <div>
+                {" "}
+                <svg
+                  className="hidden lg:block"
+                  width="3"
+                  height="82"
+                  viewBox="0 0 3 82"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M1.5 0V81.5" stroke="#E8E8E8" strokeWidth="3" />
+                </svg>{" "}
+              </div>
+              <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-3 lg:gap-20">
                 <div className="flex items-center justify-between gap-5">
                   <div className="">
                     <h2 className="font-bold lg:text-2xl">

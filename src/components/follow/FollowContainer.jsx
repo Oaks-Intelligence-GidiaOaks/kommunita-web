@@ -4,7 +4,8 @@ import {
   useFollowUserMutation,
   useUnfollowUserMutation,
 } from "../../service/whotofollow.service";
-import noimage from "../../assets/images/sidebar/noImage.png";
+// import noimage from "../../assets/images/sidebar/noImage.png";
+import noimage from "../../assets/images/sidebar/avatar4.svg";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import { BeatLoader } from "react-spinners";
 import { showAlert } from "../../static/alert";
@@ -17,10 +18,13 @@ const FollowContainer = (like) => {
   const [followUser, { error, isSuccess }] = useFollowUserMutation();
   const [unfollowUser, { error: err, isSuccess: scc }] =
     useUnfollowUserMutation();
-  console.log(like.like.followers);
+  //   console.log(like.like.followers);
   const { data: user } = useGetUserProfiileQuery();
 
   const handleFollow = async (id) => {
+    console.log("Follow ID: ", id);
+    // setSubmitId(id);
+    setSubmitting(true);
     const postData = {
       user_to_follow_id: id,
     };
@@ -30,9 +34,16 @@ const FollowContainer = (like) => {
     } catch (error) {
       console.error("Error liking post:", error);
       showAlert("Oops", "An error occurred while following this user", error);
+    } finally {
+      setSubmitId("");
+      setSubmitting(false);
     }
   };
+
   const handleUnFollow = async (id) => {
+    console.log(id);
+    // setSubmitId(id);
+    setSubmitting(true);
     const postData = {
       user_to_unfollow_id: id,
     };
@@ -41,7 +52,10 @@ const FollowContainer = (like) => {
       setFollowing((prevIsLoved) => !prevIsLoved);
     } catch (error) {
       console.error("Error liking post:", error);
-      showAlert("Oops", "An error occurred while following this user", error);
+      showAlert("Oops", "An error occurred while unfollowing this user", error);
+    } finally {
+      setSubmitId("");
+      setSubmitting(false);
     }
   };
 
@@ -83,10 +97,10 @@ const FollowContainer = (like) => {
 
       {following ? (
         <button
-          onClick={() => handleUnFollow(like.like.followers, like.like._id)}
+          onClick={() => handleUnFollow(like.like._id)}
           className="p-2 border-2 border-primary-bright-green text-primary-bright-green rounded-lg w-[100px] text-center font-semibold px-5"
         >
-          {submitting && submitID == like.like._id ? (
+          {submitting ? (
             <BeatLoader color="#ffffff" loading={true} />
           ) : (
             "Following"
@@ -94,10 +108,10 @@ const FollowContainer = (like) => {
         </button>
       ) : (
         <button
-          onClick={() => handleFollow(like.like.followers, like.like._id)}
+          onClick={() => handleFollow(like.like._id)}
           className="p-2 bg-primary--bright-green text-white rounded-lg w-[100px] text-center font-semibold px-5"
         >
-          {submitting && submitID == like.like._id ? (
+          {submitting ? (
             <BeatLoader color="#ffffff" loading={true} />
           ) : (
             "Follow"

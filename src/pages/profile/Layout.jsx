@@ -19,10 +19,8 @@ const Layout = ({ children }) => {
               <MenuItems />
             </div>
           </div>
-          <div className="col-span-12 lg:col-span-9 xl:col-span-10 border-b-[3px] border-b-primary-dark-gray">
-            <div className="flex items-center justify-center ">
-              <ProfileNav />
-            </div>
+          <div className="col-span-12 lg:col-span-9 xl:col-span-10 border-b-primary-dark-gray">
+            <ProfileNav />
             <div className="">
               <div className="mt-10">{children}</div>
             </div>
