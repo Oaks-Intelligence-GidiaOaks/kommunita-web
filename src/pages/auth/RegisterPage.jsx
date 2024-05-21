@@ -128,8 +128,8 @@ const RegisterPage = () => {
   useEffect(() => {
     if (isSuccess) {
       showAlert(
-        "Account created successfully!",
-        "Welcome to Kommunita",
+        "Welcome to Kommunita!",
+        "Pls verify email to continue",
         "success"
       );
       navigate(LOGIN);

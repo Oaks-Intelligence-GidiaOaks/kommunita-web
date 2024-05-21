@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 
 const Comment = ({ id, onComment, reply, placeholder }) => {
   const { data: profile } = useGetUserProfiileQuery();
-  // console.log(profile);
+  // console.log(profile, "profile");
 
   const [content, setContent] = useState("");
 
@@ -45,16 +45,16 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
 
   return (
     <div className="w-full flex items-center justify-center gap-2 mt-3">
-      <div className="border-white overflow-hidden rounded">
+      <div className="border-white overflow- rounded">
         <img
           src={profile?.data?.photo_url || avatar4}
-          width={35}
-          height={34}
+          width={40}
+          height={40}
           alt="user-thumbnail"
           className="rounded-md"
         />
       </div>
-      <div className="w-full rounded-md flex items-center bg-white pr-2 h-[36px] mt-2 border-2">
+      <div className="w-full rounded-md flex items-center bg-white pr-2 h-[36px] border-2">
         <input
           className="w-full outline-none focus:ring-0  p-2 border-none bg-transparent text-sm"
           type="text"

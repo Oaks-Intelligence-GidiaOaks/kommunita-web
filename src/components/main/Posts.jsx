@@ -87,16 +87,16 @@ function Post({
     <>
       <div className="pt-3 post-wrapper w-full">
         {content ? (
-          <div className="post-card p-5 h-auto w-[491px]">
+          <div className="post-card p-5 h-auto">
             <div className="flex items-center justify-between">
               <div className="flex gap-3 items-center">
                 <div
-                  className={`rounded-full border-4`}
+                  className={`rounded-full border-4 w-[40px] h-[40px]`}
                   style={{ borderColor: badgeColor }}
                 >
                   <img
-                    src={avatar || avatar4}
-                    className="w-[40px] h-[40px]"
+                    src={avatar}
+                    className="rounded-full w-full h-full object-cover"
                     alt=""
                   />
                 </div>

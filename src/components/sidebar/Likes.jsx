@@ -75,7 +75,7 @@ function Likes() {
   return (
     <div className="main-sidebar-section mt-8 pb-5 w-full">
       <div className="py-3 px-4">
-        <p className="text-like mb-4">You might like</p>
+        <p className="text-like mb-4">People you might like</p>
 
         {likes ? (
           <div className="lists mb-5 flex flex-col gap-4">
@@ -110,14 +110,15 @@ function Likes() {
               </div>
             ))}
           </div>
-        ) : (
-          <div className="h-[300px] overflow-hidden">
-            <ShimmerSocialPost type="text" />
-          </div>
-        )}
+        ) : // <div className="h-[300px] overflow-hidden">
+        //   <ShimmerSocialPost type="text" />
+        // </div>
+        null}
         <Link to={"/follow"}>
           <div className="flex justify-center">
-            <button className="view-likes">View more</button>
+            <button className="view-likes">
+              {likes?.length > 0 ? "View more" : "View"}
+            </button>
           </div>
         </Link>
       </div>

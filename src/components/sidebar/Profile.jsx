@@ -11,12 +11,18 @@ function Profile() {
   const user = useSelector((state) => state.user.user);
 
   return (
-    <div className="mt-3 flex items-center flex-col w-full">
+    <div className="flex items-center flex-col w-full">
       <img className="w-[100%] lg:w-auto " src={coverImage} alt="" />
 
       <div className="flex justify-center z-10 -mt-5">
-        <div className="profile-avatar-img-box flex justify-center items-center">
-          <img src={profile?.data?.photo_url} width={64} height={62} alt="" />
+        <div className="profile-avatar-img-box flex justify-center items-center] border rounded-full">
+          <img
+            src={profile?.data?.photo_url}
+            width={64}
+            height={62}
+            alt=""
+            className="rounded-full object-cover"
+          />
         </div>
       </div>
       <p className="text-center profile-name mt-3">{user?.display_name}</p>
@@ -24,10 +30,10 @@ function Profile() {
       <div className="flex justify-center">
         <p className="text-center mt-1 profile-bio p-2">
           {/* <p className="text-center mt-1 profile-bio w-[204px]"> */}
-          {profile?.data?.about}{" "}
-          <span className="inline-flex">
+          {profile?.data?.about}
+          {/* <span className="inline-flex">
             <img src={emoji} alt="" />
-          </span>
+          </span> */}
         </p>
       </div>
 

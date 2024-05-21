@@ -3,20 +3,20 @@ import Story from "./Story";
 import MakePost from "./MakePost";
 import Posts from "./Posts";
 import search from "../../assets/images/Home/Search.png";
-import avatar1 from "../../assets/images/sidebar/avatar1.svg";
+import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import PollDisplay from "../polls/PollDisplay";
-import SurveyDisplay from "./../polls/SurveyDisplay";
 import { Link } from "react-router-dom";
 import { Spinner } from "flowbite-react";
 
 function Main() {
   const { data, isLoading, refetch } = useGetFeedsQuery();
   const posts = data?.data || [];
+  // console.log(posts, "posts");
 
   return (
-    <div className="mt-3 px-3 main-wrapper w-full pb-10">
+    <div className="pt-4 main-wrapper w-full pb-10">
       <Story />
       <MakePost />
 
@@ -25,7 +25,7 @@ function Main() {
           <Spinner />
         </div>
       ) : posts.length === 0 ? (
-        <div className="flex items-center flex-col mt-10 w-[491px] h-auto">
+        <div className="flex items-center flex-col mt-10 justify-center h-auto">
           <img src={search} alt="Search icon" />
           <h2 className="font-bold text-4xl mt-5 mb-5">NO POST</h2>
           <p>Follow other users to begin to see posts</p>
@@ -53,8 +53,8 @@ function Main() {
                 repost={post.repost}
                 share={post.share}
                 reaction={post.reaction}
-                avatar={post.user_id.photo_url || avatar1} // Provide the avatar source
-                badgeColor={post.user_id?.department?.badge?.color}
+                avatar={post.user_id.photo_url || avatar4}
+                badgeColor={post.user_id?.department[0]?.badge?.color}
               />
             ) : (
               <div className="mt-4" key={index}>

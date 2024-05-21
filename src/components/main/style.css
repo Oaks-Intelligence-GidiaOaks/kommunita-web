@@ -72,3 +72,11 @@
   line-height: 14.52px;
   color: #838383;
 }
+.post-input {
+  font-family: Inter;
+  font-size: 9.21px;
+  font-weight: 400;
+  line-height: 11.15px;
+  letter-spacing: 0.16em;
+  text-align: left;
+}

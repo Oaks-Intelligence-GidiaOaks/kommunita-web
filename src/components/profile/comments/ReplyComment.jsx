@@ -1,6 +1,7 @@
 import CommentButtons from "./../../main/CommentButtons";
 import image4 from "../../../assets/images/sidebar/avatar4.svg";
 import PropTypes from "prop-types";
+import "./style.css";
 
 const ReplyComment = ({ reply }) => {
   return (
@@ -16,16 +17,16 @@ const ReplyComment = ({ reply }) => {
             />
           </div>
 
-          <div className="">
+          <div className="pt-2">
             <div>
-              <h2 className="font-semibold -mt-[6px]">
+              <h2 className="comment-name -mt-[6px]">
                 {reply.user_id.display_name}
               </h2>
             </div>
             <div>
-              <p className="text-xs mt-1  font-semibold">{reply.content}</p>
+              <p className="mt-2 comment">{reply.content}</p>
             </div>
-            <div className="flex text-[7px] gap-2 text-primary-gray">
+            <div className="flex text-[7px] pt-1 gap-2 text-primary-gray">
               <p className="cursor-pointer">Like</p>
               <p className="cursor-pointer">Reply</p>
             </div>
