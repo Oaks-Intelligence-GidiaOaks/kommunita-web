@@ -54,14 +54,14 @@ const NotificationsHome = () => {
                   </span>
                 )}
               </div> */}
-              <p className="">{ntf.initiator_id?.display_name}</p>
-              <p className="text-primary-light-gray">{ntf.content}</p>
+              <p className="">{ntf?.initiator_id?.display_name}</p>
+              <p className="text-primary-light-gray">{ntf?.content}</p>
               <div className="mt-2">
-                <p className="mb-1">{ntf.post_id.content}</p>
+                <p className="mb-1">{ntf?.post_id?.content}</p>
 
                 <div className="post-media rounded-md w-full">
                   <CustomCarousel
-                    media_urls={ntf.post_id.media_urls}
+                    media_urls={ntf?.post_id?.media_urls}
                     left={left}
                     right={right}
                     dotsinactive={dotsinactive}
@@ -70,7 +70,7 @@ const NotificationsHome = () => {
                 </div>
               </div>
               <p className="text-primary-light-gray">
-                {getTimeAgoString(ntf.updatedAt)}
+                {getTimeAgoString(ntf?.updatedAt)}
               </p>
             </div>
             <button>
