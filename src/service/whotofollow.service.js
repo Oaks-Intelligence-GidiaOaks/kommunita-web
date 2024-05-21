@@ -16,20 +16,16 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
         url: "/user/follow",
         method: "POST",
         body: postData,
-        headers: {
-          "Content-Type": "application/json",
-        },
       }),
+      invalidatesTags: ["WhoToFollow"],
     }),
     unfollowUser: builder.mutation({
       query: (postData) => ({
         url: "/user/unfollow",
         method: "POST",
         body: postData,
-        headers: {
-          "Content-Type": "application/json",
-        },
       }),
+      invalidatesTags: ["WhoToFollow"],
     }),
   }),
 });

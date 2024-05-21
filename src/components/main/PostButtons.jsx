@@ -9,7 +9,10 @@ import wishlist from "../../assets/images/main/wishlist.svg";
 import axios from "axios";
 import { showAlert } from "../../static/alert";
 import { useSelector } from "react-redux";
-import { useLovePostMutation } from "../../service/post.service";
+import {
+  useLovePostMutation,
+  useRepostPostMutation,
+} from "../../service/post.service";
 import rtkMutation from "../../utils/rtkMutation";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
@@ -33,12 +36,22 @@ function PostButtons({
   const isLikedByCurrentUser = likeUserIds.includes(login_user_id);
 
   const [lovePost, { error, isSuccess }] = useLovePostMutation();
+  const [repostPost, { error: err, isSuccess: scs }] = useRepostPostMutation();
 
   const handleLike = async () => {
     const postData = { post_id: id, reaction_type: "like" };
     try {
       await rtkMutation(lovePost, postData);
       setIsLoved((prevIsLoved) => !prevIsLoved);
+    } catch (error) {
+      console.error("Error liking post:", error);
+      showAlert("Oops", "An error occurred while liking the post", "error");
+    }
+  };
+  const handleRespost = async () => {
+    const postData = { post_id: id };
+    try {
+      await rtkMutation(repostPost, postData);
     } catch (error) {
       console.error("Error liking post:", error);
       showAlert("Oops", "An error occurred while liking the post", "error");
@@ -88,6 +101,7 @@ function PostButtons({
       <motion.button
         className="flex gap-1 items-center"
         whileHover={{ scale: 1.1 }}
+        onClick={handleRespost}
       >
         <img src={retweet} alt="" />
         {repost}

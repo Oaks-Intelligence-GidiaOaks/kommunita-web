@@ -10,6 +10,7 @@ const MainLayout = ({ children }) => {
 
   // Conditionally render the AdsSection only on the home route
   const isHomeRoute = pathname === "/";
+  const isNotificationRoute = pathname === "/notifications";
 
   return (
     <div>
@@ -18,7 +19,7 @@ const MainLayout = ({ children }) => {
         <div className="flex w-full">
           <SideNav />
           <main className="flex-1">{children}</main>
-          {isHomeRoute && <AdsSection />}
+          {(isHomeRoute || isNotificationRoute) && <AdsSection />}
         </div>
       </div>
     </div>

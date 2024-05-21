@@ -29,6 +29,14 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Feeds"],
     }),
+    repostPost: builder.mutation({
+      query: (postData) => ({
+        url: "/user/post/repost",
+        method: "POST",
+        body: postData,
+      }),
+      invalidatesTags: ["Feeds"],
+    }),
 
     postComment: builder.mutation({
       query: ({ content, id, reply }) => {
@@ -51,5 +59,6 @@ export const {
   useGetPostQuery,
   useCreatePostMutation,
   useLovePostMutation,
+  useRepostPostMutation,
   usePostCommentMutation,
 } = organizationApiSlice;
