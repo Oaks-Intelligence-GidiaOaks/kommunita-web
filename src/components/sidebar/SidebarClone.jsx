@@ -5,7 +5,7 @@ import Likes from "./Likes.jsx";
 
 function Sidebar() {
   return (
-    <aside className="pb-10 w-[280px] p-4 h-full hidden md:block">
+    <div className="pb-10 w-full max-w-[280px]">
       <div className="main-sidebar-section">
         <Profile />
         <MenuItems />
@@ -15,7 +15,7 @@ function Sidebar() {
           <Likes />
         </div>
       )}
-    </aside>
+    </div>
   );
 }
 

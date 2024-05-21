@@ -5,10 +5,12 @@ import CommentButtons from "./../../main/CommentButtons";
 import Comment from "../../main/Comment";
 import avatar4 from "../../../assets/images/sidebar/avatar4.svg";
 import PropTypes from "prop-types";
+import { GoDotFill } from "react-icons/go";
+import "./style.css";
 
 const MainComment = ({ comment }) => {
   const [addReply, setAddReply] = useState(false);
-  // console.log(comment);
+  console.log(comment);
   const onReply = () => {
     setAddReply(!addReply);
   };
@@ -17,21 +19,29 @@ const MainComment = ({ comment }) => {
       {/* <Comment id={comment._id} onComment={onReply} /> */}
       <div className="flex justify-between items-center">
         <div className="flex gap-2 justify-center items-center">
-          <div className="border-white w-[40px] h-[38px] overflow-hidden rounded">
+          <div
+            className="w-[50px] h-[40px] rounded-full border-4"
+            style={{
+              borderColor: comment.user_id?.department[0]?.badge?.color,
+            }}
+          >
             <img
               src={comment.user_id.photo_url || avatar4}
-              width={35}
-              height={34}
+              className="rounded-full w-full h-full object-cover"
               alt="user-thumbnail"
             />
           </div>
           <div className="flex flex-col w-full">
-            <div className="flex gap-2 font-semibold items-center">
-              <h2>{comment.user_id.display_name}</h2>
-              <h2>.</h2>
-              <h4 className="text-xs">{getTimeAgoString(comment.createdAt)}</h4>
+            <div className="flex gap-1 justify-start text-sm items-center">
+              <h2 className="comment-name">{comment.user_id.display_name}</h2>
+              <h2>
+                <GoDotFill />
+              </h2>
+              <h4 className="text-[9px]">
+                {getTimeAgoString(comment.createdAt)}
+              </h4>
             </div>
-            <p className="text-xs mt-1  font-semibold">{comment.content}</p>
+            <p className="mt-1 comment">{comment.content}</p>
             {/* <div className="flex w-full justify-between"> */}
 
             {/* </div> */}

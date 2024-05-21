@@ -16,11 +16,13 @@ import {
 } from "../../components/auth-form";
 import { Form, Field } from "react-final-form";
 import validate from "validate.js";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/new-logo.svg";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
-import { useRegisterUserMutation } from "../../service/user.service";
-import { useGetAllOrganizationQuery } from "../../service/organization.service";
+import {
+  useRegisterUserMutation,
+  useGetOrganizationQuery,
+} from "../../service/user.service";
 import { LOGIN } from "../../routes/routes";
 
 const constraints = {
@@ -55,8 +57,36 @@ const constraints = {
 };
 
 const RegisterPage = () => {
-  const { data: Organization } = useGetAllOrganizationQuery();
-  const orgData = Organization;
+  const [org, setOrg] = useState("");
+
+  async function fetchData() {
+    try {
+      // Make a GET request to the API
+      const response = await fetch(
+        "https://media-space-api-93ae1a0c4354.herokuapp.com/api/v1/user/organizations"
+      );
+
+      // Check if the response is OK (status code 200-299)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Parse the response data as JSON
+      const data = await response.json();
+
+      // Log the data to the console
+      console.log(data);
+      setOrg(data?.data);
+    } catch (error) {
+      // Handle any errors that occur during the fetch
+      console.error("Fetch error: ", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+    console.log("fetched");
+  }, []);
 
   const [organization, setOrganization] = useState("");
   const orgId = organization?._id;
@@ -98,8 +128,8 @@ const RegisterPage = () => {
   useEffect(() => {
     if (isSuccess) {
       showAlert(
-        "Account created successfully!",
-        "Welcome to Kommunita",
+        "Welcome to Kommunita!",
+        "Pls verify email to continue",
         "success"
       );
       navigate(LOGIN);
@@ -151,7 +181,7 @@ const RegisterPage = () => {
                   </h1>
 
                   <DropDownMenu
-                    options={orgData?.data}
+                    options={org || ""}
                     onSelect={(option) => setOrganization(option)}
                     displayText="Select Organization"
                   />

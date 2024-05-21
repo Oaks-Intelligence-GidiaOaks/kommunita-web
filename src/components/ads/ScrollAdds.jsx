@@ -1,20 +1,15 @@
-import { useEffect, useState } from "react";
 import Slider from "react-slick";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useGetAdvertQuery } from "../../service/advert.service";
+import { Spinner } from "flowbite-react";
 
 const ScrollAdds = () => {
-  const { data } = useGetAdvertQuery();
-  const [advert, setAdvert] = useState(null);
+  const { data: advertData, isLoading } = useGetAdvertQuery();
+  const ads = advertData?.data?.filter((ad) => ad.status === "active") || [];
+  console.log(advertData);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setAdvert(data?.data);
-      console.log(data);
-    }, 5000);
-  }, [data]);
+  const imageTypes = ["jpeg", "svg+xml", "jpg", "webp", "png", "octet-stream"];
 
   const settings = {
     dots: false,
@@ -23,7 +18,7 @@ const ScrollAdds = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    speed: 7000,
+    speed: 5000,
     // autoplaySpeed: 5000,
     cssEase: "linear",
   };
@@ -38,26 +33,45 @@ const ScrollAdds = () => {
   }
 
   return (
-    <div className="w-full">
-      {advert && (
+    <div className="">
+      {isLoading ? (
+        <div className="flex justify-center py-3">
+          <Spinner />
+        </div>
+      ) : (
         <Slider {...settings}>
-          {advert
-            ?.filter((dt) => !isToday(new Date(dt.end_date)))
-            .map((ads, id) => (
-              <a href={ads.landing_page_link} key={id} target="_blank">
-                <div className="relative lg:max-w-[400px] h-[400px]">
-                  <img
-                    className="object-cover w-[300px] h-[400px]"
-                    src={ads.media_urls[0].media_url}
-                    alt=""
-                    width={300}
-                  />
-                  <div className="absolute bottom-0 p-1 bg-white w-11/12">
-                    <h2 className="font-semibold">{ads.headline}:</h2>
-                    <p className="text-sm">{ads.description}</p>
-                  </div>
+          {ads
+            .filter((dt) => !isToday(new Date(dt.end_date)))
+            .map((ad) => (
+              <div key={ad._id} className="relative w-[410px] h-auto">
+                <a
+                  href={ad.landing_page_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {imageTypes.includes(ad.media_urls[0]?.media_type) ? (
+                    <img
+                      className="object-cover w-full max-w-[410px] h-[410px]"
+                      src={ad.media_urls[0]?.media_url}
+                      // alt={ad.description}
+                    />
+                  ) : ad.media_urls[0]?.media_type === "mp4" ? (
+                    <video
+                      className="object-cover w-full max-w-[410px] h-[410px]"
+                      controls
+                    >
+                      <source
+                        src={ad.media_urls[0]?.media_url}
+                        type="video/mp4"
+                      />
+                      Your browser does not support the video tag.
+                    </video>
+                  ) : null}
+                </a>
+                <div className="absolute bottom-0 left-0 p-2 w-full text-start bg-gray-800 bg-opacity-50 text-white">
+                  {ad.description}
                 </div>
-              </a>
+              </div>
             ))}
         </Slider>
       )}

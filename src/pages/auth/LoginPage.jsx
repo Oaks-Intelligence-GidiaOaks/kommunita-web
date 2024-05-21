@@ -7,7 +7,7 @@ import instagram from "../../assets/images/instagram.svg";
 import linkedin from "../../assets/images/linkedin.svg";
 import BgGroup from "../../assets/images/BgGroup.svg";
 import Ellipse from "../../assets/images/Ellipse.svg";
-import logo from "../../assets/images/logo.svg";
+import logo from "../../assets/images/new-logo.svg";
 import { motion } from "framer-motion";
 import { InputField, PasswordField } from "../../components/auth-form";
 import { Form } from "react-final-form";

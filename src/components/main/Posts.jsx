@@ -34,6 +34,7 @@ function Post({
   repost,
   share,
   reaction,
+  badgeColor,
 }) {
   const [allComment, setAllComment] = useState([]);
   const [addComment, setAddComment] = useState(false);
@@ -66,13 +67,10 @@ function Post({
       repost,
       share,
       reaction,
+      badgeColor,
     });
     setModalOpenPost(true);
   };
-
-  useEffect(() => {
-    console.log("Post Data:", postData);
-  }, [postData]);
 
   const [visibleComments, setVisibleComments] = useState(5);
 
@@ -89,14 +87,16 @@ function Post({
     <div className="w-full">
       <div className="pt-3 w-full">
         {content ? (
-          // <div className="post-card p-5 h-auto w-[491px]">
-          <div className="post-card p-5 h-auto w-full">
+          <div className="post-card p-5 h-auto">
             <div className="flex items-center justify-between">
               <div className="flex gap-3 items-center">
-                <div className="rounded-full border-red-100 border">
+                <div
+                  className={`rounded-full border-4 w-[40px] h-[40px]`}
+                  style={{ borderColor: badgeColor }}
+                >
                   <img
-                    src={avatar || avatar4}
-                    className="w-[40px] h-[40px]"
+                    src={avatar}
+                    className="rounded-full w-full h-full object-cover"
                     alt=""
                   />
                 </div>
@@ -285,7 +285,8 @@ Post.propTypes = {
       media_url: PropTypes.string.isRequired,
     })
   ).isRequired,
-  avatar: PropTypes.string.isRequired,
+  avatar: PropTypes.string,
+  badgeColor: PropTypes.string,
   post_id: PropTypes.string.isRequired,
   comment: PropTypes.array.isRequired,
   repost: PropTypes.array.isRequired,

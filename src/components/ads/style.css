@@ -84,3 +84,10 @@
   font-weight: 400;
   line-height: 14.163px;
 }
+.survey-container {
+  background: linear-gradient(
+    181.66deg,
+    rgba(50, 49, 49, 0) 19.82%,
+    #111010 65.8%
+  );
+}

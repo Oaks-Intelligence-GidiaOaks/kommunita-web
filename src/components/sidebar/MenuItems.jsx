@@ -37,27 +37,27 @@ function MenuItems() {
   const links = useMemo(
     () => [
       { id: 1, icon: home, activeIcon: homeActive, text: "Home", to: "/" },
-      {
-        id: 2,
-        icon: notifications,
-        activeIcon: notificationsActive,
-        text: "Notifications",
-        to: "/notifications",
-      },
-      {
-        id: 3,
-        icon: favorite,
-        activeIcon: favoriteActive,
-        text: "Favourites",
-        to: "/favorites",
-      },
-      {
-        id: 4,
-        icon: play,
-        activeIcon: playActive,
-        text: "Start a post",
-        to: "/post",
-      },
+      // {
+      //   id: 2,
+      //   icon: notifications,
+      //   activeIcon: notificationsActive,
+      //   text: "Notifications",
+      //   to: "/notifications",
+      // },
+      // {
+      //   id: 3,
+      //   icon: favorite,
+      //   activeIcon: favoriteActive,
+      //   text: "Favourites",
+      //   to: "/favorites",
+      // },
+      // {
+      //   id: 4,
+      //   icon: play,
+      //   activeIcon: playActive,
+      //   text: "Start a post",
+      //   to: "/post",
+      // },
       // { id: 5, icon: live, activeIcon: liveActive, text: "Live", to: "/live" },
       {
         id: 6,
@@ -66,13 +66,13 @@ function MenuItems() {
         text: "Direct Messages",
         to: "/messages",
       },
-      {
-        id: 7,
-        icon: diaries,
-        activeIcon: diariesActive,
-        text: "My Diary",
-        to: "/diary",
-      },
+      // {
+      //   id: 7,
+      //   icon: diaries,
+      //   activeIcon: diariesActive,
+      //   text: "My Diary",
+      //   to: "/diary",
+      // },
       {
         id: 8,
         icon: profileIcon,

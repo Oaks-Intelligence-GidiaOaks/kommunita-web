@@ -10,8 +10,8 @@
 .profile-avatar-img-box {
   width: 64px;
   height: 62px;
-  border-radius: 5px;
-  background: #d9d9d9;
+  /* border-radius: 5px !important; */
+  background: #fff;
 }
 .profile-name,
 .profile-title {

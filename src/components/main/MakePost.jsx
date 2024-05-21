@@ -203,8 +203,7 @@ function MakePost() {
 
   return (
     <>
-      {/* <div className="w-[491px] h-auto mt-3 makepost"> */}
-      <div className="w-full h-auto mt-3 makepost">
+      <div className="h-auto makepost">
         <div className="post-box p-4">
           <div className="post-content w-full">
             <div className="more flex justify-end">
@@ -305,12 +304,12 @@ function MakePost() {
               )}
             </div>
 
-            <div className="flex justify-end py-4 gap-4 items-center">
-              <div className="bg-[#F4F4F4] h-[33px] flex justify-center items-center">
+            <div className="flex justify-end py-4 gap-4 items-center w-full">
+              <div className="bg-[#F4F4F4] w-[200px] h-[33px]">
                 <select
                   value={category}
                   onChange={handleCategoryChange}
-                  className="focus:outline-none focus:ring-0 border-0 bg-transparent"
+                  className="focus:outline-none focus:ring-0 border-0 bg-transparent post-input w-full"
                 >
                   <option value="">Category</option>
                   {Category?.data?.map((data, index) => (
@@ -322,7 +321,7 @@ function MakePost() {
               </div>
 
               <div className="custom-select-box bg-[#F4F4F4] h-[33px] flex justify-center items-center">
-                <div className="p-3 flex justify-center items-center">
+                <div className="p-3 flex gap-2 justify-center items-center w-[200px]">
                   <div className="select-image">
                     {audience === "Public" ? (
                       <BiGlobe size={20} />
@@ -335,7 +334,7 @@ function MakePost() {
                   <select
                     value={audience}
                     onChange={handleAudienceChange}
-                    className="focus:outline-none focus:ring-0 border-0 bg-transparent"
+                    className="focus:outline-none focus:ring-0 border-0 bg-transparent post-input w-full"
                   >
                     <option value="Public">Public</option>
                     <option value="Private">Private</option>

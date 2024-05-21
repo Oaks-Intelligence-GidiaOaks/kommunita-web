@@ -3,12 +3,12 @@ import React from "react";
 const CategoryCard = ({ cat, onclick }) => {
   return (
     <div
-      onClick={() => onclick(cat.name)}
+      onClick={() => onclick(cat?.name)}
       className="cursor-pointer rounded-lg bg-white p-2 flex gap-3 items-center w-[170px] md:w-[200px]"
     >
       <div className="h-[32px] w-[32px]">
         <img
-          src={cat.photo_url}
+          src={cat?.photo_url}
           alt="icon"
           className="object-cover w-[32px] h-[32px]"
           width={32}
@@ -16,8 +16,8 @@ const CategoryCard = ({ cat, onclick }) => {
         />
       </div>
       <div>
-        <h2 className="font-semibold text-lg">{cat.name}</h2>
-        <p className="text-primary-dark-gray">{cat.count}</p>
+        <h2 className="font-semibold text-lg">{cat?.name}</h2>
+        <p className="text-primary-dark-gray">{cat?.count}</p>
       </div>
     </div>
   );

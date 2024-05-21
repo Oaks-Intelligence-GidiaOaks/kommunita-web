@@ -72,20 +72,20 @@ const SettingsHome = () => {
 
   // Set values once profile data is available
   useEffect(() => {
-    if (profile) {
-      setUsername(profile.data.username || "");
-      setState(profile.data.location.state || "");
-      setCountry(profile.data.location.country || "");
-      setEmail(profile.data.email || "");
-      setPhoneNumber(profile.data.phone_number || "");
-      setFullname(profile.data.fullname || "");
-      setTechtitle(profile.data.tech_title || "");
+    if (profile?.data) {
+      setUsername(profile?.data.username || "");
+      setState(profile?.data.location.state || "");
+      setCountry(profile?.data.location.country || "");
+      setEmail(profile?.data.email || "");
+      setPhoneNumber(profile?.data.phone_number || "");
+      setFullname(profile?.data.fullname || "");
+      setTechtitle(profile?.data.tech_title || "");
       // setLocation(
-      //   profile.data.location && Object.keys(profile.data.location).length !== 0
-      //     ? JSON.stringify(profile.data.location)
+      //   profile?.data.location && Object.keys(profile?.data.location).length !== 0
+      //     ? JSON.stringify(profile?.data.location)
       //     : ""
       // );
-      setBio(profile.data.about || "");
+      setBio(profile?.data.about || "");
     }
   }, [profile]);
 
