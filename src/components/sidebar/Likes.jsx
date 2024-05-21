@@ -19,10 +19,16 @@ function Likes() {
   // console.log(data?.data);
 
   useEffect(() => {
-    if (data && data?.data) {
-      setLikes(data.data);
+    if (data && user) {
+      setLikes(data.data.slice(-5));
+      const nw = data?.data?.map((like) => {
+        if (like.followers.filter((f) => f == user?.data._id).length == 0) {
+          return like;
+        }
+      });
+      console.log(nw);
     }
-  }, [data]);
+  }, [data, user]);
 
   return (
     <div className="main-sidebar-section mt-8 pb-5 w-full">
@@ -31,16 +37,16 @@ function Likes() {
 
         {likes ? (
           <div className="lists mb-5 flex flex-col gap-4">
-            {likes?.map((like, id) => {
+            {/* {likes?.map((like, id) => {
               if (
                 like.followers.filter((f) => f == user?.data._id).length == 0
               ) {
                 return <LikeContainer key={id} like={like} />;
               }
-            })}
-            {/* {likes?.map((like, id) => (
+            })} */}
+            {likes?.map((like, id) => (
               <LikeContainer key={id} like={like} refetch={refetch} />
-            ))} */}
+            ))}
           </div>
         ) : // <div className="h-[300px] overflow-hidden">
         //   <ShimmerSocialPost type="text" />
