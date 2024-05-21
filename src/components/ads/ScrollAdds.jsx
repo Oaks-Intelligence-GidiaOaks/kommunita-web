@@ -7,7 +7,7 @@ import { Spinner } from "flowbite-react";
 const ScrollAdds = () => {
   const { data: advertData, isLoading } = useGetAdvertQuery();
   const ads = advertData?.data?.filter((ad) => ad.status === "active") || [];
-  console.log(advertData);
+  console.log(advertData, "advert data");
 
   const imageTypes = ["jpeg", "svg+xml", "jpg", "webp", "png", "octet-stream"];
 
@@ -19,7 +19,6 @@ const ScrollAdds = () => {
     slidesToScroll: 1,
     autoplay: true,
     speed: 5000,
-    // autoplaySpeed: 5000,
     cssEase: "linear",
   };
 
@@ -32,47 +31,80 @@ const ScrollAdds = () => {
     );
   }
 
+  const filteredAds = ads.filter((dt) => !isToday(new Date(dt.end_date)));
+
   return (
-    <div className="">
+    <div className="w-full">
       {isLoading ? (
         <div className="flex justify-center py-3">
           <Spinner />
         </div>
+      ) : filteredAds.length === 1 ? (
+        <div className="relative w-full max-w-[410px] h-auto border rounded-md bg-white">
+          <a
+            href={filteredAds[0].landing_page_link}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {imageTypes.includes(filteredAds[0].media_urls[0]?.media_type) ? (
+              <img
+                className="w-full object-fill max-w-[410px] h-[450px]"
+                src={filteredAds[0].media_urls[0]?.media_url}
+                // alt={filteredAds[0].description}
+              />
+            ) : filteredAds[0].media_urls[0]?.media_type === "mp4" ? (
+              <video
+                className="object-cover w-full max-w-[410px] h-[410px]"
+                controls
+              >
+                <source
+                  src={filteredAds[0].media_urls[0]?.media_url}
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
+            ) : null}
+          </a>
+          <div className="absolute bottom-0 left-0 p-2 w-full text-start bg-gray-800 bg-opacity-50 text-white text-sm">
+            {filteredAds[0].description}
+          </div>
+        </div>
       ) : (
         <Slider {...settings}>
-          {ads
-            .filter((dt) => !isToday(new Date(dt.end_date)))
-            .map((ad) => (
-              <div key={ad._id} className="relative w-[410px] h-auto">
-                <a
-                  href={ad.landing_page_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {imageTypes.includes(ad.media_urls[0]?.media_type) ? (
-                    <img
-                      className="object-cover w-full max-w-[410px] h-[410px]"
+          {filteredAds.map((ad) => (
+            <div
+              key={ad._id}
+              className="relative w-full max-w-[410px] h-auto border rounded-md bg-white"
+            >
+              <a
+                href={ad.landing_page_link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {imageTypes.includes(ad.media_urls[0]?.media_type) ? (
+                  <img
+                    className="object-cover w-full max-w-[410px] h-[410px]"
+                    src={ad.media_urls[0]?.media_url}
+                    // alt={ad.description}
+                  />
+                ) : ad.media_urls[0]?.media_type === "mp4" ? (
+                  <video
+                    className="object-cover w-full max-w-[410px] h-[410px]"
+                    controls
+                  >
+                    <source
                       src={ad.media_urls[0]?.media_url}
-                      // alt={ad.description}
+                      type="video/mp4"
                     />
-                  ) : ad.media_urls[0]?.media_type === "mp4" ? (
-                    <video
-                      className="object-cover w-full max-w-[410px] h-[410px]"
-                      controls
-                    >
-                      <source
-                        src={ad.media_urls[0]?.media_url}
-                        type="video/mp4"
-                      />
-                      Your browser does not support the video tag.
-                    </video>
-                  ) : null}
-                </a>
-                <div className="absolute bottom-0 left-0 p-2 w-full text-start bg-gray-800 bg-opacity-50 text-white">
-                  {ad.description}
-                </div>
+                    Your browser does not support the video tag.
+                  </video>
+                ) : null}
+              </a>
+              <div className="absolute bottom-0 left-0 p-2 w-full text-start bg-gray-800 bg-opacity-50 text-white text-sm">
+                {ad.description}
               </div>
-            ))}
+            </div>
+          ))}
         </Slider>
       )}
     </div>

@@ -11,7 +11,7 @@ const Survey = ({ feeds }) => {
       {feeds?.length > 0 && (
         <div className="category-section mt-4 mb-5">
           <div
-            className="rounded-md h-[203px] survey-container relative"
+            className="rounded-md h-[250px] survey-container relative"
             style={{
               background: `
                 linear-gradient(

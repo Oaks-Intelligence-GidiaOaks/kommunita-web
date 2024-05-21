@@ -1,10 +1,5 @@
 import { useState, useEffect } from "react";
-import { AiOutlineMail } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
-import facebook from "../../assets/images/facebook.svg";
-import goggle from "../../assets/images/goggle.svg";
-import instagram from "../../assets/images/instagram.svg";
-import linkedin from "../../assets/images/linkedin.svg";
 import BgGroup from "../../assets/images/BgGroup.svg";
 import Ellipse from "../../assets/images/Ellipse.svg";
 import logo from "../../assets/images/new-logo.svg";
@@ -12,24 +7,25 @@ import { motion } from "framer-motion";
 import { InputField, PasswordField } from "../../components/auth-form";
 import { Form } from "react-final-form";
 import validate from "validate.js";
-import { REGISTER, INDEX, FORGOT_PASSWORD, LOGIN } from "../../routes/routes";
+import { LOGIN, FORGOT_PASSWORD } from "../../routes/routes";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
-import { useLoginUserMutation } from "../../service/user.service";
+import { useUpdatePasswordMutation } from "../../service/user.service";
+import { TbPasswordFingerprint } from "react-icons/tb";
 
 const constraints = {
-  identifier: {
+  code: {
     presence: true,
   },
-  password: {
+  newPassword: {
     presence: true,
-    length: {
-      minimum: 6,
-    },
+  },
+  confirmPassword: {
+    presence: true,
   },
 };
 
-const LoginPage = () => {
+const ResetPasswordPage = () => {
   const [eyeState, setEyeState] = useState(false);
 
   const toggleEye = (e) => {
@@ -37,15 +33,15 @@ const LoginPage = () => {
     setEyeState((prev) => !prev);
   };
 
-  const [loginUser, { error, isSuccess }] = useLoginUserMutation({
+  const [Reset, { error, isSuccess }] = useUpdatePasswordMutation({
     provideTag: ["User"],
   });
 
   const navigate = useNavigate();
 
   const onSubmit = async (values) => {
-    // console.log(values);
-    await rtkMutation(loginUser, values);
+    console.log(values);
+    await rtkMutation(Reset, values);
   };
 
   const validateForm = (values) => {
@@ -54,11 +50,11 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      showAlert("", "Login Successful!", "success");
-      navigate(INDEX);
-    } else if (error) {
+      showAlert("Password changed Successfully!", "Pls Login", "success");
       navigate(LOGIN);
-      showAlert("Oops", error.data.message || "An error occurred", "error");
+    } else if (error) {
+      // console.log(error.message);
+      showAlert("Oops", "Invalid Otp or Otp expired", "error");
     }
   }, [isSuccess, error, navigate]);
 
@@ -95,65 +91,62 @@ const LoginPage = () => {
           <img src={logo} alt="Logo" />
         </div>
         <div className="sm:mt-20 lg:mt-0 2xl:mt-40">
-          <div className="">
+          <div className="pt-10">
             <h1 className="font-Inter mb-7 lg:py-0  text-primary-dark-green font-medium text-3xl">
-              Sign In
+              Reset Password
             </h1>
             <Form
               onSubmit={onSubmit}
               validate={validateForm}
               render={({ handleSubmit, form, submitting }) => (
                 <form onSubmit={handleSubmit}>
-                  <InputField
-                    id="identifier"
-                    type="text"
-                    name="identifier"
-                    label="Email or Username"
-                    component="input"
-                    icon={AiOutlineMail}
-                    placeholder=" "
-                  />
-                  {form.getState().submitFailed &&
-                    form.getState().errors.identifier && (
-                      <small className="text-red-600">
-                        {form.getState().errors.identifier}
-                      </small>
-                    )}
                   <PasswordField
-                    name="password"
-                    id="password"
+                    name="newPassword"
+                    id="newPassword"
                     component="input"
                     eyeState={eyeState}
                     toggleEye={toggleEye}
-                    label="Password"
+                    label="New Password"
                     placeholder=" "
                   />
                   {form.getState().submitFailed &&
-                    form.getState().errors.password && (
+                    form.getState().errors.newPassword && (
                       <small className="text-red-600">
-                        {form.getState().errors.password}
+                        {form.getState().errors.newPassword}
                       </small>
                     )}
-                  <div className="flex justify-between mt-4 items-center">
-                    <div className="flex items-center gap-2">
-                      <div>
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          className="text-[#FF3A29]"
-                        />
-                        <label htmlFor="Remember Me"></label>
-                      </div>
-                      <span className="text-xs font-Inter font-light ">
-                        Keep me sign in
-                      </span>
-                    </div>
 
-                    <span className="text-xs font-Inter font-light text-primary-red hover:underline">
-                      <Link to={FORGOT_PASSWORD}>forgot password?</Link>
-                    </span>
-                  </div>
+                  <PasswordField
+                    name="confirmPassword"
+                    id="confirmPassword"
+                    component="input"
+                    eyeState={eyeState}
+                    toggleEye={toggleEye}
+                    label="Confirm Password"
+                    placeholder=" "
+                  />
+                  {form.getState().submitFailed &&
+                    form.getState().errors.confirmPassword && (
+                      <small className="text-red-600">
+                        {form.getState().errors.confirmPassword}
+                      </small>
+                    )}
+
+                  <InputField
+                    id="code"
+                    type="text"
+                    name="code"
+                    label="Enter Code"
+                    component="input"
+                    icon={TbPasswordFingerprint}
+                    placeholder=" "
+                  />
+                  {form.getState().submitFailed &&
+                    form.getState().errors.code && (
+                      <small className="text-red-600">
+                        {form.getState().errors.code}
+                      </small>
+                    )}
 
                   <button
                     type="submit"
@@ -168,7 +161,7 @@ const LoginPage = () => {
                         </span>
                       </>
                     ) : (
-                      "Sign In"
+                      "Change Password"
                     )}
                   </button>
                 </form>
@@ -179,47 +172,22 @@ const LoginPage = () => {
           <div className="mt-4 grid grid-cols-3 lg:gap-3 items-center w-full">
             <hr className="outline-gray-500" />
             <p className="text-center text-xs font-Montserrat text-gray-500 whitespace-nowrap">
-              Or Sign Up With{" "}
+              OR
             </p>
             <hr className="outline-gray-500" />
           </div>
 
-          <div className="flex items-center justify-center w-full mt-4 gap-5">
-            <div className="p-2 border border-gray-500 w-10 h-10 flex justify-center items-center rounded-full">
-              <img
-                src={goggle}
-                alt=""
-                className="bg-cover hover:cursor-pointer"
-              />
-            </div>
-            <div className="p-2 border border-gray-500 w-10 h-10 flex justify-center items-center rounded-full">
-              <img
-                src={facebook}
-                alt=""
-                className="bg-cover hover:cursor-pointer"
-              />
-            </div>
-            <div className="p-2 border border-gray-500 w-10 h-10 flex justify-center items-center rounded-full">
-              <img
-                src={instagram}
-                alt=""
-                className="bg-cover hover:cursor-pointer"
-              />
-            </div>
-            <div className="p-2 border border-gray-500 w-10 h-10 flex justify-center items-center rounded-full">
-              <img
-                src={linkedin}
-                alt=""
-                className="bg-cover hover:cursor-pointer"
-              />
-            </div>
-          </div>
+          <div className="flex items-center justify-between mt-4">
+            <button className="font-Inter font-medium text-base text-primary-gray flex gap-4">
+              Go back to Login
+              <Link to={LOGIN} className=" text-primary-red">
+                Sign In
+              </Link>
+            </button>
 
-          <div className="flex items-center justify-center mt-4">
-            <button className="font-Inter font-medium text-base text-primary-gray ">
-              Already have an account?{" "}
-              <Link to={REGISTER} className=" text-primary-red">
-                Sign up
+            <button className="font-Inter font-medium flex gap-4 border p-3 bg-primary-dark-green text-white text-sm rounded-full">
+              <Link to={FORGOT_PASSWORD} className="">
+                Request code
               </Link>
             </button>
           </div>
@@ -229,4 +197,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ResetPasswordPage;
