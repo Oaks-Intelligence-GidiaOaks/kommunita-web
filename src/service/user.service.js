@@ -1,4 +1,11 @@
-import { GETUSER, LOGIN, REGISTER, ALL_ORGANIZATIONS } from "./constants";
+import {
+  GETUSER,
+  LOGIN,
+  REGISTER,
+  ALL_ORGANIZATIONS,
+  GET_CODE,
+  RESET_PASSWORD,
+} from "./constants";
 import apiSlice from "./api/apiSlice";
 import { updateUser } from "../redux/slices/user.slice";
 
@@ -83,6 +90,24 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Organization"],
     }),
+
+    getCode: builder.mutation({
+      query: (data) => ({
+        url: GET_CODE,
+        method: "POST",
+        body: data,
+      }),
+      providesTags: ["User"],
+    }),
+
+    updatePassword: builder.mutation({
+      query: (data) => ({
+        url: RESET_PASSWORD,
+        method: "POST",
+        body: data,
+      }),
+      providesTags: ["User"],
+    }),
   }),
 });
 
@@ -91,4 +116,6 @@ export const {
   useRegisterUserMutation,
   useGetUserProfiileQuery,
   useGetOrganizationQuery,
+  useGetCodeMutation,
+  useUpdatePasswordMutation,
 } = userApiSlice;

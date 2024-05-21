@@ -17,6 +17,8 @@ import {
   Notifications,
   PollHistory,
   FollowHome,
+  ForgotPasswordPage,
+  ResetPasswordPage,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -34,6 +36,8 @@ const Config = () => {
         />
 
         <Route path={routes.REGISTER} element={<RegisterPage />} />
+        <Route path={routes.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+        <Route path={routes.RESET_PASSWORD} element={<ResetPasswordPage />} />
 
         {/* Protected Routes */}
         <Route

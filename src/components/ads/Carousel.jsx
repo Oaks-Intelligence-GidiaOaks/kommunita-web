@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types"; // Import PropTypes
 import Modals from "../modals/Modal";
 import SurveyDisplay from "../polls/SurveyDisplay";
 
@@ -40,11 +41,8 @@ const Carousel = ({ surveys, left, right }) => {
             }`}
           >
             {surveys.length > 1 && (
-              <div className="carousel-buttons absolute bottom-1 bg-transparent z-50 w-full">
-                <div className="flex justify-between items-center gap-5">
-                  <button aria-label="Previous" onClick={handlePrevious}>
-                    <img src={left} alt="Previous" />
-                  </button>
+              <div className="carousel-buttons absolute bottom-1 bg-transparent z-50 w-full h-auto">
+                <div className="flex flex-col justify-start items-start gap-3">
                   <div key={index} className="flex items-start pt-3">
                     <div className="flex items-start justify-start flex-col gap-2 w-auto">
                       {/* <p className="text-sm text-[#fff] flex-wrap">
@@ -54,16 +52,22 @@ const Carousel = ({ surveys, left, right }) => {
                         Description: {row.description}
                       </p>
                       <button
-                        className="text-xs border rounded-md p-2 text-[#fff]"
+                        className="text-xs border rounded-md p-1 text-[#fff]"
                         onClick={() => openSurvey(row)}
                       >
                         Take Survey
                       </button>
                     </div>
                   </div>
-                  <button aria-label="Next" onClick={handleNext}>
-                    <img src={right} alt="Next" />
-                  </button>
+
+                  <div className="flex w-full justify-between">
+                    <button aria-label="Previous" onClick={handlePrevious}>
+                      <img src={left} alt="Previous" />
+                    </button>
+                    <button aria-label="Next" onClick={handleNext}>
+                      <img src={right} alt="Next" />
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -82,6 +86,18 @@ const Carousel = ({ surveys, left, right }) => {
       </Modals>
     </>
   );
+};
+
+// Add prop types validation
+Carousel.propTypes = {
+  surveys: PropTypes.arrayOf(
+    PropTypes.shape({
+      topic: PropTypes.string,
+      description: PropTypes.string,
+    })
+  ).isRequired,
+  left: PropTypes.string.isRequired,
+  right: PropTypes.string.isRequired,
 };
 
 export default Carousel;

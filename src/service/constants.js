@@ -1,6 +1,9 @@
 // Auth constants
 export const LOGIN = "user/login";
 export const REGISTER = "user/register";
+export const GET_CODE = "user/forgot-password";
+export const RESET_PASSWORD = "user/reset-password";
+
 export const GETUSER = "user/me";
 export const ALL_ORGANIZATIONS = "user/organizations";
 export const FEEDS = "user/feeds";
