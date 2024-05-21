@@ -59,13 +59,13 @@ function MenuItems() {
       //   to: "/post",
       // },
       // { id: 5, icon: live, activeIcon: liveActive, text: "Live", to: "/live" },
-      {
-        id: 6,
-        icon: mail,
-        activeIcon: mailActive,
-        text: "Direct Messages",
-        to: "/messages",
-      },
+      // {
+      //   id: 6,
+      //   icon: mail,
+      //   activeIcon: mailActive,
+      //   text: "Direct Messages",
+      //   to: "/messages",
+      // },
       // {
       //   id: 7,
       //   icon: diaries,
