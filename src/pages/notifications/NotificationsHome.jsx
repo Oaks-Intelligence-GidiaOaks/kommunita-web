@@ -59,7 +59,7 @@ const NotificationsHome = () => {
               <div className="mt-2">
                 <p className="mb-1">{ntf?.post_id?.content}</p>
 
-                <div className="post-media rounded-md w-full">
+                {/* <div className="post-media rounded-md w-full">
                   <CustomCarousel
                     media_urls={ntf?.post_id?.media_urls}
                     left={left}
@@ -67,7 +67,7 @@ const NotificationsHome = () => {
                     dotsinactive={dotsinactive}
                     dotsactive={dotsactive}
                   />
-                </div>
+                </div> */}
               </div>
               <p className="text-primary-light-gray">
                 {getTimeAgoString(ntf?.updatedAt)}
