@@ -4,6 +4,7 @@ import search from "../../assets/images/Home/Search.png";
 
 import { useGetWhoToFollowQuery } from "../../service/whotofollow.service";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
+import noimage from "../../assets/images/sidebar/noImage.png";
 import { useSelector } from "react-redux";
 import { showAlert } from "../../static/alert";
 import { useGetFeedsQuery } from "../../service/feeds.service";
@@ -11,6 +12,8 @@ import axios from "axios";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { BeatLoader } from "react-spinners";
+import FollowContainer from "./FollowContainer";
 
 function Main() {
   const { data } = useGetWhoToFollowQuery();
@@ -23,8 +26,9 @@ function Main() {
 
   const token = useSelector((state) => state.user?.token);
 
-  const handleFollow = async (followers, id) => {
-    // console.log(id);
+  const handleFollo = async (followers, id) => {
+    setSubmitting(true);
+    setSubmitId(id);
     let data = {};
     let route = "follow";
 
@@ -57,7 +61,7 @@ function Main() {
         });
 
         console.log("Post submitted successfully:", response.data);
-        window.location.href = "/follow";
+        // window.location.href = "/follow";
       } catch (error) {
         console.error("Error submitting post:", error);
         showAlert(
@@ -67,7 +71,8 @@ function Main() {
         );
       } finally {
         refetch();
-        // setSubmitting(false);
+        setSubmitting(false);
+        setSubmitId("");
       }
     }
   };
@@ -85,34 +90,45 @@ function Main() {
     <div className="mt-3 px-3 w-full">
       <h2 className="font-semibold text-xl mb-5">Suggested followers</h2>
       {post?.data.map((like, id) => (
-        <div key={id} className="flex justify-between items-center gap-3 mb-3">
-          <div className="flex gap-4">
-            <img
-              src={avatar1}
-              className="w-[50.782px] h-[50.726px]"
-              alt="avatar"
-            />
-            <div className="flex flex-col">
-              <p className="font-semibold">{like.display_name}</p>
-              <p className="text-sm">@{like.username}</p>
-            </div>
-          </div>
+        // <div key={id} className="flex justify-between items-center gap-3 mb-3">
+        //   <div className="flex gap-4">
+        //     <img
+        //       src={like.photo_url || noimage}
+        //       className="w-[50.782px] h-[50.726px]"
+        //       alt="avatar"
+        //     />
+        //     <div className="flex flex-col">
+        //       <p className="font-semibold">{like.display_name}</p>
+        //       <p className="text-sm">@{like.username}</p>
+        //     </div>
+        //   </div>
 
-          {like.followers.filter((f) => f == user?.data._id).length == 1 ? (
-            <button
-              onClick={() => handleFollow(like.followers, like._id)}
-              className="p-2 border-2 border-primary-bright-green text-primary-bright-green rounded-lg w-[100px] text-center font-semibold px-5"
-            >
-              Following
-            </button>
-          ) : (
-            <button
-              onClick={() => handleFollow(like.followers, like._id)}
-              className="p-2 bg-primary--bright-green text-white rounded-lg w-[100px] text-center font-semibold px-5"
-            >
-              Follow
-            </button>
-          )}
+        //   {like.followers.filter((f) => f == user?.data._id).length == 1 ? (
+        //     <button
+        //       onClick={() => handleFollow(like.followers, like._id)}
+        //       className="p-2 border-2 border-primary-bright-green text-primary-bright-green rounded-lg w-[100px] text-center font-semibold px-5"
+        //     >
+        //       {submitting && submitID == like._id ? (
+        //         <BeatLoader color="#ffffff" loading={true} />
+        //       ) : (
+        //         "Following"
+        //       )}
+        //     </button>
+        //   ) : (
+        //     <button
+        //       onClick={() => handleFollow(like.followers, like._id)}
+        //       className="p-2 bg-primary--bright-green text-white rounded-lg w-[100px] text-center font-semibold px-5"
+        //     >
+        //       {submitting && submitID == like._id ? (
+        //         <BeatLoader color="#ffffff" loading={true} />
+        //       ) : (
+        //         "Follow"
+        //       )}
+        //     </button>
+        //   )}
+        // </div>
+        <div key={id}>
+          <FollowContainer like={like} />
         </div>
       ))}
     </div>

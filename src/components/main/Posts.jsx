@@ -86,10 +86,11 @@ function Post({
   };
 
   return (
-    <>
-      <div className="pt-3 post-wrapper w-full">
+    <div className="w-full">
+      <div className="pt-3 w-full">
         {content ? (
-          <div className="post-card p-5 h-auto w-[491px]">
+          // <div className="post-card p-5 h-auto w-[491px]">
+          <div className="post-card p-5 h-auto w-full">
             <div className="flex items-center justify-between">
               <div className="flex gap-3 items-center">
                 <div className="rounded-full border-red-100 border">
@@ -181,7 +182,7 @@ function Post({
         modalSize="3xl"
         onClose={() => setModalOpenPost(false)}
       >
-        <div className="flex items-center justify-start">
+        <div className="flex items-center justify-start w-full">
           <div className="flex gap-3 items-center">
             <div className="rounded-full border-red-100 border">
               <img src={avatar} className="w-[40px] h-[40px]" alt="" />
@@ -268,7 +269,7 @@ function Post({
           )}
         </div>
       </Modals>
-    </>
+    </div>
   );
 }
 

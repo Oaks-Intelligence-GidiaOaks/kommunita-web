@@ -1,4 +1,4 @@
-import avatar1 from "../../assets/images/sidebar/avatar1.svg";
+import noImage from "../../assets/images/sidebar/noImage.png";
 import actions from "../../assets/images/sidebar/action.svg";
 import actionPlus from "../../assets/images/sidebar/action-plus.svg";
 import { useGetWhoToFollowQuery } from "../../service/whotofollow.service";
@@ -14,7 +14,9 @@ function Likes() {
   const { data } = useGetWhoToFollowQuery();
   const { data: user, refetch } = useGetUserProfiileQuery();
   const [likes, setLikes] = useState(null);
+  const [followed, setFollowed] = useState(false);
 
+  // console.log(data?.data);
   const token = useSelector((state) => state.user?.token);
 
   useEffect(() => {
@@ -57,7 +59,7 @@ function Likes() {
           },
         });
 
-        console.log("Post submitted successfully:", response.data);
+        console.log("successful:", response.data);
       } catch (error) {
         console.error("Error submitting post:", error);
         showAlert(
@@ -83,7 +85,7 @@ function Likes() {
               <div key={id} className="flex justify-between items-center gap-3">
                 <div className="flex gap-4">
                   <img
-                    src={avatar1}
+                    src={like.photo_url || noImage}
                     className="w-[33.782px] h-[32.726px]"
                     alt="avatar"
                   />

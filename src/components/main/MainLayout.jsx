@@ -7,9 +7,9 @@ const MainLayout = ({ children, showNav }) => {
   return (
     <>
       <Nav />
-      <section className="bg-[#EFF2FC] w-full mx-auto">
+      <section className="bg-[#EFF2FC] w-full mx-auto px-5 overflow-x-hidden">
         {/* <div className="mx-auto px-8 flex justify-between w-full"> */}
-        <div className="flex justify-center w-full">
+        <div className="grid grid-cols-12 justify-center w-full">
           <div className="hidden lg:block col-span-3 xl:col-span-2">
             <SideNav />
             {/* <section className="lg:hidden">

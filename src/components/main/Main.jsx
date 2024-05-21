@@ -17,26 +17,37 @@ function Main() {
   const posts = data?.data || []; // Ensure data is an array
   // console.log(posts, "posts");
 
-  if (!data) {
-    return (
-      <div className="flex items-center flex-col mt-10">
-        <img src={search} alt="" />
-        <h2 className="font-bold text-4xl  mt-5 mb-5">NO POST</h2>
-        <p>Follow other users to begin to see post</p>
-        <Link to={"/follow"}>
-          <p className="text-primary-bright-green mt-2 font-semibold">
-            Click here to follow suggested users
-          </p>
-        </Link>
-      </div>
-    );
-  }
+  // if (!data) {
+  //   return (
+  //     <div className="flex items-center flex-col mt-10">
+  //       <img src={search} alt="" />
+  //       <h2 className="font-bold text-4xl  mt-5 mb-5">NO POST</h2>
+  //       <p>Follow other users to begin to see post</p>
+  //       <Link to={"/follow"}>
+  //         <p className="text-primary-bright-green mt-2 font-semibold">
+  //           Click here to follow suggested users
+  //         </p>
+  //       </Link>
+  //     </div>
+  //   );
+  // }
 
   return (
-    <div className="mt-3 px-3 main-wrapper w-full pb-10">
+    <div className="mt-3 px-3 w-full pb-10">
       <Story />
       <MakePost />
-
+      {!data && (
+        <div className="flex items-center flex-col mt-10">
+          <img src={search} alt="" />
+          <h2 className="font-bold text-4xl  mt-5 mb-5">NO POST</h2>
+          <p>Follow other users to begin to see post</p>
+          <Link to={"/follow"}>
+            <p className="text-primary-bright-green mt-2 font-semibold">
+              Click here to follow suggested users
+            </p>
+          </Link>
+        </div>
+      )}
       {[...posts]
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort posts by latest first
         .map((post, index) =>
@@ -57,7 +68,7 @@ function Main() {
               avatar={post.user_id.photo_url || avatar1} // You need to provide the avatar source
             />
           ) : (
-            <div className="mt-4" key={index}>
+            <div className="mt-4 w-full" key={index}>
               {post.options ? (
                 // <SurveyDisplay key={index} data={post} />
                 <PollDisplay
