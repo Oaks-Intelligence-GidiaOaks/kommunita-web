@@ -24,7 +24,7 @@ const NotificationsHome = () => {
   console.log(data?.data);
   return (
     <MainLayout>
-      {ntf.length <= 0 ? (
+      {isLoading ? (
         <div className="flex justify-center pt-10">
           <Spinner />
         </div>
@@ -59,15 +59,17 @@ const NotificationsHome = () => {
               <div className="mt-2">
                 <p className="mb-1">{ntf?.post_id?.content}</p>
 
-                {/* <div className="post-media rounded-md w-full">
-                  <CustomCarousel
-                    media_urls={ntf?.post_id?.media_urls}
-                    left={left}
-                    right={right}
-                    dotsinactive={dotsinactive}
-                    dotsactive={dotsactive}
-                  />
-                </div> */}
+                {ntf?.post_id?.media_urls.length > 0 && (
+                  <div className="post-media rounded-md w-full">
+                    <CustomCarousel
+                      media_urls={ntf?.post_id?.media_urls}
+                      left={left}
+                      right={right}
+                      dotsinactive={dotsinactive}
+                      dotsactive={dotsactive}
+                    />
+                  </div>
+                )}
               </div>
               <p className="text-primary-light-gray">
                 {getTimeAgoString(ntf?.updatedAt)}
