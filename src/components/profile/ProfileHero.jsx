@@ -8,7 +8,7 @@ import getTimeAgoString from "./../../utils/getTimeAgoString";
 const ProfileHero = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { data: profile } = useGetUserProfiileQuery();
-  // console.log("Profile:", profile);
+  console.log("Profile:", profile);
 
   // const display_name = useSelector((state) => state.user.user.display_name);
   const user = useSelector((state) => state.user.user);
@@ -109,7 +109,7 @@ const ProfileHero = () => {
                     </div>
                     <div>
                       <HeroLabel
-                        label="Lagos, Nigeria"
+                        label={`${profile?.data?.location?.country}, ${profile?.data?.location?.state}`}
                         icon={
                           <svg
                             width="14"

@@ -13,7 +13,7 @@ import { Spinner } from "flowbite-react";
 function Main() {
   const { data, isLoading, refetch } = useGetFeedsQuery();
   const posts = data?.data || [];
-  // console.log(posts, "posts");
+  console.log(posts, "posts");
 
   return (
     <div className="pt-4 main-wrapper w-full pb-10">
@@ -55,6 +55,7 @@ function Main() {
                 reaction={post.reaction}
                 avatar={post.user_id.photo_url || avatar4}
                 badgeColor={post.user_id?.department[0]?.badge?.color}
+                department={post.user_id?.department[0]?.badge?.department}
               />
             ) : (
               <div className="mt-4" key={index}>

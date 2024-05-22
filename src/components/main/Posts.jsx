@@ -35,6 +35,7 @@ function Post({
   share,
   reaction,
   badgeColor,
+  department,
 }) {
   const [allComment, setAllComment] = useState([]);
   const [addComment, setAddComment] = useState(false);
@@ -101,17 +102,19 @@ function Post({
                   />
                 </div>
                 <div>
-                  <div className="flex gap-2">
-                    <p className="post-name pb-1">{fullname}</p>{" "}
+                  <div className="flex gap-2 items-center">
+                    <p className="post-name">{fullname}</p>{" "}
                     {verifiedUser && (
                       <span>
                         <img src={verified} alt="" className="pb-1" />
                       </span>
                     )}
-                  </div>
-                  <p className="username">
-                    @{username}{" "}
                     <span className="post-time ml-2 font-bold">{postTime}</span>
+                  </div>
+                  <p className="username flex gap-1 items-center">
+                    <div className="flex flex-col">
+                      @{username} <p>{department || ""}</p>
+                    </div>
                   </p>
                 </div>
               </div>
@@ -292,6 +295,7 @@ Post.propTypes = {
   repost: PropTypes.array.isRequired,
   share: PropTypes.array.isRequired,
   reaction: PropTypes.object.isRequired,
+  department: PropTypes.string,
 };
 
 export default Post;
