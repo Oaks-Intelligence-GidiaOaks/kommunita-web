@@ -6,6 +6,7 @@ import right from "../../assets/carousel/right.svg";
 import Carousel from "./Carousel";
 
 const Survey = ({ feeds }) => {
+  // console.log(feeds, "feeds")
   return (
     <>
       {feeds?.length > 0 && (

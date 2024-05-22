@@ -6,6 +6,7 @@ import SurveyDisplay from "../polls/SurveyDisplay";
 const Carousel = ({ surveys, left, right }) => {
   const [openModal, setOpenModal] = useState(false);
   const [surveyData, setSurveyData] = useState({});
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const closeModal = () => {
     setOpenModal(false);
@@ -15,8 +16,6 @@ const Carousel = ({ surveys, left, right }) => {
     setOpenModal(true);
     setSurveyData(row);
   };
-  const [currentIndex, setCurrentIndex] = useState(0);
-  console.log(surveys);
 
   const handlePrevious = () => {
     setCurrentIndex((prevIndex) =>
@@ -40,26 +39,25 @@ const Carousel = ({ surveys, left, right }) => {
               currentIndex === index ? "flex" : "hidden"
             }`}
           >
-            {surveys.length > 1 && (
-              <div className="carousel-buttons absolute bottom-1 bg-transparent z-50 w-full h-auto">
-                <div className="flex flex-col justify-start items-start gap-3">
-                  <div key={index} className="flex items-start pt-3">
-                    <div className="flex items-start justify-start flex-col gap-2 w-auto">
-                      {/* <p className="text-sm text-[#fff] flex-wrap">
-                        Topic: {row.topic}
-                      </p> */}
-                      <p className="text-sm text-[#fff] flex flex-wrap">
-                        Description: {row.description}
-                      </p>
-                      <button
-                        className="text-xs border rounded-md p-1 text-[#fff]"
-                        onClick={() => openSurvey(row)}
-                      >
-                        Take Survey
-                      </button>
-                    </div>
+            <div className="carousel-buttons absolute bottom-1 bg-transparent z-50 w-full h-auto">
+              <div className="flex flex-col justify-start items-start gap-3">
+                <div key={index} className="flex items-start pt-3">
+                  <div className="flex items-start justify-start flex-col gap-2 w-auto">
+                    {/* <p className="text-sm text-[#fff] flex-wrap">
+                      Topic: {row.topic}
+                    </p> */}
+                    <p className="text-sm text-[#fff] flex flex-wrap">
+                      Description: {row.description}
+                    </p>
+                    <button
+                      className="text-xs border rounded-md p-1 text-[#fff]"
+                      onClick={() => openSurvey(row)}
+                    >
+                      Take Survey
+                    </button>
                   </div>
-
+                </div>
+                {surveys.length > 1 && (
                   <div className="flex w-full justify-between">
                     <button aria-label="Previous" onClick={handlePrevious}>
                       <img src={left} alt="Previous" />
@@ -68,9 +66,9 @@ const Carousel = ({ surveys, left, right }) => {
                       <img src={right} alt="Next" />
                     </button>
                   </div>
-                </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         ))}
       </div>
