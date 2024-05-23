@@ -18,7 +18,7 @@ function Category() {
               {category.map((cat, id) => (
                 <div
                   key={id}
-                  className="category-card relative border shadow-lg"
+                  className="category-card relative border shadow-lg rounded-sm"
                 >
                   <img
                     src={cat.photo_url}

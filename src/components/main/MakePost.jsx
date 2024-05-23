@@ -409,7 +409,30 @@ function MakePost() {
           </div>
         </div> */}
 
+        <div className="flex justify-start pb-5">
+          <select
+            value={category}
+            onChange={handleCategoryChange}
+            className="focus:outline-none focus:ring-0 rounded-md bg-transparent post-input w-full border-2 border-gray-300"
+          >
+            <option value="">Select Category</option>
+            {Category?.data?.map((data, index) => (
+              <option value={data?._id} key={index}>
+                {data.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <CustomEditor onChange={handleEditorChange} />
+
+        {editorContent ? (
+          <div className="flex justify-end pt-5">
+            <button className="p-2 rounded-md border text-[#fff] bg-[#34B53A]">
+              Post Diary
+            </button>
+          </div>
+        ) : null}
 
         {/* <textarea className="post-box focus:outline-none focus:ring-0 pb-4 flex-wrap"></textarea> */}
         {/* <div className="flex justify-between pb-5 pt-5">
