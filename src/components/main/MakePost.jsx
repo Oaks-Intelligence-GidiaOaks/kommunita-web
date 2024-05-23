@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useMemo } from "react";
 import Modals from "../modals/Modal";
 import more_btn from "../../assets/images/main/more.svg";
 import photo_btn from "../../assets/images/main/photo.svg";
@@ -33,6 +33,7 @@ import { useGetCategoriesQuery } from "../../service/categories.service";
 import { BeatLoader } from "react-spinners";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import PollSchedule from "../polls/PollSchedule";
+import CustomEditor from "./editor/CustomEditor";
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
@@ -48,6 +49,12 @@ function MakePost() {
   const [scheduleTime, setScheduleTime] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const { refetch } = useGetFeedsQuery();
+  const [editorContent, setEditorContent] = useState("");
+  console.log(editorContent);
+
+  const handleEditorChange = (content) => {
+    setEditorContent(content);
+  };
 
   const toggleCollapse = () => {
     setIsExpanded(!isExpanded);
@@ -386,11 +393,11 @@ function MakePost() {
 
       <Modals
         openModal={openDiaryModal}
-        modalSize="3xl"
+        modalSize="4xl"
         onClose={() => setOpenDiaryModal(false)}
-        btnText="Post Diary"
+        title={"Diary"}
       >
-        <div className="flex justify-between pb-5">
+        {/* <div className="flex justify-between pb-5">
           <p className="pagination">Page 3/4</p>
           <div className="flex gap-3 items-center">
             <button>
@@ -400,9 +407,12 @@ function MakePost() {
               <img src={right} alt="" />
             </button>
           </div>
-        </div>
-        <textarea className="post-box focus:outline-none focus:ring-0 pb-4 flex-wrap"></textarea>
-        <div className="flex justify-between pb-5 pt-5">
+        </div> */}
+
+        <CustomEditor onChange={handleEditorChange} />
+
+        {/* <textarea className="post-box focus:outline-none focus:ring-0 pb-4 flex-wrap"></textarea> */}
+        {/* <div className="flex justify-between pb-5 pt-5">
           <div className="text-add-post">Add to your post</div>
           <div className="post-buttons-add flex gap-3">
             <button className="hover:shadow-lg">
@@ -415,7 +425,7 @@ function MakePost() {
               <img src={location} alt="" />
             </button>
           </div>
-        </div>
+        </div> */}
       </Modals>
 
       <Modals

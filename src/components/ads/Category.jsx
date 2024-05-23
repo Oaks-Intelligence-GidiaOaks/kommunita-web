@@ -16,15 +16,19 @@ function Category() {
 
             <div className="flex justify-center flex-col gap-3 pt-4 pb-5">
               {category.map((cat, id) => (
-                <div key={id} className="category-card relative">
+                <div
+                  key={id}
+                  className="category-card relative border shadow-lg"
+                >
                   <img
                     src={cat.photo_url}
                     className="w-full h-[161px]"
                     alt=""
                   />
-                  <p className="absolute bottom-0 left-0 category-text ml-6 mb-6">
+
+                  <div className="absolute bottom-0 left-0 p-2 w-full text-start bg-gray-800 bg-opacity-50 text-white text-sm">
                     {cat.name}
-                  </p>
+                  </div>
                 </div>
               ))}
             </div>

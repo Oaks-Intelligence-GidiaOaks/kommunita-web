@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import close from "./close.svg";
 import "./style.css";
 
-function Modals({ openModal, modalSize, onClose, btnText, children }) {
+function Modals({ title, openModal, modalSize, onClose, btnText, children }) {
   return (
     <Modal
       show={openModal}
@@ -17,7 +17,8 @@ function Modals({ openModal, modalSize, onClose, btnText, children }) {
         zIndex: "100",
       }}
     >
-      <div className="flex justify-end mr-6 py-4">
+      <div className="flex justify-between mr-6 py-4">
+        <p className="pl-8 text-[20px] font-bold font-Inter">{title}</p>
         <button className="modal-close rounded-full ring-1" onClick={onClose}>
           <img src={close} alt="" />
         </button>
@@ -38,6 +39,7 @@ function Modals({ openModal, modalSize, onClose, btnText, children }) {
 
 // PropTypes definition
 Modals.propTypes = {
+  title: PropTypes.string,
   openModal: PropTypes.bool.isRequired,
   modalSize: PropTypes.string.isRequired,
   btnText: PropTypes.string,
