@@ -56,6 +56,7 @@ function Main() {
                 avatar={post.user_id.photo_url || avatar4}
                 badgeColor={post.user_id?.department[0]?.badge?.color}
                 department={post.user_id?.department[0]?.badge?.department}
+                type={post?.type}
               />
             ) : (
               <div className="mt-4" key={index}>

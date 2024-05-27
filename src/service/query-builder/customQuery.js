@@ -22,7 +22,7 @@ const customBaseQuery = async (args, api, extraOptions) => {
   // Check if result is null or undefined
   if (!result) {
     // Handle the case when result is null or undefined
-    console.error("Result is null or undefined:", result);
+    // console.error("Result is null or undefined:", result);
     return null; // Or handle it according to your logic
   }
 

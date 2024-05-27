@@ -11,7 +11,17 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Diary"],
     }),
+
+    createDiary: builder.mutation({
+      query: (data) => ({
+        url: DIARY,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Diary"],
+    }),
   }),
 });
 
-export const { useGetDiaryQuery } = organizationApiSlice;
+export const { useGetDiaryQuery, useCreateDiaryMutation } =
+  organizationApiSlice;
