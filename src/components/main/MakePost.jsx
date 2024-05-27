@@ -52,18 +52,6 @@ function MakePost() {
   const { refetch } = useGetFeedsQuery();
 
   const [editorHtml, setEditorHtml] = useState("");
-  const [tempHtml, setTempHtml] = useState(""); // Temporary state for changes
-
-  const handleChange = (content) => {
-    setTempHtml(content); // Update the temporary state on change
-  };
-
-  const handleBlur = (previousRange, source, editor) => {
-    console.log("Editor has lost focus");
-    const content = editor.getHTML();
-    setEditorHtml(content); // Update the main state on blur
-    console.log("Content on blur:", content);
-  };
 
   console.log(editorHtml);
 
@@ -261,7 +249,7 @@ function MakePost() {
       setContent("");
       setCategory("");
       setEditorHtml("");
-      setTempHtml("");
+      // setTempHtml("");
       setOpenDiaryModal(false);
 
       showAlert("Great!", "Diary created successfully", "success");
@@ -469,13 +457,12 @@ function MakePost() {
       >
         <div className="pb-5 flex flex-col gap-2 justify-start">
           {/* <label htmlFor="content" className="text-sm">
-            Enter content here
+            Type content here
           </label> */}
 
           <ReactQuill
-            value={tempHtml}
-            onChange={handleChange}
-            onBlur={handleBlur}
+            value={editorHtml}
+            onChange={setEditorHtml}
             theme="snow"
             placeholder="Write something amazing..."
           />

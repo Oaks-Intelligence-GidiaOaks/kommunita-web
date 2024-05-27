@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 const CustomCarousel = ({
   media_urls,
@@ -26,7 +27,7 @@ const CustomCarousel = ({
       {media_urls.map((media, index) => (
         <div
           key={index}
-          className={`items-center justify-center rounded-sm relative flex-row ${
+          className={`items-center justify-center rounded-md relative flex-row ${
             currentIndex === index ? "flex" : "hidden"
           }`}
         >
@@ -34,22 +35,23 @@ const CustomCarousel = ({
             media.media_type
           ) ? (
             <img
-              className="w-full h-[200px] object-cover"
-              // className="w-full h-[350px] object-cover"
+              className="w-full h-[250px] object-cover rounded-md border border-[#fff]"
               alt="post media"
               src={media.media_url}
             />
           ) : media.media_type === "mp4" ? (
-            <video className="h-[200px] w-full object-cover" controls>
-              {/* <video className="h-[350px] w-full object-cover" controls> */}
+            <video
+              className="h-[250px] w-full object-cover rounded-md border border-[#fff]"
+              controls
+            >
               <source src={media.media_url} type="video/mp4" />
-              Sorry, your browser doesn't support embedded videos.
+              Sorry, your browser does not support embedded videos.
             </video>
           ) : null}
 
           {media_urls.length > 1 && (
             <div className="carousel-buttons absolute bottom-10 bg-transparent z-50">
-              <div className="flex justify-center items-center gap-5">
+              <div className="flex justify-center items-center gap-5 bg-gray-800 bg-opacity-50 p-2 rounded-full">
                 <button aria-label="Previous" onClick={handlePrevious}>
                   <img src={left} alt="Previous" />
                 </button>
@@ -83,6 +85,19 @@ const CustomCarousel = ({
       ))}
     </div>
   );
+};
+
+CustomCarousel.propTypes = {
+  media_urls: PropTypes.arrayOf(
+    PropTypes.shape({
+      media_type: PropTypes.string.isRequired,
+      media_url: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  left: PropTypes.string.isRequired,
+  right: PropTypes.string.isRequired,
+  dotsinactive: PropTypes.string.isRequired,
+  dotsactive: PropTypes.string.isRequired,
 };
 
 export default CustomCarousel;

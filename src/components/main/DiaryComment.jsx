@@ -3,17 +3,20 @@ import { showAlert } from "../../static/alert";
 import { useSelector } from "react-redux";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
-import { usePostCommentMutation } from "../../service/post.service";
+import { useDiaryCommentMutation } from "../../service/diary.service";
 import rtkMutation from "../../utils/rtkMutation";
 import PropTypes from "prop-types";
+import { useGetFeedsQuery } from "../../service/feeds.service";
 
 const DiaryComment = ({ id, onComment, reply, placeholder }) => {
+  //   console.log(id, onComment, reply, placeholder);
   const { data: profile } = useGetUserProfiileQuery();
-  // console.log(profile, "profile");
+  const { data: feedsData, refetch } = useGetFeedsQuery();
+  console.log("feeds data: ", feedsData);
 
   const [content, setContent] = useState("");
 
-  const [postComment, { isSuccess, error }] = usePostCommentMutation();
+  const [diaryComment, { isSuccess, error }] = useDiaryCommentMutation();
 
   const handleComment = async () => {
     onComment();
@@ -22,7 +25,7 @@ const DiaryComment = ({ id, onComment, reply, placeholder }) => {
       try {
         const commentData = { content, id, reply };
 
-        await rtkMutation(postComment, commentData);
+        await rtkMutation(diaryComment, commentData);
 
         setContent("");
       } catch (error) {
@@ -34,12 +37,13 @@ const DiaryComment = ({ id, onComment, reply, placeholder }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log("success");
+      //   console.log("success");
+      refetch();
       showAlert("Great!", "Comment added successfully", "success");
     } else if (error) {
       showAlert("Oops", "An error occurred", "error");
     }
-  }, [isSuccess, error]);
+  }, [isSuccess, error, refetch]);
 
   const name = useSelector((state) => state.user?.user?.display_name);
 

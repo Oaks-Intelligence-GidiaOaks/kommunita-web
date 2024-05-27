@@ -18,10 +18,28 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Diary"],
+      invalidatesTags: ["Feeds"],
+    }),
+
+    diaryComment: builder.mutation({
+      query: ({ content, id, reply }) => {
+        const url = reply ? `/user/reply` : `/user/comment/diary`;
+        const body = reply
+          ? { content, comment_id: id }
+          : { content, diary_id: id };
+        return {
+          url,
+          method: "POST",
+          body,
+        };
+      },
+      // invalidatesTags: ["Feeds", "Diary", "Post"],
     }),
   }),
 });
 
-export const { useGetDiaryQuery, useCreateDiaryMutation } =
-  organizationApiSlice;
+export const {
+  useGetDiaryQuery,
+  useCreateDiaryMutation,
+  useDiaryCommentMutation,
+} = organizationApiSlice;

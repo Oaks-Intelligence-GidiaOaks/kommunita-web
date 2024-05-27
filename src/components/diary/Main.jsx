@@ -12,7 +12,7 @@ import search from "../../assets/images/Home/Search.png";
 function DiaryMain() {
   const { data } = useGetDiaryQuery();
   const post = data;
-  console.log("posts", data?.data);
+  // console.log("posts", data?.data);
 
   if (!data) {
     return (
@@ -44,6 +44,7 @@ function DiaryMain() {
           avatar={post.user_id.photo_url || avatar1}
           badgeColor={post.user_id?.department[0]?.badge?.color}
           department={post.user_id?.department[0]?.badge?.department}
+          type={post?.type}
         />
       ))}
     </div>

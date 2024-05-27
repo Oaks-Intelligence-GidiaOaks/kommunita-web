@@ -7,7 +7,7 @@ import { Spinner } from "flowbite-react";
 const ScrollAdds = () => {
   const { data: advertData, isLoading } = useGetAdvertQuery();
   const ads = advertData?.data?.filter((ad) => ad.status === "active") || [];
-  console.log(advertData, "advert data");
+  // console.log(advertData, "advert data");
 
   const imageTypes = ["jpeg", "svg+xml", "jpg", "webp", "png", "octet-stream"];
 

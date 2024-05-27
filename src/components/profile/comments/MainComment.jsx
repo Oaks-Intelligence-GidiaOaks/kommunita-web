@@ -9,6 +9,7 @@ import { GoDotFill } from "react-icons/go";
 import "./style.css";
 
 const MainComment = ({ comment }) => {
+  // console.log(comment);
   const [addReply, setAddReply] = useState(false);
   // console.log(comment);
   const onReply = () => {
