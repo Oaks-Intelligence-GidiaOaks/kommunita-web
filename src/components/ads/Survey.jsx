@@ -10,7 +10,7 @@ const Survey = ({ feeds }) => {
   return (
     <>
       {feeds?.length > 0 && (
-        <div className="category-section mt-4 mb-5">
+        <div className="category-section mb-5">
           <div
             className="rounded-md h-[250px] survey-container relative"
             style={{
