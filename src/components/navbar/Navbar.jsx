@@ -5,11 +5,43 @@ import diaries from "../../assets/images/menu/diaries.svg";
 import search from "../../assets/images/menu/search.svg";
 import feeds from "../../assets/images/menu/feeds.svg";
 import "./style.css";
+import { useState } from "react";
+import { useSearchGeneralMutation } from "../../service/search.service";
+import rtkMutation from "../../utils/rtkMutation";
+import { showAlert } from "../../static/alert";
+import Modals from "../modals/Modal";
+import GeneralSearch from "../search/GeneralSearch";
+import { BeatLoader } from "react-spinners";
 
 const Navbar = () => {
   const currentPath = window.location.pathname;
+  const [openSearchModal, setOpenSearchModal] = useState(false);
+  const [searchGeneral, { error, isSuccess }] = useSearchGeneralMutation();
+  const [searchedData, setSearchedData] = useState(null);
+  const [searching, setSearching] = useState(false);
   const nAL = "pt-1 pb-2";
   const aL = nAL + " text-[#2CC84A]";
+  const [searchString, setSearchString] = useState("");
+
+  const handleSearch = async () => {
+    setSearching(true);
+    // console.log(searchString);
+    if (searchString) {
+      const postData = {
+        search_term: searchString,
+      };
+      try {
+        const res = await rtkMutation(searchGeneral, { ...postData });
+        console.log(res.data);
+        setSearchedData(res.data);
+        setOpenSearchModal(true);
+      } catch (error) {
+        console.error("Error making search: ", error);
+        showAlert("Oops", "An error occurred while searching content", "error");
+      }
+    }
+    setSearching(false);
+  };
 
   return (
     <nav className="h-auto flex justify-between items-center p-4 w-full top-0 z-10">
@@ -68,10 +100,28 @@ const Navbar = () => {
             type="text"
             className="search-input w-full focus:outline-none focus:ring-0 "
             placeholder="Search"
+            value={searchString}
+            onChange={(e) => setSearchString(e.target.value)}
           />
-          <img src={search} alt="" />
+          <div className="cursor-pointer" onClick={handleSearch}>
+            {searching ? (
+              <BeatLoader color="#ffffff" loading={true} />
+            ) : (
+              <img src={search} alt="" />
+            )}
+          </div>
         </div>
       </div>
+      {openSearchModal && (
+        <Modals
+          title={searchString}
+          openModal={openSearchModal}
+          modalSize="2xl"
+          onClose={() => setOpenSearchModal(false)}
+        >
+          <GeneralSearch data={searchedData} />
+        </Modals>
+      )}
     </nav>
   );
 };

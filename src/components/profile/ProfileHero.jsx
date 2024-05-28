@@ -1,21 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeroLabel from "./HeroLabel";
 import MenuItems from "./../sidebar/MenuItems";
-import { useGetUserProfiileQuery } from "../../service/user.service";
+import { useParams } from "react-router-dom";
+import {
+  useGetOtherUserProfileMutation,
+  useGetUserProfiileQuery,
+} from "../../service/user.service";
 import { useSelector } from "react-redux";
-import getTimeAgoString from "./../../utils/getTimeAgoString";
+import { showAlert } from "../../static/alert";
+import avatar4 from "../../assets/images/placeholder.png";
+import hug from "../../assets/images/hug.png";
 
 const ProfileHero = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
-  const { data: profile } = useGetUserProfiileQuery();
-  console.log("Profile:", profile);
+  const { data } = useGetUserProfiileQuery();
+  const [getOtherUserProfile, { isSuccess, isError }] =
+    useGetOtherUserProfileMutation();
 
-  // const display_name = useSelector((state) => state.user.user.display_name);
+  const [profile, setProfile] = useState(null);
+
   const user = useSelector((state) => state.user.user);
 
   const createdAt = new Date(user.createdAt);
   const month = createdAt.toLocaleString("default", { month: "long" });
   const year = createdAt.getFullYear();
+
+  const { user_id } = useParams();
+
+  // console.log(user_id);
+
+  useEffect(() => {
+    if (user_id) {
+      GetOtherUser();
+    } else {
+      setProfile(data);
+    }
+  }, [user_id]);
+
+  const GetOtherUser = async () => {
+    try {
+      const res = await getOtherUserProfile(user_id);
+      setProfile(res.data);
+      console.log(res.data);
+    } catch (error) {
+      console.error("Error making search: ", error);
+      showAlert("Oops", "An error occurred while searching content", "error");
+    }
+  };
+  // if (!profile) {
+  //   return;
+  // }
 
   return (
     <div className="lg:h-[300px] text-primary-dark-gray">
@@ -34,9 +68,11 @@ const ProfileHero = () => {
       <div className="relative px-10 lg:px-20 ">
         <div className="lg:absolute -mt-10 lg:mt-0 -top-10 lg:h-[150px] rounded-xl lg:w-[90%] bg-white p-4">
           <div className="relative flex justify-center items-center">
-            <div className="absolute top-0 right-5 h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center">
-              <img src="/src/assets/images/AddNotification.svg" />
-            </div>
+            {!user_id && (
+              <div className="absolute top-0 right-5 h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center">
+                <img src="/src/assets/images/AddNotification.svg" />
+              </div>
+            )}
             <div
               onClick={() => setShowMobileNav(!showMobileNav)}
               className="absolute top-0 left-5 h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center cursor-pointer lg:!hidden"
@@ -61,11 +97,14 @@ const ProfileHero = () => {
             <div className="flex lg:items-end gap-5 -mt-[50px] flex-col items-center lg:flex-row lg:justify-between w-full">
               <div className="flex flex-col lg:flex-row items-center lg:items-end gap-5 lg:ml-10">
                 <div className="border-white border-[5px] bg-white  w-[140px] h-[136px] overflow-hidden rounded-lg">
-                  <img src={profile?.data.photo_url} />
+                  <img
+                    src={profile?.data.photo_url || avatar4}
+                    className="object-cover"
+                  />
                 </div>
                 <div className="flex flex-col items-center lg:block">
                   <h1 className="font-bold text-3xl xl:text-5xl mb-5">
-                    {user.display_name}
+                    {profile?.data?.display_name}
                   </h1>
                   <div className="flex gap-5">
                     <div>
@@ -109,7 +148,9 @@ const ProfileHero = () => {
                     </div>
                     <div>
                       <HeroLabel
-                        label={`${profile?.data?.location?.country}, ${profile?.data?.location?.state}`}
+                        label={`${profile?.data?.location?.country || ""} ${
+                          profile?.data?.location?.state || ""
+                        }`}
                         icon={
                           <svg
                             width="14"
@@ -177,6 +218,7 @@ const ProfileHero = () => {
                   </div>
                 </div>
               </div>
+
               <div>
                 {" "}
                 <svg
@@ -190,33 +232,53 @@ const ProfileHero = () => {
                   <path d="M1.5 0V81.5" stroke="#E8E8E8" strokeWidth="3" />
                 </svg>{" "}
               </div>
+
               <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-3 lg:gap-20">
-                <div className="flex items-center justify-between gap-5">
-                  <div className="">
-                    <h2 className="font-bold lg:text-2xl">
-                      {user.followers.length}
-                    </h2>
-                    <p>Followers</p>
+                <div>
+                  <div className="flex items-center justify-between gap-5">
+                    <div className="">
+                      <h2 className="font-bold lg:text-2xl">
+                        {profile?.data.followers.length}
+                      </h2>
+                      <p>Followers</p>
+                    </div>
+                    <div>
+                      {" "}
+                      <svg
+                        width="3"
+                        height="32"
+                        viewBox="0 0 3 82"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1.5 0V81.5"
+                          stroke="#E8E8E8"
+                          strokeWidth="3"
+                        />
+                      </svg>{" "}
+                    </div>
+                    <div className="">
+                      <h2 className="font-bold lg:text-2xl">
+                        {profile?.data.following.length}
+                      </h2>
+                      <p>Following</p>
+                    </div>
+                    <div></div>
                   </div>
-                  <div>
-                    {" "}
-                    <svg
-                      width="3"
-                      height="32"
-                      viewBox="0 0 3 82"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M1.5 0V81.5" stroke="#E8E8E8" strokeWidth="3" />
-                    </svg>{" "}
-                  </div>
-                  <div className="">
-                    <h2 className="font-bold lg:text-2xl">
-                      {user.following.length}
-                    </h2>
-                    <p>Following</p>
-                  </div>
-                  <div></div>
+                  {user_id && (
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="h-[41px] w-[41px] rounded-full flex items-center justify-center">
+                        <img src={hug} />
+                      </div>
+                      <button className="text-white bg-[#02BA09] rounded-lg py-2 px-5">
+                        Follow
+                      </button>
+                      <div className="h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center">
+                        <img src="/src/assets/images/AddNotification.svg" />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -82,7 +82,7 @@ const FollowContainer = (like) => {
   }, [handleFollow, handleUnFollow]);
 
   return (
-    <div className="flex justify-between items-center gap-3 mb-3">
+    <div className="flex justify-between items-center gap-3 mb-3 bg-white/50 p-2">
       <div className="flex gap-4">
         <img
           src={like.like.photo_url || noimage}

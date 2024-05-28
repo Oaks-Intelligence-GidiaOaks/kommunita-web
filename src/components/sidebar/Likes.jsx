@@ -20,13 +20,15 @@ function Likes() {
 
   useEffect(() => {
     if (data && user) {
-      setLikes(data.data.slice(-5));
+      // setLikes(data.data.slice(-5));
+      setLikes(data.data);
       const nw = data?.data?.map((like) => {
         if (like.followers.filter((f) => f == user?.data._id).length == 0) {
           return like;
         }
       });
-      console.log(nw);
+      setLikes(nw.filter((f) => f !== undefined).slice(-5));
+      // console.log("NEW DATA", nw);
     }
   }, [data, user]);
 
