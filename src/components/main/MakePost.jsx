@@ -276,11 +276,11 @@ function MakePost() {
       <div className="h-auto makepost">
         <div className="post-box p-4">
           <div className="post-content w-full">
-            <div className="more flex justify-end">
+            {/* <div className="more flex justify-end">
               <button>
                 <img src={more_btn} alt="" />
               </button>
-            </div>
+            </div> */}
 
             <div className="flex pb-4">
               {/* <img src={avatar2} alt="" /> */}
