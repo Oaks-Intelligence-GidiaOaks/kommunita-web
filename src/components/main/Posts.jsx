@@ -15,6 +15,12 @@ import left from "../../assets/carousel/left.svg";
 import right from "../../assets/carousel/right.svg";
 import dotsactive from "../../assets/carousel/dotsactive.svg";
 import dotsinactive from "../../assets/carousel/dotsinactive.svg";
+import { useSelector } from "react-redux";
+import { IoIosCloseCircle } from "react-icons/io";
+import { TbHttpDelete } from "react-icons/tb";
+import { useDeleteDiaryMutation } from "../../service/diary.service";
+import { useDeleteFeedMutation } from "../../service/feeds.service";
+import rtkMutation from "../../utils/rtkMutation";
 
 const Diary = ({ content }) => {
   const sanitizedContent = DOMPurify.sanitize(content);
@@ -55,6 +61,7 @@ const Diary = ({ content }) => {
 };
 
 function Post({
+  user_id,
   fullname,
   username,
   verifiedUser,
@@ -71,13 +78,22 @@ function Post({
   department,
   type,
 }) {
+  const [deleteFeeds] = useDeleteFeedMutation();
+  const [deleteDiary] = useDeleteDiaryMutation();
+
+  const removeFeed = async (id) => {
+    // console.log(id);
+    type === "diary" ? await deleteDiary(id) : await deleteFeeds(id);
+    setShowPopup(false);
+  };
+
   // const [allComment, setAllComment] = useState([]);
   const [addComment, setAddComment] = useState(false);
-  // console.log(comment);
+  const [showPopup, setShowPopup] = useState(false);
 
-  // useEffect(() => {
-  //   setAllComment(comment);
-  // }, [addComment, comment]);
+  const handlePostActionClick = () => {
+    setShowPopup(true);
+  };
 
   const onComment = () => {
     setAddComment(!addComment);
@@ -95,6 +111,8 @@ function Post({
       (prevVisibleComments) => prevVisibleComments + nextCommentsToShow
     );
   };
+
+  const id = useSelector((state) => state.user?.user?._id);
 
   return (
     <div className="w-full">
@@ -130,9 +148,31 @@ function Post({
                   </p>
                 </div>
               </div>
-              <button>
-                <img src={post_action} alt="" />
-              </button>
+
+              {user_id === id ? (
+                <button onClick={handlePostActionClick}>
+                  <img src={post_action} alt="" />
+                </button>
+              ) : null}
+
+              {showPopup && (
+                <div className="popup border rounded-md p-2">
+                  <div className="flex flex-col gap-2">
+                    <button
+                      onClick={() => setShowPopup(false)}
+                      className="flex justify-end"
+                    >
+                      <IoIosCloseCircle />
+                    </button>
+                    <button
+                      onClick={() => removeFeed(post_id)}
+                      className="flex justify-start border p-1 rounded-md hover:text-white hover:bg-red-600"
+                    >
+                      <TbHttpDelete />
+                    </button>
+                  </div>{" "}
+                </div>
+              )}
             </div>
 
             <Diary content={content} />
@@ -190,6 +230,7 @@ function Post({
 }
 
 Post.propTypes = {
+  user_id: PropTypes.string,
   fullname: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   verifiedUser: PropTypes.bool.isRequired,

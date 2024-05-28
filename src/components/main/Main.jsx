@@ -57,6 +57,7 @@ function Main() {
                 badgeColor={post.user_id?.department[0]?.badge?.color}
                 department={post.user_id?.department[0]?.badge?.department}
                 type={post?.type}
+                user_id={post.user_id?._id}
               />
             ) : (
               <div className="mt-4" key={index}>
