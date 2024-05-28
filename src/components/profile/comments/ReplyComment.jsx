@@ -7,17 +7,17 @@ const ReplyComment = ({ reply }) => {
   return (
     <div className="relative bg-primary-light-gray bg-opacity-10 p-2 rounded-lg mt-5 text-primary-dark-gray">
       <div className="flex justify-between items-center">
-        <div className="flex gap-2 items-start">
-          <div className="border-white w-[13px] h-[13px] overflow-hidden rounded">
+        <div className="flex gap-2 justify-start items-start">
+          <div className="flex justify-center items-center w-[20px] border h-[20px] rounded-full">
             <img
               src={reply.user_id.photo_url || image4}
-              width={13}
-              height={13}
+              width={19}
+              height={19}
               alt="user-thumbnail"
             />
           </div>
 
-          <div className="pt-2">
+          <div className="pt-2 flex justify-start flex-col">
             <div>
               <h2 className="comment-name -mt-[6px]">
                 {reply.user_id.display_name}

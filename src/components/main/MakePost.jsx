@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import Modals from "../modals/Modal";
 import more_btn from "../../assets/images/main/more.svg";
 import photo_btn from "../../assets/images/main/photo.svg";
@@ -14,8 +14,6 @@ import globe from "../../assets/images/modals/globe.svg";
 import photos from "../../assets/images/modals/photos.svg";
 import videoIcon from "../../assets/images/modals/video.svg";
 import location from "../../assets/images/modals/location.svg";
-import left from "../../assets/images/modals/left.svg";
-import right from "../../assets/images/modals/right.svg";
 import { FaTimes } from "react-icons/fa";
 import {
   BiGlobe,
@@ -33,13 +31,16 @@ import { useGetCategoriesQuery } from "../../service/categories.service";
 import { BeatLoader } from "react-spinners";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import PollSchedule from "../polls/PollSchedule";
-import CustomEditor from "./editor/CustomEditor";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import { Spinner } from "flowbite-react";
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
   const [openScheduleModal, setOpenScheduleModal] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedVideos, setSelectedVideos] = useState([]);
+  const [selectedDiaryMedia, setSelectedDiaryMedia] = useState([]);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [content, setContent] = useState("");
@@ -49,12 +50,10 @@ function MakePost() {
   const [scheduleTime, setScheduleTime] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const { refetch } = useGetFeedsQuery();
-  const [editorContent, setEditorContent] = useState("");
-  console.log(editorContent);
 
-  const handleEditorChange = (content) => {
-    setEditorContent(content);
-  };
+  const [editorHtml, setEditorHtml] = useState("");
+
+  console.log(editorHtml);
 
   const toggleCollapse = () => {
     setIsExpanded(!isExpanded);
@@ -118,6 +117,11 @@ function MakePost() {
     return new Blob([ab], { type: "image/jpeg" });
   };
 
+  const handleDiaryMediaChange = async (event) => {
+    const files = Array.from(event.target.files);
+    setSelectedDiaryMedia([...selectedDiaryMedia, ...files]);
+  };
+
   //video upload
   const handleVideoChange = async (event) => {
     const files = Array.from(event.target.files);
@@ -130,6 +134,14 @@ function MakePost() {
       setSelectedImages(selectedImages.filter((image) => image !== item));
     } else if (selectedVideos.includes(item)) {
       setSelectedVideos(selectedVideos.filter((video) => video !== item));
+    }
+  };
+
+  const handleDiaryRemove = (item) => {
+    if (selectedDiaryMedia.includes(item)) {
+      setSelectedDiaryMedia(
+        selectedDiaryMedia.filter((media) => media !== item)
+      );
     }
   };
 
@@ -198,6 +210,52 @@ function MakePost() {
       refetch();
     } catch (error) {
       console.error("Error submitting post:", error);
+      showAlert(
+        "Oops!",
+        error?.response?.data?.message || "An error occurred",
+        "error"
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDiarySubmit = async () => {
+    setSubmitting(true);
+
+    const formData = new FormData();
+    selectedDiaryMedia.forEach((media) => formData.append("media", media));
+    formData.append("content", editorHtml);
+    formData.append("category", category);
+
+    if (!editorHtml.trim()) {
+      showAlert("", "Diary content cannot be empty", "error");
+      setSubmitting(false);
+      return;
+    }
+
+    const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+    try {
+      const response = await axios.post(`${apiUrl}/user/diary`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      });
+
+      console.log("Diary created successfully:", response.data);
+      setSelectedDiaryMedia([]);
+      setContent("");
+      setCategory("");
+      setEditorHtml("");
+      // setTempHtml("");
+      setOpenDiaryModal(false);
+
+      showAlert("Great!", "Diary created successfully", "success");
+      refetch();
+    } catch (error) {
+      console.error("Error submitting Diary:", error);
       showAlert(
         "Oops!",
         error?.response?.data?.message || "An error occurred",
@@ -397,19 +455,23 @@ function MakePost() {
         onClose={() => setOpenDiaryModal(false)}
         title={"Diary"}
       >
-        {/* <div className="flex justify-between pb-5">
-          <p className="pagination">Page 3/4</p>
-          <div className="flex gap-3 items-center">
-            <button>
-              <img src={left} alt="" />
-            </button>
-            <button>
-              <img src={right} alt="" />
-            </button>
-          </div>
-        </div> */}
+        <div className="pb-5 flex flex-col gap-2 justify-start">
+          {/* <label htmlFor="content" className="text-sm">
+            Type content here
+          </label> */}
 
-        <div className="flex justify-start pb-5">
+          <ReactQuill
+            value={editorHtml}
+            onChange={setEditorHtml}
+            theme="snow"
+            placeholder="Write something amazing..."
+          />
+        </div>
+
+        <div className="flex flex-col justify-start gap-2 pb-5">
+          <label htmlFor="category" className="text-sm">
+            Select Category (optional)
+          </label>
           <select
             value={category}
             onChange={handleCategoryChange}
@@ -424,31 +486,40 @@ function MakePost() {
           </select>
         </div>
 
-        <CustomEditor onChange={handleEditorChange} />
+        <div className="flex flex-col gap-2 pb-5">
+          <label htmlFor="content" className="text-sm">
+            Select Media Files
+          </label>
 
-        {editorContent ? (
+          <input
+            type="file"
+            onChange={handleDiaryMediaChange}
+            accept="image/*,video/*"
+            multiple
+          />
+        </div>
+
+        <div className="uploaded-items-container p-4 border border-gray-200 rounded-md max-h-80 overflow-y-auto mt-4 flex flex-wrap">
+          {[...selectedDiaryMedia].map((item, index) => (
+            <UploadedItem
+              key={index}
+              item={item}
+              onRemove={handleDiaryRemove}
+              onItemSelect={handleItemSelect}
+            />
+          ))}
+        </div>
+
+        {editorHtml ? (
           <div className="flex justify-end pt-5">
-            <button className="p-2 rounded-md border text-[#fff] bg-[#34B53A]">
-              Post Diary
+            <button
+              className="p-2 rounded-md border text-[#fff] bg-[#34B53A]"
+              onClick={handleDiarySubmit}
+            >
+              {submitting ? <Spinner /> : "Post Diary"}
             </button>
           </div>
         ) : null}
-
-        {/* <textarea className="post-box focus:outline-none focus:ring-0 pb-4 flex-wrap"></textarea> */}
-        {/* <div className="flex justify-between pb-5 pt-5">
-          <div className="text-add-post">Add to your post</div>
-          <div className="post-buttons-add flex gap-3">
-            <button className="hover:shadow-lg">
-              <img src={photos} alt="" />
-            </button>
-            <button className="hover:shadow-lg">
-              <img src={videoIcon} alt="" />
-            </button>
-            <button className="hover:shadow-lg">
-              <img src={location} alt="" />
-            </button>
-          </div>
-        </div> */}
       </Modals>
 
       <Modals
