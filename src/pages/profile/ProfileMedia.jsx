@@ -3,64 +3,92 @@ import Layout from "./Layout";
 import GaleryBox from "../../components/profile/GaleryBox";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import MediaModal from "../../components/main/MediaModal";
-import { useGetMediaQuery } from "../../service/media.service";
+import {
+  useGetMediaQuery,
+  useGetOtherMediaMutation,
+} from "../../service/media.service";
 import { useEffect } from "react";
 import { ShimmerSocialPost } from "react-shimmer-effects";
+import { useParams } from "react-router-dom";
+import { showAlert } from "../../static/alert";
+import ProfileNav from "../../components/profile/ProfileNav";
 
 const ProfileMedia = () => {
-  const { data } = useGetMediaQuery();
-  const post = data;
+  const { data: mediaData } = useGetMediaQuery();
+  // const post = data;
   // console.log(data?.data);
 
-  const [show, setShow] = useState(false);
-  const [showShimer, setShowShimer] = useState(true);
+  // const [showShimer, setShowShimer] = useState(true);
+  const [showMediaModal, setShowMediaModal] = useState(false);
 
+  const [medias, setMedias] = useState(null);
   const [media, setMedia] = useState(null);
+  const [getOtherMedia, { isSuccess, isError }] = useGetOtherMediaMutation();
+  const { user_id: id } = useParams();
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setShowShimer(false);
+  //   }, 5000);
+  // }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      setShowShimer(false);
-    }, 5000);
-  }, []);
+    if (id) {
+      // console.log(id);
+      GetOtherUser();
+    } else {
+      setMedias(mediaData?.data);
+    }
+  }, [id]);
+
+  const GetOtherUser = async () => {
+    try {
+      const res = await getOtherMedia(id);
+      setMedias(res.data.data);
+      // console.log(res.data.data);
+    } catch (error) {
+      console.error("Error making search: ", error);
+      showAlert("Oops", "An error occurred while searching content", "error");
+    }
+  };
 
   function showModal(src) {
     setMedia(src);
-    setShow(true);
+    setShowMediaModal(true);
   }
   return (
     <Layout>
-      <div className="flex flex-wrap flex-row gap-2">
-        {showShimer ? (
-          <ShimmerSocialPost type="both" />
-        ) : (
-          <>
-            {post?.data.map((dt, id) => (
-              <div
-                key={id}
-                className="cursor-pointer"
-                onClick={() => showModal(dt)}
-              >
-                <GaleryBox media={dt} />
-              </div>
-            ))}
-          </>
-        )}
-        {/* <div
-          className="cursor-pointer"
-          onClick={() => showModal("/src/assets/video-2.mp4")}
-        >
-          <GaleryBox img="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.brightedge.com%2Fsites%2Fdefault%2Ffiles%2Fvideo%2520thumbnail.jpg&f=1&nofb=1&ipt=b3ea593a342aa7853181ba31f1bdfba25727814474bb65eeb51c9edb8bdcf7f6&ipo=images" />
-        </div> */}
+      <div>
+        <ProfileNav />
       </div>
-      {show && (
-        <div
-          onClick={() => setShow(!show)}
-          className="fixed bg-primary-light-gray bg-opacity-40 w-screen h-screen top-0 left-0 flex items-center justify-center z-50"
-        >
-          {/* <MediaContainer /> */}
-          <MediaModal media={media} />
+      <div>
+        <div className="flex flex-wrap flex-row gap-2">
+          {!medias ? (
+            <ShimmerSocialPost type="both" />
+          ) : (
+            <>
+              {medias?.map((dt, id) => (
+                <div
+                  key={id}
+                  className="cursor-pointer"
+                  onClick={() => showModal(dt)}
+                >
+                  <GaleryBox media={dt} />
+                </div>
+              ))}
+            </>
+          )}
         </div>
-      )}
+        {showMediaModal && (
+          <div
+            onClick={() => setShowMediaModal(!showMediaModal)}
+            className="fixed bg-primary-light-gray bg-opacity-40 w-screen h-screen top-0 left-0 flex items-center justify-center z-50"
+          >
+            {/* <MediaContainer /> */}
+            <MediaModal media={media} />
+          </div>
+        )}
+      </div>
     </Layout>
   );
 };

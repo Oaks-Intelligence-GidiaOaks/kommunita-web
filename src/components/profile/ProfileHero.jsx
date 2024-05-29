@@ -40,7 +40,7 @@ const ProfileHero = () => {
     try {
       const res = await getOtherUserProfile(user_id);
       setProfile(res.data);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       console.error("Error making search: ", error);
       showAlert("Oops", "An error occurred while searching content", "error");

@@ -11,6 +11,7 @@ import Posts from "../../components/main/Posts";
 import { useGetDiaryQuery } from "../../service/diary.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import { ShimmerSocialPost } from "react-shimmer-effects";
+import ProfileNav from "../../components/profile/ProfileNav";
 
 const ProfileDiaries = () => {
   const { data } = useGetDiaryQuery();
@@ -31,6 +32,9 @@ const ProfileDiaries = () => {
   console.log(data?.data);
   return (
     <Layout>
+      <div>
+        <ProfileNav />
+      </div>
       {loading && post == null ? (
         <ShimmerSocialPost type="both" />
       ) : (
