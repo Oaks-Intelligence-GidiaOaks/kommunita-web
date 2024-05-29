@@ -1,58 +1,37 @@
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
+  darkMode: ["class"],
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    "node_modules/flowbite-react/lib/esm/**/*.js",
+    './pages/**/*.{js,jsx}',
+    './components/**/*.{js,jsx}',
+    './app/**/*.{js,jsx}',
+    './src/**/*.{js,jsx}',
   ],
+  prefix: "",
   theme: {
     container: {
       center: true,
       padding: "2rem",
-    },
-    fontFamily: {
-      Inter: ["Inter", "san-serif"],
-      Montserrat: ["Montserrat", "san-serif"],
+      screens: {
+        "2xl": "1400px",
+      },
     },
     extend: {
-      backgroundImage: {
-        "hero-pattern": "url('/src/assets/images/green_bg.jpeg')",
-        // 'footer-texture': "url('/img/footer-texture.png')",
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
       },
-      textColor: {
-        "primary-dark-green": "#3D7100",
-        "primary-bright-green": "#7ADD02",
-        "primary-light-green": "#94FC83",
-        "primary-gray": "#AEAEAE",
-        "primary-light-gray": "#ADADAD",
-        "primary-dark-gray": "#4D4D4D",
-        "primary-red": "#FF3A29",
-        "secondary-white": "#7C8DB5",
-      },
-
-      borderColor: {
-        "primary-dark-green": "#3D7100",
-        "primary-bright-green": "#7ADD02",
-        "primary-light-green": "#94FC83",
-      },
-
-      backgroundColor: {
-        "primary-dark-green": "#3D7100",
-        "primary--bright-green": "#7ADD02",
-        "primary-gray": "#AEAEAE",
-        "primary-black": "#091001",
-        "primary-light-gray": "#ADADAD",
-      },
-      fontFamily: {
-        "pt-serif": "'PT Serif Caption', serif",
-        poppins: "'Poppins', sans-serif",
-        inter: "'Inter', sans-serif",
-      },
-      boxShadow: {
-        "primary-dark": "5px 7px 12px rgba(0,0,0,0.3)",
-        "primary-dark-hovered": "7px 9px 14px rgba(0,0,0,0.3)",
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [require("tailwind-scrollbar"), require("flowbite/plugin")],
-};
+  plugins: [require("tailwindcss-animate")],
+}

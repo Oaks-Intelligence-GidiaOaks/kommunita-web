@@ -15,7 +15,7 @@ import ProfileNav from "../../components/profile/ProfileNav";
 
 const ProfileDiaries = () => {
   const { data } = useGetDiaryQuery();
-  // const { data } = useGetPostQuery();
+
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sideDiary, setSideDiary] = useState(null);
@@ -35,7 +35,7 @@ const ProfileDiaries = () => {
       <div>
         <ProfileNav />
       </div>
-      {loading && post == null ? (
+      {post == null ? (
         <ShimmerSocialPost type="both" />
       ) : (
         <div className="grid grid-cols-12 w-full gap-3">

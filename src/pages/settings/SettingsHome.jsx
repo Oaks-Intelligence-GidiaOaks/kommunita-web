@@ -10,13 +10,20 @@ import { showAlert } from "../../static/alert";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 import countries from "../../utils/countries.json";
 
 const SettingsHome = () => {
   const { data: profile } = useGetUserProfiileQuery();
   // console.log(profile);
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState("verification");
+  // const [activeTab, setActiveTab] = useState("profile");
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
@@ -50,10 +57,8 @@ const SettingsHome = () => {
 
   useEffect(() => {
     // Check if all fields are filled
-    setIsFieldsFilled(
-      !!currentPassword && !!newPassword && !!confirmPassword && !!code
-    );
-  }, [currentPassword, newPassword, confirmPassword, code]);
+    setIsFieldsFilled(!!currentPassword && !!newPassword && !!confirmPassword);
+  }, [currentPassword, newPassword, confirmPassword]);
 
   // State variable for checking if all fields are filled
   const [isAllFieldsFilled, setIsAllFieldsFilled] = useState(false);
@@ -117,14 +122,26 @@ const SettingsHome = () => {
     const location = { country, state };
 
     const formData = new FormData();
-    formData.append("photo", imageFile);
-    formData.append("about", bio);
-    formData.append("tech_title", techtitle);
-    formData.append("phone_number", phoneNumber);
-    formData.append("username", username);
-    formData.append("email", email);
-    formData.append("fullname", fullname);
-    formData.append("location", JSON.stringify(location));
+    if (imageFile) {
+      formData.append("photo", imageFile);
+    }
+    if (bio) {
+      formData.append("about", bio);
+    }
+
+    if (phoneNumber) {
+      formData.append("phone_number", phoneNumber);
+    }
+    if (email) {
+      formData.append("email", email);
+    }
+    if (country && state) {
+      formData.append("location", JSON.stringify(location));
+    }
+
+    // formData.append("tech_title", techtitle);
+    // formData.append("username", username);
+    // formData.append("fullname", fullname);
 
     // console.log(formData);
 
@@ -157,6 +174,12 @@ const SettingsHome = () => {
   const handlePasswordUpdate = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+
+    if (!code) {
+      requestCode();
+      setSubmitting(false);
+      return;
+    }
 
     const data = {
       currentPassword,
@@ -214,8 +237,7 @@ const SettingsHome = () => {
           ...(token && { Authorization: `Bearer ${token}` }),
         },
       });
-      console.log("Password updated successfully:", response.data);
-
+      console.log("Code sent successfully:", response.data);
       showAlert("Great!", "Code has been sent to your mail", "success");
     } catch (error) {
       console.error("Error Getting Code:", error);
@@ -300,19 +322,23 @@ const SettingsHome = () => {
                 </div>
               </div>
               <div>
-                <div className="flex gap-2 pb-1">
-                  <p className="settings-profile-name">
-                    {profile?.data?.display_name}
-                  </p>
-                  <img src={edit_line} alt="" className="cursor-pointer" />
-                </div>
-                <div className="flex gap-2">
-                  <p className="settings-profile-title">
-                    {" "}
-                    {profile?.data?.tech_title}
-                  </p>
-                  <img src={edit_line} alt="" className="cursor-pointer" />
-                </div>
+                {profile?.data?.display_name && (
+                  <div className="flex gap-2 pb-1">
+                    <p className="settings-profile-name">
+                      {profile?.data?.display_name}
+                    </p>
+                    <img src={edit_line} alt="" className="cursor-pointer" />
+                  </div>
+                )}
+                {profile?.data?.tech_title && (
+                  <div className="flex gap-2">
+                    <p className="settings-profile-title">
+                      {" "}
+                      {profile?.data?.tech_title}
+                    </p>
+                    <img src={edit_line} alt="" className="cursor-pointer" />
+                  </div>
+                )}
               </div>
             </div>
             <div className="pt-10 mt-10">
@@ -339,7 +365,7 @@ const SettingsHome = () => {
                     />
                   </div>
                 </div> */}
-                <div className="flex items-center lg:gap-16 lg:flex-row flex-col  justify-between pb-3">
+                <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Username</label>
                     <input
@@ -347,6 +373,7 @@ const SettingsHome = () => {
                       onChange={(e) => setUsername(e.target.value)}
                       className="settings-input outline-none"
                       type="text"
+                      disabled
                       placeholder={"Please enter your username"}
                     />
                   </div>
@@ -397,14 +424,10 @@ const SettingsHome = () => {
                         <option>{st.name}</option>
                       ))}
                     </select>
-                    {/* <input
-                      value={state || ""}
-                      onChange={(e) => setState(e.target.value)}
-                      className="settings-input outline-none"
-                      type="text"
-                    /> */}
                   </div>
-                  <div className="flex flex-col mb-5 w-full">
+                </div>
+                <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
+                  <div className="flex flex-col mb-5 lg:w-[50%] w-full ">
                     <label className="settings-label">Phone Number</label>
                     <input
                       value={phoneNumber}
@@ -489,7 +512,7 @@ const SettingsHome = () => {
             </div>
             <div className="pt-10 mt-10">
               <form onSubmit={handlePasswordUpdate}>
-                <div className="flex items-center lg:gap-10 lg:flex-row flex-col  justify-between pb-3">
+                <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Current Password</label>
                     <input
@@ -512,7 +535,7 @@ const SettingsHome = () => {
                   </div>
                 </div>
                 <div className="flex relative items-center lg:gap-10 lg:flex-row flex-col  justify-between pb-3">
-                  <div className="flex flex-col mb-5 w-full">
+                  <div className="flex flex-col mb-5 w-full lg:w-[49%]">
                     <label className="settings-label">Re-enter Password</label>
                     <input
                       value={confirmPassword}
@@ -522,7 +545,7 @@ const SettingsHome = () => {
                       placeholder="Please re-enter Password"
                     />
                   </div>
-                  <div className="flex flex-col mb-5 w-full">
+                  {/* <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Enter Code</label>
                     <input
                       value={code}
@@ -531,13 +554,13 @@ const SettingsHome = () => {
                       type="text"
                       placeholder="Please Enter code"
                     />
-                  </div>
-                  <div
+                  </div> */}
+                  {/* <div
                     onClick={requestCode}
                     className="absolute bottom-0 right-0 bg-primary-dark-green rounded-lg p-1 px-2 text-xs text-white cursor-pointer"
                   >
                     {codeRequested ? "Code sent" : "request code"}
-                  </div>
+                  </div> */}
                 </div>
                 <button
                   className={`w-full mt-10 ${
@@ -548,10 +571,106 @@ const SettingsHome = () => {
                   {submitting ? (
                     <BeatLoader color="#ffffff" loading={true} />
                   ) : (
-                    "Update Password"
+                    "Confirm"
                   )}
                 </button>{" "}
               </form>
+            </div>
+          </div>
+        </div>
+        <div
+          className={`p-4 rounded-lg bg-gray-50 dark:bg-gray-800 ${
+            activeTab === "verification" ? "" : "hidden"
+          }`}
+          id="verification"
+          role="tabpanel"
+          aria-labelledby="verification-tab"
+        >
+          <div className="flex gap-3 items-center mb-5">
+            <div>
+              <div className="rounded-lg w-[100px] h-[100px] border flex flex-col gap-3 items-center">
+                <img
+                  className="object-cover w-[100px] cursor-pointer"
+                  src={previewSrc || profile?.data?.photo_url}
+                  alt=""
+                />
+                <label className="cursor-pointer settings-change-text text-[#398DEE]">
+                  Change
+                  <input
+                    type="file"
+                    onChange={handleImageChange}
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    // className="hidden w-[100px] h-[100px]"
+                  />
+                </label>
+              </div>
+            </div>
+            <div>
+              {profile?.data?.display_name && (
+                <div className="flex gap-2 pb-1">
+                  <p className="settings-profile-name">
+                    {profile?.data?.display_name}
+                  </p>
+                  <img src={edit_line} alt="" className="cursor-pointer" />
+                </div>
+              )}
+              {profile?.data?.tech_title && (
+                <div className="flex gap-2">
+                  <p className="settings-profile-title">
+                    {" "}
+                    {profile?.data?.tech_title}
+                  </p>
+                  <img src={edit_line} alt="" className="cursor-pointer" />
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center justify-center ">
+            <div className="text-primary-gray pt-10 mt-10">
+              <h2 className="text-5xl mb-20">Verification</h2>
+              <p className="mb-5 mt-10">
+                Enter your 4 digits code that you recieved on your email.
+              </p>
+              <div className="flex flex-col items-center gap-10">
+                <div>
+                  <InputOTP maxLength={6}>
+                    <InputOTPGroup>
+                      <InputOTPSlot index={0} />
+                      <InputOTPSlot index={1} />
+                      <InputOTPSlot index={2} />
+                    </InputOTPGroup>
+                    <InputOTPSeparator />
+                    <InputOTPGroup>
+                      <InputOTPSlot index={3} />
+                      <InputOTPSlot index={4} />
+                      <InputOTPSlot index={5} />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
+                <p className="text-red-600">00:30</p>
+                <button
+                  className={`w-full ${
+                    !!code ? "setting-btn-active" : "settings-btn"
+                  }`}
+                  disabled={!code}
+                >
+                  {submitting ? (
+                    <BeatLoader color="#ffffff" loading={true} />
+                  ) : (
+                    "Verify"
+                  )}
+                </button>{" "}
+                <p className="text-xs">
+                  If you didn't receive a code!{" "}
+                  <span
+                    onClick={() => requestCode()}
+                    className="text-primary-bright-green cursor-pointer font-semibold"
+                  >
+                    Resend
+                  </span>
+                </p>
+              </div>
             </div>
           </div>
         </div>

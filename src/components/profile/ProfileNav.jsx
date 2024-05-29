@@ -5,7 +5,7 @@ import { useGetPostQuery } from "../../service/post.service";
 const ProfileNav = () => {
   const { data } = useGetPostQuery();
 
-  const currentPath = window.location.pathname;
+  // const currentPath = window.location.pathname;
   // const nonActiveLink =
 
   const [activeTab, setActiveTab] = useState("profile");
