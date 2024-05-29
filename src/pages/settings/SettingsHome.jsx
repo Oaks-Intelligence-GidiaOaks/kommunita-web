@@ -15,7 +15,7 @@ import {
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from "../../components/ui/input-otp";
 
 import countries from "../../utils/countries.json";
 
@@ -633,19 +633,22 @@ const SettingsHome = () => {
                 Enter your 4 digits code that you recieved on your email.
               </p>
               <div className="flex flex-col items-center gap-10">
-                <div>
-                  <InputOTP maxLength={6}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
+                <div className="w-full flex items-center justify-center mt-10">
+                  <InputOTP className="w-full flex items-center" maxLength={6}>
+                    <InputOTPGroup className="w-full">
+                      <InputOTPSlot className="w-[50px] h-[50px]" index={0} />
                     </InputOTPGroup>
-                    <InputOTPSeparator />
-                    <InputOTPGroup>
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
+                    <InputOTPGroup className="w-full">
+                      <InputOTPSlot className="w-[50px] h-[50px]" index={1} />
                     </InputOTPGroup>
+                    <InputOTPGroup className="w-full">
+                      <InputOTPSlot className="w-[50px] h-[50px]" index={2} />
+                    </InputOTPGroup>
+                    <InputOTPGroup className="w-full">
+                      <InputOTPSlot className="w-[50px] h-[50px]" index={3} />
+                    </InputOTPGroup>
+
+                    {/* <InputOTPSeparator /> */}
                   </InputOTP>
                 </div>
                 <p className="text-red-600">00:30</p>
