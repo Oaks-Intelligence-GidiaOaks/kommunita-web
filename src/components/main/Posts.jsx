@@ -21,7 +21,6 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { TbHttpDelete } from "react-icons/tb";
 import { useDeleteDiaryMutation } from "../../service/diary.service";
 import { useDeleteFeedMutation } from "../../service/feeds.service";
-import rtkMutation from "../../utils/rtkMutation";
 
 const Diary = ({ content }) => {
   const sanitizedContent = DOMPurify.sanitize(content);
@@ -34,10 +33,10 @@ const Diary = ({ content }) => {
   };
 
   return (
-    <div className="post-content pt-3 pb-2 w-full h-auto overflow-hidden">
+    <div className="pt-3 pb-2 w-full h-auto overflow-hidden">
       {sanitizedContent && (
         <div
-          className="text-justify flex flex-row flex-wrap"
+          className="post-content text-justify flex flex-row flex-wrap"
           dangerouslySetInnerHTML={{
             __html: isContentExpanded
               ? sanitizedContent
@@ -62,7 +61,6 @@ const Diary = ({ content }) => {
 };
 
 function Post({
-  user_id,
   fullname,
   username,
   verifiedUser,
@@ -155,7 +153,7 @@ function Post({
                 </div>
               </div>
 
-              {user_id === id ? (
+              {userId === id ? (
                 <button onClick={handlePostActionClick}>
                   <img src={post_action} alt="" />
                 </button>
@@ -236,7 +234,7 @@ function Post({
 }
 
 Post.propTypes = {
-  user_id: PropTypes.string,
+  userId: PropTypes.string,
   fullname: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   verifiedUser: PropTypes.bool.isRequired,

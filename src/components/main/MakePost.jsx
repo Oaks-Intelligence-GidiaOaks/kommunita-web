@@ -14,6 +14,7 @@ import globe from "../../assets/images/modals/globe.svg";
 import photos from "../../assets/images/modals/photos.svg";
 import videoIcon from "../../assets/images/modals/video.svg";
 import location from "../../assets/images/modals/location.svg";
+import gallery from "../../assets/images/gallery.png";
 import { FaTimes } from "react-icons/fa";
 import {
   BiGlobe,
@@ -34,12 +35,15 @@ import PollSchedule from "../polls/PollSchedule";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Spinner } from "flowbite-react";
+import "./style.css";
+import { motion } from "framer-motion";
+import { AiOutlineClose } from "react-icons/ai";
+import { MdAddAPhoto } from "react-icons/md";
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
   const [openScheduleModal, setOpenScheduleModal] = useState(false);
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [selectedVideos, setSelectedVideos] = useState([]);
+  const [selectedPostMedia, setSelectedPostMedia] = useState([]);
   const [selectedDiaryMedia, setSelectedDiaryMedia] = useState([]);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -53,7 +57,7 @@ function MakePost() {
 
   const [editorHtml, setEditorHtml] = useState("");
 
-  console.log(editorHtml);
+  // console.log(editorHtml);
 
   const toggleCollapse = () => {
     setIsExpanded(!isExpanded);
@@ -73,48 +77,15 @@ function MakePost() {
   };
 
   // Handle image change
-  const handleImageChange = async (event) => {
+  const handlePostMediaChange = async (event) => {
+    setIsVisible(!isVisible);
     const files = Array.from(event.target.files);
-    const optimizedImages = [];
-
-    const resizeFile = (file) =>
-      new Promise((resolve) => {
-        if (file.type === "image/svg+xml") {
-          // If it's an SVG file, no need to resize
-          resolve(file);
-        } else {
-          Resizer.imageFileResizer(file, 1080, 1080, "WEBP", 100, 0, (uri) => {
-            const resizedFile = new File([uriToFile(uri)], file.name, {
-              type: file.type,
-              lastModified: file.lastModified,
-              lastModifiedDate: file.lastModifiedDate,
-            });
-            resolve(resizedFile);
-          });
-        }
-      });
-
-    for (const file of files) {
-      try {
-        const resizedImage = await resizeFile(file);
-        optimizedImages.push(resizedImage);
-      } catch (error) {
-        console.error("Error resizing image:", error);
-      }
-    }
-
-    setSelectedImages([...selectedImages, ...optimizedImages]);
+    setSelectedPostMedia([...selectedPostMedia, ...files]);
   };
 
-  // Helper function to convert base64 URI to Blob
-  const uriToFile = (uri) => {
-    const byteString = atob(uri.split(",")[1]);
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    return new Blob([ab], { type: "image/jpeg" });
+  const handleSchedulePostMediaChange = async (event) => {
+    const files = Array.from(event.target.files);
+    setSelectedPostMedia([...selectedPostMedia, ...files]);
   };
 
   const handleDiaryMediaChange = async (event) => {
@@ -122,18 +93,10 @@ function MakePost() {
     setSelectedDiaryMedia([...selectedDiaryMedia, ...files]);
   };
 
-  //video upload
-  const handleVideoChange = async (event) => {
-    const files = Array.from(event.target.files);
-    setSelectedVideos([...selectedVideos, ...files]);
-  };
-
   // Remove selected item
   const handleRemove = (item) => {
-    if (selectedImages.includes(item)) {
-      setSelectedImages(selectedImages.filter((image) => image !== item));
-    } else if (selectedVideos.includes(item)) {
-      setSelectedVideos(selectedVideos.filter((video) => video !== item));
+    if (selectedPostMedia.includes(item)) {
+      setSelectedPostMedia(selectedPostMedia.filter((media) => media !== item));
     }
   };
 
@@ -175,8 +138,7 @@ function MakePost() {
     setSubmitting(true);
 
     const formData = new FormData();
-    selectedImages.forEach((image) => formData.append("media", image));
-    selectedVideos.forEach((video) => formData.append("media", video));
+    selectedPostMedia.forEach((media) => formData.append("media", media));
     formData.append("content", content);
     formData.append("category", category);
     formData.append("audience", audience);
@@ -200,8 +162,7 @@ function MakePost() {
       });
 
       console.log("Post submitted successfully:", response.data);
-      setSelectedImages([]);
-      setSelectedVideos([]);
+      setSelectedPostMedia([]);
       setContent("");
       setCategory("");
       setScheduleDate("");
@@ -271,149 +232,56 @@ function MakePost() {
     event.target.style.height = event.target.scrollHeight + "px";
   };
 
+  const photo = useSelector((state) => state.user?.user?.photo_url);
+  // console.log(photo);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
+
   return (
     <>
-      <div className="h-auto makepost">
-        <div className="post-box p-4">
-          <div className="post-content w-full">
-            {/* <div className="more flex justify-end">
-              <button>
-                <img src={more_btn} alt="" />
-              </button>
-            </div> */}
-
-            <div className="flex pb-4">
-              {/* <img src={avatar2} alt="" /> */}
-              <textarea
-                className="post-input focus:outline-none focus:ring-0 rounded-md w-full text-wrap h-auto border shadow"
-                placeholder="Start a post..."
-                value={content}
-                onChange={handleContentChange}
-                onInput={adjustTextareaHeight}
+      <div>
+        <div className="w-full bg-white rounded-md border-b-0 border-0">
+          <div className="flex p-2 gap-4 justify-between items-center w-full">
+            {isVisible ? (
+              <AiOutlineClose
+                className="cursor-pointer"
+                onClick={() => setIsVisible(false)}
+                size={23}
               />
-            </div>
-
-            <div className="uploaded-items-container p-4 border border-gray-200 rounded-md max-h-80 overflow-y-auto mt-4 flex flex-wrap">
-              {[...selectedImages, ...selectedVideos].map((item, index) => (
-                <UploadedItem
-                  key={index}
-                  item={item}
-                  onRemove={handleRemove}
-                  onItemSelect={handleItemSelect}
-                />
-              ))}
-            </div>
-
-            <div className="pb-5 pt-5">
-              <div className="buttons flex flex-row flex-wrap items-center justify-start gap-3 pb-5">
-                <label className="shadow-md hover:shadow-lg">
-                  <img src={photo_btn} alt="" className="cursor-pointer" />
-                  <input
-                    type="file"
-                    onChange={handleImageChange}
-                    accept="image/*"
-                    multiple
-                    style={{ display: "none" }}
+            ) : (
+              <div>
+                <div className="flex items-center justify-center h-[40px] w-[40px] rounded-full">
+                  <img
+                    src={photo}
+                    className="rounded-full w-full h-full object-cover"
+                    alt=""
                   />
-                </label>
-                <label className="shadow-md hover:shadow-lg">
-                  <img src={video_btn} alt="" className="cursor-pointer" />
-                  <input
-                    type="file"
-                    onChange={handleVideoChange}
-                    accept="video/*"
-                    multiple
-                    style={{ display: "none" }}
-                  />
-                </label>
-                <button className="shadow-md hover:shadow-lg">
-                  <img src={go_live_btn} alt="" />
-                </button>
-              </div>
-
-              <div className="flex justify-center">
-                <button className="mb-2" onClick={toggleCollapse}>
-                  {isExpanded ? (
-                    <div className="flex justify-center items-center">
-                      See less <BiChevronUp size={20} />
-                    </div>
-                  ) : (
-                    <div className="flex justify-center items-center">
-                      See more <BiChevronDown size={20} />
-                    </div>
-                  )}
-                </button>
-              </div>
-
-              {isExpanded && (
-                <div className="flex justify-center gap-5 items-center mt-2 mb-2">
-                  <button
-                    className="shadow-md hover:shadow-lg"
-                    onClick={() => setOpenScheduleModal(true)}
-                  >
-                    <img src={schedule} alt="" />
-                  </button>
-
-                  <button
-                    className="shadow-md hover:shadow-lg"
-                    onClick={() => setOpenDiaryModal(true)}
-                  >
-                    <img src={diary} alt="" />
-                  </button>
-
-                  <button className="shadow-md hover:shadow-lg">
-                    <img src={draft} alt="" />
-                  </button>
-
-                  <button
-                    className="shadow-md hover:shadow-lg"
-                    onClick={() => setOpenPoll(true)}
-                  >
-                    <img src={polls} alt="" />
-                  </button>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            <div className="flex justify-end py-4 gap-4 items-center w-full">
-              <div className="bg-[#F4F4F4] w-[200px] h-[33px]">
-                <select
-                  value={category}
-                  onChange={handleCategoryChange}
-                  className="focus:outline-none focus:ring-0 border-0 bg-transparent post-input w-full"
+            {isVisible ? (
+              <label
+                onClick={toggleVisibility}
+                className="bg-white make-post-input"
+              >
+                Create Post
+              </label>
+            ) : (
+              <div className="w-full">
+                <label
+                  onClick={toggleVisibility}
+                  className="bg-white make-post-input  cursor-pointer"
                 >
-                  <option value="">Category</option>
-                  {Category?.data?.map((data, index) => (
-                    <option value={data?._id} key={index}>
-                      {data.name}
-                    </option>
-                  ))}
-                </select>
+                  What's on your mind?
+                </label>
               </div>
+            )}
 
-              <div className="custom-select-box bg-[#F4F4F4] h-[33px] flex justify-center items-center">
-                <div className="p-3 flex gap-2 justify-center items-center w-[200px]">
-                  <div className="select-image">
-                    {audience === "Public" ? (
-                      <BiGlobe size={20} />
-                    ) : audience === "Private" ? (
-                      <BiLock size={20} />
-                    ) : (
-                      <BiGroup size={20} />
-                    )}
-                  </div>
-                  <select
-                    value={audience}
-                    onChange={handleAudienceChange}
-                    className="focus:outline-none focus:ring-0 border-0 bg-transparent post-input w-full"
-                  >
-                    <option value="Public">Public</option>
-                    <option value="Private">Private</option>
-                    <option value="Followers">Followers</option>
-                  </select>
-                </div>
-              </div>
-
+            {isVisible ? (
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
@@ -425,9 +293,159 @@ function MakePost() {
                   "Post"
                 )}
               </button>
-            </div>
+            ) : (
+              <>
+                <label className="shadow-md hover:shadow-lg">
+                  {/* <img src={gallery} alt="" className="cursor-pointer" /> */}
+                  <MdAddAPhoto className="text-[#34B53A]" size={30} />
+                  <input
+                    type="file"
+                    onChange={handleSchedulePostMediaChange}
+                    accept="image/*,video/*"
+                    multiple
+                    style={{ display: "none" }}
+                  />
+                </label>
+              </>
+            )}
           </div>
         </div>
+
+        {isVisible && (
+          <motion.div
+            className="h-auto makepost border-t-0 border-0"
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="post-box p-4 bg-white rounded-md">
+              <div className="post-content w-full">
+                <div className="flex flex-col pb-4">
+                  <div className="flex justify-end pb-4 gap-4 items-center w-full">
+                    <div className="bg-[#F4F4F4] w-[200px] h-[33px]">
+                      <select
+                        value={category}
+                        onChange={handleCategoryChange}
+                        className="focus:outline-none focus:ring-0 border-0 bg-transparent post-input w-full"
+                      >
+                        <option value="">Category</option>
+                        {Category?.data?.map((data, index) => (
+                          <option value={data?._id} key={index}>
+                            {data.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="custom-select-box bg-[#F4F4F4] h-[33px] flex justify-center items-center">
+                      <div className="p-3 flex gap-2 justify-center items-center w-[200px]">
+                        <div className="select-image">
+                          {audience === "Public" ? (
+                            <BiGlobe size={20} />
+                          ) : audience === "Private" ? (
+                            <BiLock size={20} />
+                          ) : (
+                            <BiGroup size={20} />
+                          )}
+                        </div>
+                        <select
+                          value={audience}
+                          onChange={handleAudienceChange}
+                          className="focus:outline-none focus:ring-0 border-0 bg-transparent post-input w-full"
+                        >
+                          <option value="Public">Public</option>
+                          <option value="Private">Private</option>
+                          <option value="Followers">Followers</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <textarea
+                    className="make-post-input focus:outline-none focus:ring-0 w-full text-wrap h-auto border-0"
+                    placeholder="Share your thoughts..."
+                    value={content}
+                    onChange={handleContentChange}
+                    onInput={adjustTextareaHeight}
+                  />
+                </div>
+
+                {/* {selectedPostMedia ? ( */}
+                <div className="uploaded-items-container p-2 rounded-md max-h-80 overflow-y-auto flex flex-wrap">
+                  {[...selectedPostMedia].map((item, index) => (
+                    <UploadedItem
+                      key={index}
+                      item={item}
+                      onRemove={handleRemove}
+                      onItemSelect={handleItemSelect}
+                    />
+                  ))}
+                </div>
+                {/* ) : null} */}
+
+                <div className="border flex w-[130px] rounded-md ml-3">
+                  <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
+                    <MdAddAPhoto className="text-[#34B53A]" size={20} />
+                    <p className="font-Inte">Photo/Video</p>
+                    <input
+                      type="file"
+                      onChange={handlePostMediaChange}
+                      accept="image/*,video/*"
+                      multiple
+                      style={{ display: "none" }}
+                    />
+                  </label>
+                </div>
+
+                <div className="pb-5 pt-5">
+                  <div className="flex justify-center">
+                    <button className="mb-2" onClick={toggleCollapse}>
+                      {isExpanded ? (
+                        <div className="flex justify-center items-center">
+                          See less <BiChevronUp size={20} />
+                        </div>
+                      ) : (
+                        <div className="flex justify-center items-center">
+                          See more <BiChevronDown size={20} />
+                        </div>
+                      )}
+                    </button>
+                  </div>
+
+                  {isExpanded && (
+                    <div className="flex justify-center gap-5 items-center mt-2 mb-2">
+                      <button
+                        className="shadow-md hover:shadow-lg"
+                        onClick={() => setOpenScheduleModal(true)}
+                      >
+                        <img src={schedule} alt="" />
+                      </button>
+
+                      <button
+                        className="shadow-md hover:shadow-lg"
+                        onClick={() => setOpenDiaryModal(true)}
+                      >
+                        <img src={diary} alt="" />
+                      </button>
+
+                      <button className="shadow-md hover:shadow-lg">
+                        <img src={draft} alt="" />
+                      </button>
+
+                      <button
+                        className="shadow-md hover:shadow-lg"
+                        onClick={() => setOpenPoll(true)}
+                      >
+                        <img src={polls} alt="" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {viewModalOpen && selectedItem && (
@@ -537,14 +555,14 @@ function MakePost() {
         // btnText="Schedule"
       >
         <textarea
-          className="post-box focus:outline-none focus:ring-0 pb-4 flex-wrap"
-          placeholder="Start a post..."
+          className="make-post-input focus:outline-none focus:ring-0 pb-4 flex-wrap border-0"
+          placeholder="Share your thoughts..."
           value={content}
           onChange={handleContentChange}
         ></textarea>
 
-        <div className="uploaded-items-container p-4 border border-gray-200 rounded-md max-h-80 overflow-y-auto mt-4 flex flex-wrap">
-          {[...selectedImages, ...selectedVideos].map((item, index) => (
+        <div className="uploaded-items-container p-4 border border-white rounded-md max-h-80 overflow-y-auto mt-4 flex flex-wrap">
+          {[...selectedPostMedia].map((item, index) => (
             <UploadedItem
               key={index}
               item={item}
@@ -557,30 +575,34 @@ function MakePost() {
         <div className="flex justify-between pb-5 pt-5">
           <div className="text-add-post">Add to your post</div>
 
-          <div className="buttons flex flex-row flex-wrap items-center justify-start gap-3 pb-5">
+          {/* <div className="buttons flex flex-row flex-wrap items-center justify-start gap-3 pb-5">
             <label className="shadow-md hover:shadow-lg">
-              <img src={photos} alt="" className="cursor-pointer" />
+              <div className="flex gap-3 items-center">
+                <MdAddAPhoto className="text-[#34B53A]" size={30} />
+                <p>Photo/Video</p>
+              </div>
               <input
                 type="file"
-                onChange={handleImageChange}
-                accept="image/*"
+                onChange={handleSchedulePostMediaChange}
+                accept="image/*,video/*"
                 multiple
                 style={{ display: "none" }}
               />
             </label>
-            <label className="shadow-md hover:shadow-lg">
-              <img src={videoIcon} alt="" className="cursor-pointer" />
+          </div> */}
+
+          <div className="border flex w-[130px] rounded-md ml-3">
+            <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
+              <MdAddAPhoto className="text-[#34B53A]" size={20} />
+              <p className="font-Inte">Photo/Video</p>
               <input
                 type="file"
-                onChange={handleVideoChange}
-                accept="video/*"
+                onChange={handleSchedulePostMediaChange}
+                accept="image/*,video/*"
                 multiple
                 style={{ display: "none" }}
               />
             </label>
-            <button className="shadow-md hover:shadow-lg">
-              <img src={location} alt="" />
-            </button>
           </div>
         </div>
 
