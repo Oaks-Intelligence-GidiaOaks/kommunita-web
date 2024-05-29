@@ -2,21 +2,63 @@
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{js,jsx}',
-    './components/**/*.{js,jsx}',
-    './app/**/*.{js,jsx}',
-    './src/**/*.{js,jsx}',
+    "./pages/**/*.{js,jsx}",
+    "./components/**/*.{js,jsx}",
+    "./app/**/*.{js,jsx}",
+    "./src/**/*.{js,jsx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "node_modules/flowbite-react/lib/esm/**/*.js",
   ],
   prefix: "",
   theme: {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+    },
+    fontFamily: {
+      Inter: ["Inter", "san-serif"],
+      Montserrat: ["Montserrat", "san-serif"],
     },
     extend: {
+      backgroundImage: {
+        "hero-pattern": "url('/src/assets/images/green_bg.jpeg')",
+        // 'footer-texture': "url('/img/footer-texture.png')",
+      },
+      textColor: {
+        "primary-dark-green": "#3D7100",
+        "primary-bright-green": "#7ADD02",
+        "primary-light-green": "#94FC83",
+        "primary-gray": "#AEAEAE",
+        "primary-light-gray": "#ADADAD",
+        "primary-dark-gray": "#4D4D4D",
+        "primary-red": "#FF3A29",
+        "secondary-white": "#7C8DB5",
+      },
+
+      borderColor: {
+        "primary-dark-green": "#3D7100",
+        "primary-bright-green": "#7ADD02",
+        "primary-light-green": "#94FC83",
+      },
+
+      backgroundColor: {
+        "primary-dark-green": "#3D7100",
+        "primary--bright-green": "#7ADD02",
+        "primary-gray": "#AEAEAE",
+        "primary-black": "#091001",
+        "primary-light-gray": "#ADADAD",
+      },
+      fontFamily: {
+        "pt-serif": "'PT Serif Caption', serif",
+        poppins: "'Poppins', sans-serif",
+        inter: "'Inter', sans-serif",
+      },
+      boxShadow: {
+        "primary-dark": "5px 7px 12px rgba(0,0,0,0.3)",
+        "primary-dark-hovered": "7px 9px 14px rgba(0,0,0,0.3)",
+      },
+
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -33,5 +75,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-}
+  plugins: [
+    require("tailwindcss-animate"),
+    require("tailwind-scrollbar"),
+    require("flowbite/plugin"),
+  ],
+};

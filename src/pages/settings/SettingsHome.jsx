@@ -626,15 +626,22 @@ const SettingsHome = () => {
               )}
             </div>
           </div>
-          <div className="flex items-center justify-center ">
+          <div className="flex items-center justify-center pb-20">
             <div className="text-primary-gray pt-10 mt-10">
-              <h2 className="text-5xl mb-20">Verification</h2>
+              <h2 className="text-5xl mb-20 text-black text-opacity-65">
+                Verification
+              </h2>
               <p className="mb-5 mt-10">
                 Enter your 4 digits code that you recieved on your email.
               </p>
               <div className="flex flex-col items-center gap-10">
                 <div className="w-full flex items-center justify-center mt-10">
-                  <InputOTP className="w-full flex items-center" maxLength={6}>
+                  <InputOTP
+                    onChange={(e) => setCode(e.target.value)}
+                    value={code}
+                    className="w-full flex items-center"
+                    maxLength={6}
+                  >
                     <InputOTPGroup className="w-full">
                       <InputOTPSlot className="w-[50px] h-[50px]" index={0} />
                     </InputOTPGroup>
