@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import ProfileHero from "../../components/profile/ProfileHero";
 import PostHeader from "../../components/profile/PostHeader";
 import Layout from "./Layout";
-import MediaContainer from "../../components/profile/MediaContainer";
-import DiaryContainer from "../../components/profile/DiaryContainer";
-import postImage from "../../assets/images/main/post-image.svg";
+// import MediaContainer from "../../components/profile/MediaContainer";
+// import DiaryContainer from "../../components/profile/DiaryContainer";
+// import postImage from "../../assets/images/main/post-image.svg";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
-import avatar2 from "../../assets/images/sidebar/avatar2.svg";
-import avatar4 from "../../assets/images/sidebar/avatar4.svg";
+// import avatar2 from "../../assets/images/sidebar/avatar2.svg";
+// import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 import Posts from "../../components/main/Posts";
 import { Link } from "react-router-dom";
-// import { useGetFeedsQuery } from "../../service/feeds.service";
+import { useParams } from "react-router-dom";
+import { useGetOtherFeedsMutation } from "../../service/feeds.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import { ShimmerSocialPost } from "react-shimmer-effects";
 import { useGetPostQuery } from "../../service/post.service";
+import { showAlert } from "../../static/alert";
 
 const ProfileHome = () => {
   // const { data } = useGetFeedsQuery();
@@ -23,6 +25,9 @@ const ProfileHome = () => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sidePost, setSidePost] = useState(null);
+
+  const [getOtherFeeds, { isSuccess, isError }] = useGetOtherFeedsMutation();
+  const { user_id } = useParams();
 
   useEffect(() => {
     setTimeout(() => {
@@ -36,7 +41,27 @@ const ProfileHome = () => {
     }, 5000);
   }, [data]);
 
-  // console.log("profile: ", post);
+  useEffect(() => {
+    if (user_id) {
+      GetOtherUser();
+    } else {
+      setPost(data);
+      // setProfile(data);
+    }
+  }, [user_id]);
+
+  const GetOtherUser = async () => {
+    try {
+      const res = await getOtherFeeds(user_id);
+      setPost(res.data);
+      console.log(res.data);
+    } catch (error) {
+      console.error("Error making search: ", error);
+      showAlert("Oops", "An error occurred while searching content", "error");
+    }
+  };
+
+  console.log("profile: ", posts);
 
   return (
     <Layout>
@@ -62,6 +87,7 @@ const ProfileHome = () => {
                   repost={post.repost}
                   share={post.share}
                   reaction={post.reaction}
+                  userId={post.user_id._id}
                   avatar={post.user_id.photo_url || avatar1} // You need to provide the avatar source
                 />
               ))}

@@ -6,6 +6,7 @@ import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 import SearchPost from "./SearchPost";
 import GeneralUserCard from "./GeneralUserCard";
 import Category from "../ads/Category";
+import SurveyDisplay from "../polls/SurveyDisplay";
 
 const GeneralSearch = ({ data }) => {
   const tabs = Object.keys(data);
@@ -91,8 +92,9 @@ const GeneralSearch = ({ data }) => {
                 .map((post, index) => (
                   <SearchPost
                     key={index}
-                    fullname={post.user_id.display_name}
-                    username={post.user_id.username}
+                    post={post}
+                    fullname={post.display_name}
+                    username={post.username}
                     verifiedUser={false} // Adjust based on your data
                     postTime={getTimeAgoString(post.createdAt)}
                     content={post.content}
@@ -102,7 +104,7 @@ const GeneralSearch = ({ data }) => {
                     repost={post.repost}
                     share={post.share}
                     reaction={post.reaction}
-                    avatar={post.user_id.photo_url || avatar4}
+                    avatar={post.photo_url || avatar4}
                   />
                 ))}
             </div>
@@ -197,7 +199,11 @@ const GeneralSearch = ({ data }) => {
           aria-labelledby="surveys-tab"
         >
           {data.surveys.length > 0 ? (
-            <div className="pt-5 px-10 pb-20">surveys</div>
+            <div className="pt-5 px-10 pb-20">
+              {data.surveys.map((survey, id) => (
+                <SurveyDisplay data={survey} />
+              ))}
+            </div>
           ) : (
             <p>Surveys not found</p>
           )}

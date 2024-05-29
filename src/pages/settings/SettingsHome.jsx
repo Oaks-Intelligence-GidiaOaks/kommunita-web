@@ -11,6 +11,8 @@ import { useGetFeedsQuery } from "../../service/feeds.service";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 
+import countries from "../../utils/countries.json";
+
 const SettingsHome = () => {
   const { data: profile } = useGetUserProfiileQuery();
   // console.log(profile);
@@ -28,10 +30,11 @@ const SettingsHome = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
-  const [bio, setBio] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [bio, setBio] = useState("");
+  const [states, setStates] = useState([]);
 
   //- second tab
   const [currentPassword, setCurrentPassword] = useState("");
@@ -59,16 +62,9 @@ const SettingsHome = () => {
   useEffect(() => {
     // Check if all fields are filled
     setIsAllFieldsFilled(
-      !!username &&
-        !!email &&
-        !!phoneNumber &&
-        !!country &&
-        !!state &&
-        !!bio &&
-        !!fullname &&
-        !!techtitle
+      !!username && !!email && !!phoneNumber && !!country && !!state && !!bio
     );
-  }, [username, email, phoneNumber, country, state, bio, techtitle, fullname]);
+  }, [username, email, phoneNumber, country, state, bio]);
 
   // Set values once profile data is available
   useEffect(() => {
@@ -78,8 +74,8 @@ const SettingsHome = () => {
       setCountry(profile?.data.location.country || "");
       setEmail(profile?.data.email || "");
       setPhoneNumber(profile?.data.phone_number || "");
-      setFullname(profile?.data.fullname || "");
-      setTechtitle(profile?.data.tech_title || "");
+      // setFullname(profile?.data.fullname || "");
+      // setTechtitle(profile?.data.tech_title || "");
       // setLocation(
       //   profile?.data.location && Object.keys(profile?.data.location).length !== 0
       //     ? JSON.stringify(profile?.data.location)
@@ -88,6 +84,15 @@ const SettingsHome = () => {
       setBio(profile?.data.about || "");
     }
   }, [profile]);
+
+  useEffect(() => {
+    countries.map((ct) => {
+      if (ct.name === country) {
+        setStates(ct.states);
+        // console.log(ct.states);
+      }
+    });
+  }, [country]);
 
   const handleImageChange = async (event) => {
     const file = event.target.files[0];
@@ -312,7 +317,7 @@ const SettingsHome = () => {
             </div>
             <div className="pt-10 mt-10">
               <form onSubmit={handleSubmit}>
-                <div className="flex items-center lg:gap-16 lg:flex-row flex-col  justify-between pb-3">
+                {/* <div className="flex items-center lg:gap-16 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Full Name</label>
                     <input
@@ -333,7 +338,7 @@ const SettingsHome = () => {
                       placeholder={"Please enter your techtitle"}
                     />
                   </div>
-                </div>
+                </div> */}
                 <div className="flex items-center lg:gap-16 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Username</label>
@@ -359,21 +364,45 @@ const SettingsHome = () => {
                 <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Country</label>
-                    <input
+                    <select
+                      value={country}
+                      onChange={(e) => setCountry(e.target.value)}
+                      className="settings-input outline-none"
+                    >
+                      <option value="" disabled>
+                        Select Country
+                      </option>
+                      {countries.map((ct) => (
+                        <option>{ct.name}</option>
+                      ))}
+                    </select>
+                    {/* <input
                       value={country || ""}
                       onChange={(e) => setCountry(e.target.value)}
                       className="settings-input outline-none"
                       type="text"
-                    />
+                    /> */}
                   </div>
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">State</label>
-                    <input
+                    <select
+                      value={state}
+                      onChange={(e) => setState(e.target.value)}
+                      className="settings-input outline-none"
+                    >
+                      <option value="" disabled>
+                        Select State
+                      </option>
+                      {states?.map((st) => (
+                        <option>{st.name}</option>
+                      ))}
+                    </select>
+                    {/* <input
                       value={state || ""}
                       onChange={(e) => setState(e.target.value)}
                       className="settings-input outline-none"
                       type="text"
-                    />
+                    /> */}
                   </div>
                   <div className="flex flex-col mb-5 w-full">
                     <label className="settings-label">Phone Number</label>
@@ -505,7 +534,7 @@ const SettingsHome = () => {
                   </div>
                   <div
                     onClick={requestCode}
-                    className="absolute bottom-0 right-0 bg-primary--bright-green rounded-lg p-1 text-xs text-white cursor-pointer"
+                    className="absolute bottom-0 right-0 bg-primary-dark-green rounded-lg p-1 px-2 text-xs text-white cursor-pointer"
                   >
                     {codeRequested ? "Code sent" : "request code"}
                   </div>

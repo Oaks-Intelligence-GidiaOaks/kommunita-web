@@ -3,6 +3,7 @@ import noimage from "../../assets/images/sidebar/avatar4.svg";
 import { Link } from "react-router-dom";
 
 const GeneralUserCard = ({ user }) => {
+  // console.log("General User: ", user);
   return (
     <div className="flex justify-between items-center bg-white/90 p-4 gap-3 mb-3">
       <div className="flex gap-4">

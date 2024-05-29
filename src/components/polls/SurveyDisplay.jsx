@@ -10,6 +10,7 @@ import { useGetSurveyFeedsQuery } from "../../service/survey.service";
 const SurveyDisplay = ({ data, closeModal }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { data: surveyData, refetch } = useGetSurveyFeedsQuery();
+  console.log(surveyData);
 
   const [answers, setAnswers] = useState({});
   const { questions } = data;

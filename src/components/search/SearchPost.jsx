@@ -22,8 +22,12 @@ import "../main/style.css";
 import PostButtons from "./../main/PostButtons";
 import Comment from "./../main/Comment";
 import CustomCarousel from "./../main/CustomCarousel";
+import { useGetOtherUserProfileMutation } from "../../service/user.service";
+import { showAlert } from "../../static/alert";
+import { Link } from "react-router-dom";
 
 function SearchPost({
+  post,
   fullname,
   username,
   verifiedUser,
@@ -36,11 +40,29 @@ function SearchPost({
   share,
   reaction,
 }) {
+  const [getOtherUserProfile, { isSuccess, isError }] =
+    useGetOtherUserProfileMutation();
+  const [profile, setProfile] = useState(null);
   // const [allComment, setAllComment] = useState([]);
   // const [addComment, setAddComment] = useState(false);
   const { ref, inView } = useInView({
     threshold: 0.5,
   });
+
+  useEffect(() => {
+    GetOtherUser();
+  }, []);
+
+  const GetOtherUser = async () => {
+    try {
+      const res = await getOtherUserProfile(post.user_id);
+      setProfile(res.data.data);
+      // console.log(res.data.data);
+    } catch (error) {
+      console.error("Error fetching user: ", error);
+      showAlert("Oops", "An error occurred while getting user", "error");
+    }
+  };
 
   // useEffect(() => {
   //   setAllComment(comment);
@@ -55,6 +77,7 @@ function SearchPost({
 
   const handleSeeMore = () => {
     setPostData({
+      post,
       fullname,
       username,
       verifiedUser,
@@ -88,28 +111,36 @@ function SearchPost({
           <div className="post-card p-5 h-auto">
             <div className="flex items-center justify-between">
               <div className="flex gap-3 items-center">
-                <div
-                  className={`rounded-full border-4 w-[40px] h-[40px]`}
-                  style={{ borderColor: "" }}
-                >
-                  <img
-                    src={avatar}
-                    className="rounded-full w-full h-full object-cover"
-                    alt=""
-                  />
-                </div>
+                <Link to={`/profile/${post.user_id}`}>
+                  <div
+                    className={`rounded-full border-4 w-[40px] h-[40px]`}
+                    style={{ borderColor: "" }}
+                  >
+                    <img
+                      src={profile?.photo_url || avatar}
+                      className="rounded-full w-full h-full object-cover"
+                      alt=""
+                    />
+                  </div>
+                </Link>
                 <div>
                   <div className="flex gap-2 items-center">
-                    <p className="post-name">{fullname}</p>{" "}
-                    {verifiedUser && (
-                      <span>
-                        <img src={verified} alt="" className="pb-1" />
-                      </span>
-                    )}
+                    <Link to={`/profile/${post.user_id}`}>
+                      <p className="post-name">{profile?.display_name}</p>{" "}
+                      {profile?.verifiedUser && (
+                        <span>
+                          <img
+                            src={profile?.verified}
+                            alt=""
+                            className="pb-1"
+                          />
+                        </span>
+                      )}
+                    </Link>
                     <span className="post-time ml-2 font-bold">{postTime}</span>
                   </div>
                   <p className="username flex gap-1 items-center">
-                    <div className="flex flex-col">@{username}</div>
+                    <div className="flex flex-col">@{profile?.username}</div>
                   </p>
                 </div>
               </div>
@@ -187,15 +218,19 @@ function SearchPost({
             </div>
             <div>
               <div className="flex gap-2">
-                <p className="post-name pb-1">{fullname}</p>{" "}
+                <p className="post-name pb-1">{profile?.display_name}</p>{" "}
                 {verifiedUser && (
                   <span>
-                    <img src={verified} alt="" className="pb-1" />
+                    <img
+                      src={profile?.isEmailVerified}
+                      alt=""
+                      className="pb-1"
+                    />
                   </span>
                 )}
               </div>
               <p className="username">
-                @{username}{" "}
+                @{profile?.username}{" "}
                 <span className="post-time ml-2 font-bold">{postTime}</span>
               </p>
             </div>
