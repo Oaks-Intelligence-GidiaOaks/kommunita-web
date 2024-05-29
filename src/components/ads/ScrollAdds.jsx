@@ -34,7 +34,7 @@ const ScrollAdds = () => {
   const filteredAds = ads.filter((dt) => !isToday(new Date(dt.end_date)));
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${filteredAds.length > 0 ? "mb-4" : ""}`}>
       {isLoading ? (
         <div className="flex justify-center py-3">
           <Spinner />

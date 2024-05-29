@@ -266,24 +266,30 @@ function MakePost() {
     }
   };
 
+  const adjustTextareaHeight = (event) => {
+    event.target.style.height = "auto";
+    event.target.style.height = event.target.scrollHeight + "px";
+  };
+
   return (
     <>
       <div className="h-auto makepost">
         <div className="post-box p-4">
           <div className="post-content w-full">
-            <div className="more flex justify-end">
+            {/* <div className="more flex justify-end">
               <button>
                 <img src={more_btn} alt="" />
               </button>
-            </div>
+            </div> */}
 
-            <div className="flex pb-4 ">
+            <div className="flex pb-4">
               {/* <img src={avatar2} alt="" /> */}
               <textarea
-                className="post-input focus:outline-none focus:ring-0 border-0 w-full text-wrap h-auto"
+                className="post-input focus:outline-none focus:ring-0 rounded-md w-full text-wrap h-auto border shadow"
                 placeholder="Start a post..."
                 value={content}
                 onChange={handleContentChange}
+                onInput={adjustTextareaHeight}
               />
             </div>
 
@@ -410,6 +416,7 @@ function MakePost() {
 
               <button
                 onClick={handleSubmit}
+                disabled={submitting}
                 className="text-[#fff] bg-[#2CC84A] w-[121px] h-[33px] rounded-sm"
               >
                 {submitting ? (
@@ -515,6 +522,7 @@ function MakePost() {
             <button
               className="p-2 rounded-md border text-[#fff] bg-[#34B53A]"
               onClick={handleDiarySubmit}
+              disabled={submitting}
             >
               {submitting ? <Spinner /> : "Post Diary"}
             </button>

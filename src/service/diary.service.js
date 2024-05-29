@@ -33,7 +33,15 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
           body,
         };
       },
-      // invalidatesTags: ["Feeds", "Diary", "Post"],
+      invalidatesTags: ["Feeds", "Diary"],
+    }),
+
+    deleteDiary: builder.mutation({
+      query: (id) => ({
+        url: `${DIARY}/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Feeds"],
     }),
   }),
 });
@@ -42,4 +50,5 @@ export const {
   useGetDiaryQuery,
   useCreateDiaryMutation,
   useDiaryCommentMutation,
+  useDeleteDiaryMutation,
 } = organizationApiSlice;

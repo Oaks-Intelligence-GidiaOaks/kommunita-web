@@ -1,4 +1,4 @@
-import { FEEDS } from "./constants";
+import { FEEDS, POST } from "./constants";
 import apiSlice from "./api/apiSlice";
 
 export const feedsApiSlice = apiSlice.injectEndpoints({
@@ -18,7 +18,18 @@ export const feedsApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Feeds"],
     }),
+    deleteFeed: builder.mutation({
+      query: (id) => ({
+        url: `${POST}/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Feeds"],
+    }),
   }),
 });
 
-export const { useGetFeedsQuery, useGetOtherFeedsMutation } = feedsApiSlice;
+export const {
+  useGetFeedsQuery,
+  useDeleteFeedMutation,
+  useGetOtherFeedsMutation,
+} = feedsApiSlice;
