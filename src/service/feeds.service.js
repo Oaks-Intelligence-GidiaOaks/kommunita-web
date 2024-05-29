@@ -11,7 +11,13 @@ export const feedsApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Feeds"],
     }),
-
+    getOtherFeeds: builder.mutation({
+      query: (id) => ({
+        url: `${FEEDS}/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Feeds"],
+    }),
     deleteFeed: builder.mutation({
       query: (id) => ({
         url: `${POST}/${id}`,
@@ -22,4 +28,8 @@ export const feedsApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetFeedsQuery, useDeleteFeedMutation } = feedsApiSlice;
+export const {
+  useGetFeedsQuery,
+  useDeleteFeedMutation,
+  useGetOtherFeedsMutation,
+} = feedsApiSlice;

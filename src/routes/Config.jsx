@@ -66,6 +66,10 @@ const Config = () => {
           element={<ProtectedRoute component={ProfileHome} />}
         />
         <Route
+          path={`${routes.PROFILE}/:user_id`}
+          element={<ProtectedRoute component={ProfileHome} />}
+        />
+        <Route
           path={routes.FAVORITE}
           element={<ProtectedRoute component={FavoriteHome} />}
         />

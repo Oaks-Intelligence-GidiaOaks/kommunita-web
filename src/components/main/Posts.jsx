@@ -15,6 +15,7 @@ import left from "../../assets/carousel/left.svg";
 import right from "../../assets/carousel/right.svg";
 import dotsactive from "../../assets/carousel/dotsactive.svg";
 import dotsinactive from "../../assets/carousel/dotsinactive.svg";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { IoIosCloseCircle } from "react-icons/io";
 import { TbHttpDelete } from "react-icons/tb";
@@ -77,6 +78,7 @@ function Post({
   badgeColor,
   department,
   type,
+  userId,
 }) {
   const [deleteFeeds] = useDeleteFeedMutation();
   const [deleteDiary] = useDeleteDiaryMutation();
@@ -121,24 +123,28 @@ function Post({
           <div className="post-card p-5 h-auto">
             <div className="flex items-center justify-between">
               <div className="flex gap-3 items-center">
-                <div
-                  className={`rounded-full border-4 w-[40px] h-[40px]`}
-                  style={{ borderColor: badgeColor }}
-                >
-                  <img
-                    src={avatar}
-                    className="rounded-full w-full h-full object-cover"
-                    alt=""
-                  />
-                </div>
+                <Link to={`/profile/${userId}`}>
+                  <div
+                    className={`rounded-full border-4 w-[40px] h-[40px]`}
+                    style={{ borderColor: badgeColor }}
+                  >
+                    <img
+                      src={avatar}
+                      className="rounded-full w-full h-full object-cover"
+                      alt=""
+                    />
+                  </div>
+                </Link>
                 <div>
                   <div className="flex gap-2 items-center">
-                    <p className="post-name">{fullname}</p>{" "}
-                    {verifiedUser && (
-                      <span>
-                        <img src={verified} alt="" className="pb-1" />
-                      </span>
-                    )}
+                    <Link to={`/profile/${userId}`}>
+                      <p className="post-name">{fullname}</p>{" "}
+                      {verifiedUser && (
+                        <span>
+                          <img src={verified} alt="" className="pb-1" />
+                        </span>
+                      )}
+                    </Link>
                     <span className="post-time ml-2 font-bold">{postTime}</span>
                   </div>
                   <p className="username flex gap-1 items-center">

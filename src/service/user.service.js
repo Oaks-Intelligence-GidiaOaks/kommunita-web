@@ -63,6 +63,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
       providesTags: ["User"],
     }),
 
+    // Get other user route
+    getOtherUserProfile: builder.mutation({
+      query: (id) => ({
+        url: `user/profile/${id}`,
+        method: "GET",
+      }),
+      invalidatesTags: ["User"],
+    }),
+
     // // update user route
     // updateUser: builder.mutation({
     //   query: (data) => ({
@@ -115,6 +124,7 @@ export const {
   useLoginUserMutation,
   useRegisterUserMutation,
   useGetUserProfiileQuery,
+  useGetOtherUserProfileMutation,
   useGetOrganizationQuery,
   useGetCodeMutation,
   useUpdatePasswordMutation,
