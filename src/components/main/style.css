@@ -80,3 +80,9 @@
   letter-spacing: 0.16em;
   text-align: left;
 }
+.make-post-input {
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16.94px;
+}

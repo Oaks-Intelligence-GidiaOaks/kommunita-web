@@ -58,7 +58,7 @@ function Main() {
                 department={post.user_id?.department[0]?.badge?.department}
                 userId={post.user_id?._id}
                 type={post?.type}
-                user_id={post.user_id?._id}
+                // user_id={post.user_id?._id}
               />
             ) : (
               <div className="mt-4" key={index}>
