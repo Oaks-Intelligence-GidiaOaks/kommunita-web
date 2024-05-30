@@ -116,7 +116,9 @@ function MakePost() {
 
   // Handle content change
   const handleContentChange = (event) => {
-    setContent(event.target.value);
+    if (event.target.value.length <= 500) {
+      setContent(event.target.value);
+    }
   };
 
   // Handle category change
@@ -244,7 +246,7 @@ function MakePost() {
     <>
       <div>
         <div className="w-full bg-white rounded-md border-b-0 border-0">
-          <div className="flex p-2 gap-4 justify-between items-center w-full">
+          <div className="flex p-2 gap-4 justify-between items-center w-full py-5">
             {isVisible ? (
               <AiOutlineClose
                 className="cursor-pointer"
@@ -253,7 +255,7 @@ function MakePost() {
               />
             ) : (
               <div>
-                <div className="flex items-center justify-center h-[40px] w-[40px] rounded-full">
+                <div className="flex items-center justify-center h-[40px] w-[40px] rounded-full border-4">
                   <img
                     src={photo}
                     className="rounded-full w-full h-full object-cover"
@@ -284,8 +286,12 @@ function MakePost() {
             {isVisible ? (
               <button
                 onClick={handleSubmit}
-                disabled={submitting}
-                className="text-[#fff] bg-[#2CC84A] w-[121px] h-[33px] rounded-sm"
+                disabled={submitting || !content}
+                className={`${
+                  !content
+                    ? "bg-gray-200 text-gray-600"
+                    : "bg-[#2CC84A] text-white"
+                } w-[121px] h-[33px] rounded-sm`}
               >
                 {submitting ? (
                   <BeatLoader color="#ffffff" loading={true} />
@@ -295,12 +301,12 @@ function MakePost() {
               </button>
             ) : (
               <>
-                <label className="shadow-md hover:shadow-lg">
+                <label className="shadow-md hover:shadow-lg cursor-pointer">
                   {/* <img src={gallery} alt="" className="cursor-pointer" /> */}
                   <MdAddAPhoto className="text-[#34B53A]" size={30} />
                   <input
                     type="file"
-                    onChange={handleSchedulePostMediaChange}
+                    onChange={handlePostMediaChange}
                     accept="image/*,video/*"
                     multiple
                     style={{ display: "none" }}
@@ -321,13 +327,13 @@ function MakePost() {
           >
             <div className="post-box p-4 bg-white rounded-md">
               <div className="post-content w-full">
-                <div className="flex flex-col pb-4">
-                  <div className="flex justify-end pb-4 gap-4 items-center w-full">
-                    <div className="bg-[#F4F4F4] w-[200px] h-[33px]">
+                <div className="flex flex-col p-4 bg-gray-50 rounded-lg shadow-md space-y-4">
+                  <div className="flex justify-end items-center space-x-4">
+                    <div className="bg-white rounded-md w-48 h-10">
                       <select
                         value={category}
                         onChange={handleCategoryChange}
-                        className="focus:outline-none focus:ring-0 border-0 bg-transparent post-input w-full"
+                        className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full px-2 make-post-input"
                       >
                         <option value="">Category</option>
                         {Category?.data?.map((data, index) => (
@@ -338,9 +344,9 @@ function MakePost() {
                       </select>
                     </div>
 
-                    <div className="custom-select-box bg-[#F4F4F4] h-[33px] flex justify-center items-center">
-                      <div className="p-3 flex gap-2 justify-center items-center w-[200px]">
-                        <div className="select-image">
+                    <div className="bg-white rounded-md h-10 flex items-center px-3">
+                      <div className="flex items-center space-x-2 w-48">
+                        <div className="text-gray-600 ">
                           {audience === "Public" ? (
                             <BiGlobe size={20} />
                           ) : audience === "Private" ? (
@@ -352,7 +358,7 @@ function MakePost() {
                         <select
                           value={audience}
                           onChange={handleAudienceChange}
-                          className="focus:outline-none focus:ring-0 border-0 bg-transparent post-input w-full"
+                          className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full make-post-input"
                         >
                           <option value="Public">Public</option>
                           <option value="Private">Private</option>
@@ -363,40 +369,45 @@ function MakePost() {
                   </div>
 
                   <textarea
-                    className="make-post-input focus:outline-none focus:ring-0 w-full text-wrap h-auto border-0"
+                    className="make-post-input focus:outline-none focus:ring-0 w-full text-wrap h-auto border-0 rounded-md p-2 resize-none"
                     placeholder="Share your thoughts..."
                     value={content}
                     onChange={handleContentChange}
                     onInput={adjustTextareaHeight}
+                    // rows={3}
+                    // style={{ maxHeight: "200px" }}
                   />
+                  <div className="rounded-md py-2 flex justify-between make-post-input">
+                    <div className="border flex w-[130px] rounded-md">
+                      <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
+                        <MdAddAPhoto className="text-[#34B53A]" size={20} />
+                        <p className="make-post-input text-sm">Photo/Video</p>
+                        <input
+                          type="file"
+                          onChange={handleSchedulePostMediaChange}
+                          accept="image/*,video/*"
+                          multiple
+                          style={{ display: "none" }}
+                        />
+                      </label>
+                    </div>
+
+                    <div className=""> {content.length}/500</div>
+                  </div>
                 </div>
 
-                {/* {selectedPostMedia ? ( */}
-                <div className="uploaded-items-container p-2 rounded-md max-h-80 overflow-y-auto flex flex-wrap">
-                  {[...selectedPostMedia].map((item, index) => (
-                    <UploadedItem
-                      key={index}
-                      item={item}
-                      onRemove={handleRemove}
-                      onItemSelect={handleItemSelect}
-                    />
-                  ))}
-                </div>
-                {/* ) : null} */}
-
-                <div className="border flex w-[130px] rounded-md ml-3">
-                  <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
-                    <MdAddAPhoto className="text-[#34B53A]" size={20} />
-                    <p className="font-Inte">Photo/Video</p>
-                    <input
-                      type="file"
-                      onChange={handlePostMediaChange}
-                      accept="image/*,video/*"
-                      multiple
-                      style={{ display: "none" }}
-                    />
-                  </label>
-                </div>
+                {selectedPostMedia ? (
+                  <div className="uploaded-items-container p-2 rounded-md max-h-80 overflow-y-auto flex flex-wrap mt-3">
+                    {[...selectedPostMedia].map((item, index) => (
+                      <UploadedItem
+                        key={index}
+                        item={item}
+                        onRemove={handleRemove}
+                        onItemSelect={handleItemSelect}
+                      />
+                    ))}
+                  </div>
+                ) : null}
 
                 <div className="pb-5 pt-5">
                   <div className="flex justify-center">
