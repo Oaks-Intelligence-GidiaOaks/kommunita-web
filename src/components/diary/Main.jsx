@@ -1,3 +1,4 @@
+import React from "react";
 import "../main/style.css";
 import Story from "../main/Story";
 import Posts from "../main/Posts";
@@ -8,14 +9,22 @@ import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 import { useGetDiaryQuery } from "../../service/diary.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import search from "../../assets/images/Home/Search.png";
+import { Spinner } from "flowbite-react";
 
 function DiaryMain() {
-  const { data } = useGetDiaryQuery();
+  const { data, isLoading } = useGetDiaryQuery();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center mt-10">
+        <Spinner />
+      </div>
+    );
+  }
+
   const posts = data?.data || [];
 
-  console.log("posts", data?.data);
-
-  if (!data) {
+  if (!posts.length) {
     return (
       <div className="flex items-center flex-col mt-10">
         <img src={search} alt="" />
