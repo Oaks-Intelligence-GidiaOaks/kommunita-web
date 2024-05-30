@@ -16,11 +16,11 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "../../components/ui/input-otp";
-// import { REGEXP_ONLY_DIGITS_AND_CHARS } from "../../components/ui/input-otp";
-
 import countries from "../../utils/countries.json";
 import { handleLogout } from "../../static/logout";
 import { useDispatch } from "react-redux";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 const SettingsHome = () => {
   const { data: profile } = useGetUserProfiileQuery();
@@ -243,6 +243,7 @@ const SettingsHome = () => {
         error?.response?.data?.message || "An error occurred",
         "error"
       );
+      handleTabClick("dashboard");
     } finally {
       setSubmitting(false);
     }
@@ -454,12 +455,20 @@ const SettingsHome = () => {
                 <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 lg:w-[50%] w-full ">
                     <label className="settings-label">Phone Number</label>
-                    <input
+                    {/* <input
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       className="settings-input outline-none"
                       type="text"
                       placeholder={"Please enter your phone number"}
+                    /> */}
+                    <PhoneInput
+                      className="settings-input outline-none phoneInput pl-2"
+                      value={phoneNumber}
+                      defaultCountry="NG"
+                      // country="US"
+                      onChange={setPhoneNumber}
+                      placeholder="Enter phone number"
                     />
                   </div>
                 </div>
@@ -651,34 +660,32 @@ const SettingsHome = () => {
               )}
             </div>
           </div>
-          <div className="flex items-center justify-center pb-20">
-            <div className="text-primary-gray pt-10 mt-10">
-              <h2 className="text-5xl mb-20 text-black text-opacity-65">
-                Verification
-              </h2>
-              <p className="mb-5 mt-10">
+          <div className="flex items-center justify-center pb-20 w-full">
+            <div className="text-primary-gray pt-10 mt-10 md:w-[600px]">
+              <h2 className="text-[45px] text-[#51546c]">Verification</h2>
+              <p className="mt-7 text-[16px] text-[#828282]">
                 Enter your 4 digits code that you recieved on your email.
               </p>
               <div className="flex flex-col items-center gap-10">
-                <div className="w-full flex items-center justify-center mt-10">
+                <div className="w-full flex items-center justify-center mt-6 ">
                   <InputOTP
                     value={code}
                     onChange={(value) => setCode(value)}
-                    className="w-full flex items-center"
+                    className="w-full flex items-center gap-[32px]"
                     maxLength={4}
                     // pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
                   >
                     <InputOTPGroup className="w-full">
-                      <InputOTPSlot className="w-[50px] h-[50px]" index={0} />
+                      <InputOTPSlot className="w-[84px] h-[76px]" index={0} />
                     </InputOTPGroup>
                     <InputOTPGroup className="w-full">
-                      <InputOTPSlot className="w-[50px] h-[50px]" index={1} />
+                      <InputOTPSlot className="w-[84px] h-[76px]" index={1} />
                     </InputOTPGroup>
                     <InputOTPGroup className="w-full">
-                      <InputOTPSlot className="w-[50px] h-[50px]" index={2} />
+                      <InputOTPSlot className="w-[84px] h-[76px]" index={2} />
                     </InputOTPGroup>
                     <InputOTPGroup className="w-full">
-                      <InputOTPSlot className="w-[50px] h-[50px]" index={3} />
+                      <InputOTPSlot className="w-[84px] h-[76px]" index={3} />
                     </InputOTPGroup>
 
                     {/* <InputOTPSeparator /> */}
@@ -702,7 +709,7 @@ const SettingsHome = () => {
                     "Verify"
                   )}
                 </button>{" "}
-                <p className="text-xs">
+                <p className="text-[14px] text-[#828282]">
                   If you didn't receive a code!{" "}
                   <span
                     onClick={() => requestCode()}

@@ -11,7 +11,15 @@ export const categoryApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Category"],
     }),
+    getCategoriesWithStat: builder.query({
+      query: () => ({
+        url: `${CATEGORY}/stats`,
+        method: "GET",
+      }),
+      providesTags: ["Category"],
+    }),
   }),
 });
 
-export const { useGetCategoriesQuery } = categoryApiSlice;
+export const { useGetCategoriesQuery, useGetCategoriesWithStatQuery } =
+  categoryApiSlice;

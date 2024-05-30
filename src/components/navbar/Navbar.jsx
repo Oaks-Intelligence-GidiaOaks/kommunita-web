@@ -19,9 +19,9 @@ const Navbar = () => {
   const [searchGeneral, { error, isSuccess }] = useSearchGeneralMutation();
   const [searchedData, setSearchedData] = useState(null);
   const [searching, setSearching] = useState(false);
+  const [searchString, setSearchString] = useState("");
   const nAL = "pt-1 pb-2";
   const aL = nAL + " text-[#2CC84A]";
-  const [searchString, setSearchString] = useState("");
 
   const handleSearch = async () => {
     setSearching(true);

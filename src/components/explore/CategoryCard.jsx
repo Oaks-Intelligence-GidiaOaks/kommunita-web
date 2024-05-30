@@ -1,14 +1,15 @@
 import React from "react";
+import catImg from "../../assets/images/defaultcategory.png";
 
 const CategoryCard = ({ cat, onclick }) => {
   return (
     <div
-      onClick={() => onclick(cat?.name)}
-      className="cursor-pointer rounded-lg bg-white p-2 flex gap-3 items-center w-[170px] md:w-[200px]"
+      onClick={() => onclick(cat?.categoryName || cat.name)}
+      className="cursor-pointer rounded-lg bg-white p-4 flex gap-3 items-center h-[70px] w-[210px]"
     >
       <div className="h-[32px] w-[32px]">
         <img
-          src={cat?.photo_url}
+          src={cat?.photo_url || catImg}
           alt="icon"
           className="object-cover w-[32px] h-[32px]"
           width={32}
@@ -16,8 +17,10 @@ const CategoryCard = ({ cat, onclick }) => {
         />
       </div>
       <div>
-        <h2 className="font-semibold text-lg">{cat?.name}</h2>
-        <p className="text-primary-dark-gray">{cat?.count}</p>
+        <h2 className="font-semibold text-lg">{cat?.categoryName}</h2>
+        <p className="text-primary-dark-gray font-semibold">
+          {cat?.total} posts
+        </p>
       </div>
     </div>
   );

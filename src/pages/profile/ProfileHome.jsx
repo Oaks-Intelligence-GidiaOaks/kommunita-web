@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import Layout from "./Layout";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import Posts from "../../components/main/Posts";
