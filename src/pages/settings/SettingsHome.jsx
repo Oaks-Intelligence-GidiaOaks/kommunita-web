@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useStopwatch, useTimer } from "react-timer-hook";
 import SettingsLayout from "../../components/settings/SettingsLayout";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import "./style.css";
@@ -13,17 +14,19 @@ import { BeatLoader } from "react-spinners";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "../../components/ui/input-otp";
+// import { REGEXP_ONLY_DIGITS_AND_CHARS } from "../../components/ui/input-otp";
 
 import countries from "../../utils/countries.json";
+import { handleLogout } from "../../static/logout";
+import { useDispatch } from "react-redux";
 
 const SettingsHome = () => {
   const { data: profile } = useGetUserProfiileQuery();
   // console.log(profile);
-  const [activeTab, setActiveTab] = useState("verification");
-  // const [activeTab, setActiveTab] = useState("profile");
+  // const [activeTab, setActiveTab] = useState("verification");
+  const [activeTab, setActiveTab] = useState("profile");
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
@@ -50,10 +53,20 @@ const SettingsHome = () => {
   const [isFieldsFilled, setIsFieldsFilled] = useState(false);
   const [code, setCode] = useState("");
   const [codeRequested, setCodeRequested] = useState(false);
+  const [timer, setTImer] = useState(null);
   // const [selectedImages, setSelectedImages] = useState([]);
 
   const { refetch } = useGetFeedsQuery();
   const token = useSelector((state) => state.user?.token);
+
+  const setCountDown = () => {
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + 60); // 10 minutes timer
+    setTImer(time);
+  };
+
+  // logout
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Check if all fields are filled
@@ -175,9 +188,16 @@ const SettingsHome = () => {
     e.preventDefault();
     setSubmitting(true);
 
+    if (newPassword !== confirmPassword) {
+      showAlert("Oops!", "Passwords do not match", "error");
+      setSubmitting(false);
+      return;
+    }
+
     if (!code) {
       requestCode();
       setSubmitting(false);
+
       return;
     }
 
@@ -212,6 +232,9 @@ const SettingsHome = () => {
       setConfirmPassword("");
       setCode("");
       refetch();
+
+      handleLogout(dispatch);
+
       // window.location.href = "/";
     } catch (error) {
       console.error("Error updating password:", error);
@@ -225,8 +248,8 @@ const SettingsHome = () => {
     }
   };
 
-  const requestCode = async (e) => {
-    e.preventDefault();
+  const requestCode = async () => {
+    // e.preventDefault();
     // setSubmitting(true);
 
     const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -239,6 +262,8 @@ const SettingsHome = () => {
       });
       console.log("Code sent successfully:", response.data);
       showAlert("Great!", "Code has been sent to your mail", "success");
+      setCountDown();
+      handleTabClick("verification");
     } catch (error) {
       console.error("Error Getting Code:", error);
       showAlert(
@@ -637,10 +662,11 @@ const SettingsHome = () => {
               <div className="flex flex-col items-center gap-10">
                 <div className="w-full flex items-center justify-center mt-10">
                   <InputOTP
-                    onChange={(e) => setCode(e.target.value)}
                     value={code}
+                    onChange={(value) => setCode(value)}
                     className="w-full flex items-center"
-                    maxLength={6}
+                    maxLength={4}
+                    // pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
                   >
                     <InputOTPGroup className="w-full">
                       <InputOTPSlot className="w-[50px] h-[50px]" index={0} />
@@ -658,12 +684,17 @@ const SettingsHome = () => {
                     {/* <InputOTPSeparator /> */}
                   </InputOTP>
                 </div>
-                <p className="text-red-600">00:30</p>
+                {activeTab === "verification" && (
+                  <p className="text-red-600">
+                    <MyStopwatch expiryTimestamp={timer} />
+                  </p>
+                )}
                 <button
                   className={`w-full ${
-                    !!code ? "setting-btn-active" : "settings-btn"
+                    code.length == 4 ? "setting-btn-active" : "settings-btn"
                   }`}
-                  disabled={!code}
+                  disabled={!(code.length == 4)}
+                  onClick={handlePasswordUpdate}
                 >
                   {submitting ? (
                     <BeatLoader color="#ffffff" loading={true} />
@@ -690,3 +721,18 @@ const SettingsHome = () => {
 };
 
 export default SettingsHome;
+
+function MyStopwatch({ expiryTimestamp }) {
+  // const { totalSeconds, seconds, minutes, isRunning, restart } = useStopwatch({
+  //   autoStart: true,
+  // });
+  const { totalSeconds, seconds, minutes, isRunning, restart } = useTimer({
+    expiryTimestamp,
+    onExpire: () => console.warn("onExpire called"),
+  });
+  return (
+    <div style={{ fontSize: "20px" }}>
+      <span>{minutes}</span>:<span>{seconds}</span>
+    </div>
+  );
+}

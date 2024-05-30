@@ -52,6 +52,13 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: ["Feeds"],
     }),
+    getOtherUserPost: builder.mutation({
+      query: (id) => ({
+        url: `user/post/user/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Post"],
+    }),
   }),
 });
 
@@ -61,4 +68,5 @@ export const {
   useLovePostMutation,
   useRepostPostMutation,
   usePostCommentMutation,
+  useGetOtherUserPostMutation,
 } = organizationApiSlice;

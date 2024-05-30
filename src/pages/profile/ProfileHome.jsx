@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
+
 import Layout from "./Layout";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import Posts from "../../components/main/Posts";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useGetOtherFeedsMutation } from "../../service/feeds.service";
+// import { usegetOtherUserPostMutation } from "../../service/feeds.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import { ShimmerSocialPost } from "react-shimmer-effects";
-import { useGetPostQuery } from "../../service/post.service";
+import {
+  useGetOtherUserPostMutation,
+  useGetPostQuery,
+} from "../../service/post.service";
 import { showAlert } from "../../static/alert";
 import TrendingPost from "../../components/main/TrendingPosts";
 import {
@@ -16,9 +20,15 @@ import {
 } from "../../service/media.service";
 import MediaModal from "../../components/main/MediaModal";
 import GaleryBox from "../../components/profile/GaleryBox";
-import { useGetLikedPostQuery } from "../../service/likedPost.service";
+import {
+  useGetLikedPostQuery,
+  useGetOtherUserLikedPostMutation,
+} from "../../service/likedPost.service";
 import Likes from "../../components/sidebar/Likes";
-import { useGetDiaryQuery } from "../../service/diary.service";
+import {
+  useGetDiaryQuery,
+  useGetOtherUserDiariesMutation,
+} from "../../service/diary.service";
 
 const ProfileHome = () => {
   const { data } = useGetPostQuery();
@@ -26,8 +36,16 @@ const ProfileHome = () => {
   const { data: mediaData } = useGetMediaQuery();
   const { data: likedData } = useGetLikedPostQuery();
 
-  const [getOtherFeeds, { isSuccess: feedSuccess, isError: feedsError }] =
-    useGetOtherFeedsMutation();
+  const [getOtherUserPost, { isSuccess: feedSuccess, isError: feedsError }] =
+    useGetOtherUserPostMutation();
+
+  const [getOtherUserDiaries] = useGetOtherUserDiariesMutation();
+
+  const [
+    getOtherUserLikedPost,
+    { isSuccess: likedSuccess, isError: likedError },
+  ] = useGetOtherUserLikedPostMutation();
+
   const [getOtherMedia, { isSuccess, isError }] = useGetOtherMediaMutation();
 
   const [post, setPost] = useState(null);
@@ -48,6 +66,9 @@ const ProfileHome = () => {
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
   };
+
+  const time = new Date();
+  time.setSeconds(time.getSeconds() + 60);
 
   const activeLink =
     "border-b-[5px] border-primary-dark-green text-primary-dark-green pb-0";
@@ -70,25 +91,30 @@ const ProfileHome = () => {
       )
     );
     setSideDiary(diaryData?.data?.filter((fd) => fd.comment.length == 0));
-  }, [id, diaryData, data, mediaData, likedData]);
+  }, [id]);
 
   // const posts =  || [];
 
   const GetOtherUser = async () => {
     try {
-      const res = await getOtherFeeds(id);
-      setPost(res.data.data.filter((dt) => dt.type == "post"));
+      const res = await getOtherUserPost(id);
+      setPost(res?.data?.data);
+
+      const diariesResult = await getOtherUserDiaries(id);
+      if (diariesResult != undefined) {
+        setDiary(diariesResult?.data?.data);
+      }
 
       const mediaResult = await getOtherMedia(id);
-      setMedias(mediaResult.data.data);
+      setMedias(mediaResult?.data?.data);
 
-      // const likedResult = await getOtherLiked(id);
-      // setMedias(likedResult.data.data);
+      const likedResult = await getOtherUserLikedPost(id);
+      setLiked(likedResult?.data?.data);
 
       // console.log(res.data.data);
     } catch (error) {
       console.error("Error making search: ", error);
-      showAlert("Oops", "An error occurred while searching content", "error");
+      // showAlert("Oops", "An error occurred while searching content", "error");
     }
   };
 
@@ -121,7 +147,7 @@ const ProfileHome = () => {
                 aria-controls="profile"
                 aria-selected={activeTab === "profile"}
               >
-                Posts ({data?.data?.length})
+                Posts ({post?.length})
               </button>
             </li>
             <li className="me-2" role="presentation">
@@ -270,7 +296,7 @@ const ProfileHome = () => {
         aria-labelledby="diaries-tab"
       >
         {diary == undefined ? (
-          <div>You haven't created any diary yet</div>
+          <div>You haven't created any diary yet or resource is loading</div>
         ) : diary == null ? (
           <div className="mt-3">
             <ShimmerSocialPost type="both" />
