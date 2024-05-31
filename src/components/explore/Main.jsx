@@ -9,28 +9,19 @@ import getTimeAgoString from "./../../utils/getTimeAgoString";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import search from "../../assets/images/Home/Search.png";
 import { Spinner } from "flowbite-react";
+import { useGetExplorePostQuery } from "../../service/explore.service";
 
-function ExploreMain({ category }) {
-  const { data, isLoading } = useGetFeedsQuery();
+function ExploreMain({ exploreData }) {
+  // const { data, isLoading } = useGetExplorePostQuery();
 
-  const posts = data?.data || [];
+  const posts = exploreData?.data || [];
   // console.log(posts);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center mt-10">
-        <Spinner />
-      </div>
-    );
-  }
 
   if (!posts.length) {
     return (
       <div className="flex items-center flex-col mt-10">
         <img src={search} alt="" />
-        <h2 className="font-semibold text-3xl mt-5 ml-5">
-          No Feeds to display
-        </h2>
+        <h2 className="font-semibold text-3xl mt-5 ml-5">No Data to display</h2>
       </div>
     );
   }
