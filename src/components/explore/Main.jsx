@@ -14,7 +14,7 @@ import { useGetExplorePostQuery } from "../../service/explore.service";
 function ExploreMain({ exploreData }) {
   // const { data, isLoading } = useGetExplorePostQuery();
 
-  const posts = exploreData?.data || [];
+  const posts = exploreData || [];
   // console.log(posts);
 
   if (!posts.length) {

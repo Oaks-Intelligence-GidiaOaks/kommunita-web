@@ -40,7 +40,7 @@ const ExploreHome = () => {
     useGetExplorePostVideosQuery();
   const { data: diaryData, isLoading: diaryLoading } =
     useGetExploreDiaryQuery();
-  console.log("ExploreData: ", postData?.data);
+  // console.log("ExploreData: ", diaryData?.data);
 
   const [flPopular, setFlPopular] = useState(null);
   const [flDiaries, setFlDiaries] = useState(null);
@@ -48,7 +48,7 @@ const ExploreHome = () => {
   const [flImages, setFlImages] = useState(null);
   const [newCat, setNewCat] = useState("");
 
-  // console.log("Categories: ", Category?.data);
+  console.log("Categories: ", Category?.data);
   const [selectedCategory, setCategory] = useState("");
   const [openSearchModal, setOpenSearchModal] = useState(false);
 
@@ -76,7 +76,7 @@ const ExploreHome = () => {
       setFilteredCategory(
         Category?.data.filter((ct) =>
           // ct.categoryName.toLowerCase().includes(filterString.toLowerCase())
-          ct.name.toLowerCase().includes(filterString.toLowerCase())
+          ct.category.toLowerCase().includes(filterString.toLowerCase())
         )
       );
     } else {
@@ -87,22 +87,24 @@ const ExploreHome = () => {
   useEffect(() => {
     if (newCat) {
       console.log(newCat);
-      console.log(diaryData?.data[0].category);
-      setFlDiaries(diaryData?.data?.filter((ct) => ct.category == newCat));
-      setFlPopular(postData?.data?.filter((ct) => ct.category == newCat));
+      console.log(diaryData?.data[1].category);
+      setFlDiaries(diaryData?.data?.filter((dt) => dt.category == newCat));
+      setFlPopular(postData?.data?.filter((dt) => dt.category == newCat));
       // setFlDiaries(diaryData?.data.filter((ct) => ct.category.includes(newCat)));
       // setFlPopular(postData?.data.filter((ct) => ct.category.includes(newCat)));
     } else {
-      setFlPopular(postData);
-      setFlDiaries(diaryData);
+      console.log("No category selected");
+      setFlPopular(postData?.data);
+      setFlDiaries(diaryData?.data);
     }
-  }, [newCat, postData, diaryData]);
+    // console.log("Diaries: ", flDiaries);
+  }, [newCat, postData, activeTab]);
 
   // Select category
   const selectCategory = (cat) => {
     // console.log(cat._id);
-    setCategory(cat.name);
-    setNewCat(cat._id);
+    setCategory(cat.category);
+    setNewCat(cat.category_id);
   };
 
   const unSelectCategory = () => {
@@ -269,39 +271,40 @@ const ExploreHome = () => {
         </div>
 
         {/* Main Page */}
-        <div className="grid grid-cols-12 justify-between w-full">
-          <div className="-ml-3 col-span-12 md:col-span-9">
-            {/* Popular section */}
-            <div
-              className={`${activeTab === "popular" ? "" : "hidden"}`}
-              id="popular"
-              role="tabpanel"
-              aria-labelledby="popular-tab"
-            >
-              {postLoading ? (
-                <div className="flex items-center justify-center mt-10">
-                  <Spinner />
-                </div>
-              ) : (
-                <ExploreMain exploreData={flPopular} />
-              )}
-            </div>
+        <div className="overflow-x-hidden">
+          <div className="grid grid-cols-12 justify-between w-full">
+            <div className="-ml-3 col-span-12 lg:col-span-9">
+              {/* Popular section */}
+              <div
+                className={`${activeTab === "popular" ? "" : "hidden"}`}
+                id="popular"
+                role="tabpanel"
+                aria-labelledby="popular-tab"
+              >
+                {postLoading ? (
+                  <div className="flex items-center justify-center mt-10">
+                    <Spinner />
+                  </div>
+                ) : (
+                  <ExploreMain exploreData={flPopular} />
+                )}
+              </div>
 
-            {/* Diaries Section */}
-            <div
-              className={`${activeTab === "diaries" ? "" : "hidden"}`}
-              id="diaries"
-              role="tabpanel"
-              aria-labelledby="diaries-tab"
-            >
-              {diaryLoading ? (
-                <div className="flex items-center justify-center mt-10">
-                  <Spinner />
-                </div>
-              ) : (
-                <ExploreMain exploreData={flDiaries} />
-              )}
-              {/* {diaryData?.data && (
+              {/* Diaries Section */}
+              <div
+                className={`${activeTab === "diaries" ? "" : "hidden"}`}
+                id="diaries"
+                role="tabpanel"
+                aria-labelledby="diaries-tab"
+              >
+                {diaryLoading ? (
+                  <div className="flex items-center justify-center mt-10">
+                    <Spinner />
+                  </div>
+                ) : (
+                  <ExploreMain exploreData={flDiaries} />
+                )}
+                {/* {diaryData?.data && (
                 <div className="mt-3 px-3 main-wrapper w-full pb-10">
                   {[...diaryData?.data]
                     .sort(
@@ -330,46 +333,47 @@ const ExploreHome = () => {
                     )}
                 </div>
               )} */}
-            </div>
+              </div>
 
-            {/* Videos Section */}
-            <div
-              className={`${activeTab === "videos" ? "" : "hidden"}`}
-              id="videos"
-              role="tabpanel"
-              aria-labelledby="videos-tab"
-            >
-              {/* {imagesLoading ? (
+              {/* Videos Section */}
+              <div
+                className={`${activeTab === "videos" ? "" : "hidden"}`}
+                id="videos"
+                role="tabpanel"
+                aria-labelledby="videos-tab"
+              >
+                {/* {imagesLoading ? (
                 <div className="flex items-center justify-center mt-10">
                   <Spinner />
                 </div>
               ) : (
                 <ExploreMain exploreData={imagesData} />
               )} */}
-            </div>
+              </div>
 
-            {/* Images Section */}
-            <div
-              className={`${activeTab === "images" ? "" : "hidden"}`}
-              id="images"
-              role="tabpanel"
-              aria-labelledby="images-tab"
-            >
-              {/* {videosLoading ? (
+              {/* Images Section */}
+              <div
+                className={`${activeTab === "images" ? "" : "hidden"}`}
+                id="images"
+                role="tabpanel"
+                aria-labelledby="images-tab"
+              >
+                {/* {videosLoading ? (
                 <div className="flex items-center justify-center mt-10">
                   <Spinner />
                 </div>
               ) : (
                 <ExploreMain exploreData={videosData} />
               )} */}
+              </div>
             </div>
-          </div>
 
-          {/* sidebar */}
-          <div className="hidden md:block col-span-3 -mt-2">
-            <Likes />
-            <div className="mt-3">
-              <AdsOnly />
+            {/* sidebar */}
+            <div className="hidden lg:block col-span-3 -mt-2">
+              <Likes />
+              <div className="mt-3">
+                <AdsOnly />
+              </div>
             </div>
           </div>
         </div>
