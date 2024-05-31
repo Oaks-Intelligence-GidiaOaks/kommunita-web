@@ -43,6 +43,13 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Feeds"],
     }),
+    getOtherUserDiaries: builder.mutation({
+      query: (id) => ({
+        url: `user/diary/user/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Post"],
+    }),
   }),
 });
 
@@ -51,4 +58,5 @@ export const {
   useCreateDiaryMutation,
   useDiaryCommentMutation,
   useDeleteDiaryMutation,
+  useGetOtherUserDiariesMutation,
 } = organizationApiSlice;

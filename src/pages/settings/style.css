@@ -33,6 +33,14 @@
   line-height: 15.74px;
   color: #8d98aa;
 }
+
+.phoneInput input {
+  border: none;
+  background-color: transparent;
+  height: 100%;
+  border-radius: 8px;
+}
+
 .settings-input::placeholder {
   font-family: Inter;
   font-size: 14px;

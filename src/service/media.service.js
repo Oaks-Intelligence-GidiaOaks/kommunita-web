@@ -11,7 +11,15 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Media"],
     }),
+    getOtherMedia: builder.mutation({
+      query: (id) => ({
+        url: `${MEDIA}/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Media"],
+    }),
   }),
 });
 
-export const { useGetMediaQuery } = organizationApiSlice;
+export const { useGetMediaQuery, useGetOtherMediaMutation } =
+  organizationApiSlice;

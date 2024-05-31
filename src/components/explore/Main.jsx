@@ -10,9 +10,11 @@ import { useGetFeedsQuery } from "../../service/feeds.service";
 import search from "../../assets/images/Home/Search.png";
 import { Spinner } from "flowbite-react";
 
-function ExploreMain() {
+function ExploreMain({ category }) {
   const { data, isLoading } = useGetFeedsQuery();
+
   const posts = data?.data || [];
+  // console.log(posts);
 
   if (isLoading) {
     return (

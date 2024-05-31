@@ -11,10 +11,11 @@ import Posts from "../../components/main/Posts";
 import { useGetDiaryQuery } from "../../service/diary.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import { ShimmerSocialPost } from "react-shimmer-effects";
+import ProfileNav from "../../components/profile/ProfileNav";
 
 const ProfileDiaries = () => {
   const { data } = useGetDiaryQuery();
-  // const { data } = useGetPostQuery();
+
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [sideDiary, setSideDiary] = useState(null);
@@ -31,7 +32,10 @@ const ProfileDiaries = () => {
   console.log(data?.data);
   return (
     <Layout>
-      {loading && post == null ? (
+      <div>
+        <ProfileNav />
+      </div>
+      {post == null ? (
         <ShimmerSocialPost type="both" />
       ) : (
         <div className="grid grid-cols-12 w-full gap-3">

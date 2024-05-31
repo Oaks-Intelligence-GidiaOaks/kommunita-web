@@ -10,6 +10,7 @@ import Posts from "../../components/main/Posts";
 import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import { useGetLikedPostQuery } from "../../service/likedPost.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
+import ProfileNav from "../../components/profile/ProfileNav";
 
 const ProfileLikes = () => {
   const { data } = useGetLikedPostQuery();
@@ -37,10 +38,8 @@ const ProfileLikes = () => {
               avatar={post.user_id.photo_url || avatar1} // You need to provide the avatar source
             />
           ))}
-          {/* <DiaryContainer comment={true} />
-          <MediaContainer /> */}
         </div>
-        <div className="w-full hidden md:block col-span-4">
+        <div className="w-full hidden md:block -mt-5 col-span-4">
           <Likes />
         </div>
       </div>

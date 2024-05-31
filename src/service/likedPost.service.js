@@ -11,7 +11,15 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["LikedPost"],
     }),
+    getOtherUserLikedPost: builder.mutation({
+      query: (id) => ({
+        url: `user/post/liked/user/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Post"],
+    }),
   }),
 });
 
-export const { useGetLikedPostQuery } = organizationApiSlice;
+export const { useGetLikedPostQuery, useGetOtherUserLikedPostMutation } =
+  organizationApiSlice;

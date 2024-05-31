@@ -10,15 +10,28 @@ import { useSelector } from "react-redux";
 import { showAlert } from "../../static/alert";
 import avatar4 from "../../assets/images/placeholder.png";
 import hug from "../../assets/images/hug.png";
+import { BeatLoader } from "react-spinners";
+import rtkMutation from "../../utils/rtkMutation";
+import {
+  useFollowUserMutation,
+  useUnfollowUserMutation,
+} from "../../service/whotofollow.service";
 
 const ProfileHero = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
   const { data } = useGetUserProfiileQuery();
   const [getOtherUserProfile, { isSuccess, isError }] =
     useGetOtherUserProfileMutation();
+  const [followUser, { error, isSuccess: sccss }] = useFollowUserMutation();
+  const [unfollowUser, { error: err, isSuccess: scc }] =
+    useUnfollowUserMutation();
+
   const { user_id } = useParams();
 
   const [profile, setProfile] = useState(null);
+  const [following, setFollowing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitID, setSubmitId] = useState("");
 
   const user = useSelector((state) => state.user.user);
 
@@ -28,19 +41,61 @@ const ProfileHero = () => {
 
   // console.log(user_id);
 
+  const handleFollow = async (id) => {
+    console.log("Follow ID: ", id);
+    // setSubmitId(id);
+    setSubmitting(true);
+    const postData = {
+      user_to_follow_id: id,
+    };
+    try {
+      await rtkMutation(followUser, postData);
+      setFollowing((prevIsLoved) => !prevIsLoved);
+    } catch (error) {
+      console.error("Error liking post:", error);
+      showAlert("Oops", "An error occurred while following this user", error);
+    } finally {
+      setSubmitId("");
+      setSubmitting(false);
+    }
+  };
+
+  const handleUnFollow = async (id) => {
+    console.log(id);
+    // setSubmitId(id);
+    setSubmitting(true);
+    const postData = {
+      user_to_unfollow_id: id,
+    };
+    try {
+      await rtkMutation(unfollowUser, postData);
+      setFollowing((prevIsLoved) => !prevIsLoved);
+    } catch (error) {
+      console.error("Error liking post:", error);
+      showAlert("Oops", "An error occurred while unfollowing this user", error);
+    } finally {
+      setSubmitId("");
+      setSubmitting(false);
+    }
+  };
+
   useEffect(() => {
     if (user_id) {
       GetOtherUser();
     } else {
       setProfile(data);
     }
-  }, [user_id]);
+  }, [user_id, following]);
 
   const GetOtherUser = async () => {
     try {
       const res = await getOtherUserProfile(user_id);
       setProfile(res.data);
-      console.log(res.data);
+      const fl =
+        res?.data?.data?.followers?.filter((f) => f == data?.data._id).length ==
+        1;
+      setFollowing(fl);
+      // console.log(fl);
     } catch (error) {
       console.error("Error making search: ", error);
       showAlert("Oops", "An error occurred while searching content", "error");
@@ -49,6 +104,8 @@ const ProfileHero = () => {
   // if (!profile) {
   //   return;
   // }
+
+  console.log(following);
 
   return (
     <div className="lg:h-[300px] text-primary-dark-gray">
@@ -239,7 +296,7 @@ const ProfileHero = () => {
                 </svg>{" "}
               </div>
 
-              <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-3 lg:gap-20">
+              <div className="flex flex-col lg:flex-row lg:justify-between justify-center items-center gap-3 lg:gap-20 lg:mr-10">
                 <div>
                   <div className="flex items-center justify-between gap-5">
                     <div className="">
@@ -273,13 +330,36 @@ const ProfileHero = () => {
                     <div></div>
                   </div>
                   {user_id && (
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center gap-2 mt-2 lg:-mb-5">
                       <div className="h-[41px] w-[41px] rounded-full flex items-center justify-center">
                         <img src={hug} />
                       </div>
-                      <button className="text-white bg-[#02BA09] rounded-lg py-2 px-5">
+                      {following ? (
+                        <button
+                          onClick={() => handleUnFollow(user_id)}
+                          className="p-2 border-2 border-[#02BA09] text-[#02BA09] rounded-lg w-[122px] text-center font-semibold px-3"
+                        >
+                          {submitting ? (
+                            <BeatLoader color="#02BA09" loading={true} />
+                          ) : (
+                            "Following"
+                          )}
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleFollow(user_id)}
+                          className="p-2 bg-[#02BA09] text-white rounded-lg w-[122px] text-center font-semibold px-5"
+                        >
+                          {submitting ? (
+                            <BeatLoader color="#ffffff" loading={true} />
+                          ) : (
+                            "Follow"
+                          )}
+                        </button>
+                      )}
+                      {/* <button className="text-white bg-[#02BA09] rounded-lg py-2 px-5">
                         Follow
-                      </button>
+                      </button> */}
                       <div className="h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center">
                         <img src="/src/assets/images/AddNotification.svg" />
                       </div>
