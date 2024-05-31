@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import search from "../../assets/images/menu/search.svg";
 import ExploreMain from "../../components/explore/Main";
 import Likes from "./../../components/sidebar/Likes";
+import Posts from "../../components/main/Posts";
 import ExploreNav from "../../components/explore/ExploreNav";
 import CategoryCard from "../../components/explore/CategoryCard";
 // import ScrollAdds from './../../components/ads/ScrollAdds';
@@ -27,19 +28,27 @@ import {
   useGetExplorePostVideosQuery,
 } from "../../service/explore.service";
 import { Spinner } from "flowbite-react";
+import getTimeAgoString from "../../utils/getTimeAgoString";
 
 const ExploreHome = () => {
   const { data: Category } = useGetCategoriesWithStatQuery();
+  // const { data: Category } = useGetCategoriesQuery();
   const { data: postData, isLoading: postLoading } = useGetExplorePostQuery();
-  // console.log("PostData: ", postData);
   const { data: imagesData, isLoading: imagesLoading } =
     useGetExplorePostImagesQuery();
   const { data: videosData, isLoading: videosLoading } =
     useGetExplorePostVideosQuery();
   const { data: diaryData, isLoading: diaryLoading } =
     useGetExploreDiaryQuery();
+  console.log("ExploreData: ", postData?.data);
 
-  console.log(Category?.data);
+  const [flPopular, setFlPopular] = useState(null);
+  const [flDiaries, setFlDiaries] = useState(null);
+  const [flVidoes, setFlVidoes] = useState(null);
+  const [flImages, setFlImages] = useState(null);
+  const [newCat, setNewCat] = useState("");
+
+  // console.log("Categories: ", Category?.data);
   const [selectedCategory, setCategory] = useState("");
   const [openSearchModal, setOpenSearchModal] = useState(false);
 
@@ -66,7 +75,8 @@ const ExploreHome = () => {
     if (filterString) {
       setFilteredCategory(
         Category?.data.filter((ct) =>
-          ct.categoryName.toLowerCase().includes(filterString.toLowerCase())
+          // ct.categoryName.toLowerCase().includes(filterString.toLowerCase())
+          ct.name.toLowerCase().includes(filterString.toLowerCase())
         )
       );
     } else {
@@ -74,9 +84,30 @@ const ExploreHome = () => {
     }
   }, [filterString, Category]);
 
+  useEffect(() => {
+    if (newCat) {
+      console.log(newCat);
+      console.log(diaryData?.data[0].category);
+      setFlDiaries(diaryData?.data?.filter((ct) => ct.category == newCat));
+      setFlPopular(postData?.data?.filter((ct) => ct.category == newCat));
+      // setFlDiaries(diaryData?.data.filter((ct) => ct.category.includes(newCat)));
+      // setFlPopular(postData?.data.filter((ct) => ct.category.includes(newCat)));
+    } else {
+      setFlPopular(postData);
+      setFlDiaries(diaryData);
+    }
+  }, [newCat, postData, diaryData]);
+
   // Select category
   const selectCategory = (cat) => {
-    setCategory(cat);
+    // console.log(cat._id);
+    setCategory(cat.name);
+    setNewCat(cat._id);
+  };
+
+  const unSelectCategory = () => {
+    setCategory("");
+    setNewCat("");
   };
 
   // handle Search function
@@ -105,7 +136,7 @@ const ExploreHome = () => {
     <MainLayout showNav={false}>
       <div className="flex flex-col w-full p-4">
         <div
-          onClick={() => setCategory("")}
+          onClick={() => unSelectCategory()}
           className="flex gap-2 items-center cursor-pointer"
         >
           {/* {selectedCategory && ( */}
@@ -252,7 +283,7 @@ const ExploreHome = () => {
                   <Spinner />
                 </div>
               ) : (
-                <ExploreMain exploreData={postData} />
+                <ExploreMain exploreData={flPopular} />
               )}
             </div>
 
@@ -268,8 +299,37 @@ const ExploreHome = () => {
                   <Spinner />
                 </div>
               ) : (
-                <ExploreMain exploreData={diaryData} />
+                <ExploreMain exploreData={flDiaries} />
               )}
+              {/* {diaryData?.data && (
+                <div className="mt-3 px-3 main-wrapper w-full pb-10">
+                  {[...diaryData?.data]
+                    .sort(
+                      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                    ) // Sort posts by latest first
+                    .map(
+                      (post, index) =>
+                        post.user_id && (
+                          <Posts
+                            key={index}
+                            fullname={post.user_id.display_name}
+                            username={post.user_id.username}
+                            verifiedUser={false} // You need to adjust this based on your data
+                            postTime={getTimeAgoString(post.createdAt)} // Assuming createdAt is the post time
+                            // postTime={moment(post.createdAt).fromNow()} // Assuming createdAt is the post time
+                            content={post.content}
+                            media_urls={post.media_urls}
+                            post_id={post._id}
+                            comment={post.comment}
+                            repost={post.repost}
+                            share={post.share}
+                            reaction={post.reaction}
+                            avatar={post.user_id.photo_url || avatar2} // You need to provide the avatar source
+                          />
+                        )
+                    )}
+                </div>
+              )} */}
             </div>
 
             {/* Videos Section */}
@@ -279,13 +339,13 @@ const ExploreHome = () => {
               role="tabpanel"
               aria-labelledby="videos-tab"
             >
-              {imagesLoading ? (
+              {/* {imagesLoading ? (
                 <div className="flex items-center justify-center mt-10">
                   <Spinner />
                 </div>
               ) : (
                 <ExploreMain exploreData={imagesData} />
-              )}
+              )} */}
             </div>
 
             {/* Images Section */}
@@ -295,13 +355,13 @@ const ExploreHome = () => {
               role="tabpanel"
               aria-labelledby="images-tab"
             >
-              {videosLoading ? (
+              {/* {videosLoading ? (
                 <div className="flex items-center justify-center mt-10">
                   <Spinner />
                 </div>
               ) : (
                 <ExploreMain exploreData={videosData} />
-              )}
+              )} */}
             </div>
           </div>
 

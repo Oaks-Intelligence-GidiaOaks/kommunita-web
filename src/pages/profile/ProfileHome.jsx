@@ -359,7 +359,7 @@ const ProfileHome = () => {
           aria-labelledby="media-tab"
         >
           <div>
-            <div className="flex flex-wrap flex-row gap-2">
+            <div className="flex flex-wrap flex-row gap-4">
               {!medias ? (
                 <ShimmerSocialPost type="both" />
               ) : (
@@ -367,7 +367,7 @@ const ProfileHome = () => {
                   {medias?.map((dt, id) => (
                     <div
                       key={id}
-                      className="cursor-pointer"
+                      className="cursor-pointer mb-4"
                       onClick={() => showModal(dt)}
                     >
                       <GaleryBox media={dt} />

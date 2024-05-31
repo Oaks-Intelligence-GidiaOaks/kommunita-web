@@ -48,6 +48,28 @@ function ExploreMain({ exploreData }) {
                 reaction={post.reaction}
                 avatar={post.user_id.photo_url || avatar1} // Provide the avatar source
               />
+              // <Posts
+              //   key={index}
+              //   fullname={post.user_id.display_name}
+              //   username={post.user_id.username}
+              //   verifiedUser={false} // Adjust based on your data
+              //   postTime={getTimeAgoString(post.createdAt)}
+              //   content={post.content}
+              //   media_urls={post.media_urls}
+              //   post_id={post._id}
+              //   comment={post.comment}
+              //   repost={post.repost}
+              //   share={post.share}
+              //   reaction={post.reaction}
+              //   avatar={post.user_id.photo_url || avatar4}
+              //   badgeColor={post.user_id?.department[0]?.badge?.color || ""}
+              //   department={
+              //     post.user_id?.department[0]?.badge?.department || ""
+              //   }
+              //   userId={post.user_id?._id}
+              //   type={post?.type}
+              //   // user_id={post.user_id?._id}
+              // />
             )
         )}
     </div>

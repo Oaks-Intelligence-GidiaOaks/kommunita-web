@@ -9,7 +9,10 @@ import { GoDotFill } from "react-icons/go";
 import "./style.css";
 
 const MainComment = ({ comment }) => {
-  // console.log(comment);
+  let bordercolor = "";
+  if (comment?.user_id?.department) {
+    bordercolor = comment.user_id?.department[0]?.badge?.color;
+  }
   const [addReply, setAddReply] = useState(false);
   // console.log(comment);
   const onReply = () => {
@@ -23,7 +26,8 @@ const MainComment = ({ comment }) => {
           <div
             className="w-[50px] h-[40px] rounded-full border-4"
             style={{
-              borderColor: comment.user_id?.department[0]?.badge?.color,
+              borderColor: bordercolor,
+              // borderColor: comment.user_id?.department[0]?.badge?.color || "",
             }}
           >
             <img

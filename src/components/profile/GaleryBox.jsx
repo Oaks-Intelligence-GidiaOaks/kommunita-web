@@ -14,11 +14,11 @@ const GaleryBox = ({ media }) => {
       {media.mimetype.startsWith("image") ? (
         <img
           src={media.downloadUrl}
-          className="object-cover w-[300px] h-[284px]"
+          className="object-cover w-[285px] h-[284px] rounded-lg"
           alt="post image"
         />
       ) : (
-        <div className="flex items-center justify-center w-[300px] h-[284px] border-[1px] border-black rounded-lg bg-white">
+        <div className="flex items-center justify-center w-[285px] h-[284px] border-[1px] border-black rounded-lg bg-white">
           <div className="flex items-center justify-center rounded-full h-[50px] w-[50px] bg-black">
             <svg
               xmlns="http://www.w3.org/2000/svg"
