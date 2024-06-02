@@ -36,6 +36,7 @@ const ExploreHome = () => {
   const { data: postData, isLoading: postLoading } = useGetExplorePostQuery();
   const { data: imagesData, isLoading: imagesLoading } =
     useGetExplorePostImagesQuery();
+  console.log(imagesData?.data);
   const { data: videosData, isLoading: videosLoading } =
     useGetExplorePostVideosQuery();
   const { data: diaryData, isLoading: diaryLoading } =
@@ -44,11 +45,11 @@ const ExploreHome = () => {
 
   const [flPopular, setFlPopular] = useState(null);
   const [flDiaries, setFlDiaries] = useState(null);
-  const [flVidoes, setFlVidoes] = useState(null);
+  const [flVideos, setFlVideos] = useState(null);
   const [flImages, setFlImages] = useState(null);
   const [newCat, setNewCat] = useState("");
 
-  console.log("Categories: ", Category?.data);
+  // console.log("Categories: ", Category?.data);
   const [selectedCategory, setCategory] = useState("");
   const [openSearchModal, setOpenSearchModal] = useState(false);
 
@@ -86,16 +87,18 @@ const ExploreHome = () => {
 
   useEffect(() => {
     if (newCat) {
-      console.log(newCat);
-      console.log(diaryData?.data[1].category);
+      // console.log(newCat);
+      // console.log(diaryData?.data[1].category);
       setFlDiaries(diaryData?.data?.filter((dt) => dt.category == newCat));
       setFlPopular(postData?.data?.filter((dt) => dt.category == newCat));
-      // setFlDiaries(diaryData?.data.filter((ct) => ct.category.includes(newCat)));
-      // setFlPopular(postData?.data.filter((ct) => ct.category.includes(newCat)));
+      setFlImages(imagesData?.data?.filter((dt) => dt.category == newCat));
+      setFlVideos(videosData?.data?.filter((dt) => dt.category == newCat));
     } else {
       console.log("No category selected");
       setFlPopular(postData?.data);
       setFlDiaries(diaryData?.data);
+      setFlVideos(videosData?.data);
+      setFlImages(imagesData?.data);
     }
     // console.log("Diaries: ", flDiaries);
   }, [newCat, postData, activeTab]);
@@ -104,7 +107,7 @@ const ExploreHome = () => {
   const selectCategory = (cat) => {
     // console.log(cat._id);
     setCategory(cat.category);
-    setNewCat(cat.category_id);
+    setNewCat(cat.category);
   };
 
   const unSelectCategory = () => {
@@ -342,13 +345,13 @@ const ExploreHome = () => {
                 role="tabpanel"
                 aria-labelledby="videos-tab"
               >
-                {/* {imagesLoading ? (
-                <div className="flex items-center justify-center mt-10">
-                  <Spinner />
-                </div>
-              ) : (
-                <ExploreMain exploreData={imagesData} />
-              )} */}
+                {videosLoading ? (
+                  <div className="flex items-center justify-center mt-10">
+                    <Spinner />
+                  </div>
+                ) : (
+                  <ExploreMain exploreData={flVideos} />
+                )}
               </div>
 
               {/* Images Section */}
@@ -358,13 +361,13 @@ const ExploreHome = () => {
                 role="tabpanel"
                 aria-labelledby="images-tab"
               >
-                {/* {videosLoading ? (
-                <div className="flex items-center justify-center mt-10">
-                  <Spinner />
-                </div>
-              ) : (
-                <ExploreMain exploreData={videosData} />
-              )} */}
+                {imagesLoading ? (
+                  <div className="flex items-center justify-center mt-10">
+                    <Spinner />
+                  </div>
+                ) : (
+                  <ExploreMain exploreData={flImages} />
+                )}
               </div>
             </div>
 
