@@ -122,8 +122,8 @@ const ProfileHome = () => {
     setShowMediaModal(true);
   }
 
-  // console.log("profile: ", post);
-  console.log(diaryData?.data);
+  console.log("profile: ", post);
+  // console.log("logs:", diaryData?.data);
 
   return (
     <Layout>
@@ -206,8 +206,9 @@ const ProfileHome = () => {
         aria-labelledby="profile-tab"
       >
         {post == null ? (
-          <div className="mt-3">
-            <ShimmerSocialPost type="both" />
+          <div className="mt-3 justify-center flex">
+            {/* <ShimmerSocialPost type="both" /> */}
+            No Post Available
           </div>
         ) : (
           <div className="grid grid-cols-12 w-full gap-3">
@@ -229,7 +230,10 @@ const ProfileHome = () => {
                     share={pst.share}
                     reaction={pst.reaction}
                     userId={pst.user_id._id}
-                    avatar={pst.user_id.photo_url || avatar1} // You need to provide the avatar source
+                    avatar={pst.user_id.photo_url || avatar1}
+                    badgeColor={pst.user_id?.department[0]?.badge?.color}
+                    department={pst.user_id?.department[0]?.badge?.department}
+                    type={pst?.type}
                   />
                 ))}
 
