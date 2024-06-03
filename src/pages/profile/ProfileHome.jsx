@@ -118,8 +118,8 @@ const ProfileHome = () => {
     setShowMediaModal(true);
   }
 
-  // console.log("profile: ", post);
-  console.log(diaryData?.data);
+  console.log("profile: ", post);
+  // console.log("logs:", diaryData?.data);
 
   return (
     <Layout>
@@ -202,9 +202,9 @@ const ProfileHome = () => {
         aria-labelledby="profile-tab"
       >
         {post == null ? (
-          <div className="mt-3">
-            No data available yet
+          <div className="mt-3 justify-center flex">
             {/* <ShimmerSocialPost type="both" /> */}
+            No Post Available
           </div>
         ) : (
           <div className="grid grid-cols-12 w-full gap-3">

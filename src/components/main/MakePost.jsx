@@ -337,7 +337,7 @@ function MakePost() {
                       >
                         <option value="">Category</option>
                         {Category?.data?.map((data, index) => (
-                          <option value={data?._id} key={index}>
+                          <option value={data?.name} key={index}>
                             {data.name}
                           </option>
                         ))}
@@ -374,8 +374,6 @@ function MakePost() {
                     value={content}
                     onChange={handleContentChange}
                     onInput={adjustTextareaHeight}
-                    // rows={3}
-                    // style={{ maxHeight: "200px" }}
                   />
                   <div className="rounded-md py-2 flex justify-between make-post-input">
                     <div className="border flex w-[130px] rounded-md">
@@ -515,7 +513,7 @@ function MakePost() {
           >
             <option value="">Select Category</option>
             {Category?.data?.map((data, index) => (
-              <option value={data?._id} key={index}>
+              <option value={data?.name} key={index}>
                 {data.name}
               </option>
             ))}

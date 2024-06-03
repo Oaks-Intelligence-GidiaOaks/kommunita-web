@@ -8,7 +8,7 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     headers.set("Content-Type", "application/json");
     const token = getState().user.token;
-    // console.log(`Token: ${token}`);
+    console.log(`Token: ${token}`);
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
     }
@@ -19,36 +19,24 @@ const baseQuery = fetchBaseQuery({
 const customBaseQuery = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
-  // Check if result is null or undefined
-  if (!result) {
-    // Handle the case when result is null or undefined
-    // console.error("Result is null or undefined:", result);
-    return null; // Or handle it according to your logic
+  // console.log(result, "res");
+  if (result.error && result.error.status === 406) {
+    api.dispatch(logoutUser());
+    showAlert(
+      "Inactive for too long",
+      "Please login again to continue",
+      "error"
+    );
+
+    return;
+  } else if (result.error && result.error.status === 401) {
+    api.dispatch(logoutUser());
+    showAlert(
+      "Access Token Expired",
+      "Please login again to continue",
+      "error"
+    );
   }
-
-  // Check if there's an error in the result
-  if (result.error) {
-    if (result.error.status === 406) {
-      api.dispatch(logoutUser());
-      showAlert(
-        "Inactive for too long",
-        "Please login again to continue",
-        "error"
-      );
-    } else if (result.error.status === 401) {
-      api.dispatch(logoutUser());
-      showAlert(
-        "Access Token Expired",
-        "Please login again to continue",
-        "error"
-      );
-    }
-
-    return null; // Or handle it according to your logic
-  }
-
-  // If result is not null and there's no error, return the result
-  // console.log(result);
   return result;
 };
 
