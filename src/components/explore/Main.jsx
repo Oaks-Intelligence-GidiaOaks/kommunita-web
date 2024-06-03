@@ -9,28 +9,19 @@ import getTimeAgoString from "./../../utils/getTimeAgoString";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import search from "../../assets/images/Home/Search.png";
 import { Spinner } from "flowbite-react";
+import { useGetExplorePostQuery } from "../../service/explore.service";
 
-function ExploreMain({ category }) {
-  const { data, isLoading } = useGetFeedsQuery();
+function ExploreMain({ exploreData }) {
+  // const { data, isLoading } = useGetExplorePostQuery();
 
-  const posts = data?.data || [];
+  const posts = exploreData || [];
   // console.log(posts);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center mt-10">
-        <Spinner />
-      </div>
-    );
-  }
 
   if (!posts.length) {
     return (
       <div className="flex items-center flex-col mt-10">
         <img src={search} alt="" />
-        <h2 className="font-semibold text-3xl mt-5 ml-5">
-          No Feeds to display
-        </h2>
+        <h2 className="font-semibold text-3xl mt-5 ml-5">No Data to display</h2>
       </div>
     );
   }
@@ -39,14 +30,21 @@ function ExploreMain({ category }) {
     <div className="mt-3 px-3 main-wrapper w-full pb-10">
       {[...posts]
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort posts by latest first
-        .map(
-          (post, index) =>
+        .map((post, index) => {
+          let badgeColor = "";
+          let dept = "";
+          if (post.user_id?.department) {
+            badgeColor = post.user_id?.department[0]?.badge?.color;
+            dept = post.user_id?.department[0]?.badge?.department;
+          }
+
+          return (
             post.user_id && (
               <Posts
                 key={index}
                 fullname={post.user_id.display_name}
                 username={post.user_id.username}
-                verifiedUser={false} // Adjust this based on your data
+                verifiedUser={false} // Adjust based on your data
                 postTime={getTimeAgoString(post.createdAt)}
                 content={post.content}
                 media_urls={post.media_urls}
@@ -55,10 +53,16 @@ function ExploreMain({ category }) {
                 repost={post.repost}
                 share={post.share}
                 reaction={post.reaction}
-                avatar={post.user_id.photo_url || avatar1} // Provide the avatar source
+                avatar={post.user_id.photo_url || avatar4}
+                badgeColor={badgeColor}
+                department={dept}
+                userId={post.user_id?._id}
+                type={post?.type}
+                // user_id={post.user_id?._id}
               />
             )
-        )}
+          );
+        })}
     </div>
   );
 }

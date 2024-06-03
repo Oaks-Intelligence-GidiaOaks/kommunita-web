@@ -2,16 +2,25 @@ import "./style.css";
 import Profile from "./Profile";
 import MenuItems from "./MenuItems.jsx";
 import Likes from "./Likes.jsx";
+import { useLocation } from "react-router-dom";
 
 function Sidebar() {
+  const location = useLocation();
+  const { pathname } = location;
+  console.log(pathname);
   return (
     <aside className="pb-10 w-[280px] p-4 h-full hidden md:block">
       <div className="main-sidebar-section">
         <Profile />
         <MenuItems />
       </div>
-      {window.location.href != "/explore" && (
+      {pathname != "/explore" && (
         <div className="hidden lg:block">
+          <Likes />
+        </div>
+      )}
+      {pathname == "/explore" && (
+        <div className="lg:hidden block">
           <Likes />
         </div>
       )}

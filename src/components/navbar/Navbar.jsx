@@ -4,6 +4,7 @@ import explore from "../../assets/images/menu/explore.svg";
 import diaries from "../../assets/images/menu/diaries.svg";
 import search from "../../assets/images/menu/search.svg";
 import feeds from "../../assets/images/menu/feeds.svg";
+import home from "../../assets/images/menu/home.png";
 import "./style.css";
 import { useState } from "react";
 import { useSearchGeneralMutation } from "../../service/search.service";
@@ -50,11 +51,18 @@ const Navbar = () => {
           <img src={new_logo} alt="" />
         </Link>
       </div>
-      <div className="menus flex space-x-10">
+      <div className="flex lg:space-x-10 ">
         <Link to="/">
-          <div className="items flex flex-col justify-center items-center">
-            <div className="flex justify-center items-center h-[28.327px] w-[28.327px] rounded-full bg-[#2CC84A]">
-              <img src={feeds} alt="feeds" />
+          <div className="items flex flex-col justify-center items-center w-[70px]">
+            <div
+              className={`flex justify-center items-center h-[28.327px] w-[28.327px] rounded-full ${
+                currentPath !== "/explore" && currentPath !== "/diary"
+                  ? "bg-[#2CC84A]"
+                  : ""
+              } `}
+            >
+              <img src={home} alt="feeds" />
+              {/* <img src={feeds} alt="feeds" /> */}
             </div>
             <p
               className={
@@ -72,8 +80,14 @@ const Navbar = () => {
         </Link>
 
         <Link to="/explore">
-          <div className="items flex flex-col justify-center items-center">
-            <div className="flex justify-center items-center active h-[28.327px] w-[28.327px] rounded-full bg-[#2CC84A]">
+          <div className="items flex flex-col justify-center items-center w-[70px]">
+            <div
+              className={`flex justify-center items-center h-[28.327px] w-[28.327px] rounded-full ${
+                currentPath === "/explore" && currentPath !== "/diary"
+                  ? "bg-[#2CC84A]"
+                  : ""
+              } `}
+            >
               <img src={explore} alt="explore" />
             </div>
             <p className={currentPath === "/explore" ? aL : nAL}>Explore</p>
@@ -84,8 +98,14 @@ const Navbar = () => {
         </Link>
 
         <Link to="/diary">
-          <div className="items flex flex-col justify-center items-center">
-            <div className="flex justify-center items-center active h-[28.327px] w-[28.327px] rounded-full">
+          <div className="items flex flex-col justify-center items-center w-[70px]">
+            <div
+              className={`flex justify-center items-center h-[28.327px] w-[28.327px] rounded-full ${
+                currentPath !== "/explore" && currentPath === "/diary"
+                  ? "bg-[#2CC84A]"
+                  : ""
+              } `}
+            >
               <img src={diaries} alt="diaries" />
             </div>
             <p className={currentPath === "/diary" ? aL : nAL}>Diaries</p>
@@ -95,7 +115,7 @@ const Navbar = () => {
       </div>
 
       <div className="search">
-        <div className="flex search-box">
+        <div className="flex search-box w-[220px] md:w-[300px] lg:w-[331px]">
           <input
             type="text"
             className="search-input w-full focus:outline-none focus:ring-0 "
