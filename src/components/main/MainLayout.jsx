@@ -8,15 +8,15 @@ const MainLayout = ({ children }) => {
   const location = useLocation();
   const { pathname } = location;
 
-  // Conditionally render the AdsSection only on the home route
+  // Conditionally render the AdsSection only on specific routes
   const isHomeRoute = pathname === "/";
   const isFollowRoute = pathname === "/follow";
   const isNotificationRoute = pathname === "/notifications";
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Nav />
-      <div className="bg-[#EFF2FC]">
+      <div className="bg-[#EFF2FC] flex-1">
         <div className="flex w-full">
           <SideNav />
           <main className="flex-1">{children}</main>

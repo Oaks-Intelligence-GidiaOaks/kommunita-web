@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import home from "../../assets/images/sidebar/home.svg";
 import notifications from "../../assets/images/sidebar/notifications.svg";
@@ -29,8 +29,6 @@ import { useGetUserProfiileQuery } from "../../service/user.service";
 
 function MenuItems() {
   const { data: profile } = useGetUserProfiileQuery();
-  // console.log(profile, "profile");
-
   const location = useLocation();
   const [activeLink, setActiveLink] = useState(null);
 
@@ -59,13 +57,13 @@ function MenuItems() {
       //   to: "/post",
       // },
       // { id: 5, icon: live, activeIcon: liveActive, text: "Live", to: "/live" },
-      // {
-      //   id: 6,
-      //   icon: mail,
-      //   activeIcon: mailActive,
-      //   text: "Direct Messages",
-      //   to: "/messages",
-      // },
+      {
+        id: 6,
+        icon: mail,
+        activeIcon: mailActive,
+        text: "Direct Messages",
+        to: "/messages",
+      },
       // {
       //   id: 7,
       //   icon: diaries,
@@ -92,14 +90,13 @@ function MenuItems() {
   );
 
   useEffect(() => {
-    // Set active link based on the current URL
     const activeLinkIndex = links.findIndex(
       (link) => link.to === location.pathname
     );
     if (activeLinkIndex !== -1) {
       setActiveLink(links[activeLinkIndex].id);
     }
-  }, [location, links]);
+  }, [location.pathname, links]);
 
   const dispatch = useDispatch();
 
@@ -114,12 +111,12 @@ function MenuItems() {
           <NavLink
             key={id}
             to={to}
-            activeclassname="active"
             className="flex items-center justify-between py-3 menu-items"
+            activeclassname="active"
             onMouseEnter={() => setActiveLink(id)}
             onMouseLeave={() => {
               const activeMenu = links.find(
-                (item) => item.url === location.pathname
+                (item) => item.to === location.pathname
               );
               if (activeMenu) {
                 setActiveLink(activeMenu.id);
@@ -148,6 +145,7 @@ function MenuItems() {
         <a
           href={profile?.data?.current_organization?.website_url}
           target="_blank"
+          rel="noopener noreferrer"
         >
           {profile?.data?.current_organization?.organization_name && (
             <p className="flex gap-2 items-center oaks-text pt-5 text-sm">
