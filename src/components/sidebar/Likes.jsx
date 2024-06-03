@@ -19,11 +19,11 @@ function Likes() {
   // console.log(data?.data);
 
   useEffect(() => {
-    if (data && user) {
+    if (data?.data?.length && data?.data?.length > 0 && user) {
       // setLikes(data.data.slice(-5));
       setLikes(data.data);
       const nw = data?.data?.map((like) => {
-        if (like.followers.filter((f) => f == user?.data._id).length == 0) {
+        if (like.followers?.filter((f) => f == user?.data?._id).length == 0) {
           return like;
         }
       });
