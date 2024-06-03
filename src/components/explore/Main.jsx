@@ -30,14 +30,21 @@ function ExploreMain({ exploreData }) {
     <div className="mt-3 px-3 main-wrapper w-full pb-10">
       {[...posts]
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort posts by latest first
-        .map(
-          (post, index) =>
+        .map((post, index) => {
+          let badgeColor = "";
+          let dept = "";
+          if (post.user_id?.department) {
+            badgeColor = post.user_id?.department[0]?.badge?.color;
+            dept = post.user_id?.department[0]?.badge?.department;
+          }
+
+          return (
             post.user_id && (
               <Posts
                 key={index}
                 fullname={post.user_id.display_name}
                 username={post.user_id.username}
-                verifiedUser={false} // Adjust this based on your data
+                verifiedUser={false} // Adjust based on your data
                 postTime={getTimeAgoString(post.createdAt)}
                 content={post.content}
                 media_urls={post.media_urls}
@@ -46,32 +53,16 @@ function ExploreMain({ exploreData }) {
                 repost={post.repost}
                 share={post.share}
                 reaction={post.reaction}
-                avatar={post.user_id.photo_url || avatar1} // Provide the avatar source
+                avatar={post.user_id.photo_url || avatar4}
+                badgeColor={badgeColor}
+                department={dept}
+                userId={post.user_id?._id}
+                type={post?.type}
+                // user_id={post.user_id?._id}
               />
-              // <Posts
-              //   key={index}
-              //   fullname={post.user_id.display_name}
-              //   username={post.user_id.username}
-              //   verifiedUser={false} // Adjust based on your data
-              //   postTime={getTimeAgoString(post.createdAt)}
-              //   content={post.content}
-              //   media_urls={post.media_urls}
-              //   post_id={post._id}
-              //   comment={post.comment}
-              //   repost={post.repost}
-              //   share={post.share}
-              //   reaction={post.reaction}
-              //   avatar={post.user_id.photo_url || avatar4}
-              //   badgeColor={post.user_id?.department[0]?.badge?.color || ""}
-              //   department={
-              //     post.user_id?.department[0]?.badge?.department || ""
-              //   }
-              //   userId={post.user_id?._id}
-              //   type={post?.type}
-              //   // user_id={post.user_id?._id}
-              // />
             )
-        )}
+          );
+        })}
     </div>
   );
 }

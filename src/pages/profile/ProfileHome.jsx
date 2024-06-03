@@ -84,11 +84,7 @@ const ProfileHome = () => {
       setLiked(likedData?.data);
       // setProfile(data);
     }
-    setSidePost(
-      data?.data?.filter(
-        (fd) => fd.comment.length == 0 || fd.comment.length == 1
-      )
-    );
+    setSidePost(data?.data?.filter((fd) => fd.comment.length == 0));
     setSideDiary(diaryData?.data?.filter((fd) => fd.comment.length == 0));
   }, [id]);
 
@@ -207,31 +203,47 @@ const ProfileHome = () => {
       >
         {post == null ? (
           <div className="mt-3">
-            <ShimmerSocialPost type="both" />
+            No data available yet
+            {/* <ShimmerSocialPost type="both" /> */}
           </div>
         ) : (
           <div className="grid grid-cols-12 w-full gap-3">
             <div className="w-full col-span-12 md:col-span-8">
               {[...post]
                 .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort posts by latest first
-                .map((pst, index) => (
-                  <Posts
-                    key={index}
-                    fullname={pst.user_id?.display_name}
-                    username={pst.user_id?.username}
-                    verifiedUser={false} // You need to adjust this based on your data
-                    postTime={getTimeAgoString(pst.createdAt)}
-                    content={pst.content}
-                    media_urls={pst.media_urls}
-                    post_id={pst._id}
-                    comment={pst.comment}
-                    repost={pst.repost}
-                    share={pst.share}
-                    reaction={pst.reaction}
-                    userId={pst.user_id._id}
-                    avatar={pst.user_id.photo_url || avatar1} // You need to provide the avatar source
-                  />
-                ))}
+                .map((post, index) => {
+                  let badgeColor = "";
+                  let dept = "";
+                  if (post.user_id?.department) {
+                    badgeColor = post.user_id?.department[0]?.badge?.color;
+                    dept = post.user_id?.department[0]?.badge?.department;
+                  }
+
+                  return (
+                    post.user_id && (
+                      <Posts
+                        key={index}
+                        fullname={post.user_id.display_name}
+                        username={post.user_id.username}
+                        verifiedUser={false} // Adjust based on your data
+                        postTime={getTimeAgoString(post.createdAt)}
+                        content={post.content}
+                        media_urls={post.media_urls}
+                        post_id={post._id}
+                        comment={post.comment}
+                        repost={post.repost}
+                        share={post.share}
+                        reaction={post.reaction}
+                        avatar={post.user_id.photo_url || avatar1}
+                        badgeColor={badgeColor}
+                        department={dept}
+                        userId={post.user_id?._id}
+                        type={post?.type}
+                        // user_id={post.user_id?._id}
+                      />
+                    )
+                  );
+                })}
 
               {/* <MediaContainer /> */}
             </div>
@@ -294,33 +306,47 @@ const ProfileHome = () => {
         role="tabpanel"
         aria-labelledby="diaries-tab"
       >
-        {diary == undefined ? (
-          <div>You haven't created any diary yet or resource is loading</div>
-        ) : diary == null ? (
+        {diary == null ? (
           <div className="mt-3">
-            <ShimmerSocialPost type="both" />
+            <div>No diary available yet or resource is loading</div>
+            {/* <ShimmerSocialPost type="both" /> */}
           </div>
         ) : (
           <div className="grid grid-cols-12 w-full gap-3">
             <div className="w-full col-span-12 md:col-span-8">
-              {diary?.map((post, index) => (
-                <Posts
-                  key={index}
-                  fullname={post.user_id.display_name}
-                  username={post.user_id.username}
-                  verifiedUser={false} // You need to adjust this based on your data
-                  postTime={getTimeAgoString(post.createdAt)} // Assuming createdAt is the post time
-                  // postTime={moment(post.createdAt).fromNow()} // Assuming createdAt is the post time
-                  content={post.content}
-                  media_urls={post.media_urls}
-                  post_id={post._id}
-                  comment={post.comment}
-                  repost={post.repost}
-                  share={post.share}
-                  reaction={post.reaction}
-                  avatar={post.user_id.photo_url || avatar2} // You need to provide the avatar source
-                />
-              ))}
+              {diary?.map((post, index) => {
+                let badgeColor = "";
+                let dept = "";
+                if (post.user_id?.department) {
+                  badgeColor = post.user_id?.department[0]?.badge?.color;
+                  dept = post.user_id?.department[0]?.badge?.department;
+                }
+
+                return (
+                  post.user_id && (
+                    <Posts
+                      key={index}
+                      fullname={post.user_id.display_name}
+                      username={post.user_id.username}
+                      verifiedUser={false} // Adjust based on your data
+                      postTime={getTimeAgoString(post.createdAt)}
+                      content={post.content}
+                      media_urls={post.media_urls}
+                      post_id={post._id}
+                      comment={post.comment}
+                      repost={post.repost}
+                      share={post.share}
+                      reaction={post.reaction}
+                      avatar={post.user_id.photo_url || avatar1}
+                      badgeColor={badgeColor}
+                      department={dept}
+                      userId={post.user_id?._id}
+                      type={post?.type}
+                      // user_id={post.user_id?._id}
+                    />
+                  )
+                );
+              })}
             </div>
             <div className="hidden md:block w-full col-span-4">
               <p className="mb-1 mt-2">Trending Diary Posts</p>
@@ -361,8 +387,9 @@ const ProfileHome = () => {
           <div>
             <div className="flex flex-wrap flex-row gap-4">
               {!medias ? (
-                <ShimmerSocialPost type="both" />
+                <div>No media available yet or resource is loading</div>
               ) : (
+                // <ShimmerSocialPost type="both" />
                 <>
                   {medias?.map((dt, id) => (
                     <div
@@ -399,24 +426,43 @@ const ProfileHome = () => {
         <div>
           <div className="grid grid-cols-12 w-full gap-3">
             <div className="w-full col-span-12 md:col-span-8">
-              {liked?.map((post, index) => (
-                <Posts
-                  key={index}
-                  fullname={post.user_id.display_name}
-                  username={post.user_id.username}
-                  verifiedUser={false} // You need to adjust this based on your data
-                  postTime={getTimeAgoString(post.createdAt)} // Assuming createdAt is the post time
-                  // postTime={moment(post.createdAt).fromNow()} // Assuming createdAt is the post time
-                  content={post.content}
-                  media_urls={post.media_urls}
-                  post_id={post._id}
-                  comment={post.comment}
-                  repost={post.repost}
-                  share={post.share}
-                  reaction={post.reaction}
-                  avatar={post.user_id.photo_url || avatar1} // You need to provide the avatar source
-                />
-              ))}
+              {liked == null ? (
+                <div>You haven't liked any post or diary yet</div>
+              ) : (
+                liked?.map((post, index) => {
+                  let badgeColor = "";
+                  let dept = "";
+                  if (post.user_id?.department) {
+                    badgeColor = post.user_id?.department[0]?.badge?.color;
+                    dept = post.user_id?.department[0]?.badge?.department;
+                  }
+
+                  return (
+                    post.user_id && (
+                      <Posts
+                        key={index}
+                        fullname={post.user_id.display_name}
+                        username={post.user_id.username}
+                        verifiedUser={false} // Adjust based on your data
+                        postTime={getTimeAgoString(post.createdAt)}
+                        content={post.content}
+                        media_urls={post.media_urls}
+                        post_id={post._id}
+                        comment={post.comment}
+                        repost={post.repost}
+                        share={post.share}
+                        reaction={post.reaction}
+                        avatar={post.user_id.photo_url || avatar1}
+                        badgeColor={badgeColor}
+                        department={dept}
+                        userId={post.user_id?._id}
+                        type={post?.type}
+                        // user_id={post.user_id?._id}
+                      />
+                    )
+                  );
+                })
+              )}
             </div>
             <div className="w-full hidden md:block -mt-5 col-span-4">
               <Likes />
