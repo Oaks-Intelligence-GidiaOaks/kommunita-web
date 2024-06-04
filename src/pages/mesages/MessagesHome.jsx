@@ -12,15 +12,19 @@ import elipses from "../../assets/images/chat/elipses.svg";
 const MessagesHome = () => {
   return (
     <MainLayout>
-      <div className="chat-container flex justify-center gap-1 min-h-screen w-full pt-4">
-        <div className="bg-white w-full max-w-[380px] message-list">
-          <div className="flex justify-between items-center p-3 w-full  border-b-[1px]">
+      <div className="chat-container flex min-h-screen w-full pt-4 pr-4">
+        <div className="bg-white w-full max-w-[380px] message-list h-full">
+          <div className="flex justify-between items-center p-3 w-full border-b-[1px]">
             <select
               name=""
               id=""
               className="chat-filter border-0 focus:outline-none focus:ring-0"
             >
               <option value="">All Messages</option>
+              <option value="">Unread</option>
+              <option value="">Starred</option>
+              <option value="">Archived</option>
+              <option value="">Spam</option>
             </select>
             <button>
               <img src={elipses} alt="" />
@@ -38,16 +42,19 @@ const MessagesHome = () => {
             </div>
           </div>
 
-          {[...Array(5)].map((_, index) => (
-            <MessageCard key={index} />
-          ))}
+          <div className="message-list-content h-full overflow-y-auto">
+            {[...Array(5)].map((_, index) => (
+              <MessageCard key={index} />
+            ))}
+          </div>
         </div>
-        <div className="bg-[#EFF2FC] w-full">
-          <div className="flex flex-col justify-between h-full">
-            <div className="w-full mb-5">
+
+        <div className="bg-[#EFF2FC] flex-grow flex flex-col">
+          <div className="flex flex-col justify-between border h-full">
+            <div className="w-full flex-grow overflow-y-auto">
               <div className="flex items-center gap-2 justify-between p-4 w-full h-[70px] border-b-[1px]">
                 <div className="flex items-center gap-2">
-                  <div className="h-[35px] w-[35px] justify-center items-center">
+                  <div className="h-[35px] w-[35px] flex justify-center items-center">
                     <img
                       className="rounded-lg object-cover"
                       src={avatar2}
@@ -56,7 +63,7 @@ const MessagesHome = () => {
                   </div>
                   <p className="message-name">Jenifer Markus</p>
                 </div>
-                <div className="flex gap-3 items-center justify-between">
+                <div className="flex gap-3 items-center">
                   <div className="cursor-pointer flex items-center justify-center bg-white rounded-lg p-1">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -95,14 +102,13 @@ const MessagesHome = () => {
                 </div>
               </div>
               <div className="flex justify-center pt-3">
-                {" "}
                 <div className="flex items-center mt-2 gap-2 message-timestamp pb-5">
                   <p>Today</p>
                   <p>|</p>
                   <p>05:30 PM</p>
                 </div>
               </div>
-              <div className="flex flex-col px-2 gap-5">
+              <div className="flex flex-col px-2 gap-5 h-full overflow-y-auto">
                 <div className="sender-box flex flex-col gap-1">
                   <div className="sender">
                     I love jesus bcos He is GOd and Lord of ALL
@@ -118,7 +124,7 @@ const MessagesHome = () => {
                   <p className="self-end message-time">04:50 PM</p>
                 </div>
               </div>
-            </div>{" "}
+            </div>
             <div className="bg-white h-[70px] flex items-center px-4">
               <div className="flex w-full items-center gap-2 justify-evenly">
                 <img src={emoji} alt="emoji" />
