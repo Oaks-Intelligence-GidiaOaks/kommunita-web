@@ -1,38 +1,22 @@
 import React from "react";
 import avatar2 from "../../assets/images/sidebar/avatar2.svg";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
+import "./style.css";
+import clock from "../../assets/images/chat/clock.svg";
 
 const MessageCard = ({ message }) => {
   return (
-    <div className="flex gap-5 p-4 items-start border-b-[1px] bg-white">
+    <div className="chat-list-container flex gap-4 items-start bg-white hover:bg-[#F8F9FD] cursor-pointer">
+      <img src={avatar2} className="h-[35px] w-[35px]" alt="" />
+
       <div>
-        <img
-          className="ml-3 rounded-lg w-[35px] h-[35px] object-cover"
-          src={avatar2}
-          alt=""
-        />
-      </div>
-      <div>
-        <h2 className="font-semibold">Jennifer Markus</h2>
-        <p className="mb-4 text-sm">
+        <h2 className="message-card-name pb-1">Jennifer Markus</h2>
+        <p className="mb-4 message-card-content">
           Hey! were you able to hit the shores of valhala or your couldn't cross
           the four walls of cantata
         </p>
-        <div className="flex items-center gap-2 text-xs text-gray-400">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-4 h-4"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-            />
-          </svg>
+        <div className="flex items-center gap-1 message-timestamp">
+          <img src={clock} alt="" />
           <p>Today</p>
           <p>|</p>
           <p>05:30 PM</p>

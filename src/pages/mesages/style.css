@@ -1,0 +1,100 @@
+.message-list {
+  border-radius: 5px;
+}
+.sender {
+  /* max-width: 260px; */
+  width: 100%;
+  height: auto;
+  padding: 16px 24px 16px 24px;
+  gap: 10px;
+  border-radius: 32px 32px 32px 0px;
+  opacity: 0px;
+  background-color: #ececec;
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14.52px;
+  text-align: left;
+  color: #272727;
+}
+.recipient {
+  /* max-width: 260px; */
+  width: 100%;
+  height: auto;
+  padding: 16px 24px 16px 24px;
+  gap: 10px;
+  border-radius: 32px 32px 0px 32px;
+  opacity: 0px;
+  background-color: #d7f4d9;
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14.52px;
+  text-align: left;
+  color: #272727;
+}
+.message-time {
+  font-family: Inter;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 15.73px;
+  text-align: left;
+  color: #afb8cf;
+}
+.message-timestamp {
+  font-family: Inter;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 13.31px;
+  color: #afb8cf;
+}
+.message-name {
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16.94px;
+  color: #636363;
+}
+.message-search {
+  font-family: Inter;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 13.31px;
+  color: #636363;
+}
+.message-search::placeholder {
+  font-family: Inter;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 13.31px;
+  color: #9fa7be;
+}
+.message-box {
+  /* max-width: 424px; */
+  width: 100%;
+  height: 40px;
+  padding: 8px 8px 8px 16px;
+  gap: 219px;
+  border-radius: 24px;
+  opacity: 0px;
+}
+.message-input {
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14.52px;
+  color: #636363;
+}
+.message-input::placeholder {
+  font-family: Inter;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14.52px;
+  color: #9fa7be;
+}
+.chat-filter {
+  font-family: Inter;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 16.94px;
+}
