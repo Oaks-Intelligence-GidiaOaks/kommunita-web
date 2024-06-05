@@ -40,7 +40,7 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="bg-[#EFF2FC] overflow-x-hidden">
+    <div className="bg-[#EFF2FC] overflow-x-hidden h-screen">
       <div className="">
         <ProfileHero />
       </div>

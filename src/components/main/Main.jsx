@@ -13,7 +13,7 @@ import { Spinner } from "flowbite-react";
 function Main() {
   const { data, isLoading, refetch } = useGetFeedsQuery();
   const posts = data?.data || [];
-  console.log(posts, "posts");
+  // console.log(posts, "posts");
 
   return (
     <div className="pt-4 main-wrapper w-full pb-10">

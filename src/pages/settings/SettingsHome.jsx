@@ -33,9 +33,9 @@ const SettingsHome = () => {
   };
 
   // State variables for form fields
-  const [username, setUsername] = useState("");
-  const [fullname, setFullname] = useState("");
-  const [techtitle, setTechtitle] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  // const [fullname, setFullname] = useState("");
+  // const [techtitle, setTechtitle] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [country, setCountry] = useState("");
@@ -80,19 +80,19 @@ const SettingsHome = () => {
   useEffect(() => {
     // Check if all fields are filled
     setIsAllFieldsFilled(
-      !!username && !!email && !!phoneNumber && !!country && !!state && !!bio
+      !!displayName && !!email && !!phoneNumber && !!country && !!state && !!bio
     );
-  }, [username, email, phoneNumber, country, state, bio]);
+  }, [displayName, email, phoneNumber, country, state, bio]);
 
   // Set values once profile data is available
   useEffect(() => {
     if (profile?.data) {
-      setUsername(profile?.data.username || "");
+      setDisplayName(profile?.data.display_name || "");
       setState(profile?.data.location.state || "");
       setCountry(profile?.data.location.country || "");
       setEmail(profile?.data.email || "");
       setPhoneNumber(profile?.data.phone_number || "");
-      // setFullname(profile?.data.fullname || "");
+      // setFullname(profile?.data.displayName || "");
       // setTechtitle(profile?.data.tech_title || "");
       // setLocation(
       //   profile?.data.location && Object.keys(profile?.data.location).length !== 0
@@ -145,6 +145,9 @@ const SettingsHome = () => {
     if (phoneNumber) {
       formData.append("phone_number", phoneNumber);
     }
+    if (displayName) {
+      formData.append("display_name", displayName);
+    }
     if (email) {
       formData.append("email", email);
     }
@@ -153,7 +156,7 @@ const SettingsHome = () => {
     }
 
     // formData.append("tech_title", techtitle);
-    // formData.append("username", username);
+    // formData.append("displayName", displayName);
     // formData.append("fullname", fullname);
 
     // console.log(formData);
@@ -393,14 +396,13 @@ const SettingsHome = () => {
                 </div> */}
                 <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
                   <div className="flex flex-col mb-5 w-full">
-                    <label className="settings-label">Username</label>
+                    <label className="settings-label">Display Name</label>
                     <input
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
                       className="settings-input outline-none"
                       type="text"
-                      disabled
-                      placeholder={"Please enter your username"}
+                      placeholder={"Please enter your Display Name"}
                     />
                   </div>
                   <div className="flex flex-col mb-5 w-full">
