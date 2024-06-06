@@ -7,7 +7,7 @@ function Category() {
   return (
     <>
       {category && category.length > 0 && (
-        <div className="category-section mt-4 mb-5">
+        <div className="category-section mb-5">
           <div className="p-4">
             <div className="flex justify-between">
               <p className="category">Categories</p>
