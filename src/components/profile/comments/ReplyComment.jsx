@@ -4,11 +4,21 @@ import PropTypes from "prop-types";
 import "./style.css";
 
 const ReplyComment = ({ reply }) => {
+  let bordercolor = "";
+  if (reply?.user_id?.department) {
+    bordercolor = reply.user_id?.department[0]?.badge?.color;
+  }
+  console.log(bordercolor);
   return (
     <div className="relative bg-primary-light-gray bg-opacity-10 p-2 rounded-lg mt-5 text-primary-dark-gray">
       <div className="flex justify-between items-center">
         <div className="flex gap-2 justify-start items-start">
-          <div className="flex justify-center items-center w-[20px] border h-[20px] rounded-full">
+          <div
+            style={{
+              borderColor: bordercolor,
+            }}
+            className="flex text-[#181616] justify-center items-center w-[20px] overflow-hidden border-2 h-[20px] rounded-full"
+          >
             <img
               src={reply.user_id.photo_url || image4}
               width={19}
