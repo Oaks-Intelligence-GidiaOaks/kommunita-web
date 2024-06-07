@@ -1,151 +1,121 @@
 import MainLayout from "../../components/main/MainLayout";
-import search from "../../assets/images/menu/search.svg";
-import avatar2 from "../../assets/images/sidebar/avatar2.svg";
 import MessageCard from "./../../components/messages/MessageCard";
 import "./style.css";
-import like from "../../assets/images/chat/like.svg";
-import add from "../../assets/images/chat/add.svg";
-import emoji from "../../assets/images/chat/emoji.svg";
-import microphone from "../../assets/images/chat/microphone.svg";
-import elipses from "../../assets/images/chat/elipses.svg";
+import View from "./View";
+import Header from "./Header";
+import Empty from "./Empty";
+import { io } from "socket.io-client";
+import { useSelector } from "react-redux";
+import { useRef, useEffect, useState } from "react";
+import { useGetConversationsQuery } from "../../service/message.service";
+import { Spinner } from "flowbite-react";
 
 const MessagesHome = () => {
+  const user = useSelector((state) => state.user?.user);
+
+  // call socket
+  const socket = useRef(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [receivedMessage, setReceivedMessage] = useState(null);
+
+  const { data: chatList, isLoading } = useGetConversationsQuery();
+  const list = chatList?.data;
+  // console.log(list);
+
+  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
+
+  // Connect to Socket.io
+  useEffect(() => {
+    const socketUrl = `${BASE_URL}?userId=${user._id}`;
+    socket.current = io(socketUrl);
+
+    // Listen for the 'connect' event to know when the connection is established
+    socket.current.on("connect", () => {
+      console.log("Connected to the socket server");
+
+      // Send the organizationId to the server
+      const request = {
+        organizationId: user?.current_organization || user?.organization_id[0],
+      };
+      socket.current.emit("online_org_users", request);
+
+      socket.current.on("online_org_users", (data) => {
+        console.log("Received online users:", data);
+        setOnlineUsers(data?.data);
+      });
+    });
+
+    // Listen for 'onboard' event
+    socket.current.on("onboard", (data) => {
+      console.log("Onboard event received:", data);
+    });
+
+    // Listen for 'error' event
+    socket.current.on("error", (error) => {
+      console.error("Error event received:", error);
+    });
+
+    // Clean up the socket connection when the component unmounts
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+  }, [user, BASE_URL]);
+
+  const checkOnlineStatus = (chat) => {
+    const chatMember = chat.participants.find(
+      (participants) => participants?._id !== user._id
+    );
+    const online = onlineUsers.find((user) => user.user_id === chatMember);
+    return online ? true : false;
+  };
+
   return (
     <MainLayout>
-      <div className="chat-container flex min-h-screen w-full pt-4 pr-4">
-        <div className="bg-white w-full max-w-[380px] message-list h-full">
-          <div className="flex justify-between items-center p-3 w-full border-b-[1px]">
-            <select
-              name=""
-              id=""
-              className="chat-filter border-0 focus:outline-none focus:ring-0"
-            >
-              <option value="">All Messages</option>
-              <option value="">Unread</option>
-              <option value="">Starred</option>
-              <option value="">Archived</option>
-              <option value="">Spam</option>
-            </select>
-            <button>
-              <img src={elipses} alt="" />
-            </button>
-          </div>
-
-          <div className="p-4 bg-white border-b-[1px]">
-            <div className="flex p-1 rounded-xl bg-[#F8F9FD] w-full">
-              <img className="ml-3 cursor-pointer" src={search} alt="" />
-              <input
-                type="text"
-                className="w-full bg-transparent border-none focus:outline-none focus:ring-0 message-search"
-                placeholder="Search or start a new chat"
-              />
-            </div>
-          </div>
-
-          <div className="message-list-content h-full overflow-y-auto">
-            {[...Array(5)].map((_, index) => (
-              <MessageCard key={index} />
-            ))}
-          </div>
+      {isLoading ? (
+        <div className="loading-container flex justify-center mt-10">
+          <Spinner />
         </div>
+      ) : list?.length > 0 ? (
+        <div className="chat-container flex min-h-screen w-full pt-4 pr-4">
+          <div className="bg-white w-full max-w-[380px] message-list h-full">
+            <Header />
 
-        <div className="bg-[#EFF2FC] flex-grow flex flex-col">
-          <div className="flex flex-col justify-between border h-full">
-            <div className="w-full flex-grow overflow-y-auto">
-              <div className="flex items-center gap-2 justify-between p-4 w-full h-[70px] border-b-[1px]">
-                <div className="flex items-center gap-2">
-                  <div className="h-[35px] w-[35px] flex justify-center items-center">
-                    <img
-                      className="rounded-lg object-cover"
-                      src={avatar2}
-                      alt=""
-                    />
-                  </div>
-                  <p className="message-name">Jenifer Markus</p>
-                </div>
-                <div className="flex gap-3 items-center">
-                  <div className="cursor-pointer flex items-center justify-center bg-white rounded-lg p-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="#FDC73D"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="cursor-pointer flex items-center justify-center bg-white rounded-lg p-2">
-                    <img className="" src={search} alt="" />
-                  </div>
-                  <div className="cursor-pointer flex items-center justify-center bg-white rounded-lg p-1">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-6 h-6 cursor-pointer"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-center pt-3">
-                <div className="flex items-center mt-2 gap-2 message-timestamp pb-5">
-                  <p>Today</p>
-                  <p>|</p>
-                  <p>05:30 PM</p>
-                </div>
-              </div>
-              <div className="flex flex-col px-2 gap-5 h-full overflow-y-auto">
-                <div className="sender-box flex flex-col gap-1">
-                  <div className="sender">
-                    I love jesus bcos He is GOd and Lord of ALL
-                  </div>
-                  <p className="message-time">04:45 PM</p>
-                </div>
-
-                <div className="sender-box flex flex-col gap-1">
-                  <div className="self-end recipient">
-                    I love jesus bcos He is GOd and Lord of ALL I love jesus
-                    bcos He is GOd and Lord of ALL
-                  </div>
-                  <p className="self-end message-time">04:50 PM</p>
-                </div>
-              </div>
+            <div className="message-list-content h-full overflow-y-auto bg[#F8F9FD]">
+              {list.map((chat) => (
+                <MessageCard
+                  key={chat._id}
+                  message={chat?.last_message?.message || "null"}
+                  timestamp={chat?.last_message?.createdAt}
+                  conversationId={chat?.last_message?.conversation_id}
+                  read={chat?.last_message?.read}
+                  name={
+                    chat?.last_message?.sender?.fullname ||
+                    chat?.last_message?.sender?.display_name
+                  }
+                  photo={chat?.last_message?.sender?.photo_url}
+                  onClick={() => {
+                    setCurrentChat(chat);
+                  }}
+                  currentUser={chat?.last_message?.sender?._id}
+                  online={checkOnlineStatus(chat)}
+                />
+              ))}
             </div>
-            <div className="bg-white h-[70px] flex items-center px-4">
-              <div className="flex w-full items-center gap-2 justify-evenly">
-                <img src={emoji} alt="emoji" />
-                <div className="bg-[#F8F9FD] flex items-center justify-center message-box gap-2 w-full">
-                  <input
-                    type="text"
-                    className="w-full bg-transparent border-none focus:outline-none focus:ring-0 message-input h-auto"
-                    placeholder="Type your message here"
-                  />
-                  <img src={add} alt="add" className="cursor-pointer mt-1" />
-                </div>
+          </div>
 
-                <div className="flex gap-4 items-center">
-                  <img src={microphone} alt="microphone" />
-                  <img src={like} alt="like" />
-                </div>
-              </div>
+          <div className="bg-[#EFF2FC] flex-grow flex flex-col">
+            <div className="flex flex-col justify-between border h-full">
+              <View chat={currentChat} currentUserId={user._id} />
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        // Display message if no chats available
+        <Empty />
+      )}
     </MainLayout>
   );
 };
