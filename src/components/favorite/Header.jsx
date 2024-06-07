@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 
-const Header = () => {
+const Header = ({ setFilter }) => {
   const [show, setShow] = useState(false);
   const [category, setCategory] = useState("");
 
-  const handleCategory = (e) => {
+  const handleCategory = (cat) => {
     // console.log(e.target);
-    setCategory(e);
+    setCategory(cat);
+    setFilter(cat);
     setShow(false);
   };
   return (
-    <div className="w-full relative flex items-center justify-between">
-      <p className="font-semibold text-lg">Favorites</p>
+    <div className="w-full relative flex items-center justify-between text-[#51546C] z-50">
+      <p className="font-semibold text-lg text-[18px]">Bookmarks</p>
       <div className="flex items-center gap-2">
         {category && (
           <svg
@@ -42,34 +43,34 @@ const Header = () => {
         </svg>
       </div>
       {show && (
-        <div className=" absolute right-0 top-8 rounded-lg bg-[#fff] text-primary-gray p-4 w-48">
+        <div className=" absolute right-0 top-12 rounded-lg bg-[#fff] text-primary-gray p-4 w-[199px]">
           <p
-            className="mb-2 hover:bg-primary-gray hover:text-white cursor-pointer"
-            onClick={(e) => handleCategory("")}
+            className="mb-3 hover:bg-primary-gray hover:text-white cursor-pointer"
+            onClick={() => handleCategory("")}
           >
             All
           </p>
           <p
-            className="mb-2 hover:bg-primary-gray hover:text-white cursor-pointer"
-            onClick={(e) => handleCategory("Post")}
+            className="mb-3 hover:bg-primary-gray hover:text-white cursor-pointer"
+            onClick={() => handleCategory("posts")}
           >
             Post
           </p>
           <p
-            className="mb-2 hover:bg-primary-gray hover:text-white cursor-pointer"
-            onClick={(e) => handleCategory("Diaries")}
+            className="mb-3 hover:bg-primary-gray hover:text-white cursor-pointer"
+            onClick={() => handleCategory("diaries")}
           >
             Diaries
           </p>
           <p
-            className="mb-2 hover:bg-primary-gray hover:text-white cursor-pointer"
-            onClick={(e) => handleCategory("Videos")}
+            className="mb-3 hover:bg-primary-gray hover:text-white cursor-pointer"
+            onClick={() => handleCategory("videos")}
           >
             Videos
           </p>
           <p
-            className="mb-2 hover:bg-primary-gray hover:text-white cursor-pointer"
-            onClick={(e) => handleCategory("Images")}
+            className="mb-3 hover:bg-primary-gray hover:text-white cursor-pointer"
+            onClick={() => handleCategory("images")}
           >
             Images
           </p>

@@ -29,6 +29,16 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Feeds"],
     }),
+
+    favoritePost: builder.mutation({
+      query: (postData) => ({
+        url: "/user/post/favourite",
+        method: "POST",
+        body: postData,
+      }),
+      invalidatesTags: ["Feeds"],
+    }),
+
     repostPost: builder.mutation({
       query: (postData) => ({
         url: "/user/post/repost",
@@ -66,6 +76,7 @@ export const {
   useGetPostQuery,
   useCreatePostMutation,
   useLovePostMutation,
+  useFavoritePostMutation,
   useRepostPostMutation,
   usePostCommentMutation,
   useGetOtherUserPostMutation,

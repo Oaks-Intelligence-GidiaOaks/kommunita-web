@@ -18,6 +18,7 @@ const apiSlice = createApi({
     "WhoToFollow",
     "Survey",
     "Notification",
+    "Favourite",
     "Message",
   ],
 

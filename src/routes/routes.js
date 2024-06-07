@@ -11,7 +11,7 @@ export const LIKES = "/profile/likes";
 export const MEDIA = "/profile/media";
 
 //FAVORITE PAGE RPUTES
-export const FAVORITE = "/favorites";
+export const BOOKMARK = "/bookmarks";
 export const FOLLOW = "/follow";
 
 //EXPLORE PAGE RPUTES

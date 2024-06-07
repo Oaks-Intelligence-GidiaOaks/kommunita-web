@@ -9,9 +9,18 @@ export const favoritesApiSlice = apiSlice.injectEndpoints({
         url: FAVORITE,
         method: "GET",
       }),
-      providesTags: ["Favorite"],
+      providesTags: ["Favourite"],
+    }),
+
+    getFilteredFavorites: builder.query({
+      query: (type) => ({
+        url: `${FAVORITE}?filter_by=${type}`,
+        method: "GET",
+      }),
+      providesTags: ["Favourite"],
     }),
   }),
 });
 
-export const { useGetFavoritesQuery } = favoritesApiSlice;
+export const { useGetFavoritesQuery, useGetFilteredFavoritesQuery } =
+  favoritesApiSlice;
