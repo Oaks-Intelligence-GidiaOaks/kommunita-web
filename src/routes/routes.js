@@ -1,4 +1,5 @@
 export const INDEX = "/";
+export const SWITCH = "/home";
 export const LOGIN = "/login";
 export const REGISTER = "/register";
 export const FORGOT_PASSWORD = "/forgot-password";

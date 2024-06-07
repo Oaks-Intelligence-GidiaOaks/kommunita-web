@@ -45,7 +45,7 @@ const AutoLogout = () => {
       window.removeEventListener("click", handleUserActivity);
       //   window.removeEventListener("touchstart", handleUserActivity);
     };
-  }, [lastActivityTime]);
+  }, [lastActivityTime, dispatch, user]);
 
   return null; // The component doesn't render anything, it just handles the logic
 };

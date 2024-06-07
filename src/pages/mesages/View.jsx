@@ -18,6 +18,8 @@ function View({ chat, currentUserId }) {
   const socket = useRef(null);
   const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
   const user = useSelector((state) => state.user?.user);
+  const [newMessage, setNewMessage] = useState("");
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     const socketUrl = `${BASE_URL}?userId=${user._id}`;
@@ -61,9 +63,6 @@ function View({ chat, currentUserId }) {
     (user) => user?._id !== currentUserId
   )?._id;
 
-  const [newMessage, setNewMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-
   const { data: messageList, isLoading } =
     useGetChatMessagesQuery(conversationId);
   // console.log(messageList);
@@ -82,7 +81,8 @@ function View({ chat, currentUserId }) {
     e.preventDefault();
     const data = { message: newMessage, recipient: otherUserId };
     const { newData } = await rtkMutation(sendMessage, data);
-    setMessages((prevMessages) => [...prevMessages, newData.data]);
+    // setMessages((prevMessages) => [...prevMessages, newData.data]);
+
     // setMessages([...messages, newData.data]);
   };
 
@@ -115,8 +115,12 @@ function View({ chat, currentUserId }) {
   const messageContent = messages?.data?.map((message) => {
     const isSender = message.sender._id === currentUserId; // Check for recipient using currentUserId
     const messageContainerClassNames = `
-      ${isSender ? "sender-box" : "recipient-box"}
-      flex flex-col gap-1
+      ${
+        isSender
+          ? "sender-box max-w-60 w-auto self-start"
+          : "recipient-box max-w-60 w-auto self-end"
+      }
+      flex flex-col
     `;
     const mediaContent = message.media?.map((mediaItem) => {
       const mediaUrl = mediaItem.media_url;
@@ -152,10 +156,14 @@ function View({ chat, currentUserId }) {
         className={messageContainerClassNames}
         ref={scroll}
       >
-        <div className={isSender ? "sender" : "recipient"}>
+        <div
+          className={
+            isSender ? "sender flex flex-wrap" : "recipient flex flex-wrap"
+          }
+        >
           {message.message} {/* Use message.message for clarity */}
         </div>
-        <p className={`message-time ${isSender ? "self-end" : ""}`}>
+        <p className={`message-time ${isSender ? "self-start" : "self-end"}`}>
           {message.createdAt ? format(message.createdAt) : "Unknown time"}{" "}
           {/* Handle missing timestamp */}
         </p>

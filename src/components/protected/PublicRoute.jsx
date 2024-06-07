@@ -8,6 +8,7 @@ const PublicRoute = ({ component: Component }) => {
   const isAuthenticated = token !== null && token !== undefined;
 
   return <>{isAuthenticated ? <Navigate to="/" /> : <Component />}</>;
+  // return <>{isAuthenticated ? <Component /> : <Component />}</>;
 };
 
 PublicRoute.propTypes = {

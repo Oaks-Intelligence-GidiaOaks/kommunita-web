@@ -1,7 +1,4 @@
-import React from "react";
-import PropTypes from "prop-types"; // Import PropTypes for prop validation
-import avatar2 from "../../assets/images/sidebar/avatar2.svg";
-import avatar4 from "../../assets/images/sidebar/avatar4.svg";
+import PropTypes from "prop-types";
 import "./style.css";
 import clock from "../../assets/images/chat/clock.svg";
 import { FaRegUser } from "react-icons/fa";

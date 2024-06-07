@@ -46,6 +46,11 @@ const Config = () => {
         ></Route>
 
         <Route
+          path={routes.SWITCH}
+          element={<ProtectedRoute component={Homepage} />}
+        ></Route>
+
+        <Route
           path={routes.PROFILEDIARIES}
           element={<ProtectedRoute component={ProfileDiaries} />}
         />
