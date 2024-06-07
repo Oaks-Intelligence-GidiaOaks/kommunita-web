@@ -42,13 +42,13 @@ function MenuItems() {
         text: "Notifications",
         to: "/notifications",
       },
-      // {
-      //   id: 3,
-      //   icon: favorite,
-      //   activeIcon: favoriteActive,
-      //   text: "Favourites",
-      //   to: "/favorites",
-      // },
+      {
+        id: 3,
+        icon: favorite,
+        activeIcon: favoriteActive,
+        text: "Bookmarks",
+        to: "/bookmarks",
+      },
       // {
       //   id: 4,
       //   icon: play,

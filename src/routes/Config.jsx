@@ -70,7 +70,7 @@ const Config = () => {
           element={<ProtectedRoute component={ProfileHome} />}
         />
         <Route
-          path={routes.FAVORITE}
+          path={routes.BOOKMARK}
           element={<ProtectedRoute component={FavoriteHome} />}
         />
         <Route

@@ -12,6 +12,7 @@ const MainLayout = ({ children }) => {
   const isHomeRoute = pathname === "/";
   const isFollowRoute = pathname === "/follow";
   const isNotificationRoute = pathname === "/notifications";
+  const isBookmarkRoute = pathname === "/bookmarks";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -20,9 +21,10 @@ const MainLayout = ({ children }) => {
         <div className="flex w-full">
           <SideNav />
           <main className="flex-1">{children}</main>
-          {(isHomeRoute || isNotificationRoute || isFollowRoute) && (
-            <AdsSection />
-          )}
+          {(isHomeRoute ||
+            isNotificationRoute ||
+            isFollowRoute ||
+            isBookmarkRoute) && <AdsSection />}
         </div>
       </div>
     </div>

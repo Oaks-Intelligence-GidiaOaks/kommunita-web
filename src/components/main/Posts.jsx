@@ -77,6 +77,7 @@ function Post({
   department,
   type,
   userId,
+  refetchFav,
 }) {
   const [deleteFeeds] = useDeleteFeedMutation();
   const [deleteDiary] = useDeleteDiaryMutation();
@@ -198,6 +199,7 @@ function Post({
               share={share?.length}
               reaction={reaction || []}
               onComment={onComment}
+              refetchFav={refetchFav}
             />
 
             {sortedComments.slice(0, visibleComments).map((comment, id) => (

@@ -8,7 +8,7 @@ const ReplyComment = ({ reply }) => {
   if (reply?.user_id?.department) {
     bordercolor = reply.user_id?.department[0]?.badge?.color;
   }
-  console.log(bordercolor);
+  // console.log(bordercolor);
   return (
     <div className="relative bg-primary-light-gray bg-opacity-10 p-2 rounded-lg mt-5 text-primary-dark-gray">
       <div className="flex justify-between items-center">

@@ -10,12 +10,14 @@ import axios from "axios";
 import { showAlert } from "../../static/alert";
 import { useSelector } from "react-redux";
 import {
+  useFavoritePostMutation,
   useLovePostMutation,
   useRepostPostMutation,
 } from "../../service/post.service";
 import rtkMutation from "../../utils/rtkMutation";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { useLocation } from "react-router-dom";
 
 function PostButtons({
   id,
@@ -24,8 +26,12 @@ function PostButtons({
   repost,
   share,
   reply,
+  refetchFav,
   onComment,
 }) {
+  const location = useLocation();
+  const { pathname } = location;
+
   const [isLoved, setIsLoved] = useState(false);
   const login_user_id = useSelector((state) => state.user?.user?._id);
 
@@ -36,6 +42,8 @@ function PostButtons({
   const isLikedByCurrentUser = likeUserIds.includes(login_user_id);
 
   const [lovePost, { error, isSuccess }] = useLovePostMutation();
+  const [bookMarkPost, { error: bookmarkError, isSuccess: bookMarkSuccess }] =
+    useFavoritePostMutation();
   const [repostPost, { error: err, isSuccess: scs }] = useRepostPostMutation();
 
   const handleLike = async () => {
@@ -58,14 +66,32 @@ function PostButtons({
     }
   };
 
+  // Bookmark
+  const handleBookmark = async () => {
+    const postData = { post_id: id };
+    try {
+      const rr = await rtkMutation(bookMarkPost, postData);
+      // console.log(rr);
+      if (pathname == "/bookmarks") {
+        showAlert("Removed", "", "success");
+        refetchFav();
+      } else {
+        showAlert("Bookmarked!!!", "", "success");
+      }
+    } catch (error) {
+      console.error("Error bookmarking post:", error);
+      showAlert("Oops", error.message, "error");
+    }
+  };
+
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess || bookMarkSuccess) {
       console.log("success");
-    } else if (error) {
+    } else if (error || bookmarkError) {
       // showAlert("Oops", error.data.message || "An error occurred", "error");
       showAlert("Oops", "An error occurred", "error");
     }
-  }, [isSuccess, error]);
+  }, [isSuccess, error, bookMarkSuccess, bookmarkError]);
 
   return (
     <motion.div
@@ -109,8 +135,9 @@ function PostButtons({
       <motion.button
         className="flex gap-1 items-center"
         whileHover={{ scale: 1.1 }}
+        onClick={handleBookmark}
       >
-        <img src={wishlist} alt="" />0
+        <img src={wishlist} alt="" />
       </motion.button>
     </motion.div>
   );
