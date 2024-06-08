@@ -58,7 +58,7 @@ const LoginPage = () => {
       navigate(INDEX);
     } else if (error) {
       navigate(LOGIN);
-      showAlert("Oops", error.data.message || "An error occurred", "error");
+      showAlert("Oops", error?.data?.message || "An error occurred", "error");
     }
   }, [isSuccess, error, navigate]);
 

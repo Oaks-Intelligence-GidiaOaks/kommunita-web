@@ -13,92 +13,101 @@ import InputEmoji from "react-input-emoji";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 
+const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
+const socket = io(BASE_URL);
+
 function View({ chat, currentUserId }) {
   const conversationId = chat?.last_message?.conversation_id;
-  const socket = useRef(null);
-  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
   const user = useSelector((state) => state.user?.user);
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [activeUsers, setActiveUsers] = useState([]);
+  const scroll = useRef();
+
+  // Fetch messages
+  const { data: messageList, isLoading } =
+    useGetChatMessagesQuery(conversationId);
 
   useEffect(() => {
-    const socketUrl = `${BASE_URL}?userId=${user._id}`;
-    socket.current = io(socketUrl);
+    if (messageList) {
+      setMessages(messageList.data || []);
+    }
+  }, [messageList]);
 
-    // Listen for the 'connect' event to know when the connection is established
-    socket.current.on("connect", () => {
-      console.log("Connected to the socket server");
+  // Initialize socket connection
+  useEffect(() => {
+    if (user) {
+      socket.io.uri = `${BASE_URL}?userId=${user._id}`;
 
-      // Send the organizationId to the server
-      const request = {
-        organizationId: user?.current_organization || user?.organization_id[0],
+      socket.on("connect", () => {
+        console.log("Connected to the socket server");
+        const request = {
+          organizationId:
+            user?.current_organization || user?.organization_id[0],
+        };
+        socket.emit("online_org_users", request);
+      });
+
+      socket.on("online_org_users", setActiveUsers);
+
+      socket.on("new_message", (newMessageData) => {
+        setMessages((prevMessages) => [...prevMessages, newMessageData]);
+        scroll.current?.scrollIntoView({ behavior: "smooth" });
+      });
+
+      socket.on("fetch_chat_messages", (newMessageData) => {
+        setMessages((prevMessages) => [...prevMessages, newMessageData]);
+      });
+
+      socket.on("error", console.error);
+
+      return () => {
+        socket.off("connect");
+        socket.off("online_org_users");
+        socket.off("new_message");
+        socket.off("fetch_chat_messages");
+        socket.off("error");
+        socket.disconnect();
       };
-      socket.current.emit("online_org_users", request);
-    });
-
-    // Listen for 'onboard' event
-    socket.current.on("onboard", (data) => {
-      console.log("Onboard event received:", data);
-    });
-
-    // Listen for 'error' event
-    socket.current.on("error", (error) => {
-      console.error("Error event received:", error);
-    });
-
-    socket.current.on("new_message", (newMessageData) => {
-      // setMessages((prevMessages) => [...prevMessages, newMessageData]);
-      console.log("msg", newMessageData);
-    });
-
-    // Clean up the socket connection when the component unmounts
-    return () => {
-      if (socket.current) {
-        socket.current.disconnect();
-      }
-    };
-  }, [user, BASE_URL]);
+    }
+  }, [user, conversationId]);
 
   const otherUserId = chat?.participants?.find(
     (user) => user?._id !== currentUserId
   )?._id;
-
-  const { data: messageList, isLoading } =
-    useGetChatMessagesQuery(conversationId);
-  // console.log(messageList);
-
-  useEffect(() => {
-    setMessages(messageList);
-  }, [messageList]);
+  const [sendMessage, { error, isSuccess }] = useSendMessageMutation();
 
   const handleChange = (newMessage) => {
     setNewMessage(newMessage);
   };
 
-  const [sendMessage, { error, isSuccess }] = useSendMessageMutation();
-
   const handleSend = async (e) => {
     e.preventDefault();
     const data = { message: newMessage, recipient: otherUserId };
-    const { newData } = await rtkMutation(sendMessage, data);
-    // setMessages((prevMessages) => [...prevMessages, newData.data]);
+    const msg = {
+      ...data,
+      sender: currentUserId,
+      organizationId: user?.current_organization || user?.organization_id[0],
+      media: [],
+    };
 
-    // setMessages([...messages, newData.data]);
+    try {
+      await rtkMutation(sendMessage, data);
+      setNewMessage("");
+      socket.emit("new_message", msg);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
   useEffect(() => {
     if (isSuccess) {
       setNewMessage("");
-      console.log("message sent successfully!");
-      scroll.current?.scrollIntoView({ behavior: "smooth" });
     } else if (error) {
       console.error(error.data.message);
     }
   }, [isSuccess, error]);
 
-  const scroll = useRef();
-
-  // Handle potential missing chat data
   if (!chat) {
     return (
       <div className="flex justify-center mt-3">
@@ -107,28 +116,14 @@ function View({ chat, currentUserId }) {
     );
   }
 
-  // Check if messages are loading
   if (isLoading) {
     return <div className="flex justify-center mt-3">Loading messages...</div>;
   }
 
-  const messageContent = messages?.data?.map((message) => {
-    const isSender = message.sender._id === currentUserId; // Check for recipient using currentUserId
-    const messageContainerClassNames = `
-      ${
-        isSender
-          ? "sender-box max-w-60 w-auto self-start"
-          : "recipient-box max-w-60 w-auto self-end"
-      }
-      flex flex-col
-    `;
-    const mediaContent = message.media?.map((mediaItem) => {
+  const renderMediaContent = (media) => {
+    return media.map((mediaItem) => {
       const mediaUrl = mediaItem.media_url;
-      if (
-        mediaItem.media_type === "jpeg" ||
-        mediaItem.media_type === "jpg" ||
-        mediaItem.media_type === "png"
-      ) {
+      if (["jpeg", "jpg", "png"].includes(mediaItem.media_type)) {
         return (
           <img
             key={mediaItem._id}
@@ -139,7 +134,6 @@ function View({ chat, currentUserId }) {
           />
         );
       } else if (mediaItem.media_type === "mp4") {
-        // Handle video example
         return <video key={mediaItem._id} src={mediaUrl} controls />;
       } else {
         return (
@@ -149,11 +143,18 @@ function View({ chat, currentUserId }) {
         );
       }
     });
+  };
+
+  const messageContent = messages.map((message) => {
+    const isSender = message.sender._id === currentUserId;
+    const messageContainerClassNames = isSender
+      ? "sender-box max-w-60 w-auto self-start"
+      : "recipient-box max-w-60 w-auto self-end";
 
     return (
       <div
         key={message._id}
-        className={messageContainerClassNames}
+        className={`${messageContainerClassNames} flex flex-col`}
         ref={scroll}
       >
         <div
@@ -161,13 +162,12 @@ function View({ chat, currentUserId }) {
             isSender ? "sender flex flex-wrap" : "recipient flex flex-wrap"
           }
         >
-          {message.message} {/* Use message.message for clarity */}
+          {message.message}
+          {renderMediaContent(message.media)}
         </div>
         <p className={`message-time ${isSender ? "self-start" : "self-end"}`}>
-          {message.createdAt ? format(message.createdAt) : "Unknown time"}{" "}
-          {/* Handle missing timestamp */}
+          {message.createdAt ? format(message.createdAt) : "Unknown time"}
         </p>
-        {/* {mediaContent} */}
       </div>
     );
   });
@@ -185,7 +185,7 @@ function View({ chat, currentUserId }) {
                     className="rounded-lg object-cover"
                     src={
                       chat.participants.find((user) => user._id === otherUserId)
-                        .photo_url
+                        ?.photo_url
                     }
                     alt=""
                   />
@@ -193,7 +193,6 @@ function View({ chat, currentUserId }) {
               ) : (
                 <FaRegUser size={23} />
               )}
-
               <p className="message-name">
                 {
                   chat.participants.find((user) => user._id === otherUserId)
@@ -219,7 +218,7 @@ function View({ chat, currentUserId }) {
                 </svg>
               </div>
               <div className="cursor-pointer flex items-center justify-center bg-white rounded-lg p-2">
-                <img className="" src={search} alt="" />
+                <img src={search} alt="search" />
               </div>
               <div className="cursor-pointer flex items-center justify-center bg-white rounded-lg p-1">
                 <svg
@@ -245,14 +244,12 @@ function View({ chat, currentUserId }) {
       <div className="bg-white h-auto flex items-center px-4 mt-5">
         <div className="flex w-full items-center gap-2 justify-evenly p-2 px-2">
           <img src={add} alt="add" className="cursor-pointer mt-1" />
-
           <InputEmoji
             value={newMessage}
             onChange={handleChange}
             placeholder="Type a message"
             background="#F8F9FD"
           />
-
           {newMessage ? (
             <button
               className="p-2 border bg-[#34b53a] text-white rounded-md"
@@ -281,8 +278,11 @@ View.propTypes = {
         photo_url: PropTypes.string,
       })
     ),
+    last_message: PropTypes.shape({
+      conversation_id: PropTypes.string,
+    }),
   }),
-  currentUserId: PropTypes.string,
+  currentUserId: PropTypes.string.isRequired,
 };
 
 export default View;

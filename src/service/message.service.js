@@ -26,7 +26,7 @@ export const messageApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: message,
       }),
-      invalidatesTags: ["Message"],
+      // invalidatesTags: ["Message"],
     }),
   }),
 });
