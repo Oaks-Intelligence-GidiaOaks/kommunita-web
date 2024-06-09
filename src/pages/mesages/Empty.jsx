@@ -157,6 +157,8 @@ const Empty = () => {
                   onChange={handleChange}
                   placeholder="Type a message"
                   background="#F8F9FD"
+                  cleanOnEnter
+                  onEnter={handleSend}
                 />
                 {newMessage ? (
                   <button
