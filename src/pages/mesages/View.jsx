@@ -13,10 +13,8 @@ import InputEmoji from "react-input-emoji";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 
-const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
-const socket = io(BASE_URL);
-
 function View({ chat, currentUserId }) {
+  const socket = useRef(null);
   const conversationId = chat?.last_message?.conversation_id;
   const user = useSelector((state) => state.user?.user);
   const [newMessage, setNewMessage] = useState("");
@@ -24,7 +22,6 @@ function View({ chat, currentUserId }) {
   const [activeUsers, setActiveUsers] = useState([]);
   const scroll = useRef();
 
-  // Fetch messages
   const { data: messageList, isLoading } =
     useGetChatMessagesQuery(conversationId);
 
@@ -34,47 +31,53 @@ function View({ chat, currentUserId }) {
     }
   }, [messageList]);
 
-  // Initialize socket connection
+  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
+
   useEffect(() => {
-    if (user) {
-      socket.io.uri = `${BASE_URL}?userId=${user._id}`;
+    const socketUrl = `${BASE_URL}?userId=${user._id}`;
+    socket.current = io(socketUrl);
 
-      socket.on("connect", () => {
-        console.log("Connected to the socket server");
-        const request = {
-          organizationId:
-            user?.current_organization || user?.organization_id[0],
-        };
-        socket.emit("online_org_users", request);
-      });
-
-      socket.on("online_org_users", setActiveUsers);
-
-      socket.on("new_message", (newMessageData) => {
-        setMessages((prevMessages) => [...prevMessages, newMessageData]);
-        scroll.current?.scrollIntoView({ behavior: "smooth" });
-      });
-
-      socket.on("fetch_chat_messages", (newMessageData) => {
-        setMessages((prevMessages) => [...prevMessages, newMessageData]);
-      });
-
-      socket.on("error", console.error);
-
-      return () => {
-        socket.off("connect");
-        socket.off("online_org_users");
-        socket.off("new_message");
-        socket.off("fetch_chat_messages");
-        socket.off("error");
-        socket.disconnect();
+    socket.current.on("connect", () => {
+      console.log("Connected to the socket server");
+      const request = {
+        organizationId: user?.current_organization || user?.organization_id[0],
       };
-    }
-  }, [user, conversationId]);
+      socket.current.emit("online_org_users", request);
+      socket.current.on("online_org_users", (data) => {
+        console.log("Received online users:", data);
+        setActiveUsers(data?.data);
+      });
+    });
+
+    // Listen for 'onboard' event
+    socket.current.on("onboard", (data) => {
+      console.log("Onboard event received:", data);
+    });
+
+    socket.current.on("new_message", (newMessageData) => {
+      setMessages((prevMessages) => [...prevMessages, newMessageData]);
+      scroll.current?.scrollIntoView({ behavior: "smooth" });
+    });
+
+    socket.current.on("fetch_chat_messages", (newMessageData) => {
+      setMessages((prevMessages) => [...prevMessages, newMessageData]);
+    });
+
+    socket.current.on("error", (error) => {
+      console.error("Socket error:", error);
+    });
+
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+  }, [user, conversationId, BASE_URL]);
 
   const otherUserId = chat?.participants?.find(
     (user) => user?._id !== currentUserId
   )?._id;
+
   const [sendMessage, { error, isSuccess }] = useSendMessageMutation();
 
   const handleChange = (newMessage) => {
@@ -94,7 +97,7 @@ function View({ chat, currentUserId }) {
     try {
       await rtkMutation(sendMessage, data);
       setNewMessage("");
-      socket.emit("new_message", msg);
+      socket.current.emit("new_message", msg);
     } catch (error) {
       console.error("Error sending message:", error);
     }
