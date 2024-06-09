@@ -159,7 +159,7 @@ const SettingsHome = () => {
     // formData.append("displayName", displayName);
     // formData.append("fullname", fullname);
 
-    // console.log(formData);
+    console.log(formData);
 
     const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 

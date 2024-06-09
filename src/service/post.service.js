@@ -31,8 +31,8 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
     }),
 
     favoritePost: builder.mutation({
-      query: (postData) => ({
-        url: "/user/post/favourite",
+      query: ({ postData, typ }) => ({
+        url: `/user/${typ}/favourite`,
         method: "POST",
         body: postData,
       }),
