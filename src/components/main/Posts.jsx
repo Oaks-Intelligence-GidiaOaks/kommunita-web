@@ -200,6 +200,7 @@ function Post({
               reaction={reaction || []}
               onComment={onComment}
               refetchFav={refetchFav}
+              type={type}
             />
 
             {sortedComments.slice(0, visibleComments).map((comment, id) => (

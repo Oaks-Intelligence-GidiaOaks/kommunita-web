@@ -58,7 +58,7 @@ const Header = ({ setFilter }) => {
           </p>
           <p
             className="mb-3 hover:bg-primary-gray hover:text-white cursor-pointer"
-            onClick={() => handleCategory("diaries")}
+            onClick={() => handleCategory("diary")}
           >
             Diaries
           </p>

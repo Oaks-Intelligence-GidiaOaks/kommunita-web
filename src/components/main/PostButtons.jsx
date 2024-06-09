@@ -28,6 +28,7 @@ function PostButtons({
   reply,
   refetchFav,
   onComment,
+  type,
 }) {
   const location = useLocation();
   const { pathname } = location;
@@ -42,6 +43,7 @@ function PostButtons({
   const isLikedByCurrentUser = likeUserIds.includes(login_user_id);
 
   const [lovePost, { error, isSuccess }] = useLovePostMutation();
+
   const [bookMarkPost, { error: bookmarkError, isSuccess: bookMarkSuccess }] =
     useFavoritePostMutation();
   const [repostPost, { error: err, isSuccess: scs }] = useRepostPostMutation();
@@ -68,9 +70,13 @@ function PostButtons({
 
   // Bookmark
   const handleBookmark = async () => {
-    const postData = { post_id: id };
+    const typ = type.includes("pos") ? "post" : "diary";
+
+    const postData = type.includes("pos") ? { post_id: id } : { diary_id: id };
+
+    const dt = { postData, typ };
     try {
-      const rr = await rtkMutation(bookMarkPost, postData);
+      const rr = await rtkMutation(bookMarkPost, dt);
       // console.log(rr);
       if (pathname == "/bookmarks") {
         showAlert("Removed", "", "success");
