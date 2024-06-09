@@ -1,17 +1,22 @@
 import PropTypes from "prop-types";
 import search from "../../assets/images/menu/search.svg";
 import { FaRegUser } from "react-icons/fa";
-import { useGetChatMessagesQuery } from "../../service/message.service";
+import {
+  useGetChatMessagesQuery,
+  useSendMessageMutation,
+} from "../../service/message.service";
 import { format } from "timeago.js";
 import { useState, useEffect, useRef } from "react";
-import { useSendMessageMutation } from "../../service/message.service";
-import rtkMutation from "../../utils/rtkMutation";
-import like from "../../assets/images/chat/like.svg";
-import add from "../../assets/images/chat/add.svg";
-import microphone from "../../assets/images/chat/microphone.svg";
 import InputEmoji from "react-input-emoji";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
+import { format as formatDate, parseISO } from "date-fns";
+import like from "../../assets/images/chat/like.svg";
+import add from "../../assets/images/chat/add.svg";
+import microphone from "../../assets/images/chat/microphone.svg";
+import rtkMutation from "../../utils/rtkMutation";
+import sound from "../../assets/sound.mp3";
+import { Spinner } from "flowbite-react";
 
 function View({ chat, currentUserId }) {
   const socket = useRef(null);
@@ -19,8 +24,8 @@ function View({ chat, currentUserId }) {
   const user = useSelector((state) => state.user?.user);
   const [newMessage, setNewMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [activeUsers, setActiveUsers] = useState([]);
   const scroll = useRef();
+  const audioRef = useRef(new Audio(sound));
 
   const { data: messageList, isLoading } =
     useGetChatMessagesQuery(conversationId);
@@ -31,6 +36,12 @@ function View({ chat, currentUserId }) {
     }
   }, [messageList]);
 
+  useEffect(() => {
+    if (scroll.current) {
+      scroll.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
 
   useEffect(() => {
@@ -39,28 +50,23 @@ function View({ chat, currentUserId }) {
 
     socket.current.on("connect", () => {
       console.log("Connected to the socket server");
-      const request = {
-        organizationId: user?.current_organization || user?.organization_id[0],
-      };
-      socket.current.emit("online_org_users", request);
-      socket.current.on("online_org_users", (data) => {
-        console.log("Received online users:", data);
-        setActiveUsers(data?.data);
-      });
-    });
-
-    // Listen for 'onboard' event
-    socket.current.on("onboard", (data) => {
-      console.log("Onboard event received:", data);
     });
 
     socket.current.on("new_message", (newMessageData) => {
-      setMessages((prevMessages) => [...prevMessages, newMessageData]);
+      const { data } = newMessageData;
+      setMessages((prevMessages) => [...prevMessages, data]);
       scroll.current?.scrollIntoView({ behavior: "smooth" });
+
+      const senderID = data?.sender?._id;
+      if (senderID !== currentUserId) {
+        audioRef.current.play();
+      } else {
+        console.log("Message sent by myself");
+      }
     });
 
     socket.current.on("fetch_chat_messages", (newMessageData) => {
-      setMessages((prevMessages) => [...prevMessages, newMessageData]);
+      setMessages((prevMessages) => [...prevMessages, newMessageData?.data]);
     });
 
     socket.current.on("error", (error) => {
@@ -72,13 +78,14 @@ function View({ chat, currentUserId }) {
         socket.current.disconnect();
       }
     };
-  }, [user, conversationId, BASE_URL]);
+  }, [user, conversationId, BASE_URL, currentUserId]);
 
   const otherUserId = chat?.participants?.find(
     (user) => user?._id !== currentUserId
   )?._id;
 
-  const [sendMessage, { error, isSuccess }] = useSendMessageMutation();
+  const [sendMessage, { error, isSuccess, isLoading: sendloading }] =
+    useSendMessageMutation();
 
   const handleChange = (newMessage) => {
     setNewMessage(newMessage);
@@ -111,6 +118,92 @@ function View({ chat, currentUserId }) {
     }
   }, [isSuccess, error]);
 
+  const groupMessagesByDate = (messages) => {
+    return messages.reduce((groups, message) => {
+      const date = formatDate(parseISO(message.createdAt), "yyyy-MM-dd");
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(message);
+      return groups;
+    }, {});
+  };
+
+  const groupedMessages = groupMessagesByDate(messages);
+
+  const renderMediaContent = (media) => {
+    return media.map((mediaItem) => {
+      const mediaUrl = mediaItem.media_url;
+      switch (mediaItem.media_type) {
+        case "jpeg":
+        case "jpg":
+        case "png":
+          return (
+            <img
+              key={mediaItem._id}
+              src={mediaUrl}
+              alt="Chat media"
+              width={200}
+              height={200}
+            />
+          );
+        case "mp4":
+          return <video key={mediaItem._id} src={mediaUrl} controls />;
+        default:
+          return (
+            <p key={mediaItem._id}>
+              Unsupported media type: {mediaItem.media_type}
+            </p>
+          );
+      }
+    });
+  };
+
+  const messageContent = Object.entries(groupedMessages).map(
+    ([date, messagesForDate]) => (
+      <div key={date}>
+        <div className="message-timestamp flex justify-center py-5">
+          {formatDate(parseISO(date), "MMMM dd, yyyy")}
+        </div>
+        {messagesForDate.map((message, index) => {
+          const isSender = message?.sender?._id === currentUserId;
+          const messageContainerClassNames = isSender
+            ? "sender-box max-w-60 w-auto self-start"
+            : "recipient-box max-w-60 w-auto self-end";
+          return (
+            <div key={index} className="flex flex-col pb-2">
+              <div
+                key={message._id}
+                className={`${messageContainerClassNames} flex flex-col`}
+                ref={scroll}
+              >
+                <div
+                  className={
+                    isSender
+                      ? "sender flex flex-wrap"
+                      : "recipient flex flex-wrap"
+                  }
+                >
+                  {message.message}
+                  {renderMediaContent(message.media)}
+                </div>
+                <p
+                  className={`message-time ${
+                    isSender ? "self-start" : "self-end"
+                  }`}
+                >
+                  {message.createdAt
+                    ? format(message.createdAt)
+                    : "Unknown time"}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )
+  );
+
   if (!chat) {
     return (
       <div className="flex justify-center mt-3">
@@ -120,60 +213,13 @@ function View({ chat, currentUserId }) {
   }
 
   if (isLoading) {
-    return <div className="flex justify-center mt-3">Loading messages...</div>;
-  }
-
-  const renderMediaContent = (media) => {
-    return media.map((mediaItem) => {
-      const mediaUrl = mediaItem.media_url;
-      if (["jpeg", "jpg", "png"].includes(mediaItem.media_type)) {
-        return (
-          <img
-            key={mediaItem._id}
-            src={mediaUrl}
-            alt="Chat media"
-            width={200}
-            height={200}
-          />
-        );
-      } else if (mediaItem.media_type === "mp4") {
-        return <video key={mediaItem._id} src={mediaUrl} controls />;
-      } else {
-        return (
-          <p key={mediaItem._id}>
-            Unsupported media type: {mediaItem.media_type}
-          </p>
-        );
-      }
-    });
-  };
-
-  const messageContent = messages.map((message) => {
-    const isSender = message.sender._id === currentUserId;
-    const messageContainerClassNames = isSender
-      ? "sender-box max-w-60 w-auto self-start"
-      : "recipient-box max-w-60 w-auto self-end";
-
     return (
-      <div
-        key={message._id}
-        className={`${messageContainerClassNames} flex flex-col`}
-        ref={scroll}
-      >
-        <div
-          className={
-            isSender ? "sender flex flex-wrap" : "recipient flex flex-wrap"
-          }
-        >
-          {message.message}
-          {renderMediaContent(message.media)}
-        </div>
-        <p className={`message-time ${isSender ? "self-start" : "self-end"}`}>
-          {message.createdAt ? format(message.createdAt) : "Unknown time"}
-        </p>
+      <div className="flex justify-center items-center mt-3 flex-col">
+        <Spinner />
+        <p className="pt-2 text-sm">Loading messages...</p>
       </div>
     );
-  });
+  }
 
   return (
     <>
@@ -256,9 +302,10 @@ function View({ chat, currentUserId }) {
           {newMessage ? (
             <button
               className="p-2 border bg-[#34b53a] text-white rounded-md"
+              disabled={sendloading}
               onClick={handleSend}
             >
-              Send
+              {sendloading ? "Sending..." : "Send"}
             </button>
           ) : (
             <div className="flex gap-4 items-center">
