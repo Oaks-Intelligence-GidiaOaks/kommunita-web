@@ -146,11 +146,11 @@ function Post({
                     </Link>
                     <span className="post-time ml-2 font-bold">{postTime}</span>
                   </div>
-                  <p className="username flex gap-1 items-center">
-                    <div className="flex flex-col">
+                  <div className="username flex gap-1 items-center">
+                    <p className="flex flex-col">
                       @{username} <p>{department || ""}</p>
-                    </div>
-                  </p>
+                    </p>
+                  </div>
                 </div>
               </div>
 

@@ -31,13 +31,6 @@ const MessageCard = ({
           <img src={clock} alt="" />
           {format(timestamp)}
         </div>
-        {/* <div className="absolute right-2 bottom-3">
-          {read === false ? (
-            <div className="flex justify-center items-center rounded-full h-[16px] w-auto bg-[#34b53a] text-white text-xs">
-              <p className="p-1">1</p>
-            </div>
-          ) : null}
-        </div> */}
       </div>
     </div>
   );
