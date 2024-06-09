@@ -77,7 +77,7 @@ const LikeContainer = (like) => {
 
   useEffect(() => {
     setFollowing(
-      like.like?.followers?.filter((f) => f == user?.data._id).length == 1
+      like.like?.followers?.filter((f) => f == user?.data?._id).length == 1
         ? true
         : false
     );

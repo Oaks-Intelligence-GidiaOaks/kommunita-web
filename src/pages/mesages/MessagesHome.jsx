@@ -4,9 +4,8 @@ import "./style.css";
 import View from "./View";
 import Header from "./Header";
 import Empty from "./Empty";
-import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
-import { useRef, useEffect, useState } from "react";
+import { useState } from "react";
 import { useGetConversationsQuery } from "../../service/message.service";
 import { Spinner } from "flowbite-react";
 
@@ -16,7 +15,6 @@ const MessagesHome = () => {
 
   const { data: chatList, isLoading } = useGetConversationsQuery();
   const list = chatList?.data;
-  // console.log(list);
 
   return (
     <MainLayout>

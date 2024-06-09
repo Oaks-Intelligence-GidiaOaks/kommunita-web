@@ -26,7 +26,15 @@ export const messageApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: message,
       }),
-      // invalidatesTags: ["Message"],
+    }),
+
+    sendInitialMessage: builder.mutation({
+      query: (message) => ({
+        url: CHAT_MESSAGES,
+        method: "POST",
+        body: message,
+      }),
+      invalidatesTags: ["Message"],
     }),
   }),
 });
@@ -35,4 +43,5 @@ export const {
   useGetConversationsQuery,
   useGetChatMessagesQuery,
   useSendMessageMutation,
+  useSendInitialMessageMutation,
 } = messageApiSlice;
