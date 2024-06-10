@@ -47,8 +47,7 @@ const Empty = () => {
     console.log("user", selectedUser);
   };
 
-  const handleSend = async (e) => {
-    e.preventDefault();
+  const handleSend = async () => {
     const data = { message: newMessage, recipient: selectedUser?._id };
 
     try {
@@ -157,8 +156,8 @@ const Empty = () => {
                   onChange={handleChange}
                   placeholder="Type a message"
                   background="#F8F9FD"
-                  cleanOnEnter
-                  onEnter={handleSend}
+                  // cleanOnEnter
+                  // onEnter={handleSend}
                 />
                 {newMessage ? (
                   <button
