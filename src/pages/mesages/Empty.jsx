@@ -47,8 +47,7 @@ const Empty = () => {
     console.log("user", selectedUser);
   };
 
-  const handleSend = async (e) => {
-    e.preventDefault();
+  const handleSend = async () => {
     const data = { message: newMessage, recipient: selectedUser?._id };
 
     try {

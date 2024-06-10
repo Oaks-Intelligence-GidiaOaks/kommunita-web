@@ -26,6 +26,7 @@ function View({ chat, currentUserId }) {
   const [messages, setMessages] = useState([]);
   const scroll = useRef();
   const audioRef = useRef(new Audio(sound));
+  const isSending = useRef(false);
 
   const { data: messageList, isLoading } =
     useGetChatMessagesQuery(conversationId);
@@ -91,8 +92,10 @@ function View({ chat, currentUserId }) {
     setNewMessage(newMessage);
   };
 
-  const handleSend = async (e) => {
-    e.preventDefault();
+  const handleSend = async () => {
+    if (isSending.current) return; // Prevent multiple triggers
+    isSending.current = true; // Mark as sending
+
     const data = { message: newMessage, recipient: otherUserId };
     const msg = {
       ...data,
@@ -103,10 +106,12 @@ function View({ chat, currentUserId }) {
 
     try {
       await rtkMutation(sendMessage, data);
-      setNewMessage("");
       socket.current.emit("new_message", msg);
+      setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
+    } finally {
+      isSending.current = false; // Reset sending status
     }
   };
 
