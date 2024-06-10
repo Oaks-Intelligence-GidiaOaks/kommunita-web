@@ -28,6 +28,7 @@ import {
   useGetDiaryQuery,
   useGetOtherUserDiariesMutation,
 } from "../../service/diary.service";
+import Modals from "../../components/modals/Modal";
 
 const ProfileHome = () => {
   const { data } = useGetPostQuery();
@@ -113,10 +114,11 @@ const ProfileHome = () => {
     }
   };
 
-  function showModal(src) {
-    setMedia(src);
-    setShowMediaModal(true);
-  }
+  // function showModal(src) {
+  //   console.log("Media: ", src);
+  //   setMedia(src);
+  //   setShowMediaModal(true);
+  // }
 
   console.log("profile: ", post);
   // console.log("logs:", diaryData?.data);
@@ -395,7 +397,7 @@ const ProfileHome = () => {
                     <div
                       key={id}
                       className="cursor-pointer mb-4"
-                      onClick={() => showModal(dt)}
+                      // onClick={() => showModal(dt)}
                     >
                       <GaleryBox media={dt} />
                     </div>
@@ -403,15 +405,6 @@ const ProfileHome = () => {
                 </>
               )}
             </div>
-            {showMediaModal && (
-              <div
-                onClick={() => setShowMediaModal(!showMediaModal)}
-                className="fixed bg-primary-light-gray bg-opacity-40 w-screen h-screen top-0 left-0 flex items-center justify-center z-50"
-              >
-                {/* <MediaContainer /> */}
-                <MediaModal media={media} />
-              </div>
-            )}
           </div>
         </div>
       </div>

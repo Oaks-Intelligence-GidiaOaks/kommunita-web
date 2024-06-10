@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 
 function MediaModal({ media }) {
   return (
-    <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px]">
+    <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
       <div className="post-card p-4">
         <div className="flex items-center justify-between">
           {media.mimetype.startsWith("image") ? (
@@ -22,7 +22,7 @@ function MediaModal({ media }) {
             </div>
           ) : (
             <div className="w-full pb-5">
-              <video className="object-contain" autoPlay controls width="100%">
+              <video className="w-full" autoPlay controls>
                 <source src={media.downlaodUrl} type="video/mp4" />
                 Sorry, your browser doesn't support embedded videos.
               </video>
@@ -43,7 +43,7 @@ MediaModal.propTypes = {
   // imageSrc: PropTypes.string,
   // videoSrc: PropTypes.string, // addded by joseph
   // avatar: PropTypes.string.isRequired,
-  media: PropTypes.array.isRequired,
+  media: PropTypes.object.isRequired,
 };
 
 export default MediaModal;
