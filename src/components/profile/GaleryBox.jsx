@@ -3,6 +3,7 @@ import Modals from "../modals/Modal";
 import MediaModal from "../main/MediaModal";
 
 const GaleryBox = ({ media }) => {
+  // console.log(media);
   const [showMediaModal, setShowMediaModal] = useState(false);
 
   return (
@@ -28,7 +29,7 @@ const GaleryBox = ({ media }) => {
             onClick={() => setShowMediaModal(true)}
             className="flex items-center justify-center w-[285px] h-[284px] border-[1px] border-black rounded-lg bg-white"
           >
-            {/* <div className="flex items-center justify-center rounded-full h-[50px] w-[50px] bg-black">
+            <div className="flex items-center justify-center rounded-full h-[50px] w-[50px] bg-black">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="white"
@@ -48,19 +49,19 @@ const GaleryBox = ({ media }) => {
                   d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z"
                 />
               </svg>
-            </div> */}
-            <div className="w-full pb-5">
-              <video className="w-full" controls>
-                <source src={media.downlaodUrl} type="video/mp4" />
+            </div>
+            {/* <div className="w-full pb-5">
+              <video className="w-full">
+                <source src={media.downloadUrl} type="video/mp4" />
                 Sorry, your browser doesn't support embedded videos.
               </video>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
       {showMediaModal && (
         <Modals
-          title={""}
+          title={media.name.split(".")[0]}
           openModal={showMediaModal}
           modalSize="2xl"
           onClose={() => setShowMediaModal(false)}
@@ -81,7 +82,7 @@ const GaleryBox = ({ media }) => {
                 ) : (
                   <div className="w-full pb-5">
                     <video className="w-full" autoPlay controls>
-                      <source src={media.downlaodUrl} type="video/mp4" />
+                      <source src={media.downloadUrl} type="video/mp4" />
                       Sorry, your browser doesn't support embedded videos.
                     </video>
                   </div>
