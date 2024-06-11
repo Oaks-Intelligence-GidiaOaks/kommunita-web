@@ -67,63 +67,57 @@ function Header() {
     }
   }, [isSuccess, error]);
 
-  const inputRef = useRef(null);
-
-  const handleCustomButtonClick = () => {
-    if (inputRef.current) {
-      inputRef.current.showPicker();
-    }
-  };
-
   return (
     <>
-      <div className="flex justify-between items-center p-3 w-full border-b-[1px]">
-        <select
-          name=""
-          id=""
-          className="chat-filter border-0 focus:outline-none focus:ring-0"
-        >
-          <option value="">All Messages</option>
-          {/* <option value="">Unread</option>
+      <div className="flex flex-col w-full">
+        <div className="flex justify-between items-center p-3 w-full border-b-[1px]">
+          <select
+            name=""
+            id=""
+            className="chat-filter border-0 focus:outline-none focus:ring-0"
+          >
+            <option value="">All Messages</option>
+            {/* <option value="">Unread</option>
           <option value="">Starred</option>
           <option value="">Archived</option>
           <option value="">Spam</option> */}
-        </select>
-        <button>
-          <img src={elipses} alt="" />
-        </button>
-      </div>
-
-      <div className="p-4 bg-white border-b-[1px]">
-        <div className="flex p-1 rounded-xl bg-[#F8F9FD] w-full">
-          <img className="ml-3 cursor-pointer" src={search} alt="" />
-          <input
-            type="text"
-            className="w-full bg-transparent border-none focus:outline-none focus:ring-0 message-search"
-            placeholder="Search and tap to start a new chat"
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
+          </select>
+          <button>
+            <img src={elipses} alt="" />
+          </button>
         </div>
-        {searchTerm && (
-          <div className="bg-white shadow border rounded mt-2 max-h-60 overflow-y-auto">
-            {filteredUsers.map((user) => (
-              <div
-                key={user._id}
-                className="flex justify-between items-center p-2 cursor-pointer hover:bg-gray-200 border-b"
-                onClick={() => handleUserSelect(user)}
-              >
-                <span className="text-sm">{user.display_name}</span>
-                <button
-                  className="message-search p-2 border bg-[#34b53a] text-white rounded-md w-auto"
+
+        <div className="p-4 bg-white border-b-[1px]">
+          <div className="flex p-1 rounded-xl bg-[#F8F9FD] w-full">
+            <img className="ml-3 cursor-pointer" src={search} alt="" />
+            <input
+              type="text"
+              className="w-full bg-transparent border-none focus:outline-none focus:ring-0 message-search"
+              placeholder="Search and tap to start a new chat"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </div>
+          {searchTerm && (
+            <div className="bg-white shadow border rounded mt-2 max-h-60 overflow-y-auto">
+              {filteredUsers.map((user) => (
+                <div
+                  key={user._id}
+                  className="flex justify-between items-center p-2 cursor-pointer hover:bg-gray-200 border-b"
                   onClick={() => handleUserSelect(user)}
                 >
-                  tap to chat
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
+                  <span className="text-sm">{user.display_name}</span>
+                  <button
+                    className="message-search p-2 border bg-[#34b53a] text-white rounded-md w-auto"
+                    onClick={() => handleUserSelect(user)}
+                  >
+                    tap to chat
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {selectedUser && openModal && (

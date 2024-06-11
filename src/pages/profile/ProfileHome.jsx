@@ -75,7 +75,7 @@ const ProfileHome = () => {
 
   useEffect(() => {
     if (id) {
-      // console.log(id);
+      console.log(id, "me");
       GetOtherUser();
     } else {
       console.log(diaryData);
@@ -122,6 +122,13 @@ const ProfileHome = () => {
 
   console.log("profile: ", post);
   // console.log("logs:", diaryData?.data);
+
+  const handleChatUser = (user) => {
+    // setSelectedUser(user);
+    // setOpenModal(true);
+    // setSearchTerm("");
+    // console.log("Selected User ID:", user._id);
+  };
 
   return (
     <Layout>

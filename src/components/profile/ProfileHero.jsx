@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import HeroLabel from "./HeroLabel";
 import MenuItems from "./../sidebar/MenuItems";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetOtherUserProfileMutation,
   useGetUserProfiileQuery,
@@ -16,6 +16,10 @@ import {
   useFollowUserMutation,
   useUnfollowUserMutation,
 } from "../../service/whotofollow.service";
+import message from "../../assets/images/message.png";
+import { Modal } from "flowbite-react";
+import InputEmoji from "react-input-emoji";
+import { useSendInitialMessageMutation } from "../../service/message.service";
 
 const ProfileHero = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
@@ -105,7 +109,49 @@ const ProfileHero = () => {
   //   return;
   // }
 
-  console.log(following);
+  console.log(user_id, "me", profile);
+
+  const handleChange = (newMessage) => {
+    setNewMessage(newMessage);
+  };
+
+  const [openModal, setOpenModal] = useState(false);
+  const [newMessage, setNewMessage] = useState("");
+
+  const closeModal = () => {
+    setNewMessage("");
+    setOpenModal(false);
+  };
+  const [
+    sendMessage,
+    { error: messageError, isSuccess: mesageSuccess, isLoading: sendloading },
+  ] = useSendInitialMessageMutation();
+
+  const handleSendMessage = () => {
+    setOpenModal(true);
+  };
+
+  const handleSend = async () => {
+    const data = { message: newMessage, recipient: user_id };
+
+    try {
+      await rtkMutation(sendMessage, data);
+      setNewMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
+  };
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (mesageSuccess) {
+      setNewMessage("");
+      setOpenModal(false);
+      navigate("/messages");
+    } else if (messageError) {
+      console.error(messageError.data.message);
+    }
+  }, [mesageSuccess, messageError, navigate]);
 
   return (
     <div className="lg:h-[300px] text-primary-dark-gray">
@@ -282,6 +328,17 @@ const ProfileHero = () => {
                 </div>
               </div>
 
+              {user_id && (
+                <div>
+                  <img
+                    src={message}
+                    className="h-[40] w-[40px] cursor-pointer"
+                    onClick={handleSendMessage}
+                    alt=""
+                  />
+                </div>
+              )}
+
               <div>
                 {" "}
                 <svg
@@ -371,6 +428,43 @@ const ProfileHero = () => {
           </div>
         </div>
       </div>
+      {openModal && (
+        <Modal dismissible show={openModal} onClose={closeModal}>
+          <Modal.Header></Modal.Header>
+          <Modal.Body>
+            <div className="flex justify-center text-lg">
+              Say hi to{" "}
+              <span className="text-[#34b53a] px-1">
+                {profile?.data?.display_name}
+              </span>{" "}
+              with a wave 👋
+            </div>
+
+            <div className="bg-white h-auto flex items-center pt-8 pb-5">
+              <div className="flex w-full items-center gap-2 justify-evenly px-2">
+                <InputEmoji
+                  value={newMessage}
+                  onChange={handleChange}
+                  placeholder="Type a message"
+                  background="#F8F9FD"
+                  // cleanOnEnter
+                  // onEnter={handleSend}
+                />
+
+                {newMessage ? (
+                  <button
+                    className="p-2 border bg-[#34b53a] text-white rounded-md"
+                    disabled={sendloading}
+                    onClick={handleSend}
+                  >
+                    {sendloading ? "Sending..." : "Send"}
+                  </button>
+                ) : null}
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      )}
     </div>
   );
 };

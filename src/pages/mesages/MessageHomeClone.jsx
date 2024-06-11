@@ -15,7 +15,6 @@ const MessagesHome = () => {
 
   const { data: chatList, isLoading } = useGetConversationsQuery();
   const list = chatList?.data;
-  // console.log(list);
 
   return (
     <MainLayout>
@@ -50,8 +49,8 @@ const MessagesHome = () => {
             </div>
           </div>
 
-          <div className="bg-[#EFF2FC] flex-grow flex flex-col">
-            <div className="flex flex-col justify-between border h-full">
+          <div className="flex-grow flex flex-col h-screen">
+            <div className="flex flex-col justify-between border w-full">
               <View chat={currentChat} currentUserId={user._id} />
             </div>
           </div>

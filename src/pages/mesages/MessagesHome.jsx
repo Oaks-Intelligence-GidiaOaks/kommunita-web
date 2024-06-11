@@ -5,60 +5,107 @@ import View from "./View";
 import Header from "./Header";
 import Empty from "./Empty";
 import { useSelector } from "react-redux";
-import { useState } from "react";
-import { useGetConversationsQuery } from "../../service/message.service";
+import { useEffect, useState } from "react";
+import {
+  useGetConversationsQuery,
+  useReadMessageMutation,
+} from "../../service/message.service";
 import { Spinner } from "flowbite-react";
+import chat from "../../assets/images/chat.gif";
 
 const MessagesHome = () => {
   const user = useSelector((state) => state.user?.user);
   const [currentChat, setCurrentChat] = useState(null);
+  const [messageList, setMessageList] = useState([]);
 
   const { data: chatList, isLoading } = useGetConversationsQuery();
   const list = chatList?.data;
+  // console.log(list);
+
+  useEffect(() => {
+    setMessageList(list);
+  }, [list]);
+
+  const [readMessage] = useReadMessageMutation();
+
+  const isRead = async (id) => {
+    console.log(id);
+    await readMessage(id);
+  };
 
   return (
     <MainLayout>
-      {isLoading ? (
-        <div className="loading-container flex justify-center mt-10">
-          <Spinner />
-        </div>
-      ) : list?.length > 0 ? (
-        <div className="chat-container flex min-h-screen w-full pt-4 pr-4">
-          <div className="bg-white w-full max-w-[380px] message-list h-full">
+      <div className="chat-container w-full h-full">
+        <div className="h-auto w-full flex pt-4 pr-4">
+          <div className="bg-white w-full max-w-[380px] border-r flex flex-col point ">
             <Header />
+            <div className="overflow-y-auto bg-[#F8F9FD]">
+              {isLoading ? (
+                <div className="loading-container flex justify-center mt-10">
+                  <Spinner />
+                </div>
+              ) : messageList?.length > 0 ? (
+                messageList.map((chat) => {
+                  const otherParticipant = chat.participants.find(
+                    (participant) => participant._id !== user._id
+                  );
+                  const isLastMessageFromCurrentUser =
+                    chat.last_message?.sender._id === user._id;
 
-            <div className="message-list-content h-full overflow-y-auto bg[#F8F9FD]">
-              {list.map((chat) => (
-                <MessageCard
-                  key={chat._id}
-                  message={chat?.last_message?.message || "null"}
-                  timestamp={chat?.last_message?.createdAt}
-                  conversationId={chat?.last_message?.conversation_id}
-                  read={chat?.last_message?.read}
-                  name={
-                    chat?.last_message?.sender?.fullname ||
-                    chat?.last_message?.sender?.display_name
-                  }
-                  photo={chat?.last_message?.sender?.photo_url}
-                  onClick={() => {
-                    setCurrentChat(chat);
-                  }}
-                  currentUser={chat?.last_message?.sender?._id}
-                />
-              ))}
+                  const displayMessage = isLastMessageFromCurrentUser
+                    ? `Me: ${chat.last_message?.message || ""}`
+                    : `${otherParticipant?.display_name || "Unknown"}: ${
+                        chat.last_message?.message || ""
+                      }`;
+
+                  return (
+                    <MessageCard
+                      key={chat._id}
+                      message={displayMessage}
+                      timestamp={chat.last_message?.createdAt}
+                      conversationId={chat.last_message?.conversation_id}
+                      read={chat.last_message?.read}
+                      name={otherParticipant?.display_name || "Unknown"}
+                      photo={otherParticipant?.photo_url}
+                      onClick={() => {
+                        setCurrentChat(chat);
+                        isRead(chat.last_message?._id);
+                      }}
+                      currentUser={user._id}
+                      sender={chat.last_message?.sender._id}
+                      active={currentChat?._id === chat._id}
+                      chatId={chat.last_message?._id}
+                      lastMessageId={chat.last_message?._id}
+                    />
+                  );
+                })
+              ) : (
+                <div className="message-list-content bg[#F8F9FD] h-full">
+                  <div className="border-b p-3 flex justify-start">
+                    You have no message
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="bg-[#EFF2FC] flex-grow flex flex-col">
-            <div className="flex flex-col justify-between border h-full">
+          <div className="w-full flex flex-col border chat-window relative point">
+            {currentChat ? (
               <View chat={currentChat} currentUserId={user._id} />
-            </div>
+            ) : (
+              <div className="flex items-center justify-center h-full w-full flex-col">
+                <img src={chat} alt="chat gif" />
+                <strong className="empty-strong">
+                  Pick up where you left off
+                </strong>
+                <small className="empty-small">
+                  Search or select a conversation and chat away.
+                </small>
+              </div>
+            )}
           </div>
         </div>
-      ) : (
-        // Display message if no chats available
-        <Empty />
-      )}
+      </div>
     </MainLayout>
   );
 };

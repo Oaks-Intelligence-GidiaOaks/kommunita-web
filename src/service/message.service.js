@@ -36,6 +36,22 @@ export const messageApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Message"],
     }),
+
+    readMessage: builder.mutation({
+      query: (id) => ({
+        url: `${CHAT_MESSAGES}/${id}/read`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Message"],
+    }),
+
+    deleteMessage: builder.mutation({
+      query: (id) => ({
+        url: `${CHAT_MESSAGES}/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Message"],
+    }),
   }),
 });
 
@@ -44,4 +60,6 @@ export const {
   useGetChatMessagesQuery,
   useSendMessageMutation,
   useSendInitialMessageMutation,
+  useReadMessageMutation,
+  useDeleteMessageMutation,
 } = messageApiSlice;

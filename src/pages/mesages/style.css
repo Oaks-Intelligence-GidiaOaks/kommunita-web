@@ -1,5 +1,8 @@
 .message-list {
-  border-radius: 5px;
+  border-radius: 5px 0px 0px 5px;
+}
+.chat-list {
+  border-radius: 0px 5px 5px 0px;
 }
 .sender {
   /* max-width: 260px; */
@@ -101,3 +104,44 @@
 /* .react-input-emoji--button {
   display: none !important;
 } */
+
+.chat-container {
+  box-sizing: border-box;
+  overflow-x: hidden;
+  padding: 0 !important;
+  border-radius: 5px;
+}
+.empty-strong {
+  color: #404145;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+}
+.empty-small {
+  color: #62646a;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  margin: 10px auto;
+  /* max-width: 330px; */
+  padding: 0 20px;
+  white-space: pre-line;
+}
+.chat-window {
+  background-image: url("./chat-window.svg");
+  background-color: rgba(255, 255, 255, 0.45);
+  background-blend-mode: overlay;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.point {
+  height: 88vh;
+}
+.message-holder {
+  height: 80dvh;
+}
+.blank {
+  height: 78dvh;
+  width: 100%;
+}

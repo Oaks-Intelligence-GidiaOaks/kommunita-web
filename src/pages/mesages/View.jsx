@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import search from "../../assets/images/menu/search.svg";
-import { FaRegUser } from "react-icons/fa";
 import {
   useGetChatMessagesQuery,
   useSendMessageMutation,
@@ -17,6 +16,8 @@ import microphone from "../../assets/images/chat/microphone.svg";
 import rtkMutation from "../../utils/rtkMutation";
 import sound from "../../assets/sound.mp3";
 import { Spinner } from "flowbite-react";
+import "./style.css";
+import avatar from "../../assets/images/user.png";
 
 function View({ chat, currentUserId }) {
   const socket = useRef(null);
@@ -26,7 +27,12 @@ function View({ chat, currentUserId }) {
   const [messages, setMessages] = useState([]);
   const scroll = useRef();
   const audioRef = useRef(new Audio(sound));
-  const isSending = useRef(false);
+  const [isSending, setIsSending] = useState(false);
+
+  useEffect(() => {
+    console.log("Chat changed:", chat);
+    setIsSending(true);
+  }, [chat]);
 
   const { data: messageList, isLoading } =
     useGetChatMessagesQuery(conversationId);
@@ -34,6 +40,7 @@ function View({ chat, currentUserId }) {
   useEffect(() => {
     if (messageList) {
       setMessages(messageList.data || []);
+      setIsSending(false);
     }
   }, [messageList]);
 
@@ -77,6 +84,7 @@ function View({ chat, currentUserId }) {
     return () => {
       if (socket.current) {
         socket.current.disconnect();
+        socket.current.off("new_message");
       }
     };
   }, [user, conversationId, BASE_URL, currentUserId]);
@@ -93,9 +101,6 @@ function View({ chat, currentUserId }) {
   };
 
   const handleSend = async () => {
-    if (isSending.current) return; // Prevent multiple triggers
-    isSending.current = true; // Mark as sending
-
     const data = { message: newMessage, recipient: otherUserId };
     const msg = {
       ...data,
@@ -107,11 +112,8 @@ function View({ chat, currentUserId }) {
     try {
       await rtkMutation(sendMessage, data);
       socket.current.emit("new_message", msg);
-      setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
-    } finally {
-      isSending.current = false; // Reset sending status
     }
   };
 
@@ -166,7 +168,7 @@ function View({ chat, currentUserId }) {
 
   const messageContent = Object.entries(groupedMessages).map(
     ([date, messagesForDate]) => (
-      <div key={date}>
+      <div key={date} className="">
         <div className="message-timestamp flex justify-center py-5">
           {formatDate(parseISO(date), "MMMM dd, yyyy")}
         </div>
@@ -209,17 +211,9 @@ function View({ chat, currentUserId }) {
     )
   );
 
-  if (!chat) {
+  if (isLoading || isSending) {
     return (
-      <div className="flex justify-center mt-3">
-        Tap on a chat to start conversation...
-      </div>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center mt-3 flex-col">
+      <div className="flex justify-center items-center mt-10 flex-col">
         <Spinner />
         <p className="pt-2 text-sm">Loading messages...</p>
       </div>
@@ -228,24 +222,28 @@ function View({ chat, currentUserId }) {
 
   return (
     <>
-      <div className="w-full flex-grow overflow-y-auto">
-        <div className="flex flex-col px-2 gap-5 h-full overflow-y-auto">
-          <div className="flex items-center gap-2 justify-between p-4 w-full h-[70px] border-b-[1px]">
+      <div className="w-full overflow-y-auto blank">
+        <div className="flex flex-col px-2">
+          <div className="flex items-center gap-2 p-4 justify-between z-5 w-full h-[70px] border-b-[1px]">
             <div className="flex items-center gap-3">
               {chat.participants.find((user) => user._id === otherUserId)
                 ?.photo_url ? (
-                <div className="h-[35px] w-[35px] flex justify-center items-center">
+                <img
+                  className="h-[35px] w-[35px] rounded-full border object-cover"
+                  src={
+                    chat.participants.find((user) => user._id === otherUserId)
+                      ?.photo_url
+                  }
+                  alt=""
+                />
+              ) : (
+                <div className="h-[35px] w-[35px] flex justify-center items-center rounded-full border">
                   <img
                     className="rounded-lg object-cover"
-                    src={
-                      chat.participants.find((user) => user._id === otherUserId)
-                        ?.photo_url
-                    }
+                    src={avatar}
                     alt=""
                   />
                 </div>
-              ) : (
-                <FaRegUser size={23} />
               )}
               <p className="message-name">
                 {
@@ -292,10 +290,15 @@ function View({ chat, currentUserId }) {
               </div>
             </div>
           </div>
-          {messageContent}
+          {/* <div className=""> */}
+          <div className="overflow-y-auto">
+            <div className="">{messageContent}</div>
+          </div>
+          {/* </div> */}
         </div>
       </div>
-      <div className="bg-white h-auto flex items-center px-4 mt-5">
+
+      <div className="bg-white h-auto flex items-center px-4 mt-5 absolute bottom-0 left-0 w-full">
         <div className="flex w-full items-center gap-2 justify-evenly p-2 px-2">
           <img src={add} alt="add" className="cursor-pointer mt-1" />
           <InputEmoji
