@@ -1,4 +1,4 @@
-import new_logo from "../../assets/images/new-logo.svg";
+import new_logo from "../../assets/images/Group.png";
 import { Link } from "react-router-dom";
 import explore from "../../assets/images/menu/explore.svg";
 import diaries from "../../assets/images/menu/diaries.svg";
@@ -48,7 +48,7 @@ const Navbar = () => {
     <nav className="h-auto flex justify-between items-center p-4 w-full top-0 z-10">
       <div className="logo">
         <Link to={"/"}>
-          <img src={new_logo} alt="" />
+          <img src={new_logo} alt="" width="152" height="40" />
         </Link>
       </div>
       <div className="flex lg:space-x-10 ">
