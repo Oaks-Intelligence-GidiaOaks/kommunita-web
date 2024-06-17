@@ -182,12 +182,12 @@ function Post({
                     </button>
 
                     {/* EDIT POST */}
-                    <button
+                    {/* <button
                       onClick={() => setShowEditModal(true)}
                       className="flex justify-start border p-1 rounded-md hover:text-white hover:bg-red-600"
                     >
                       <CiEdit />
-                    </button>
+                    </button> */}
                   </div>{" "}
                 </div>
               )}
