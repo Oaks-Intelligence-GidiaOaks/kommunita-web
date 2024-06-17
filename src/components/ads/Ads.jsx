@@ -14,8 +14,8 @@ function Ads() {
   // Filter out surveys where the user ID already exists in the list of respondents
   const filteredSurveyFeeds = surveyFeeds?.filter((survey) => {
     // Check if any respondent has the same user ID
-    const isUserRespondent = survey.respondents.some(
-      (respondent) => respondent.respondent._id === user_id
+    const isUserRespondent = survey?.respondents?.some(
+      (respondent) => respondent?.respondent?._id === user_id
     );
     console.log(isUserRespondent, "check");
     // Return true if the user is not aisUserRespondent respondent to this survey

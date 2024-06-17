@@ -69,10 +69,10 @@ const ProtectedRoute = ({ component: Component }) => {
 
   if (external_token) {
     getNewUser();
-    // console.log("External token: ", external_token);
+    console.log("External token: ", external_token);
   } else if (authtoken) {
     isAuthenticated = authtoken !== null && authtoken !== undefined;
-    // console.log(authtoken);
+    console.log("authtoken: ", authtoken);
   }
 
   return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
