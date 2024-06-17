@@ -8,11 +8,13 @@ import { useDispatch } from "react-redux";
 import { showAlert } from "../../static/alert";
 import axios from "axios";
 import { handleLogout } from "../../static/logout";
+import { useState } from "react";
 
 const ProtectedRoute = ({ component: Component }) => {
   const [searchParams] = useSearchParams();
   const external_token = searchParams.get("token");
   const authtoken = useSelector((state) => state.user.token);
+  // const [carbonAdjustuser, setCarbonAdjustUser] = useState(null)
 
   const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -86,10 +88,13 @@ const ProtectedRoute = ({ component: Component }) => {
 
   // return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
   return (
-    <>
-      <Navigate to={LOGIN} />
-    </>
+    <>{external_token || authtoken ? <Component /> : <Navigate to={LOGIN} />}</>
   );
+  // return (
+  //   <>
+  //     <Navigate to={LOGIN} />
+  //   </>
+  // );
 };
 
 ProtectedRoute.propTypes = {
