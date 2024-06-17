@@ -45,7 +45,7 @@ const ProtectedRoute = ({ component: Component }) => {
       });
 
       console.log("User gotten successfully:", response.data);
-      dispatch(
+      await dispatch(
         updateUser({
           token: external_token,
           user: response?.data?.data,
@@ -56,6 +56,8 @@ const ProtectedRoute = ({ component: Component }) => {
       console.log("external_token is available");
 
       showAlert("Great!", "User retrieved successfully", "success");
+      return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
+      // return <>{isAuthenticated && <Component />}</>;
     } catch (error) {
       console.error("Error fetching user:", error);
       showAlert(
@@ -63,19 +65,31 @@ const ProtectedRoute = ({ component: Component }) => {
         error?.response?.data?.message || "An error occurred",
         "error"
       );
-      handleLogout(dispatch);
+      return (
+        <>
+          <Navigate to={LOGIN} />
+        </>
+      );
+      // handleLogout(dispatch);
     }
   };
 
   if (external_token) {
     getNewUser();
     console.log("External token: ", external_token);
-  } else if (authtoken) {
+  } else {
     isAuthenticated = authtoken !== null && authtoken !== undefined;
     console.log("authtoken: ", authtoken);
+    // return <>{isAuthenticated && <Component />}</>;
+    return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
   }
 
-  return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
+  // return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
+  return (
+    <>
+      <Navigate to={LOGIN} />
+    </>
+  );
 };
 
 ProtectedRoute.propTypes = {
