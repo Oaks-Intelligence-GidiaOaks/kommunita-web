@@ -19,8 +19,12 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { IoIosCloseCircle } from "react-icons/io";
 import { TbHttpDelete } from "react-icons/tb";
+import { CiEdit } from "react-icons/ci";
 import { useDeleteDiaryMutation } from "../../service/diary.service";
 import { useDeleteFeedMutation } from "../../service/feeds.service";
+import Modals from "../modals/Modal";
+// import EditPost from "./EditPost";
+import EditMyPost from "./EditMyPost";
 
 const Diary = ({ content }) => {
   const sanitizedContent = DOMPurify.sanitize(content);
@@ -81,6 +85,7 @@ function Post({
 }) {
   const [deleteFeeds] = useDeleteFeedMutation();
   const [deleteDiary] = useDeleteDiaryMutation();
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const removeFeed = async (id) => {
     // console.log(id);
@@ -175,6 +180,14 @@ function Post({
                     >
                       <TbHttpDelete />
                     </button>
+
+                    {/* EDIT POST */}
+                    {/* <button
+                      onClick={() => setShowEditModal(true)}
+                      className="flex justify-start border p-1 rounded-md hover:text-white hover:bg-red-600"
+                    >
+                      <CiEdit />
+                    </button> */}
                   </div>{" "}
                 </div>
               )}
@@ -232,6 +245,20 @@ function Post({
           <ShimmerSocialPost type="both" />
         )}
       </div>
+      {showEditModal && (
+        <Modals
+          title={"Edit post"}
+          openModal={showEditModal}
+          modalSize="2xl"
+          onClose={() => setShowEditModal(false)}
+        >
+          <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
+            <div className="post-media rounded-md w-full py-3">
+              <EditMyPost content={content} medias={media_urls} />
+            </div>
+          </div>
+        </Modals>
+      )}
     </div>
   );
 }
@@ -243,6 +270,7 @@ Post.propTypes = {
   verifiedUser: PropTypes.bool.isRequired,
   postTime: PropTypes.string.isRequired,
   content: PropTypes.string,
+  refetchFav: PropTypes.func,
   media_urls: PropTypes.arrayOf(
     PropTypes.shape({
       media_type: PropTypes.string.isRequired,

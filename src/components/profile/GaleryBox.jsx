@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Modals from "../modals/Modal";
-import MediaModal from "../main/MediaModal";
+// import MediaModal from "../main/MediaModal";
 
 const GaleryBox = ({ media }) => {
   // console.log(media);
