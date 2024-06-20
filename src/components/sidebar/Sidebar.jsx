@@ -9,7 +9,7 @@ function Sidebar() {
   const { pathname } = location;
   console.log(pathname);
   return (
-    <aside className="pb-10 w-[280px] p-4 h-full hidden md:block">
+    <aside className="mb-10 p-4 hidden md:block">
       <div className="main-sidebar-section">
         <Profile />
         <MenuItems />

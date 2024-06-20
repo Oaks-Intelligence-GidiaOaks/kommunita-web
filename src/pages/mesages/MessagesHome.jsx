@@ -3,20 +3,22 @@ import MessageCard from "./../../components/messages/MessageCard";
 import "./style.css";
 import View from "./View";
 import Header from "./Header";
-import Empty from "./Empty";
+// import Empty from "./Empty";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   useGetConversationsQuery,
   useReadMessageMutation,
 } from "../../service/message.service";
 import { Spinner } from "flowbite-react";
 import chat from "../../assets/images/chat.gif";
+import { io } from "socket.io-client";
 
 const MessagesHome = () => {
   const user = useSelector((state) => state.user?.user);
   const [currentChat, setCurrentChat] = useState(null);
   const [messageList, setMessageList] = useState([]);
+  const socket = useRef(null);
 
   const { data: chatList, isLoading } = useGetConversationsQuery();
   const list = chatList?.data;
@@ -33,9 +35,35 @@ const MessagesHome = () => {
     await readMessage(id);
   };
 
+  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
+
+  useEffect(() => {
+    const socketUrl = `${BASE_URL}?userId=${user._id}`;
+    socket.current = io(socketUrl);
+
+    socket.current.on("connect", () => {
+      console.log("Connected to the socket server");
+    });
+
+    socket.current.on("fetch_chat_messages", (newMessageData) => {
+      setMessageList((prevMessages) => [...prevMessages, newMessageData?.data]);
+    });
+
+    socket.current.on("error", (error) => {
+      console.error("Socket error:", error);
+    });
+
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+        socket.current.off("fetch_chat_messages");
+      }
+    };
+  }, [user, BASE_URL]);
+
   return (
     <MainLayout>
-      <div className="chat-container w-full h-full">
+      <div className="chat-container w-full">
         <div className="h-auto w-full flex pt-4 pr-4">
           <div className="bg-white w-full max-w-[380px] border-r flex flex-col point ">
             <Header />

@@ -62,8 +62,9 @@ function View({ chat, currentUserId }) {
 
     socket.current.on("new_message", (newMessageData) => {
       const { data } = newMessageData;
-      setMessages((prevMessages) => [...prevMessages, data]);
-      scroll.current?.scrollIntoView({ behavior: "smooth" });
+      console.log("socket data", data);
+      // setMessages((prevMessages) => [...prevMessages, data]);
+      // scroll.current?.scrollIntoView({ behavior: "smooth" });
 
       const senderID = data?.sender?._id;
       if (senderID !== currentUserId) {
@@ -127,6 +128,8 @@ function View({ chat, currentUserId }) {
 
   const groupMessagesByDate = (messages) => {
     return messages.reduce((groups, message) => {
+      console.log(" msg", message);
+
       const date = formatDate(parseISO(message.createdAt), "yyyy-MM-dd");
       if (!groups[date]) {
         groups[date] = [];

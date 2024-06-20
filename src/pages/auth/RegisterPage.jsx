@@ -19,10 +19,7 @@ import validate from "validate.js";
 import logo from "../../assets/images/new-logo.svg";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
-import {
-  useRegisterUserMutation,
-  useGetOrganizationQuery,
-} from "../../service/user.service";
+import { useRegisterUserMutation } from "../../service/user.service";
 import { LOGIN } from "../../routes/routes";
 
 const constraints = {

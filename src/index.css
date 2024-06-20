@@ -45,3 +45,31 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* styles.css */
+
+/* Hide the scrollbar by default */
+.custom-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  /* background-color: #eff2fc; */
+  border-radius: 10px;
+}
+
+/* Show scrollbar on hover */
+.custom-scrollbar:hover::-webkit-scrollbar {
+  width: 1px;
+  height: 1px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  /* background-color: #eff2fc; */
+  border-radius: 10px;
+}
