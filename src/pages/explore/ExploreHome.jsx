@@ -139,7 +139,7 @@ const ExploreHome = () => {
 
   return (
     <MainLayout showNav={false}>
-      <div className="flex flex-col w-full p-4">
+      <div className="flex flex-col w-full pt-4 pr-4">
         <div
           onClick={() => unSelectCategory()}
           className="flex gap-2 items-center cursor-pointer"
@@ -175,7 +175,7 @@ const ExploreHome = () => {
                   <div className="flex search-box">
                     <input
                       type="text"
-                      className="search-input w-full focus:outline-none focus:ring-0 "
+                      className="search-input w-[331px] focus:outline-none focus:ring-0 "
                       placeholder="Search"
                       value={filterString}
                       onChange={(e) => setFilterString(e.target.value)}
@@ -193,8 +193,12 @@ const ExploreHome = () => {
               {/* <div className="grid grid-cols-4 gap-5 items-center w-full mb-10"> */}
               {filteredCategory && (
                 <div className="flex flex-wrap lg:grid lg:grid-cols-4 gap-10 items-center w-full mb-10">
-                  {filteredCategory?.map((dt) => (
-                    <CategoryCard cat={dt} onclick={selectCategory} />
+                  {filteredCategory?.map((dt, index) => (
+                    <CategoryCard
+                      key={index}
+                      cat={dt}
+                      onclick={selectCategory}
+                    />
                   ))}
                 </div>
               )}

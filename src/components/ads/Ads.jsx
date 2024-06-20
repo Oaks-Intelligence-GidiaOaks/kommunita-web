@@ -25,7 +25,7 @@ function Ads() {
   // console.log(surveyFeeds, "survey");
 
   return (
-    <aside className="ads-container w-full max-w-[410px] p-4 h-full hidden lg:block">
+    <aside className="w-full p-4 h-full hidden lg:block">
       <div className="rounded-md">
         <div className="ads rounded-md">
           <ScrollAdds />

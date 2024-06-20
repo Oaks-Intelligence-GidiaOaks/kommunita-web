@@ -45,13 +45,13 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="h-auto flex justify-between items-center p-4 w-full top-0 z-10">
+    <nav className="fixed h-auto flex justify-between items-center p-4 w-full top-0 left-0 right-0 z-10 mb-10">
       <div className="logo">
         <Link to={"/"}>
           <img src={new_logo} alt="" width="152" height="40" />
         </Link>
       </div>
-      <div className="flex lg:space-x-10 ">
+      <div className="flex lg:space-x-10">
         <Link to="/">
           <div className="items flex flex-col justify-center items-center w-[70px]">
             <div
