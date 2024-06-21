@@ -58,7 +58,7 @@ const Diary = ({ content }) => {
   );
 };
 
-const EditMyPost = ({
+const EditMyDiary = ({
   content,
   medias,
   avatar,
@@ -144,7 +144,7 @@ const EditMyPost = ({
 
     try {
       const response = await axios.patch(
-        `${apiUrl}/user/post/${postId}`,
+        `${apiUrl}/user/diary/${postId}`,
         formData,
         {
           headers: {
@@ -154,14 +154,14 @@ const EditMyPost = ({
         }
       );
 
-      console.log("Post Updated successfully:", response.data);
+      console.log("Diary Updated successfully:", response.data);
       setSelectedPostMedia([]);
       setMessage("");
       setCategory("");
-      showAlert("Great!", "Post Updated successfully", "success");
+      showAlert("Great!", "Diary Updated successfully", "success");
       refetch();
     } catch (error) {
-      console.error("Error Updating post:", error);
+      console.error("Error Updating Diary:", error);
       showAlert(
         "Oops!",
         error?.response?.data?.message || "An error occurred",
@@ -299,9 +299,9 @@ const EditMyPost = ({
   );
 };
 
-export default EditMyPost;
+export default EditMyDiary;
 
-EditMyPost.propTypes = {
+EditMyDiary.propTypes = {
   content: PropTypes.string,
   medias: PropTypes.array,
   avatar: PropTypes.string,
