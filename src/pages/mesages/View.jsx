@@ -50,8 +50,8 @@ function View({ chat, currentUserId }) {
     }
   }, [messages]);
 
-  // const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
-  const BASE_URL = "https://bdf1-41-184-162-24.ngrok-free.app/";
+  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
+  // const BASE_URL = "https://bdf1-41-184-162-24.ngrok-free.app/";
 
   useEffect(() => {
     const socketUrl = `${BASE_URL}?userId=${user._id}`;
