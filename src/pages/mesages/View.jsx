@@ -50,7 +50,8 @@ function View({ chat, currentUserId }) {
     }
   }, [messages]);
 
-  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
+  // const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
+  const BASE_URL = "https://bdf1-41-184-162-24.ngrok-free.app/";
 
   useEffect(() => {
     const socketUrl = `${BASE_URL}?userId=${user._id}`;
@@ -63,8 +64,8 @@ function View({ chat, currentUserId }) {
     socket.current.on("new_message", (newMessageData) => {
       const { data } = newMessageData;
       console.log("socket data", data);
-      // setMessages((prevMessages) => [...prevMessages, data]);
-      // scroll.current?.scrollIntoView({ behavior: "smooth" });
+      setMessages((prevMessages) => [...prevMessages, data]);
+      scroll.current?.scrollIntoView({ behavior: "smooth" });
 
       const senderID = data?.sender?._id;
       if (senderID !== currentUserId) {
@@ -111,7 +112,7 @@ function View({ chat, currentUserId }) {
     };
 
     try {
-      await rtkMutation(sendMessage, data);
+      // await rtkMutation(sendMessage, data);
       socket.current.emit("new_message", msg);
     } catch (error) {
       console.error("Error sending message:", error);
