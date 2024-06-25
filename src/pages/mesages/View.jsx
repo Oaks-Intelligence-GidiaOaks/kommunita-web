@@ -1,9 +1,6 @@
 import PropTypes from "prop-types";
 import search from "../../assets/images/menu/search.svg";
-import {
-  useGetChatMessagesQuery,
-  useSendMessageMutation,
-} from "../../service/message.service";
+import { useGetChatMessagesQuery } from "../../service/message.service";
 import { format } from "timeago.js";
 import { useState, useEffect, useRef } from "react";
 import InputEmoji from "react-input-emoji";
@@ -13,7 +10,6 @@ import { format as formatDate, parseISO } from "date-fns";
 import like from "../../assets/images/chat/like.svg";
 import add from "../../assets/images/chat/add.svg";
 import microphone from "../../assets/images/chat/microphone.svg";
-import rtkMutation from "../../utils/rtkMutation";
 import sound from "../../assets/sound.mp3";
 import { Spinner } from "flowbite-react";
 import "./style.css";
@@ -28,6 +24,7 @@ function View({ chat, currentUserId }) {
   const scroll = useRef();
   const audioRef = useRef(new Audio(sound));
   const [isSending, setIsSending] = useState(false);
+  const [sendMessage, setSendMessage] = useState(false);
 
   useEffect(() => {
     console.log("Chat changed:", chat);
@@ -51,6 +48,7 @@ function View({ chat, currentUserId }) {
   }, [messages]);
 
   const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
+  // const BASE_URL = "https://bdf1-41-184-162-24.ngrok-free.app/";
 
   useEffect(() => {
     const socketUrl = `${BASE_URL}?userId=${user._id}`;
@@ -63,8 +61,8 @@ function View({ chat, currentUserId }) {
     socket.current.on("new_message", (newMessageData) => {
       const { data } = newMessageData;
       console.log("socket data", data);
-      // setMessages((prevMessages) => [...prevMessages, data]);
-      // scroll.current?.scrollIntoView({ behavior: "smooth" });
+      setMessages((prevMessages) => [...prevMessages, data]);
+      scroll.current?.scrollIntoView({ behavior: "smooth" });
 
       const senderID = data?.sender?._id;
       if (senderID !== currentUserId) {
@@ -94,37 +92,29 @@ function View({ chat, currentUserId }) {
     (user) => user?._id !== currentUserId
   )?._id;
 
-  const [sendMessage, { error, isSuccess, isLoading: sendloading }] =
-    useSendMessageMutation();
-
   const handleChange = (newMessage) => {
     setNewMessage(newMessage);
   };
 
-  const handleSend = async () => {
-    const data = { message: newMessage, recipient: otherUserId };
+  const handleSend = () => {
+    setSendMessage(true);
     const msg = {
-      ...data,
+      message: newMessage,
+      recipient: otherUserId,
       sender: currentUserId,
       organizationId: user?.current_organization || user?.organization_id[0],
       media: [],
     };
 
     try {
-      await rtkMutation(sendMessage, data);
       socket.current.emit("new_message", msg);
+      setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
+    } finally {
+      setSendMessage(false);
     }
   };
-
-  useEffect(() => {
-    if (isSuccess) {
-      setNewMessage("");
-    } else if (error) {
-      console.error(error.data.message);
-    }
-  }, [isSuccess, error]);
 
   const groupMessagesByDate = (messages) => {
     return messages.reduce((groups, message) => {
@@ -315,17 +305,17 @@ function View({ chat, currentUserId }) {
           {newMessage ? (
             <button
               className="p-2 border bg-[#34b53a] text-white rounded-md"
-              disabled={sendloading}
+              disabled={sendMessage || !newMessage}
               onClick={handleSend}
             >
-              {sendloading ? "Sending..." : "Send"}
+              {sendMessage ? "Sending..." : "Send"}
             </button>
-          ) : (
-            <div className="flex gap-4 items-center">
-              <img src={microphone} alt="microphone" />
-              <img src={like} alt="like" />
-            </div>
-          )}
+          ) : null
+          // <div className="flex gap-4 items-center">
+          //   <img src={microphone} alt="microphone" />
+          //   <img src={like} alt="like" />
+          // </div>
+          }
         </div>
       </div>
     </>
