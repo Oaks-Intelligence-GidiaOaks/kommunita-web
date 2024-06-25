@@ -4,6 +4,7 @@ import CustomCarousel from "./CustomCarousel";
 import left from "../../assets/carousel/left.svg";
 import right from "../../assets/carousel/right.svg";
 import catIcon from "../../assets/images/category.svg";
+import audience from "../../assets/images/audience.svg";
 import dotsactive from "../../assets/carousel/dotsactive.svg";
 import dotsinactive from "../../assets/carousel/dotsinactive.svg";
 import DOMPurify from "dompurify";
@@ -19,6 +20,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import { BeatLoader } from "react-spinners";
+import ReactQuill from "react-quill";
 
 const Diary = ({ content }) => {
   const sanitizedContent = DOMPurify.sanitize(content);
@@ -161,7 +163,7 @@ const EditMyDiary = ({
       showAlert("Great!", "Diary Updated successfully", "success");
       refetch();
     } catch (error) {
-      console.error("Error Updating Diary:", error);
+      console.error("Error Updating diary:", error);
       showAlert(
         "Oops!",
         error?.response?.data?.message || "An error occurred",
@@ -177,66 +179,16 @@ const EditMyDiary = ({
     <div>
       <form onSubmit={(e) => e.preventDefault()}>
         {/* <Diary content={message} /> */}
-        <div className="flex gap-3 items-start mb-3">
-          <Link to={`/profile/${userId}`}>
-            <div
-              className={`rounded-full border-4 w-[40px] h-[40px]`}
-              style={{ borderColor: badgeColor }}
-            >
-              <img
-                src={avatar}
-                className="rounded-full w-full h-full object-cover"
-                alt=""
-              />
-            </div>
-          </Link>
-          <div className="rounded-md py-2 flex justify-between make-post-input">
-            <textarea
-              className="make-post-input focus:outline-none focus:ring-0 w-full text-wrap h-auto border-0 rounded-md resize-none"
-              placeholder="Share your thoughts..."
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onInput={adjustTextareaHeight}
-            />
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="border mb-10 flex bg-[#EFF2FC] rounded-md">
-            <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
-              <IoMdPhotos className="text-[#34B53A]" size={20} />
-              <p className="make-post-input text-sm text-[#838383]">Photo</p>
-              <input
-                type="file"
-                onChange={handleSchedulePostMediaChange}
-                accept="image/*"
-                multiple
-                style={{ display: "none" }}
-              />
-            </label>
-          </div>
-          <div className="border mb-10 flex bg-[#EFF2FC] rounded-md">
-            <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
-              <IoVideocam className="text-red-600" size={20} />
-              <p className="make-post-input text-sm text-[#838383]">Video</p>
-              <input
-                type="file"
-                onChange={handleSchedulePostMediaChange}
-                accept="video/*"
-                multiple
-                style={{ display: "none" }}
-              />
-            </label>
-          </div>
-        </div>
-        {/* {imgPreview && (
-          <CustomCarousel
-            media_urls={imgPreview}
-            left={left}
-            right={right}
-            dotsinactive={dotsinactive}
-            dotsactive={dotsactive}
+
+        <div className="flex-1 w-full mb-5">
+          <ReactQuill
+            value={message}
+            onChange={setMessage}
+            theme="snow"
+            placeholder="Write something amazing..."
           />
-        )} */}
+        </div>
+
         {selectedPostMedia?.length > 0 ? (
           <div className="uploaded-items-container p-2 rounded-md max-h-[400px] overflow-y-auto flex flex-wrap mt-3">
             {[...selectedPostMedia].map((item, index) => (
@@ -258,41 +210,72 @@ const EditMyDiary = ({
           />
         )}
 
-        <div className="flex items-center justify-between mt-5">
+        <div className="mt-5 flex justify-between items-center">
+          <p className="font-[600] text-[16.74px] text-[#838383]">
+            Add to your post
+          </p>
+
+          <div className="flex items-center gap-2">
+            <div className="border mb-10 flex bg-[#EFF2FC] rounded-md">
+              <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
+                <IoMdPhotos className="text-[#34B53A]" size={20} />
+                <p className="make-post-input text-sm text-[#838383]">Photo</p>
+                <input
+                  type="file"
+                  onChange={handleSchedulePostMediaChange}
+                  accept="image/*"
+                  multiple
+                  style={{ display: "none" }}
+                />
+              </label>
+            </div>
+            <div className="border mb-10 flex bg-[#EFF2FC] rounded-md">
+              <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
+                <IoVideocam className="text-red-600" size={20} />
+                <p className="make-post-input text-sm text-[#838383]">Video</p>
+                <input
+                  type="file"
+                  onChange={handleSchedulePostMediaChange}
+                  accept="video/*"
+                  multiple
+                  style={{ display: "none" }}
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className=" mt-5">
+          <p className="text-[9.61px] font-[500]">Choose Audience</p>
           <div className="w-[169px] h-[33px] flex">
-            <img src={catIcon} width={24} alt="" />
+            <img src={audience} width={24} alt="" />
             <select
               value={category}
               onChange={handleCategoryChange}
               className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full px-2 make-post-input text-[#6B6B6B] text-[9.21px]"
             >
-              <option className="w-full" value="">
-                Select Category
+              <option className="w-full" value="public">
+                Public
               </option>
-              {Category?.data?.map((data, index) => (
+              <option className="w-full" value="private">
+                Private
+              </option>
+              {/* {Category?.data?.map((data, index) => (
                 <option value={data?.name} key={index}>
                   {data.name}
                 </option>
-              ))}
+              ))} */}
             </select>
           </div>
-          <div className="flex items-center gap-5">
-            <div onClick={handleSubmit}>
-              <button className="flex font-[600] items-center justify-center text-[11.14px] w-[121px] h-[33px] p-[10px] rounded-[3.48px] bg-[#34b53a] text-white">
-                {submitting ? (
-                  <BeatLoader color="#ffffff" loading={true} />
-                ) : (
-                  "Update Post"
-                )}
-              </button>
-            </div>
-            <div
-              onClick={onClose}
-              className="flex font-[600] cursor-pointer items-center justify-center text-[11.14px] w-[121px] h-[33px] p-[10px] rounded-[3.48px] text-[#34b53a] bg-white border border-[#34b53a]"
-            >
-              Cancel
-            </div>
-          </div>
+        </div>
+        <div className="w-full" onClick={handleSubmit}>
+          <button className="mt-5 flex font-[600] items-center justify-center text-[22.32px] w-full h-[54px] p-[10px] rounded-[3.48px] bg-[#34b53a] text-white">
+            {submitting ? (
+              <BeatLoader color="#ffffff" loading={true} />
+            ) : (
+              "Update Diary"
+            )}
+          </button>
         </div>
       </form>
     </div>

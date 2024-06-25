@@ -41,16 +41,18 @@ function PostButtons({
   const login_user = useSelector((state) => state.user?.user);
 
   const { data: userData, refetch: refetchUser } = useGetUserProfiileQuery();
-  console.log(userData.data);
+  // console.log(userData?.data);
 
   useEffect(() => {
-    const postBookmarked = userData.data?.favourites?.filter(
+    const postBookmarked = userData?.data?.favourites?.filter(
       (fid) => fid == id
     );
-    const diaryBookmarked = userData.data?.favourites_diary?.filter(
+    const diaryBookmarked = userData?.data?.favourites_diary?.filter(
       (fid) => fid == id
     );
-    setIsBookmarked(postBookmarked.length != 0 || diaryBookmarked.length != 0);
+    setIsBookmarked(
+      postBookmarked?.length != 0 || diaryBookmarked?.length != 0
+    );
     console.log(isBookmarked, "Bookmarked, ", id);
   }, [userData, id, isBookmarked, refetchUser]);
 

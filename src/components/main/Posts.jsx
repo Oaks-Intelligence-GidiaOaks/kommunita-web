@@ -25,6 +25,7 @@ import { useDeleteFeedMutation } from "../../service/feeds.service";
 import Modals from "../modals/Modal";
 // import EditPost from "./EditPost";
 import EditMyPost from "./EditMyPost";
+import EditMyDiary from "./EditMyDiary";
 
 const Diary = ({ content }) => {
   const sanitizedContent = DOMPurify.sanitize(content);
@@ -94,10 +95,10 @@ function Post({
   };
 
   const handleShowEditModal = () => {
-    if (type == "diary") {
-      setShowPopup(false);
-      return;
-    }
+    // if (type == "diary") {
+    //   setShowPopup(false);
+    //   return;
+    // }
     setShowEditModal(true);
     setShowPopup(false);
   };
@@ -252,7 +253,7 @@ function Post({
           <ShimmerSocialPost type="both" />
         )}
       </div>
-      {showEditModal && (
+      {showEditModal && type == "post" ? (
         <Modals
           title={"Edit post"}
           openModal={showEditModal}
@@ -262,6 +263,27 @@ function Post({
           <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
             <div className="post-media rounded-md w-full py-3">
               <EditMyPost
+                content={content}
+                medias={media_urls}
+                avatar={avatar}
+                userId={userId}
+                badgeColor={badgeColor}
+                onClose={() => setShowEditModal(false)}
+                postId={post_id}
+              />
+            </div>
+          </div>
+        </Modals>
+      ) : (
+        <Modals
+          title={"Edit Diary"}
+          openModal={showEditModal}
+          modalSize="2xl"
+          onClose={() => setShowEditModal(false)}
+        >
+          <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
+            <div className="post-media rounded-md w-full py-3">
+              <EditMyDiary
                 content={content}
                 medias={media_urls}
                 avatar={avatar}

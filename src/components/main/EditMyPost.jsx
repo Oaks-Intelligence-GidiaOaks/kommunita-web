@@ -177,7 +177,7 @@ const EditMyPost = ({
     <div>
       <form onSubmit={(e) => e.preventDefault()}>
         {/* <Diary content={message} /> */}
-        <div className="flex gap-3 items-start mb-3">
+        <div className="flex gap-3 items-start mb-3 w-full">
           <Link to={`/profile/${userId}`}>
             <div
               className={`rounded-full border-4 w-[40px] h-[40px]`}
@@ -190,7 +190,7 @@ const EditMyPost = ({
               />
             </div>
           </Link>
-          <div className="rounded-md py-2 flex justify-between make-post-input">
+          <div className=" w-full rounded-md py-2 flex justify-between make-post-input">
             <textarea
               className="make-post-input focus:outline-none focus:ring-0 w-full text-wrap h-auto border-0 rounded-md resize-none"
               placeholder="Share your thoughts..."
