@@ -1,0 +1,21 @@
+.sticky-div {
+    position: sticky;
+    top: 50px; /* Adjust this value to position your div where you want it to stick */
+    /* background-color: rgb(229, 231, 235); */
+    /* padding: 10px; */
+    /* border: 1px solid #cccccc; Example border */
+    /* z-index: 1000; Adjust z-index as needed */
+    width: 100%; /* Set width to make it full width if needed */
+  }
+  
+  .sticky {
+    position: fixed;
+    top: 0;
+    /* padding-top: 100px; */
+    /* margin-top: ; */
+    /* background-color: rgb(229, 231, 235); */
+    width: 100%; /* Set width to make it full width if needed */
+    z-index: 10; /* Adjust z-index as needed */
+    /* Additional styles as needed */
+  }
+  

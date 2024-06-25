@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // import { Link } from "react-router-dom";
 // import { data } from "../../components/explore/category";
 import search from "../../assets/images/menu/search.svg";
@@ -29,6 +29,8 @@ import {
 } from "../../service/explore.service";
 import { Spinner } from "flowbite-react";
 import getTimeAgoString from "../../utils/getTimeAgoString";
+import "./style.css";
+import StickyDiv from "./StickyDiv";
 
 const ExploreHome = () => {
   const { data: Category } = useGetCategoriesWithStatQuery();
@@ -116,33 +118,55 @@ const ExploreHome = () => {
   };
 
   // handle Search function
-  const handleSearch = async () => {
-    console.log(filterString);
-    // setSearching(true);
-    // // console.log(searchString);
-    // if (searchString) {
-    //   const postData = {
-    //     search_term: searchString,
-    //   };
-    //   try {
-    //     const res = await rtkMutation(searchGeneral, { ...postData });
-    //     console.log(res.data);
-    //     setSearchedData(res.data);
-    //     setOpenSearchModal(true);
-    //   } catch (error) {
-    //     console.error("Error making search: ", error);
-    //     showAlert("Oops", "An error occurred while searching content", "error");
-    //   }
-    // }
-    // setSearching(false);
-  };
+  // const handleSearch = async () => {
+  //   console.log(filterString);
+  //   // setSearching(true);
+  //   // // console.log(searchString);
+  //   // if (searchString) {
+  //   //   const postData = {
+  //   //     search_term: searchString,
+  //   //   };
+  //   //   try {
+  //   //     const res = await rtkMutation(searchGeneral, { ...postData });
+  //   //     console.log(res.data);
+  //   //     setSearchedData(res.data);
+  //   //     setOpenSearchModal(true);
+  //   //   } catch (error) {
+  //   //     console.error("Error making search: ", error);
+  //   //     showAlert("Oops", "An error occurred while searching content", "error");
+  //   //   }
+  //   // }
+  //   // setSearching(false);
+  // };
+
+  // handle sticky scrolling
+
+  const stickyRef = useRef(null);
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (stickyRef.current) {
+        const stickyPos =
+          stickyRef.current.getBoundingClientRect().top + window.scrollY;
+        setIsSticky(window.scrollY > stickyPos);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <MainLayout showNav={false}>
       <div className="flex flex-col w-full pt-4 pr-4">
         <div
           onClick={() => unSelectCategory()}
-          className="flex gap-2 items-center cursor-pointer"
+          className="fixed z-50 flex gap-2 items-center cursor-pointer"
         >
           {/* {selectedCategory && ( */}
           <svg
@@ -167,11 +191,11 @@ const ExploreHome = () => {
         <div className="mt-16">
           {!selectedCategory && (
             <div className="">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between ">
                 <p className="font-semibold mb-5 text-[#2d2b2b] text-[20px]">
                   Categories
                 </p>
-                <div className="search">
+                {/* <div className="search">
                   <div className="flex search-box">
                     <input
                       type="text"
@@ -188,7 +212,7 @@ const ExploreHome = () => {
                       )}
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
               {/* <div className="grid grid-cols-4 gap-5 items-center w-full mb-10"> */}
               {filteredCategory && (
@@ -204,8 +228,9 @@ const ExploreHome = () => {
               )}
             </div>
           )}
-          <div className="mt-7">
-            {/* NAVIGATION BAR */}
+        </div>
+        <StickyDiv>
+          <div className="bg-[#EFF2FC]">
             {/* <ExploreNav /> */}
             <div className="border-b-[3px] border-gray-200 dark:border-gray-700">
               <ul
@@ -275,7 +300,7 @@ const ExploreHome = () => {
               </ul>
             </div>
           </div>
-        </div>
+        </StickyDiv>
 
         {/* Main Page */}
         <div className="overflow-x-hidden">

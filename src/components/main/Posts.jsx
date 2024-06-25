@@ -25,6 +25,7 @@ import { useDeleteFeedMutation } from "../../service/feeds.service";
 import Modals from "../modals/Modal";
 // import EditPost from "./EditPost";
 import EditMyPost from "./EditMyPost";
+import EditMyDiary from "./EditMyDiary";
 
 const Diary = ({ content }) => {
   const sanitizedContent = DOMPurify.sanitize(content);
@@ -93,12 +94,21 @@ function Post({
     setShowPopup(false);
   };
 
+  const handleShowEditModal = () => {
+    // if (type == "diary") {
+    //   setShowPopup(false);
+    //   return;
+    // }
+    setShowEditModal(true);
+    setShowPopup(false);
+  };
+
   // const [allComment, setAllComment] = useState([]);
   const [addComment, setAddComment] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
   const handlePostActionClick = () => {
-    setShowPopup(true);
+    setShowPopup(!showPopup);
   };
 
   const onComment = () => {
@@ -125,7 +135,7 @@ function Post({
       <div className="pt-3 w-full">
         {content ? (
           <div className="post-card p-5 h-auto">
-            <div className="flex items-center justify-between">
+            <div className="relative flex items-center justify-between">
               <div className="flex gap-3 items-center">
                 <Link to={`/profile/${userId}`}>
                   <div
@@ -166,28 +176,26 @@ function Post({
               ) : null}
 
               {showPopup && (
-                <div className="popup border rounded-md p-2">
-                  <div className="flex flex-col gap-2">
+                <div className="absolute -right-4 top-[30px] z-50 popup rounded-md bg-[#ffffff] p-2">
+                  <div className="  w-[110px] h-[69px] bg-[#ffffff] rounded-[10px] p-2 flex items-center justify-center flex-col gap-2">
+                    {/* EDIT POST */}
+
                     <button
-                      onClick={() => setShowPopup(false)}
-                      className="flex justify-end"
+                      onClick={() => handleShowEditModal(true)}
+                      className={`${
+                        type == "diary" ? "disabled" : ""
+                      }flex w-[89px] h-[26px] px-[19px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#838383] justify-center items-center border rounded-md hover:text-black`}
                     >
-                      <IoIosCloseCircle />
-                    </button>
-                    <button
-                      onClick={() => removeFeed(post_id)}
-                      className="flex justify-start border p-1 rounded-md hover:text-white hover:bg-red-600"
-                    >
-                      <TbHttpDelete />
+                      {type == "diary" ? "Edit diary" : "Edit post"}
                     </button>
 
-                    {/* EDIT POST */}
-                    {/* <button
-                      onClick={() => setShowEditModal(true)}
-                      className="flex justify-start border p-1 rounded-md hover:text-white hover:bg-red-600"
+                    <button
+                      onClick={() => removeFeed(post_id)}
+                      className="flex w-[89px] h-[26px] px-[15px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#E71D36] justify-center items-center border rounded-md hover:text-white hover:bg-red-600"
                     >
-                      <CiEdit />
-                    </button> */}
+                      {/* <TbHttpDelete /> */}
+                      {type == "diary" ? "Delete diary" : "Delete post"}
+                    </button>
                   </div>{" "}
                 </div>
               )}
@@ -245,7 +253,7 @@ function Post({
           <ShimmerSocialPost type="both" />
         )}
       </div>
-      {showEditModal && (
+      {showEditModal && type == "post" ? (
         <Modals
           title={"Edit post"}
           openModal={showEditModal}
@@ -254,7 +262,36 @@ function Post({
         >
           <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
             <div className="post-media rounded-md w-full py-3">
-              <EditMyPost content={content} medias={media_urls} />
+              <EditMyPost
+                content={content}
+                medias={media_urls}
+                avatar={avatar}
+                userId={userId}
+                badgeColor={badgeColor}
+                onClose={() => setShowEditModal(false)}
+                postId={post_id}
+              />
+            </div>
+          </div>
+        </Modals>
+      ) : (
+        <Modals
+          title={"Edit Diary"}
+          openModal={showEditModal}
+          modalSize="2xl"
+          onClose={() => setShowEditModal(false)}
+        >
+          <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
+            <div className="post-media rounded-md w-full py-3">
+              <EditMyDiary
+                content={content}
+                medias={media_urls}
+                avatar={avatar}
+                userId={userId}
+                badgeColor={badgeColor}
+                onClose={() => setShowEditModal(false)}
+                postId={post_id}
+              />
             </div>
           </div>
         </Modals>

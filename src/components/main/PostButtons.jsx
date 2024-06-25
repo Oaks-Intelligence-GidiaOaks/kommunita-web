@@ -6,6 +6,7 @@ import message from "../../assets/images/main/message.svg";
 import retweet from "../../assets/images/main/retweet.svg";
 import reply from "../../assets/images/reply.png";
 import wishlist from "../../assets/images/main/wishlist.svg";
+import bookmark from "../../assets/images/main/bookmarked.svg";
 import axios from "axios";
 import { showAlert } from "../../static/alert";
 import { useSelector } from "react-redux";
@@ -18,6 +19,7 @@ import rtkMutation from "../../utils/rtkMutation";
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useLocation } from "react-router-dom";
+import { useGetUserProfiileQuery } from "../../service/user.service";
 
 function PostButtons({
   id,
@@ -34,7 +36,25 @@ function PostButtons({
   const { pathname } = location;
 
   const [isLoved, setIsLoved] = useState(false);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const login_user_id = useSelector((state) => state.user?.user?._id);
+  const login_user = useSelector((state) => state.user?.user);
+
+  const { data: userData, refetch: refetchUser } = useGetUserProfiileQuery();
+  // console.log(userData?.data);
+
+  useEffect(() => {
+    const postBookmarked = userData?.data?.favourites?.filter(
+      (fid) => fid == id
+    );
+    const diaryBookmarked = userData?.data?.favourites_diary?.filter(
+      (fid) => fid == id
+    );
+    setIsBookmarked(
+      postBookmarked?.length != 0 || diaryBookmarked?.length != 0
+    );
+    console.log(isBookmarked, "Bookmarked, ", id);
+  }, [userData, id, isBookmarked, refetchUser]);
 
   const [ref, inView] = useInView();
   const likes = reaction.like.length + reaction.love.length;
@@ -79,11 +99,19 @@ function PostButtons({
       const rr = await rtkMutation(bookMarkPost, dt);
       // console.log(rr);
       if (pathname == "/bookmarks") {
-        showAlert("Removed", "", "success");
+        showAlert("Removed Bookmarked", "", "success");
+        setIsBookmarked(false);
         refetchFav();
-      } else {
+      }
+      if (!isBookmarked && pathname != "/bookmarks") {
+        setIsBookmarked(true);
         showAlert("Bookmarked!!!", "", "success");
       }
+      if (isBookmarked && pathname != "/bookmarks") {
+        setIsBookmarked(false);
+        showAlert("Bookmarked Removed!!!", "", "success");
+      }
+      refetchUser();
     } catch (error) {
       console.error("Error bookmarking post:", error);
       showAlert("Oops", error.message, "error");
@@ -143,7 +171,7 @@ function PostButtons({
         whileHover={{ scale: 1.1 }}
         onClick={handleBookmark}
       >
-        <img src={wishlist} alt="" />
+        <img src={isBookmarked ? bookmark : wishlist} alt="" />
       </motion.button>
     </motion.div>
   );

@@ -7,7 +7,7 @@ import { updateUser } from "../../redux/slices/user.slice";
 import { useDispatch } from "react-redux";
 import { showAlert } from "../../static/alert";
 import axios from "axios";
-import { handleLogout } from "../../static/logout";
+// import { handleLogout } from "../../static/logout";
 
 const ProtectedRoute = ({ component: Component }) => {
   const [searchParams] = useSearchParams();
@@ -17,7 +17,7 @@ const ProtectedRoute = ({ component: Component }) => {
   const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
   const dispatch = useDispatch();
-  var isAuthenticated;
+  let isAuthenticated;
 
   // const dispatch = useDispatch();
 
@@ -45,30 +45,25 @@ const ProtectedRoute = ({ component: Component }) => {
       });
 
       console.log("User gotten successfully:", response.data);
-      await dispatch(
+      dispatch(
         updateUser({
           token: external_token,
           user: response?.data?.data,
         })
       );
 
-      isAuthenticated = external_token !== null && external_token !== undefined;
+      // isAuthenticated = external_token !== null && external_token !== undefined;
+      isAuthenticated = true;
       console.log("external_token is available");
 
-      showAlert("Great!", "User retrieved successfully", "success");
-      return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
-      // return <>{isAuthenticated && <Component />}</>;
+      console.log(isAuthenticated);
+      // showAlert("Great!", "User retrieved successfully", "success");
     } catch (error) {
       console.error("Error fetching user:", error);
       showAlert(
         "Oops!",
         error?.response?.data?.message || "An error occurred",
         "error"
-      );
-      return (
-        <>
-          <Navigate to={LOGIN} />
-        </>
       );
       // handleLogout(dispatch);
     }
@@ -79,17 +74,12 @@ const ProtectedRoute = ({ component: Component }) => {
     console.log("External token: ", external_token);
   } else {
     isAuthenticated = authtoken !== null && authtoken !== undefined;
-    console.log("authtoken: ", authtoken);
-    // return <>{isAuthenticated && <Component />}</>;
-    return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
+    // console.log("authtoken: ", authtoken);
   }
 
-  // return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
-  return (
-    <>
-      <Navigate to={LOGIN} />
-    </>
-  );
+  console.log(isAuthenticated);
+
+  return <>{isAuthenticated ? <Component /> : <Navigate to={LOGIN} />}</>;
 };
 
 ProtectedRoute.propTypes = {
