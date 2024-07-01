@@ -4,8 +4,8 @@ import SettingsLayout from "../../components/settings/SettingsLayout";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import "./style.css";
 import edit_line from "../../assets/images/edit_line.svg";
-import Resizer from "react-image-file-resizer";
-import UploadedItem from "../../components/main/UploadedItem";
+// import Resizer from "react-image-file-resizer";
+// import UploadedItem from "../../components/main/UploadedItem";
 import axios from "axios";
 import { showAlert } from "../../static/alert";
 import { useGetFeedsQuery } from "../../service/feeds.service";
@@ -34,7 +34,7 @@ const SettingsHome = () => {
 
   // State variables for form fields
   const [displayName, setDisplayName] = useState("");
-  // const [fullname, setFullname] = useState("");
+  const [username, setUsername] = useState("");
   // const [techtitle, setTechtitle] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -92,7 +92,7 @@ const SettingsHome = () => {
       setCountry(profile?.data.location.country || "");
       setEmail(profile?.data.email || "");
       setPhoneNumber(profile?.data.phone_number || "");
-      // setFullname(profile?.data.displayName || "");
+      setUsername(profile?.data.username || "");
       // setTechtitle(profile?.data.tech_title || "");
       // setLocation(
       //   profile?.data.location && Object.keys(profile?.data.location).length !== 0
@@ -428,7 +428,7 @@ const SettingsHome = () => {
                         Select Country
                       </option>
                       {countries.map((ct) => (
-                        <option>{ct.name}</option>
+                        <option key={ct}>{ct.name}</option>
                       ))}
                     </select>
                     {/* <input
@@ -449,21 +449,15 @@ const SettingsHome = () => {
                         Select State
                       </option>
                       {states?.map((st) => (
-                        <option>{st.name}</option>
+                        <option key={st}>{st.name}</option>
                       ))}
                     </select>
                   </div>
                 </div>
                 <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
-                  <div className="flex flex-col mb-5 lg:w-[50%] w-full ">
+                  <div className="flex flex-col mb-5 w-full ">
                     <label className="settings-label">Phone Number</label>
-                    {/* <input
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      className="settings-input outline-none"
-                      type="text"
-                      placeholder={"Please enter your phone number"}
-                    /> */}
+
                     <PhoneInput
                       className="settings-input outline-none phoneInput pl-2"
                       value={phoneNumber}
@@ -471,6 +465,17 @@ const SettingsHome = () => {
                       // country="US"
                       onChange={setPhoneNumber}
                       placeholder="Enter phone number"
+                    />
+                  </div>
+                  <div className="flex flex-col mb-5 w-full ">
+                    <label className="settings-label">Username</label>
+                    <input
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="settings-input outline-none"
+                      disabled
+                      type="text"
+                      placeholder={"Please enter your email"}
                     />
                   </div>
                 </div>
