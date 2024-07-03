@@ -86,3 +86,17 @@
   font-weight: 400;
   line-height: 16.94px;
 }
+.schedule-btn {
+  font-family: Inter;
+  font-size: 5.79px;
+  font-weight: 600;
+  line-height: 7.01px;
+  color: #838383;
+}
+.see-more-text {
+  font-family: Inter;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 12.1px;
+  color: #838383;
+}
