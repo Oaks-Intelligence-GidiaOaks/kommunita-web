@@ -7,6 +7,8 @@ import go_live_btn from "../../assets/images/main/go-live.svg";
 import diary from "../../assets/images/main/diary.svg";
 import polls from "../../assets/images/main/polls.svg";
 import schedule from "../../assets/images/main/schedule.svg";
+import scheduleActive from "../../assets/images/main/schedule-active.svg";
+
 import draft from "../../assets/images/main/draft.svg";
 import Date from "../../assets/images/modals/date.svg";
 import time from "../../assets/images/modals/time.svg";
@@ -39,6 +41,10 @@ import "./style.css";
 import { motion } from "framer-motion";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdAddAPhoto } from "react-icons/md";
+import { CiCalendarDate } from "react-icons/ci";
+import { SlNotebook } from "react-icons/sl";
+import { BiPoll } from "react-icons/bi";
+import { IoMdCopy } from "react-icons/io";
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
@@ -245,216 +251,203 @@ function MakePost() {
   return (
     <>
       <div>
-        <div className="w-full bg-white rounded-md border-b-0 border-0">
-          <div className="flex p-2 gap-4 justify-between items-center w-full py-5">
-            {isVisible ? (
-              <AiOutlineClose
-                className="cursor-pointer"
-                onClick={() => setIsVisible(false)}
-                size={23}
-              />
-            ) : (
-              <div>
-                <div className="flex items-center justify-center h-[40px] w-[40px] rounded-full border-4">
-                  <img
-                    src={photo}
-                    className="rounded-full w-full h-full object-cover"
-                    alt=""
-                  />
-                </div>
+        <div className="w-full bg-white rounded-md border-b-0 border-0 h-auto">
+          <div
+            className={`flex p-2 gap-4 justify-start ${
+              isVisible ? "items-start" : "items-center"
+            } w-full py-5`}
+          >
+            <div>
+              <div className="flex items-center justify-center h-[40px] w-[40px] rounded-full border-4">
+                <img
+                  src={photo}
+                  className="rounded-full w-full h-full object-cover"
+                  alt=""
+                />
               </div>
-            )}
+            </div>
 
-            {isVisible ? (
-              <label
-                onClick={toggleVisibility}
-                className="bg-white make-post-input"
-              >
-                Create Post
-              </label>
-            ) : (
-              <div className="w-full">
+            <div className="w-full">
+              {isVisible ? (
+                <textarea
+                  className="make-post-input focus:outline-none focus:ring-0 w-full text-wrap h-auto border-0 rounded-md p-2 resize-none"
+                  placeholder="Share your thoughts..."
+                  value={content}
+                  onChange={handleContentChange}
+                  onInput={adjustTextareaHeight}
+                />
+              ) : (
                 <label
                   onClick={toggleVisibility}
                   className="bg-white make-post-input  cursor-pointer"
                 >
-                  What's on your mind?
+                  Share your thoughts...
                 </label>
-              </div>
-            )}
+              )}
+            </div>
+          </div>
 
-            {isVisible ? (
-              <button
-                onClick={handleSubmit}
-                disabled={submitting || !content}
-                className={`${
-                  !content
-                    ? "bg-gray-200 text-gray-600"
-                    : "bg-[#2CC84A] text-white"
-                } w-[121px] h-[33px] rounded-sm`}
-              >
-                {submitting ? (
-                  <BeatLoader color="#ffffff" loading={true} />
-                ) : (
-                  "Post"
-                )}
-              </button>
-            ) : (
-              <>
-                <label className="shadow-md hover:shadow-lg cursor-pointer">
-                  {/* <img src={gallery} alt="" className="cursor-pointer" /> */}
-                  <MdAddAPhoto className="text-[#34B53A]" size={30} />
+          <div className="bg-white px-3">
+            <div className="rounded-md pb-3 flex justify-between make-post-input">
+              <div className="border flex w-[130px] rounded-md">
+                <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
+                  <MdAddAPhoto className="text-[#34B53A]" size={20} />
+                  <p className="make-post-input text-sm">Photo/Video</p>
                   <input
                     type="file"
-                    onChange={handlePostMediaChange}
+                    onChange={handleSchedulePostMediaChange}
                     accept="image/*,video/*"
                     multiple
                     style={{ display: "none" }}
                   />
                 </label>
-              </>
-            )}
-          </div>
-        </div>
+              </div>
 
-        {isVisible && (
-          <motion.div
-            className="h-auto makepost border-t-0 border-0"
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="post-box p-4 bg-white rounded-md">
-              <div className="post-content w-full">
-                <div className="flex flex-col p-4 bg-gray-50 rounded-lg shadow-md space-y-4">
-                  <div className="flex justify-end items-center space-x-4">
-                    <div className="bg-white rounded-md w-48 h-10">
+              {isVisible && <div className=""> {content.length}/500</div>}
+            </div>
+
+            {selectedPostMedia && (
+              <div className="uploaded-items-container p-2 rounded-md max-h-80 overflow-y-auto flex flex-wrap mt-3">
+                {[...selectedPostMedia].map((item, index) => (
+                  <UploadedItem
+                    key={index}
+                    item={item}
+                    onRemove={handleRemove}
+                    onItemSelect={handleItemSelect}
+                  />
+                ))}
+              </div>
+            )}
+
+            <div className="flex justify-end gap-3">
+              {isVisible && (
+                <>
+                  <div className="bg-[#fbf8f8] rounded-md w-35 h-10">
+                    <select
+                      value={category}
+                      onChange={handleCategoryChange}
+                      className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full px-2 make-post-input"
+                    >
+                      <option value="">Category</option>
+                      {Category?.data?.map((data, index) => (
+                        <option value={data?.name} key={index}>
+                          {data.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="bg-[#fbf8f8] rounded-md h-10 flex items-center px-3">
+                    <div className="flex items-center space-x-2 w-35">
+                      <div className="text-gray-600 ">
+                        {audience === "Public" ? (
+                          <BiGlobe size={20} />
+                        ) : audience === "Private" ? (
+                          <BiLock size={20} />
+                        ) : (
+                          <BiGroup size={20} />
+                        )}
+                      </div>
                       <select
-                        value={category}
-                        onChange={handleCategoryChange}
-                        className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full px-2 make-post-input"
+                        value={audience}
+                        onChange={handleAudienceChange}
+                        className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full make-post-input"
                       >
-                        <option value="">Category</option>
-                        {Category?.data?.map((data, index) => (
-                          <option value={data?.name} key={index}>
-                            {data.name}
-                          </option>
-                        ))}
+                        <option value="Public">Public</option>
+                        <option value="Private">Private</option>
+                        <option value="Followers">Followers</option>
                       </select>
                     </div>
-
-                    <div className="bg-white rounded-md h-10 flex items-center px-3">
-                      <div className="flex items-center space-x-2 w-48">
-                        <div className="text-gray-600 ">
-                          {audience === "Public" ? (
-                            <BiGlobe size={20} />
-                          ) : audience === "Private" ? (
-                            <BiLock size={20} />
-                          ) : (
-                            <BiGroup size={20} />
-                          )}
-                        </div>
-                        <select
-                          value={audience}
-                          onChange={handleAudienceChange}
-                          className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full make-post-input"
-                        >
-                          <option value="Public">Public</option>
-                          <option value="Private">Private</option>
-                          <option value="Followers">Followers</option>
-                        </select>
-                      </div>
-                    </div>
                   </div>
 
-                  <textarea
-                    className="make-post-input focus:outline-none focus:ring-0 w-full text-wrap h-auto border-0 rounded-md p-2 resize-none"
-                    placeholder="Share your thoughts..."
-                    value={content}
-                    onChange={handleContentChange}
-                    onInput={adjustTextareaHeight}
-                  />
-                  <div className="rounded-md py-2 flex justify-between make-post-input">
-                    <div className="border flex w-[130px] rounded-md">
-                      <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
-                        <MdAddAPhoto className="text-[#34B53A]" size={20} />
-                        <p className="make-post-input text-sm">Photo/Video</p>
-                        <input
-                          type="file"
-                          onChange={handleSchedulePostMediaChange}
-                          accept="image/*,video/*"
-                          multiple
-                          style={{ display: "none" }}
-                        />
-                      </label>
-                    </div>
+                  <button
+                    onClick={handleSubmit}
+                    disabled={submitting || !content}
+                    className={`${
+                      !content
+                        ? "bg-gray-200 text-gray-600"
+                        : "bg-[#2CC84A] text-white"
+                    } w-[121px] h-10 rounded-md`}
+                  >
+                    {submitting ? (
+                      <BeatLoader color="#ffffff" loading={true} />
+                    ) : (
+                      "Post"
+                    )}
+                  </button>
 
-                    <div className=""> {content.length}/500</div>
-                  </div>
-                </div>
-
-                {selectedPostMedia ? (
-                  <div className="uploaded-items-container p-2 rounded-md max-h-80 overflow-y-auto flex flex-wrap mt-3">
-                    {[...selectedPostMedia].map((item, index) => (
-                      <UploadedItem
-                        key={index}
-                        item={item}
-                        onRemove={handleRemove}
-                        onItemSelect={handleItemSelect}
-                      />
-                    ))}
-                  </div>
-                ) : null}
-
-                <div className="pb-5 pt-5">
-                  <div className="flex justify-center">
-                    <button className="mb-2" onClick={toggleCollapse}>
-                      {isExpanded ? (
-                        <div className="flex justify-center items-center">
-                          See less <BiChevronUp size={20} />
-                        </div>
-                      ) : (
-                        <div className="flex justify-center items-center">
-                          See more <BiChevronDown size={20} />
-                        </div>
-                      )}
-                    </button>
-                  </div>
-
-                  {isExpanded && (
-                    <div className="flex justify-center gap-5 items-center mt-2 mb-2">
-                      <button
-                        className="shadow-md hover:shadow-lg"
-                        onClick={() => setOpenScheduleModal(true)}
-                      >
-                        <img src={schedule} alt="" />
-                      </button>
-
-                      <button
-                        className="shadow-md hover:shadow-lg"
-                        onClick={() => setOpenDiaryModal(true)}
-                      >
-                        <img src={diary} alt="" />
-                      </button>
-
-                      <button className="shadow-md hover:shadow-lg">
-                        <img src={draft} alt="" />
-                      </button>
-
-                      <button
-                        className="shadow-md hover:shadow-lg"
-                        onClick={() => setOpenPoll(true)}
-                      >
-                        <img src={polls} alt="" />
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
+                  <button
+                    onClick={toggleVisibility}
+                    className="h-10 w-[121px] text-[#2CC84A] border border-[#2CC84A] bg-white rounded-md"
+                  >
+                    Cancel{" "}
+                  </button>
+                </>
+              )}
             </div>
-          </motion.div>
-        )}
+
+            <div className="pb-5 pt-5">
+              {!isVisible && (
+                <div className="flex justify-center">
+                  <button className="mb-2" onClick={toggleCollapse}>
+                    {isExpanded ? (
+                      <div className="flex justify-center items-center">
+                        <p className="see-more-text">See less</p>{" "}
+                        <BiChevronUp size={20} />
+                      </div>
+                    ) : (
+                      <div className="flex justify-center items-center ">
+                        <p className="see-more-text">See more</p>{" "}
+                        <BiChevronDown size={20} />
+                      </div>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {isExpanded && (
+            <div className="flex w-full justify-center h-[120px] rounded-[4px] gap-5 items-center mb-2 bg-[#EDFFF0]">
+              <button
+                className="hover:bg-[#2CC84A] hover:text-white w-[66.58px] h-[50.66px] flex flex-col justify-center items-center schedule-btn gap-2"
+                onClick={() => setOpenScheduleModal(true)}
+              >
+                {/* <img src={schedule} alt="" /> */}
+                <CiCalendarDate size={20} />
+
+                <p>Schedule Post</p>
+              </button>
+
+              <button
+                className="hover:bg-[#2CC84A] hover:text-white w-[66.58px] h-[50.66px] flex flex-col justify-center items-center schedule-btn gap-2"
+                onClick={() => setOpenDiaryModal(true)}
+              >
+                {/* <img src={diary} alt="" /> */}
+                <SlNotebook size={16} />
+
+                <p>Diary</p>
+              </button>
+
+              <button className="hover:bg-[#2CC84A] hover:text-white w-[66.58px] h-[50.66px] flex flex-col justify-center items-center schedule-btn gap-2">
+                {/* <img src={draft} alt="" /> */}
+                <IoMdCopy size={20} />
+                <p>Draft</p>
+              </button>
+
+              <button
+                className="hover:bg-[#2CC84A] hover:text-white w-[66.58px] h-[50.66px] flex flex-col justify-center items-center schedule-btn gap-2"
+                onClick={() => setOpenPoll(true)}
+              >
+                {/* <img src={polls} alt="" />
+                 */}
+                <BiPoll size={20} />
+
+                <p>Polls</p>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {viewModalOpen && selectedItem && (
