@@ -88,6 +88,9 @@ function Post({
   const [deleteDiary] = useDeleteDiaryMutation();
   const [showEditModal, setShowEditModal] = useState(false);
 
+  const user = useSelector((state) => state.user.user);
+  // console.log("User: ", user);
+
   const removeFeed = async (id) => {
     // console.log(id);
     type === "diary" ? await deleteDiary(id) : await deleteFeeds(id);
@@ -137,7 +140,7 @@ function Post({
           <div className="post-card p-5 h-auto">
             <div className="relative flex items-center justify-between">
               <div className="flex gap-3 items-center">
-                <Link to={`/profile/${userId}`}>
+                <Link to={`/profile/${userId || user._id}`}>
                   <div
                     className={`rounded-full border-4 w-[40px] h-[40px]`}
                     style={{ borderColor: badgeColor }}
@@ -151,7 +154,7 @@ function Post({
                 </Link>
                 <div>
                   <div className="flex gap-2 items-center">
-                    <Link to={`/profile/${userId}`}>
+                    <Link to={`/profile/${userId || user._id}`}>
                       <p className="post-name">{fullname}</p>{" "}
                       {verifiedUser && (
                         <span>

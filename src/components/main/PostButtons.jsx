@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useLocation } from "react-router-dom";
 import { useGetUserProfiileQuery } from "../../service/user.service";
+import { useRepostDiaryMutation } from "../../service/diary.service";
 
 function PostButtons({
   id,
@@ -53,7 +54,7 @@ function PostButtons({
     setIsBookmarked(
       postBookmarked?.length != 0 || diaryBookmarked?.length != 0
     );
-    console.log(isBookmarked, "Bookmarked, ", id);
+    // console.log(isBookmarked, "Bookmarked, ", id);
   }, [userData, id, isBookmarked, refetchUser]);
 
   const [ref, inView] = useInView();
@@ -67,6 +68,8 @@ function PostButtons({
   const [bookMarkPost, { error: bookmarkError, isSuccess: bookMarkSuccess }] =
     useFavoritePostMutation();
   const [repostPost, { error: err, isSuccess: scs }] = useRepostPostMutation();
+  const [repostDiary, { error: errDiary, isSuccess: scsDiary }] =
+    useRepostDiaryMutation();
 
   const handleLike = async () => {
     const postData = { post_id: id, reaction_type: "like" };
@@ -79,12 +82,31 @@ function PostButtons({
     }
   };
   const handleRespost = async () => {
-    const postData = { post_id: id };
-    try {
-      await rtkMutation(repostPost, postData);
-    } catch (error) {
-      console.error("Error liking post:", error);
-      showAlert("Oops", "An error occurred while liking the post", "error");
+    if (type.includes("pos")) {
+      const postData = { post_id: id };
+      try {
+        await rtkMutation(repostPost, postData);
+      } catch (error) {
+        console.error("Error reposting post:", error);
+        showAlert(
+          "Oops",
+          "An error occurred while reposting the post",
+          "error"
+        );
+      }
+    } else {
+      const diaryData = { diary_id: id };
+      console.log("Diary repost");
+      try {
+        await rtkMutation(repostDiary, diaryData);
+      } catch (error) {
+        console.error("Error reposting diary:", error);
+        showAlert(
+          "Oops",
+          "An error occurred while reposting the diary",
+          "error"
+        );
+      }
     }
   };
 
