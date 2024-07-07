@@ -39,7 +39,48 @@ function Main() {
         [...posts]
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .map((post, index) =>
-            post.user_id ? (
+            post.shared_by ? (
+              <Posts
+                key={index}
+                fullname={
+                  post?.post_id?.user_id.display_name ||
+                  post?.diary_id?.user_id.display_name
+                }
+                username={
+                  post?.post_id?.user_id.username ||
+                  post?.diary_id?.user_id.username
+                }
+                verifiedUser={false} // Adjust based on your data
+                postTime={getTimeAgoString(post?.createdAt || post?.createdAt)}
+                content={post?.post_id?.content || post?.diary_id?.content}
+                media_urls={
+                  post?.post_id?.media_urls || post?.diary_id?.media_urls
+                }
+                post_id={post?.post_id?._id || post?.diary_id?._id}
+                comment={post?.post_id?.comment || post?.diary_id?.comment}
+                repost={post?.post_id?.repost || post?.diary_id?.repost}
+                share={post?.post_id?.share || post?.diary_id?.share}
+                reaction={post?.post_id?.reaction || post?.diary_id?.reaction}
+                avatar={
+                  post?.post_id?.user_id.photo_url ||
+                  post?.diary_id?.user_id.photo_url ||
+                  avatar4
+                }
+                badgeColor={
+                  post?.post_id?.user_id?.department[0]?.badge?.color ||
+                  post?.diary_id?.user_id?.department[0]?.badge?.color
+                }
+                department={
+                  post?.post_id?.user_id?.department[0]?.badge?.department ||
+                  post?.diary_id?.user_id?.department[0]?.badge?.department
+                }
+                userId={
+                  post?.post_id?.user_id?._id || post?.diary_id?.user_id?._id
+                }
+                type={post?.post_id?.type || post?.diary_id?.type}
+                // user_id={post?.post_id?.user_id?._id}
+              />
+            ) : post.user_id ? (
               <Posts
                 key={index}
                 fullname={post.user_id.display_name}

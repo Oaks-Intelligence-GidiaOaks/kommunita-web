@@ -89,7 +89,7 @@ const ProfileHero = () => {
     } else {
       setProfile(data);
     }
-  }, [user_id, following]);
+  }, [user_id, following, data]);
 
   const GetOtherUser = async () => {
     try {
@@ -109,7 +109,7 @@ const ProfileHero = () => {
   //   return;
   // }
 
-  console.log(user_id, "me", profile);
+  // console.log(user_id, "me", profile);
 
   const handleChange = (newMessage) => {
     setNewMessage(newMessage);

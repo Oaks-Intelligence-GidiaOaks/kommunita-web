@@ -25,6 +25,7 @@ import CustomCarousel from "./../main/CustomCarousel";
 import { useGetOtherUserProfileMutation } from "../../service/user.service";
 import { showAlert } from "../../static/alert";
 import { Link } from "react-router-dom";
+import DOMPurify from "dompurify";
 
 function SearchPost({
   post,
@@ -144,11 +145,11 @@ function SearchPost({
                   </p>
                 </div>
               </div>
-              <button>
+              {/* <button>
                 <img src={post_action} alt="" />
-              </button>
+              </button> */}
             </div>
-            <div className="post-content pt-3 pb-2 w-[431.99px] h-auto">
+            {/* <div className="post-content pt-3 pb-2 w-[431.99px] h-auto">
               {content && (
                 <p className="text-justify flex flex-row flex-wrap">
                   {content.length > 177
@@ -156,8 +157,8 @@ function SearchPost({
                     : content}
                 </p>
               )}
-            </div>
-            {content && content.length > 177 && (
+            </div> */}
+            {/* {content && content.length > 177 && (
               <div className="flex justify-end items-center py-3">
                 <p
                   className="text-sm cursor-pointer hover:text-blue-600 text-gray-400"
@@ -166,7 +167,9 @@ function SearchPost({
                   see more
                 </p>
               </div>
-            )}
+            )} */}
+
+            <Diary content={content} />
 
             <div className="post-media rounded-md w-full py-3">
               <CustomCarousel
@@ -305,5 +308,43 @@ function SearchPost({
     </div>
   );
 }
+
+const Diary = ({ content }) => {
+  const sanitizedContent = DOMPurify.sanitize(content);
+  const maxLength = 177;
+
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
+
+  const toggleContent = () => {
+    setIsContentExpanded(!isContentExpanded);
+  };
+
+  return (
+    <div className="pt-3 pb-2 w-full h-auto overflow-hidden">
+      {sanitizedContent && (
+        <div
+          className="post-content text-justify flex flex-row flex-wrap"
+          dangerouslySetInnerHTML={{
+            __html: isContentExpanded
+              ? sanitizedContent
+              : sanitizedContent.length > maxLength
+              ? sanitizedContent.slice(0, maxLength) + "..."
+              : sanitizedContent,
+          }}
+        />
+      )}
+      {sanitizedContent.length > maxLength && (
+        <div className="flex justify-end items-center py-3">
+          <p
+            className="text-sm cursor-pointer hover:text-blue-600 text-gray-400"
+            onClick={toggleContent}
+          >
+            {isContentExpanded ? "see less" : "see more"}
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default SearchPost;

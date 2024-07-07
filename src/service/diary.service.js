@@ -21,6 +21,15 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Feeds"],
     }),
 
+    repostDiary: builder.mutation({
+      query: (diaryData) => ({
+        url: "/user/diary/repost",
+        method: "POST",
+        body: diaryData,
+      }),
+      invalidatesTags: ["Feeds"],
+    }),
+
     diaryComment: builder.mutation({
       query: ({ content, id, reply }) => {
         const url = reply ? `/user/reply` : `/user/comment/diary`;
@@ -58,5 +67,6 @@ export const {
   useCreateDiaryMutation,
   useDiaryCommentMutation,
   useDeleteDiaryMutation,
+  useRepostDiaryMutation,
   useGetOtherUserDiariesMutation,
 } = organizationApiSlice;

@@ -32,6 +32,7 @@ import Modals from "../../components/modals/Modal";
 
 const ProfileHome = () => {
   const { data } = useGetPostQuery();
+  // console.log(data);
   const { data: diaryData } = useGetDiaryQuery();
   const { data: mediaData } = useGetMediaQuery();
   const { data: likedData } = useGetLikedPostQuery();
@@ -78,16 +79,40 @@ const ProfileHome = () => {
       console.log(id, "me");
       GetOtherUser();
     } else {
-      console.log(diaryData);
+      // console.log(diaryData);
       setPost(data?.data);
       setDiary(diaryData?.data);
       setMedias(mediaData?.data);
       setLiked(likedData?.data);
       // setProfile(data);
     }
-    setSidePost(data?.data?.filter((fd) => fd.comment.length == 0));
-    setSideDiary(diaryData?.data?.filter((fd) => fd.comment.length == 0));
-  }, [id]);
+    data?.data?.map((dt) => {
+      // console.log("data: ", dt);
+      if (dt.shared_by) {
+        if (dt.post_id.comment.length == 0) {
+          setSidePost(dt.post_id);
+          // setSideDiary(dt.post_id);
+        }
+      } else {
+        setSidePost(dt);
+        // setSideDiary(dt);
+      }
+    });
+    diaryData?.data?.map((dt) => {
+      // console.log("data: ", dt);
+      if (dt.shared_by) {
+        if (dt.diary_id.comment.length == 0) {
+          // setSidePost(dt.diary_id);
+          setSideDiary(dt.diary_id);
+        }
+      } else {
+        // setSidePost(dt);
+        setSideDiary(dt);
+      }
+    });
+    // setSidePost(data?.data?.filter((fd) => fd.comment.length == 0));
+    // setSideDiary(diaryData?.data?.filter((fd) => fd.comment.length == 0));
+  }, [id, data, diaryData]);
 
   // const posts =  || [];
 
@@ -120,7 +145,7 @@ const ProfileHome = () => {
   //   setShowMediaModal(true);
   // }
 
-  console.log("profile: ", post);
+  // console.log("profile: ", post);
   // console.log("logs:", diaryData?.data);
 
   const handleChatUser = (user) => {
@@ -228,7 +253,32 @@ const ProfileHome = () => {
                     dept = post.user_id?.department[0]?.badge?.department;
                   }
 
-                  return (
+                  return post.shared_by ? (
+                    <Posts
+                      key={index}
+                      fullname={post?.post_id?.user_id.display_name}
+                      username={post?.post_id?.user_id.username}
+                      verifiedUser={false} // Adjust based on your data
+                      postTime={getTimeAgoString(post?.post_id?.createdAt)}
+                      content={post?.post_id?.content}
+                      media_urls={post?.post_id?.media_urls}
+                      post_id={post?.post_id?._id}
+                      comment={post?.post_id?.comment}
+                      repost={post?.post_id?.repost}
+                      share={post?.post_id?.share}
+                      reaction={post?.post_id?.reaction}
+                      avatar={post?.post_id?.user_id.photo_url || avatar1}
+                      badgeColor={
+                        post?.post_id?.user_id?.department[0]?.badge?.color
+                      }
+                      department={
+                        post?.post_id?.user_id?.department[0]?.badge?.department
+                      }
+                      userId={post?.post_id?.user_id?._id}
+                      type={post?.post_id?.type}
+                      // user_id={post?.post_id?.user_id?._id}
+                    />
+                  ) : (
                     post.user_id && (
                       <Posts
                         key={index}
@@ -279,6 +329,23 @@ const ProfileHome = () => {
 
               {sideDiary && (
                 <Posts
+                  fullname={sideDiary.user_id.display_name}
+                  username={sideDiary.user_id.username}
+                  verifiedUser={false} // You need to adjust this based on your data
+                  postTime={getTimeAgoString(sideDiary.createdAt)} // Assuming createdAt is the post time
+                  // postTime={moment(sideDiary.createdAt).fromNow()} // Assuming createdAt is the post time
+                  content={sideDiary.content}
+                  media_urls={sideDiary.media_urls}
+                  post_id={sideDiary._id}
+                  comment={sideDiary.comment}
+                  repost={sideDiary.repost}
+                  share={sideDiary.share}
+                  reaction={sideDiary.reaction}
+                  avatar={avatar1} // You need to provide the avatar source
+                />
+              )}
+              {/* {sideDiary && (
+                <Posts
                   fullname={sideDiary[0].user_id.display_name}
                   username={sideDiary[0].user_id.username}
                   verifiedUser={false} // You need to adjust this based on your data
@@ -293,7 +360,7 @@ const ProfileHome = () => {
                   reaction={sideDiary[0].reaction}
                   avatar={avatar1} // You need to provide the avatar source
                 />
-              )}
+              )} */}
 
               <div className="">
                 <Link
@@ -361,18 +428,18 @@ const ProfileHome = () => {
               <p className="mb-1 mt-2">Trending Diary Posts</p>
               {sideDiary && (
                 <Posts
-                  fullname={sideDiary[0].user_id.display_name}
-                  username={sideDiary[0].user_id.username}
+                  fullname={sideDiary?.user_id.display_name}
+                  username={sideDiary?.user_id.username}
                   verifiedUser={false} // You need to adjust this based on your data
-                  postTime={getTimeAgoString(sideDiary[0].createdAt)} // Assuming createdAt is the post time
-                  // postTime={moment(sideDiary[0].createdAt).fromNow()} // Assuming createdAt is the post time
-                  content={sideDiary[0].content}
-                  media_urls={sideDiary[0].media_urls}
-                  post_id={sideDiary[0]._id}
-                  comment={sideDiary[0].comment}
-                  repost={sideDiary[0].repost}
-                  share={sideDiary[0].share}
-                  reaction={sideDiary[0].reaction}
+                  postTime={getTimeAgoString(sideDiary?.createdAt)} // Assuming createdAt is the post time
+                  // postTime={moment(sideDiary?.createdAt).fromNow()} // Assuming createdAt is the post time
+                  content={sideDiary?.content}
+                  media_urls={sideDiary?.media_urls}
+                  post_id={sideDiary?._id}
+                  comment={sideDiary?.comment}
+                  repost={sideDiary?.repost}
+                  share={sideDiary?.share}
+                  reaction={sideDiary?.reaction}
                   avatar={avatar1} // You need to provide the avatar source
                 />
               )}

@@ -125,7 +125,28 @@ const GeneralSearch = ({ data }) => {
           aria-labelledby="diaries-tab"
         >
           {data.diaries.length > 0 ? (
-            <div className="pt-5 px-10 pb-20">diaries</div>
+            <div className="pt-5 px-10 pb-20">
+              {[...data.diaries]
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .map((post, index) => (
+                  <SearchPost
+                    key={index}
+                    post={post}
+                    fullname={post.display_name}
+                    username={post.username}
+                    verifiedUser={false} // Adjust based on your data
+                    postTime={getTimeAgoString(post.createdAt)}
+                    content={post.content}
+                    media_urls={post.media_urls}
+                    post_id={post._id}
+                    comment={post.comment}
+                    repost={post.repost}
+                    share={post.share}
+                    reaction={post.reaction}
+                    avatar={post.photo_url || avatar4}
+                  />
+                ))}
+            </div>
           ) : (
             <p>No diaries found</p>
           )}
