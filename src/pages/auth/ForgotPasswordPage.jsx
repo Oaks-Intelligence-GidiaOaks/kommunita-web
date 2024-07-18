@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import BgGroup from "../../assets/images/BgGroup.svg";
@@ -8,10 +8,11 @@ import { motion } from "framer-motion";
 import { InputField } from "../../components/auth-form";
 import { Form } from "react-final-form";
 import validate from "validate.js";
-import { LOGIN, RESET_PASSWORD } from "../../routes/routes";
+import { LOGIN } from "../../routes/routes";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
 import { useGetCodeMutation } from "../../service/user.service";
+import ResetPasswordPage from "./ResetPasswordPage";
 
 const constraints = {
   email: {
@@ -26,10 +27,12 @@ const ForgotPasswordPage = () => {
   });
 
   const navigate = useNavigate();
+  const [email, setEmail] = useState();
 
   const onSubmit = async (values) => {
     console.log(values);
     await rtkMutation(Forgot, values);
+    setEmail(values.email);
   };
 
   const validateForm = (values) => {
@@ -43,11 +46,14 @@ const ForgotPasswordPage = () => {
         "Check your email for your password reset code",
         "success"
       );
-      navigate(RESET_PASSWORD);
     } else if (error) {
       showAlert("Oops", error.data.message || "An error occurred", "error");
     }
   }, [isSuccess, error, navigate]);
+
+  if (isSuccess) {
+    return <ResetPasswordPage email={email} />;
+  }
 
   return (
     <div className="flex lg:h-screen bg-[#001900]  flex-col lg:flex-row ">

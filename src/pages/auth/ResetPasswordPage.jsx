@@ -10,7 +10,10 @@ import validate from "validate.js";
 import { LOGIN, FORGOT_PASSWORD } from "../../routes/routes";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
-import { useUpdatePasswordMutation } from "../../service/user.service";
+import {
+  useUpdatePasswordMutation,
+  useGetCodeMutation,
+} from "../../service/user.service";
 import { TbPasswordFingerprint } from "react-icons/tb";
 
 const constraints = {
@@ -25,8 +28,18 @@ const constraints = {
   },
 };
 
-const ResetPasswordPage = () => {
+const ResetPasswordPage = ({ email }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!email) {
+      navigate(FORGOT_PASSWORD);
+    }
+  }, [email, navigate]);
+
   const [eyeState, setEyeState] = useState(false);
+  const [timer, setTimer] = useState(60);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
   const toggleEye = (e) => {
     e.preventDefault();
@@ -36,8 +49,6 @@ const ResetPasswordPage = () => {
   const [Reset, { error, isSuccess }] = useUpdatePasswordMutation({
     provideTag: ["User"],
   });
-
-  const navigate = useNavigate();
 
   const onSubmit = async (values) => {
     console.log(values);
@@ -53,10 +64,39 @@ const ResetPasswordPage = () => {
       showAlert("Password changed Successfully!", "Pls Login", "success");
       navigate(LOGIN);
     } else if (error) {
-      // console.log(error.message);
       showAlert("Oops", "Invalid Otp or Otp expired", "error");
     }
   }, [isSuccess, error, navigate]);
+
+  const [Forgot, { error: otpError, isSuccess: otpSuccess, isLoading }] =
+    useGetCodeMutation({
+      provideTag: ["User"],
+    });
+
+  const resendOtp = async () => {
+    await rtkMutation(Forgot, { email });
+    setTimer(60);
+    setIsButtonDisabled(true);
+  };
+
+  useEffect(() => {
+    if (otpSuccess) {
+      showAlert("", "Otp has been resent", "success");
+    } else if (otpError) {
+      showAlert("Oops", otpError.data.message || "An error occurred", "error");
+    }
+  }, [otpSuccess, otpError]);
+
+  useEffect(() => {
+    if (timer > 0) {
+      const intervalId = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+      return () => clearInterval(intervalId);
+    } else {
+      setIsButtonDisabled(false);
+    }
+  }, [timer]);
 
   return (
     <div className="flex lg:h-screen bg-[#001900]  flex-col lg:flex-row ">
@@ -100,51 +140,43 @@ const ResetPasswordPage = () => {
               validate={validateForm}
               render={({ handleSubmit, form, submitting }) => (
                 <form onSubmit={handleSubmit}>
-                  <PasswordField
-                    name="newPassword"
-                    id="newPassword"
-                    component="input"
-                    eyeState={eyeState}
-                    toggleEye={toggleEye}
-                    label="New Password"
-                    placeholder=" "
-                  />
-                  {form.getState().submitFailed &&
-                    form.getState().errors.newPassword && (
-                      <small className="text-red-600">
-                        {form.getState().errors.newPassword}
-                      </small>
-                    )}
-
-                  <PasswordField
-                    name="confirmPassword"
-                    id="confirmPassword"
-                    component="input"
-                    eyeState={eyeState}
-                    toggleEye={toggleEye}
-                    label="Confirm Password"
-                    placeholder=" "
-                  />
-                  {form.getState().submitFailed &&
-                    form.getState().errors.confirmPassword && (
-                      <small className="text-red-600">
-                        {form.getState().errors.confirmPassword}
-                      </small>
-                    )}
-
                   <InputField
                     id="code"
                     type="text"
                     name="code"
-                    label="Enter Code"
+                    label="Enter OTP"
+                    component="input"
+                    placeholder=" "
+                  />
+
+                  <PasswordField
+                    id="newPassword"
+                    name="newPassword"
+                    label="New Password"
                     component="input"
                     icon={TbPasswordFingerprint}
                     placeholder=" "
+                    toggleEye={toggleEye}
+                    eyeState={eyeState}
                   />
+
+                  <PasswordField
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    component="input"
+                    icon={TbPasswordFingerprint}
+                    placeholder=" "
+                    toggleEye={toggleEye}
+                    eyeState={eyeState}
+                  />
+
                   {form.getState().submitFailed &&
-                    form.getState().errors.code && (
+                    (form.getState().errors.code ||
+                      form.getState().errors.newPassword ||
+                      form.getState().errors.confirmPassword) && (
                       <small className="text-red-600">
-                        {form.getState().errors.code}
+                        Please fill all the fields correctly
                       </small>
                     )}
 
@@ -161,12 +193,24 @@ const ResetPasswordPage = () => {
                         </span>
                       </>
                     ) : (
-                      "Change Password"
+                      "Reset Password"
                     )}
                   </button>
                 </form>
               )}
             />
+
+            <button
+              className={`w-full mt-4 font-Montserrat font-bold py-2 px-8 mb-4 rounded-full bg-primary-dark-green text-white hover:opacity-85 ${
+                isButtonDisabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={resendOtp}
+              disabled={isButtonDisabled}
+            >
+              {isLoading
+                ? "Sending..."
+                : `Resend OTP ${isButtonDisabled ? `(${timer}s)` : ""}`}
+            </button>
           </div>
 
           <div className="mt-4 grid grid-cols-3 lg:gap-3 items-center w-full">
@@ -177,17 +221,11 @@ const ResetPasswordPage = () => {
             <hr className="outline-gray-500" />
           </div>
 
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-center mt-4">
             <button className="font-Inter font-medium text-base text-primary-gray flex gap-4">
               Go back to Login
               <Link to={LOGIN} className=" text-primary-red">
                 Sign In
-              </Link>
-            </button>
-
-            <button className="font-Inter font-medium flex gap-4 border p-3 bg-primary-dark-green text-white text-sm rounded-full">
-              <Link to={FORGOT_PASSWORD} className="">
-                Request code
               </Link>
             </button>
           </div>
