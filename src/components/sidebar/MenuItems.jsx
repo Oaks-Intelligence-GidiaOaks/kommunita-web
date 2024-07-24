@@ -12,6 +12,12 @@ import settings from "../../assets/images/sidebar/settings.svg";
 import logout from "../../assets/images/sidebar/logout.svg";
 import logo from "../../assets/images/sidebar/oaks-logo.svg";
 import small_logo from "../../assets/images/sidebar/small-logo.svg";
+import { RiHome5Line } from "react-icons/ri";
+import { GoStar } from "react-icons/go";
+import { CgPoll } from "react-icons/cg";
+import { RiSurveyLine } from "react-icons/ri";
+import { CiMail } from "react-icons/ci";
+
 
 // active icons
 import homeActive from "../../assets/images/sidebar/homeActive.svg";
@@ -26,6 +32,7 @@ import liveActive from "../../assets/images/sidebar/liveActive.svg";
 import { handleLogout } from "../../static/logout";
 import { useDispatch } from "react-redux";
 import { useGetUserProfiileQuery } from "../../service/user.service";
+import { backToOak } from "../../assets/images";
 
 function MenuItems() {
   const { data: profile } = useGetUserProfiileQuery();
@@ -34,57 +41,47 @@ function MenuItems() {
 
   const links = useMemo(
     () => [
-      { id: 1, icon: home, activeIcon: homeActive, text: "Home", to: "/" },
+      { id: 1, 
+        icon: <RiHome5Line/>, 
+        activeIcon: homeActive, 
+        text: "Home", 
+        to: "/",
+      },
       {
         id: 2,
-        icon: notifications,
+        icon: <GoStar/>,
         activeIcon: notificationsActive,
-        text: "Notifications",
+        text: "Favourites",
         to: "/notifications",
       },
       {
         id: 3,
-        icon: favorite,
+        icon: <CgPoll/>,
         activeIcon: favoriteActive,
-        text: "Bookmarks",
+        text: "Polls",
         to: "/bookmarks",
       },
-      // {
-      //   id: 4,
-      //   icon: play,
-      //   activeIcon: playActive,
-      //   text: "Start a post",
-      //   to: "/post",
-      // },
-      // { id: 5, icon: live, activeIcon: liveActive, text: "Live", to: "/live" },
-      {
-        id: 6,
-        icon: mail,
-        activeIcon: mailActive,
-        text: "Direct Messages",
-        to: "/messages",
-      },
-      // {
-      //   id: 7,
-      //   icon: diaries,
-      //   activeIcon: diariesActive,
-      //   text: "My Diary",
-      //   to: "/diary",
-      // },
       {
         id: 8,
-        icon: profileIcon,
+        icon: <RiSurveyLine/>,
         activeIcon: profileActive,
-        text: "Profile",
+        text: "Survey",
         to: "/profile",
       },
       {
-        id: 9,
-        icon: settings,
-        activeIcon: settingsActive,
-        text: "Settings",
-        to: "/settings",
+        id: 6,
+        icon: <CiMail/>,
+        activeIcon: mailActive,
+        text: "Messages",
+        to: "/messages",
       },
+      // {
+      //   id: 9,
+      //   icon: settings,
+      //   activeIcon: settingsActive,
+      //   text: "Settings",
+      //   to: "/settings",
+      // },
     ],
     []
   );
@@ -125,12 +122,13 @@ function MenuItems() {
               }
             }}
           >
-            <div className="flex items-center">
-              <img
+            <div className="flex gap-5 items-center">
+              <span className={activeLink === id ? 'text-[#3D7100]' : ''}>{icon}</span>
+              {/* <img
                 src={activeLink === id ? activeIcon : icon}
                 alt={text}
                 className="mr-2"
-              />
+              /> */}
               <span className={activeLink === id ? "active" : ""}>{text}</span>
             </div>
           </NavLink>
@@ -148,10 +146,10 @@ function MenuItems() {
           rel="noopener noreferrer"
         >
           {profile?.data?.current_organization?.organization_name && (
-            <p className="flex gap-2 items-center oaks-text pt-5 text-sm">
+            <p className="flex gap-2 items-center text-[#3160A5] oaks-text pt-5 text-sm">
               <img
                 src={
-                  profile?.data?.current_organization?.logo_url || small_logo
+                  profile?.data?.current_organization?.logo_url || backToOak
                 }
                 className="w-[24.96px] h-[28.87px]"
                 alt=""

@@ -314,7 +314,7 @@ const Navbar = () => {
           <GeneralSearch data={searchedData} />
         </Modals>
       )}
-      <div className="flex gap-4 items-center md:hidden">
+      <div className="sm:flex md:hidden gap-4 items-center">
       <RiSearch2Line size={30} />
       <AiOutlineMenu size={30} />
       </div>

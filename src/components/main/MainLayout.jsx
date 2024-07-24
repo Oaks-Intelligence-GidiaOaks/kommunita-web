@@ -23,14 +23,14 @@ const MainLayout = ({ children }) => {
         {/* Added pt-16 for top padding */}
         {/* Sidebar */}
         <div
-          className="overflow-y-auto custom-scrollbar md:1/3 lg:w-1/4"
+          className="overflow-y-auto custom-scrollbar md:w-1/3 lg:w-1/4"
           style={{ height: "90vh" }}
         >
           <SideNav />
         </div>
         {/* Main Content Area */}
         <main
-          className="overflow-y-auto overflow-x-hidden custom-scrollbar w-full md:2/3 lg:w-2/4"
+          className="overflow-y-auto overflow-x-hidden custom-scrollbar w-full md:w-2/3 lg:w-2/4"
           style={{ height: "90vh" }}
         >
           {children}
