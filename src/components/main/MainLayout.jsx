@@ -3,6 +3,7 @@ import { Nav } from "../navbar";
 import { SideNav } from "../sidebar";
 import { AdsSection } from "../ads";
 import { useLocation } from "react-router-dom";
+import Story from "./Story";
 // import "../../index.css";
 
 const MainLayout = ({ children }) => {
@@ -15,21 +16,21 @@ const MainLayout = ({ children }) => {
   const isBookmarkRoute = pathname === "/bookmarks";
 
   return (
-    <div className="flex flex-col h-screen w-full">
+    <div className="flex flex-col h-screen w-full p bg-[#F7F7F7] ">
       <Nav />
-      <div className="bg-[#EFF2FC] flex overflow-hidden mt-24">
+      <div className="bg-[#F7F7F7] flex items-center overflow-hidden mt-24">
         {" "}
         {/* Added pt-16 for top padding */}
         {/* Sidebar */}
         <div
-          className="overflow-y-auto custom-scrollbar w-[280px]"
+          className="overflow-y-auto custom-scrollbar md:1/3 lg:w-1/4"
           style={{ height: "90vh" }}
         >
           <SideNav />
         </div>
         {/* Main Content Area */}
         <main
-          className="flex-1 overflow-y-auto custom-scrollbar"
+          className="overflow-y-auto overflow-x-hidden custom-scrollbar w-full md:2/3 lg:w-2/4"
           style={{ height: "90vh" }}
         >
           {children}
@@ -40,7 +41,7 @@ const MainLayout = ({ children }) => {
           isFollowRoute ||
           isBookmarkRoute) && (
           <div
-            className="ads-container overflow-y-auto custom-scrollbar"
+            className="ads-container overflow-y-auto custom-scrollbar hidden lg:flex lg:w-1/4"
             style={{ height: "90vh" }}
           >
             <AdsSection />

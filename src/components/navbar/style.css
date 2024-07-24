@@ -10,11 +10,11 @@
   /* width: 331px; */
   height: 38px;
   padding: 12px;
-  border-radius: 13px;
+  /* border-radius: 13px; */
   background: #efefef;
 }
 .search-box-mobile {
-  width: 250px;
+  width: 18rem;
   height: 38px;
   padding: 12px;
   border-radius: 13px;
@@ -43,5 +43,5 @@
   width: 71.432px;
   height: 1.687px;
   border-radius: 2.812px 2.812px 0px 0px;
-  background: #2cc84a;
+  background: #3D7100;
 }

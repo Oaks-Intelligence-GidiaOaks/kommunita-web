@@ -19,6 +19,7 @@ import {
   FollowHome,
   ForgotPasswordPage,
   ResetPasswordPage,
+  CommunityHome,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -48,6 +49,10 @@ const Config = () => {
         <Route
           path={routes.SWITCH}
           element={<ProtectedRoute component={Homepage} />}
+        ></Route>
+        <Route
+          path={routes.COMMUNITY}
+          element={<ProtectedRoute component={CommunityHome} />}
         ></Route>
 
         <Route

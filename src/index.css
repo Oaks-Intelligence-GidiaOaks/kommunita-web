@@ -50,7 +50,7 @@ html {
 
 /* Hide the scrollbar by default */
 .custom-scrollbar {
-  scrollbar-width: thin; /* Firefox */
+  scrollbar-width: 0; /* Firefox */
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -65,8 +65,8 @@ html {
 
 /* Show scrollbar on hover */
 .custom-scrollbar:hover::-webkit-scrollbar {
-  width: 1px;
-  height: 1px;
+  width: 0px;
+  height: 0px;
 }
 
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
