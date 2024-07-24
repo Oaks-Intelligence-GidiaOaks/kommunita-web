@@ -7,7 +7,7 @@ import instagram from "../../assets/images/instagram.svg";
 import linkedin from "../../assets/images/linkedin.svg";
 import BgGroup from "../../assets/images/BgGroup.svg";
 import Ellipse from "../../assets/images/Ellipse.svg";
-import logo from "../../assets/images/new-logo.svg";
+// import logo from "../../assets/images/new-logo.svg";
 import { motion } from "framer-motion";
 import { InputField, PasswordField } from "../../components/auth-form";
 import { Form } from "react-final-form";
@@ -16,6 +16,7 @@ import { REGISTER, INDEX, FORGOT_PASSWORD, LOGIN } from "../../routes/routes";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
 import { useLoginUserMutation } from "../../service/user.service";
+import { logo, user_phone, world_2 } from "../../assets/images";
 
 const constraints = {
   identifier: {
@@ -63,8 +64,8 @@ const LoginPage = () => {
   }, [isSuccess, error, navigate]);
 
   return (
-    <div className="flex lg:h-screen bg-[#001900]  flex-col lg:flex-row ">
-      <div className="w-full lg:w-3/5">
+    <div className="flex lg:h-screen bg-[]  flex-col lg:flex-row ">
+      {/* <div className="w-full ">
         <div className="relative">
           <div className="h-screen w-full flex justify-center items-center bg-[#001900] bg-no-repeat overflow-hidden relative">
             <motion.img
@@ -88,16 +89,67 @@ const LoginPage = () => {
             />
           </div>
         </div>
+      </div> */}
+
+<div className="w-full flex-1">
+        <div className="relative">
+          <div className="h-screen w-full flex justify-center items-center bg-[#001900] bg-no-repeat overflow-hidden relative">
+            <Link to={INDEX} className="flex">
+              <motion.img
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 3, duration: 1, ease: "easeIn" }}
+                className="absolute top-0 left-10 transform  text-white  mt-5"
+                // className="absolute text-center font-Inter top-0 left-1/2 transform -translate-x-1/2 text-white text-3xl  mt-10"
+                style={{
+                  // backgroundImage:
+                  //   "linear-gradient(90deg, #6E9D37 0%, #74A12D 52%, #97B24C 99.99%, #94B04A 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+                src={logo}
+              />
+
+              {/* <img src={images.logo} alt="logo" /> */}
+            </Link>
+            <motion.img
+              initial={{ y: 200, opacity: 0, scale: 1 }}
+              animate={{ y: 0, opacity: 1, scale: 1.1 }}
+              transition={{ duration: 1, ease: "easeInOut" }}
+              // src={BgGroup}
+              src={user_phone}
+              alt="Background"
+              className="absolute z-40 bg-cover bottom-0  transform -translate-x-1/2 w-[20rem]"
+            />
+          </div>
+
+          <div className="absolute right-0 left-0 top-0 h-full w-full scale-100">
+            <motion.img
+              // initial={{ y: -400, x: -400 }}
+              // animate={{ y: 0, x: 0 }}
+              // transition={{ delay: 1.5, duration: 1, ease: "easeOut" }}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 3, ease: "easeOut" }}
+              src={world_2}
+              alt=""
+              className="mt-24 w- mx-auto   "
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="w-full h-screen lg:w-2/5 rounded-tl-[10%]  lg:rounded-tl-[20%]  mx-auto pt-20 px-8 lg:p-16 bg-white">
-        <div className="flex justify-end">
+      <div className="w-full h-screen flex-1 flex flex-col justify-center items-center rounded-tl-[10%]  lg:rounded-tl-[20%]  mx-auto pt-20 px-8 lg:p-16 bg-white">
+      {/* <div className="w-full h-screen rounded-tl-[10%]  lg:rounded-tl-[20%]  mx-auto pt-20 px-8 lg:p-16 bg-white"> */}
+        {/* <div className="flex justify-end">
           <img src={logo} alt="Logo" />
-        </div>
-        <div className="sm:mt-20 lg:mt-0 2xl:mt-40">
+        </div> */}
+        <div className="sm:mt-20 lg:mt-0 2xl:mt-40 mx-auto w-[80%]">
           <div className="">
-            <h1 className="font-Inter mb-7 lg:py-0  text-primary-dark-green font-medium text-3xl">
-              Sign In
+          <h1 className="font-Inter mb-7 lg:py-0 mx-auto flex justify-center items-center  text-primary-dark-green font-bold text-3xl">
+              Hello, Welcome Back
             </h1>
             <Form
               onSubmit={onSubmit}
@@ -157,7 +209,7 @@ const LoginPage = () => {
 
                   <button
                     type="submit"
-                    className="w-full mt-4 font-Montserrat font-bold py-2 px-8 mb-4 rounded-full bg-primary-dark-green text-white hover:opacity-85"
+                    className="w-full mt-4 font-Montserrat font-bold py-2 px-8 mb-4 bg-primary-dark-green text-white hover:opacity-85"
                   >
                     {submitting ? (
                       <>
@@ -199,7 +251,7 @@ const LoginPage = () => {
                 className="bg-cover hover:cursor-pointer"
               />
             </div>
-            <div className="p-2 border border-gray-500 w-10 h-10 flex justify-center items-center rounded-full">
+            {/* <div className="p-2 border border-gray-500 w-10 h-10 flex justify-center items-center rounded-full">
               <img
                 src={instagram}
                 alt=""
@@ -212,14 +264,14 @@ const LoginPage = () => {
                 alt=""
                 className="bg-cover hover:cursor-pointer"
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="flex items-center justify-center mt-4">
             <button className="font-Inter font-medium text-base text-primary-gray ">
-              Already have an account?{" "}
-              <Link to={REGISTER} className=" text-primary-red">
-                Sign up
+            Don’t have an account?  
+              <Link to={REGISTER} className=" text-[#3D7100]">
+              Register Here 
               </Link>
             </button>
           </div>

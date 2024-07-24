@@ -20,3 +20,4 @@ export { default as Notifications } from "./notifications/NotificationsHome";
 export { default as Polls } from "./polls/PollsHome";
 export { default as PollHistory } from "./polls/PollHistory";
 export { default as Survey } from "./survey/SurveyHome";
+export { default as CommunityHome } from "./community/CommunityHome";

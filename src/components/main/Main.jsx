@@ -9,6 +9,7 @@ import getTimeAgoString from "./../../utils/getTimeAgoString";
 import PollDisplay from "../polls/PollDisplay";
 import { Link } from "react-router-dom";
 import { Spinner } from "flowbite-react";
+import StoryList from "../ui/StoryList";
 
 function Main() {
   const { data, isLoading, refetch } = useGetFeedsQuery();
@@ -17,7 +18,8 @@ function Main() {
 
   return (
     <div className="pt-4 main-wrapper w-full pb-10">
-      <Story />
+      {/* <Story /> */}
+      <StoryList />
       <MakePost />
 
       {isLoading ? (

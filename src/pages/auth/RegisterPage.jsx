@@ -5,8 +5,8 @@ import goggle from "../../assets/images/goggle.svg";
 import instagram from "../../assets/images/instagram.svg";
 import linkedin from "../../assets/images/linkedin.svg";
 import { AiOutlineMail } from "react-icons/ai";
-import BgGroup from "../../assets/images/BgGroup.svg";
-import Ellipse from "../../assets/images/Ellipse.svg";
+// import BgGroup from "../../assets/images/BgGroup.svg";
+// import Ellipse from "../../assets/images/Ellipse.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -16,11 +16,12 @@ import {
 } from "../../components/auth-form";
 import { Form, Field } from "react-final-form";
 import validate from "validate.js";
-import logo from "../../assets/images/new-logo.svg";
+// import logo from "../../assets/images/new-logo.svg";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
 import { useRegisterUserMutation } from "../../service/user.service";
-import { LOGIN } from "../../routes/routes";
+import { INDEX, LOGIN } from "../../routes/routes";
+import { logo, user_phone, world_2 } from "../../assets/images";
 
 const constraints = {
   display_name: {
@@ -136,8 +137,8 @@ const RegisterPage = () => {
   }, [error, isSuccess, navigate]);
 
   return (
-    <div className="flex lg:h-screen bg-[#001900]  flex-col lg:flex-row ">
-      <div className="w-full lg:w-3/5">
+    <div className="flex lg:h-screen bg-[]  flex-col lg:flex-row ">
+      {/* <div className="w-full flex-1">
         <div className="relative">
           <div className="h-screen w-full flex justify-center items-center bg-[#001900] bg-no-repeat overflow-hidden relative">
             <motion.img
@@ -161,19 +162,76 @@ const RegisterPage = () => {
             />
           </div>
         </div>
-      </div>
-      <div className="w-full h-screen lg:w-2/5 rounded-tl-[10%]  lg:rounded-tl-[20%] mx-auto px-8 lg:p-16 bg-white overflow-y-scroll scrollbar-thin bar  scrollbar-thumb-[#AEAEAE] scrollbar-track-gray-200">
-        <div className="flex justify-end">
-          <img src={logo} alt="Logo" />
+      </div> */}
+         <div className="w-full flex-1">
+        <div className="relative">
+          <div className="h-screen w-full flex justify-center items-center bg-[#001900] bg-no-repeat overflow-hidden relative">
+            <Link to={INDEX} className="flex" smooth={true}>
+              <motion.img
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 3, duration: 1, ease: "easeIn" }}
+                className="absolute top-0 left-10 transform  text-white  mt-5"
+                // className="absolute text-center font-Inter top-0 left-1/2 transform -translate-x-1/2 text-white text-3xl  mt-10"
+                style={{
+                  // backgroundImage:
+                  //   "linear-gradient(90deg, #6E9D37 0%, #74A12D 52%, #97B24C 99.99%, #94B04A 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+                src={logo}
+              />
+
+              {/* <img src={images.logo} alt="logo" /> */}
+            </Link>
+            <motion.img
+              initial={{ y: 200, opacity: 0, scale: 1 }}
+              animate={{ y: 0, opacity: 1, scale: 1.1 }}
+              transition={{ duration: 1, ease: "easeInOut" }}
+              // src={BgGroup}
+              src={user_phone}
+              alt="Background"
+              className="absolute z-40 bg-cover bottom-0  transform -translate-x-1/2 w-[20rem]"
+            />
+          </div>
+
+          <div className="absolute right-0 left-0 top-0 h-full w-full scale-100">
+            <motion.img
+              // initial={{ y: -400, x: -400 }}
+              // animate={{ y: 0, x: 0 }}
+              // transition={{ delay: 1.5, duration: 1, ease: "easeOut" }}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              transition={{ duration: 3, ease: "easeOut" }}
+              src={world_2}
+              alt=""
+              className="mt-24 w- mx-auto   "
+            />
+          </div>
         </div>
-        <div className="2xl:mt-12">
+      </div>
+      <div className="w-full h-screen flex-1 rounded-tl-[10%]  lg:rounded-tl-[20%] mx-auto px-8 lg:p-16 bg-white overflow-y-scroll scrollbar-thin bar  scrollbar-thumb-[#AEAEAE] scrollbar-track-gray-200">
+        {/* <div className="flex justify-end">
+          <img src={logo} alt="Logo" />
+        </div> */}
+        <div className="mx-auto w-[80%] lg:mt-10 2xl:mt-40">
           <div className="">
+          <div className="flex justify-center items-center mb-10">
+          <div className="flex font-[500] mx-auto text-xs items-center">
+              <p className=" bg-[#F7F7F8] text-sm w-[8.8rem] text-center rounded-lg text-[#757682]">
+                Built for you
+              </p>
+              <p className="text-[#3D7100]">Change</p>
+            </div>
+          </div>
             <Form
               onSubmit={onSubmit}
               validate={validateForm}
               render={({ handleSubmit, form, submitting }) => (
                 <form onSubmit={handleSubmit}>
-                  <h1 className="font-Inter mb-7 lg:py-0 text-primary-dark-green font-medium text-3xl">
+                 <h1 className="font-Inter mb-7 flex justify-center items-center lg:py-0 text-primary-dark-green font-bold text-3xl">
                     Create Account
                   </h1>
 
@@ -271,9 +329,9 @@ const RegisterPage = () => {
                     </div>
                     <span className="text-xs font-Inter font-normal pt-1">
                       I accept the{" "}
-                      <span className=" text-primary-red">terms of use</span>{" "}
+                      <span className=" text-[#3D7100]">terms of use</span>{" "}
                       and{" "}
-                      <span className=" text-primary-red">privacy policy</span>
+                      <span className=" text-[#3D7100]">privacy policy</span>
                     </span>
                   </div>
                   {form.getState().errors.terms && (
@@ -284,7 +342,7 @@ const RegisterPage = () => {
 
                   <button
                     type="submit"
-                    className="w-full mt-4 font-Montserrat font-bold py-2 px-8 mb-4 rounded-full bg-primary-dark-green text-white hover:opacity-85"
+                    className="w-full mt-4 font-Montserrat font-bold py-2 px-8 mb-4 bg-primary-dark-green text-white hover:opacity-85"
                   >
                     {submitting ? (
                       <>
@@ -345,8 +403,8 @@ const RegisterPage = () => {
           <div className="flex items-center justify-center mt-4">
             <button className="font-Inter font-medium text-base text-primary-gray ">
               Already have an account?{" "}
-              <Link to="/login" className=" text-primary-red">
-                Sign In
+              <Link to="/login" className=" text-[#3D7100]">
+                Log In
               </Link>
             </button>
           </div>
