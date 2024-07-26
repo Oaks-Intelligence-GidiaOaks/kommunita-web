@@ -47,8 +47,8 @@ function DiaryMain() {
           return (
             <Posts
               key={index}
-              fullname={post.user_id.display_name}
-              username={post.user_id.username}
+              fullname={post.user_id?.display_name}
+              username={post.user_id?.username}
               verifiedUser={false} // You need to adjust this based on your data
               postTime={getTimeAgoString(post.createdAt)} // Assuming createdAt is the post time
               content={post.content}
@@ -58,7 +58,7 @@ function DiaryMain() {
               repost={post.repost}
               share={post.share}
               reaction={post.reaction}
-              avatar={post.user_id.photo_url || avatar1}
+              avatar={post?.user_id?.photo_url || avatar1}
               badgeColor={badgeColor}
               department={department}
               type={post?.type}

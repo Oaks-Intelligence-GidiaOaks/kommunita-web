@@ -31,14 +31,14 @@ const MainComment = ({ comment }) => {
             }}
           >
             <img
-              src={comment.user_id.photo_url || avatar4}
+              src={comment.user_id?.photo_url || avatar4}
               className="rounded-full w-full h-full object-cover"
               alt="user-thumbnail"
             />
           </div>
           <div className="flex flex-col w-full">
             <div className="flex gap-1 justify-start text-sm items-center">
-              <h2 className="comment-name">{comment.user_id.display_name}</h2>
+              <h2 className="comment-name">{comment?.user_id?.display_name}</h2>
               <h2>
                 <GoDotFill />
               </h2>
@@ -68,7 +68,7 @@ const MainComment = ({ comment }) => {
         </svg>
 
         {/* This is the comment reply section */}
-        {comment.replies.length > 0 && (
+        {comment?.replies?.length > 0 && (
           <div className="absolute top-11 left-[2%]">
             <svg
               width="23"
@@ -102,7 +102,7 @@ const MainComment = ({ comment }) => {
           />
         </div>
       )}
-      {comment.replies.length > 0 &&
+      {comment?.replies?.length > 0 &&
         comment.replies.map((rp, id) => (
           <div key={id} className="ml-11 -mt-4">
             <ReplyComment reply={rp} />

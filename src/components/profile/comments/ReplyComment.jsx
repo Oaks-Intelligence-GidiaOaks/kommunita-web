@@ -30,7 +30,7 @@ const ReplyComment = ({ reply }) => {
           <div className="pt-2 flex justify-start flex-col">
             <div>
               <h2 className="comment-name -mt-[6px]">
-                {reply.user_id.display_name}
+                {reply?.user_id?.display_name}
               </h2>
             </div>
             <div>

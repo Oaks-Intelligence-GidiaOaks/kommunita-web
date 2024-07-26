@@ -42,8 +42,8 @@ function ExploreMain({ exploreData }) {
             post.user_id && (
               <Posts
                 key={index}
-                fullname={post.user_id.display_name}
-                username={post.user_id.username}
+                fullname={post?.user_id?.display_name}
+                username={post?.user_id?.username}
                 verifiedUser={false} // Adjust based on your data
                 postTime={getTimeAgoString(post.createdAt)}
                 content={post.content}
