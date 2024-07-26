@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 function Sidebar() {
   const location = useLocation();
   const { pathname } = location;
-  console.log(pathname);
+  // console.log(pathname);
   return (
     <aside className="mb-10 p-4 hidden md:block">
       <div className="main-sidebar-section">

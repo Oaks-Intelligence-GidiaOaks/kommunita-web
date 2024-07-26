@@ -42,7 +42,7 @@
 .stats-title {
   color: #838383;
   font-family: Inter;
-  font-size: 14px;
+  font-size: .8rem;
   font-style: normal;
   font-weight: 500;
   line-height: normal;
@@ -103,9 +103,9 @@
   line-height: normal;
 }
 .oaks-text {
-  color: #34b53a;
+  /* color: #34b53a; */
   font-family: Inter;
-  font-size: 16px;
+  font-size: 1rem;
   font-style: normal;
   font-weight: 700;
   line-height: normal;

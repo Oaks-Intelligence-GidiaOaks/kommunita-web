@@ -18,6 +18,8 @@ import videoIcon from "../../assets/images/modals/video.svg";
 import location from "../../assets/images/modals/location.svg";
 import gallery from "../../assets/images/gallery.png";
 import { FaTimes } from "react-icons/fa";
+import { IoCameraOutline } from "react-icons/io5";
+import { GoDeviceCameraVideo } from "react-icons/go";
 import {
   BiGlobe,
   BiLock,
@@ -45,6 +47,7 @@ import { CiCalendarDate } from "react-icons/ci";
 import { SlNotebook } from "react-icons/sl";
 import { BiPoll } from "react-icons/bi";
 import { IoMdCopy } from "react-icons/io";
+import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
@@ -253,7 +256,7 @@ function MakePost() {
       <div>
         <div className="w-full bg-white rounded-md border-b-0 border-0 h-auto">
           <div
-            className={`flex p-2 gap-4 justify-start ${
+            className={`flex p-2 gap-4 justify-start px-7 ${
               isVisible ? "items-start" : "items-center"
             } w-full py-5`}
           >
@@ -284,26 +287,54 @@ function MakePost() {
                   Share your thoughts...
                 </label>
               )}
+              {isVisible && (
+                <div className="flex pr-10 justify-end text-[7px]">
+                  {" "}
+                  <span>{content.length}/500</span>
+                </div>
+              )}
             </div>
           </div>
 
-          <div className="bg-white px-3">
-            <div className="rounded-md pb-3 flex justify-between make-post-input">
-              <div className="border flex w-[130px] rounded-md">
-                <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
-                  <MdAddAPhoto className="text-[#34B53A]" size={20} />
-                  <p className="make-post-input text-sm">Photo/Video</p>
-                  <input
-                    type="file"
-                    onChange={handleSchedulePostMediaChange}
-                    accept="image/*,video/*"
-                    multiple
-                    style={{ display: "none" }}
-                  />
-                </label>
+          {/* upload picture or video */}
+          <div className="bg-white flex justify-between items-center p-7">
+            <div className="flex items-center justify-between gap-10">
+              <div className="rounded-md pb- flex justify-between make-post-input">
+                <div className=" flex rounded-md">
+                  <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
+                    <IoCameraOutline className="text-[#3D7100]" size={20} />
+                    <p className="make-post-input text-sm">Photo</p>
+                    <input
+                      type="file"
+                      onChange={handleSchedulePostMediaChange}
+                      accept="image/*,video/*"
+                      multiple
+                      style={{ display: "none" }}
+                    />
+                  </label>
+                </div>
+              </div>
+              <div className="rounded-md pb- flex justify-between make-post-input">
+                <div className=" flex rounded-md">
+                  <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
+                    <GoDeviceCameraVideo className="text-[#3D7100]" size={20} />
+                    <p className="make-post-input text-sm">Video</p>
+                    <input
+                      type="file"
+                      onChange={handleSchedulePostMediaChange}
+                      accept="image/*,video/*"
+                      multiple
+                      style={{ display: "none" }}
+                    />
+                  </label>
+                </div>
+
+                {/* {isVisible && <div className=""> {content.length}/500</div>} */}
               </div>
 
-              {isVisible && <div className=""> {content.length}/500</div>}
+              <div className="text-center py-1 px-4 rounded-md bg-gray-200">
+                View More <MdOutlineKeyboardArrowRight className="inline-block" size={20}/>
+              </div>
             </div>
 
             {selectedPostMedia && (
@@ -319,7 +350,23 @@ function MakePost() {
               </div>
             )}
 
-            <div className="flex justify-end gap-3">
+            <button
+              onClick={handleSubmit}
+              disabled={submitting || !content}
+              className={`${
+                !content
+                  ? "bg-gray-200 text-gray-600"
+                  : "bg-[#3D7100] text-white"
+              } px-8 h-10 rounded-3xl`}
+            >
+              {submitting ? (
+                <BeatLoader color="#ffffff" loading={true} />
+              ) : (
+                "Post"
+              )}
+            </button>
+
+            {/* <div className="flex justify-end gap-3">
               {isVisible && (
                 <>
                   <div className="bg-[#fbf8f8] rounded-md w-35 h-10">
@@ -384,9 +431,9 @@ function MakePost() {
                   </button>
                 </>
               )}
-            </div>
+            </div> */}
 
-            <div className="pb-5 pt-5">
+            {/* <div className="pb-5 pt-5">
               {!isVisible && (
                 <div className="flex justify-center">
                   <button className="mb-2" onClick={toggleCollapse}>
@@ -404,7 +451,7 @@ function MakePost() {
                   </button>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
 
           {isExpanded && (
