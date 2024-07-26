@@ -21,7 +21,7 @@ function Category() {
                   className="category-card relative border shadow-lg rounded-sm"
                 >
                   <img
-                    src={cat.photo_url}
+                    src={cat?.photo_url}
                     className="w-full h-[161px]"
                     alt=""
                   />

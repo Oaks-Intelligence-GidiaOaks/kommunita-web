@@ -93,8 +93,8 @@ const GeneralSearch = ({ data }) => {
                   <SearchPost
                     key={index}
                     post={post}
-                    fullname={post.display_name}
-                    username={post.username}
+                    fullname={post?.display_name}
+                    username={post?.username}
                     verifiedUser={false} // Adjust based on your data
                     postTime={getTimeAgoString(post.createdAt)}
                     content={post.content}
