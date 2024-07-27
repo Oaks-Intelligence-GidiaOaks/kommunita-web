@@ -69,7 +69,7 @@ function MakePost() {
   const [audience, setAudience] = useState("Public");
   const [scheduleDate, setScheduleDate] = useState("");
   const [scheduleTime, setScheduleTime] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const { refetch } = useGetFeedsQuery();
   const viewMoreRef = useRef(null);
 

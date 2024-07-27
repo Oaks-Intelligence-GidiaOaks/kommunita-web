@@ -197,6 +197,7 @@ import { debounce } from "lodash";
 import { useDispatch } from "react-redux";
 import { handleLogout } from "../../static/logout";
 import { PROFILE } from "../../routes/routes";
+import NotificationModal from "../../pages/notifications/NotificationModal";
 
 const NavItem = ({ to, icon: Icon, label, exact }) => {
   const location = useLocation();
@@ -230,6 +231,7 @@ const Navbar = () => {
   const [searching, setSearching] = useState(false);
   const [isOrganisationOpen, setIsOrganisationOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [notificationBox, setNotificationBox] = useState(false);
   const organisationRef = useRef(null);
   const profileRef = useRef(null);
   const [searchString, setSearchString] = useState("");
@@ -390,7 +392,14 @@ const Navbar = () => {
                 }
               />
             </div>
-            <BsBell size={20} className="text-[]" />
+            <div>
+            <BsBell size={20} className="text-[]" onClick={()=>{setNotificationBox((prev)=>!prev)}} />
+
+            {
+              notificationBox && <NotificationModal onClick={()=>{setNotificationBox(!notificationBox)}}/>
+            }
+
+            </div>
             <div className="w-[3rem] h-[3rem] flex justify-center items-center border rounded-full">
               <DropdownMenu
                 aria_label={"Profile"}
