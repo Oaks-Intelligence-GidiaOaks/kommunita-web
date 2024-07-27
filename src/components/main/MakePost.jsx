@@ -17,7 +17,7 @@ import photos from "../../assets/images/modals/photos.svg";
 import videoIcon from "../../assets/images/modals/video.svg";
 import location from "../../assets/images/modals/location.svg";
 import gallery from "../../assets/images/gallery.png";
-import { FaTimes } from "react-icons/fa";
+import { FaRegUser, FaTimes } from "react-icons/fa";
 import { IoCameraOutline } from "react-icons/io5";
 import { GoDeviceCameraVideo } from "react-icons/go";
 import {
@@ -48,6 +48,14 @@ import { SlNotebook } from "react-icons/sl";
 import { BiPoll } from "react-icons/bi";
 import { IoMdCopy } from "react-icons/io";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
+import DropdownMenu from "../ui/DropdownMenu";
+import { Link } from "react-router-dom";
+import { PROFILE } from "../../routes/routes";
+import { LuCalendarClock } from "react-icons/lu";
+import { GiBlackBook } from "react-icons/gi";
+import { HiOutlineDocumentDuplicate } from "react-icons/hi2";
+import { CgPoll } from "react-icons/cg";
+
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
@@ -63,8 +71,10 @@ function MakePost() {
   const [scheduleTime, setScheduleTime] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const { refetch } = useGetFeedsQuery();
+  const viewMoreRef = useRef(null);
 
   const [editorHtml, setEditorHtml] = useState("");
+  const [viewMore, setIsViewMore] = useState(false);
 
   // console.log(editorHtml);
 
@@ -297,8 +307,8 @@ function MakePost() {
           </div>
 
           {/* upload picture or video */}
-          <div className="bg-white flex justify-between items-center p-7">
-            <div className="flex items-center justify-between gap-10">
+          <div className="bg-white flex justify-between items-center px-5 md:px-7 pb-1 md:pb-5 pt-7">
+            <div className="flex items-center justify-between md:gap-10">
               <div className="rounded-md pb- flex justify-between make-post-input">
                 <div className=" flex rounded-md">
                   <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
@@ -333,7 +343,67 @@ function MakePost() {
               </div>
 
               <div className="text-center py-1 px-4 rounded-md bg-gray-200">
-                View More <MdOutlineKeyboardArrowRight className="inline-block" size={20}/>
+                <DropdownMenu
+                  aria_label={"viewMore"}
+                  dropdownRef={viewMoreRef}
+                  onClick={() => {
+                    setIsViewMore(!viewMore);
+                  }}
+                  display_value={
+                    <>
+                      <span className="text-sm">View More</span>
+                      <MdOutlineKeyboardArrowRight
+                        className="inline-block"
+                        size={20}
+                      />
+                    </>
+                  }
+                  isDropdownOpen={viewMore}
+                  listItem={
+                    <div className="px-4 py-2">
+                      <Link
+                        to={PROFILE}
+                        className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                        }}
+                      >
+                        <LuCalendarClock className="w-4 h-4 mr-2 inline" />
+                        <span className="font-semibold">Schedule Post</span>
+                      </Link>
+                      <Link
+                        to={PROFILE}
+                        className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                        }}
+                      >
+                        <GiBlackBook className="w-4 h-4 mr-2 inline" />
+                        <span className="font-semibold">Diary</span>
+                      </Link>
+                      <Link
+                        to={PROFILE}
+                        className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                        }}
+                      >
+                        <HiOutlineDocumentDuplicate className="w-4 h-4 mr-2 inline" />
+                        <span className="font-semibold">Draft</span>
+                      </Link>
+                      <Link
+                        to={PROFILE}
+                        className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
+                        onClick={() => {
+                          setIsProfileOpen(false);
+                        }}
+                      >
+                        <CgPoll className="w-4 h-4 mr-2 inline" />
+                        <span className="font-semibold">Polls</span>
+                      </Link>
+                    </div>
+                  }
+                />
               </div>
             </div>
 
@@ -357,7 +427,7 @@ function MakePost() {
                 !content
                   ? "bg-gray-200 text-gray-600"
                   : "bg-[#3D7100] text-white"
-              } px-8 h-10 rounded-3xl`}
+              } hidden md:block px-8 h-10 rounded-3xl`}
             >
               {submitting ? (
                 <BeatLoader color="#ffffff" loading={true} />
@@ -494,7 +564,23 @@ function MakePost() {
               </button>
             </div>
           )}
+            <button
+              onClick={handleSubmit}
+              disabled={submitting || !content}
+              className={`${
+                !content
+                  ? "bg-gray-200 text-gray-600"
+                  : "bg-[#3D7100] text-white"
+              } md:hidden mx-6 px-8 py-1 mb-3 rounded-3xl`}
+            >
+              {submitting ? (
+                <BeatLoader color="#ffffff" loading={true} />
+              ) : (
+                "Post"
+              )}
+            </button>
         </div>
+        
       </div>
 
       {viewModalOpen && selectedItem && (

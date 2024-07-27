@@ -59,14 +59,14 @@ function MenuItems() {
         icon: <CgPoll/>,
         activeIcon: favoriteActive,
         text: "Polls",
-        to: "/bookmarks",
+        to: "/polls",
       },
       {
         id: 8,
         icon: <RiSurveyLine/>,
         activeIcon: profileActive,
         text: "Survey",
-        to: "/profile",
+        to: "/survey",
       },
       {
         id: 6,
@@ -95,11 +95,11 @@ function MenuItems() {
     }
   }, [location.pathname, links]);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const Logout = () => {
-    handleLogout(dispatch);
-  };
+  // const Logout = () => {
+  //   handleLogout(dispatch);
+  // };
 
   return (
     <div className="mt-5 pb-5 w-full">
@@ -134,12 +134,12 @@ function MenuItems() {
           </NavLink>
         ))}
 
-        <button
+        {/* <button
           className="logout-btn flex justify-between gap-3 items-center mt-3"
           onClick={() => Logout()}
         >
           <img src={logout} alt="logout" /> Log out
-        </button>
+        </button> */}
         <a
           href={profile?.data?.current_organization?.website_url}
           target="_blank"

@@ -151,7 +151,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
 
 // Function to render input fields based on answer type
 const renderQuestion = (question, handleAnswer, index) => {
-  switch (question.answer_type) {
+  switch (question?.answer_type) {
     case "single_choice":
       return (
         <>

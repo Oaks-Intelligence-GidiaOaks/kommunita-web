@@ -6,7 +6,7 @@ import { useGetUserProfiileQuery } from "../../service/user.service";
 
 function Profile() {
   const { data: profile } = useGetUserProfiileQuery();
-  // console.log(profile);
+  console.log(profile?.data);
 
   const user = useSelector((state) => state.user.user);
 
@@ -28,17 +28,16 @@ function Profile() {
         </div>
         <p className="text-center profile-name mt-3">{user?.display_name}</p>
         <p className="text-center profile-title">{profile?.data?.tech_title}</p>
-        <div className="flex justify-center">
+        {/* <div className="flex justify-center">
           <p className="text-center mt-1 profile-bio p-2">
-            {/* <p className="text-center mt-1 profile-bio w-[204px]"> */}
             {profile?.data?.about}
-            {/* <span className="inline-flex">
+            <span className="inline-flex">
             <img src={emoji} alt="" />
-          </span> */}
+          </span>
           </p>
-        </div>
+        </div> */}
 
-        <div className="stats flex gap-3 justify-between items-center mt-4">
+        <div className="stats flex gap-3 px-12 justify-between items-center mt-4">
           <div className="flex flex-col text-center">
             <p className="stats-number text-sm font-semibold">
               {profile?.data?.posts_count}
@@ -63,10 +62,12 @@ function Profile() {
         </div>
       </div>
       <div className="px-5 pt-2">
-        <p className="text-start flex font-semibold text-[#707070] text-[calc(1rem-6px)] justify-start">ABOUT</p>
-        <p className="text-center mt-1 profile-bio p-2">
-            {profile?.data?.about}
-          </p>
+        <p className="text-start flex font-semibold text-[#707070] text-[calc(1rem-6px)] justify-start">
+          ABOUT
+        </p>
+        <p className="mt-1 profile-bio text-xs">
+          {profile?.data?.about}
+        </p>
       </div>
     </div>
   );

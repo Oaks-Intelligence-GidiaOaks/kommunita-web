@@ -87,12 +87,12 @@ const SettingsHome = () => {
   // Set values once profile data is available
   useEffect(() => {
     if (profile?.data) {
-      setDisplayName(profile?.data.display_name || "");
-      setState(profile?.data.location.state || "");
-      setCountry(profile?.data.location.country || "");
-      setEmail(profile?.data.email || "");
-      setPhoneNumber(profile?.data.phone_number || "");
-      setUsername(profile?.data.username || "");
+      setDisplayName(profile?.data?.display_name || "");
+      setState(profile?.data?.location?.state || "");
+      setCountry(profile?.data.location?.country || "");
+      setEmail(profile?.data?.email || "");
+      setPhoneNumber(profile?.data?.phone_number || "");
+      setUsername(profile?.data?.username || "");
       // setTechtitle(profile?.data.tech_title || "");
       // setLocation(
       //   profile?.data.location && Object.keys(profile?.data.location).length !== 0

@@ -171,7 +171,7 @@
 import { Link, useLocation } from "react-router-dom";
 import search from "../../assets/images/menu/search.svg";
 import "./style.css";
-import { useState } from "react";
+import { useRef, useState,  useEffect, useCallback } from "react";
 import { useSearchGeneralMutation } from "../../service/search.service";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
@@ -188,6 +188,15 @@ import { BsBell } from "react-icons/bs";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import { AiOutlineMenu } from "react-icons/ai";
 import { RiSearch2Line } from "react-icons/ri";
+import DropdownMenu from "../ui/DropdownMenu";
+import { FaRegUser } from "react-icons/fa6";
+import { IoSettingsOutline } from "react-icons/io5";
+import { CiLogout } from "react-icons/ci";
+import { useGetUserOrganisationQuery } from "../../service/organization.service";
+import { debounce } from "lodash";
+import { useDispatch } from "react-redux";
+import { handleLogout } from "../../static/logout";
+import { PROFILE } from "../../routes/routes";
 
 const NavItem = ({ to, icon: Icon, label, exact }) => {
   const location = useLocation();
@@ -219,15 +228,44 @@ const Navbar = () => {
   const [searchGeneral, { error, isSuccess }] = useSearchGeneralMutation();
   const [searchedData, setSearchedData] = useState(null);
   const [searching, setSearching] = useState(false);
+  const [isOrganisationOpen, setIsOrganisationOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const organisationRef = useRef(null);
+  const profileRef = useRef(null);
   const [searchString, setSearchString] = useState("");
   const { data: profile } = useGetUserProfiileQuery();
+  const { data:userOganisation, } = useGetUserOrganisationQuery()
+
+  const dispatch = useDispatch();
+
+  const Logout = () => {
+    handleLogout(dispatch);
+  };
 
   const handleSearch = async () => {
-    setSearching(true);
-    if (searchString) {
-      const postData = {
-        search_term: searchString,
-      };
+    // setSearching(true);
+    // if (searchString) {
+    //   const postData = {
+    //     search_term: searchString,
+    //   };
+    //   try {
+    //     const res = await rtkMutation(searchGeneral, { ...postData });
+    //     console.log(res.data);
+    //     setSearchedData(res.data);
+    //     setOpenSearchModal(true);
+    //   } catch (error) {
+    //     console.error("Error making search: ", error);
+    //     showAlert("Oops", "An error occurred while searching content", "error");
+    //   }
+    // }
+    // setSearching(false);
+    console.log("saerch organisation")
+  };
+
+  const debouncedSearch = useRef(
+    debounce(async (searchTerm) => {
+      setSearching(true);
+      const postData = { search_term: searchTerm };
       try {
         const res = await rtkMutation(searchGeneral, { ...postData });
         console.log(res.data);
@@ -237,12 +275,23 @@ const Navbar = () => {
         console.error("Error making search: ", error);
         showAlert("Oops", "An error occurred while searching content", "error");
       }
+      setSearching(false);
+    }, 2000) 
+  ).current;
+
+  useEffect(() => {
+    if (searchString) {
+      debouncedSearch(searchString);
     }
-    setSearching(false);
-  };
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [searchString, debouncedSearch]);
+
+  // console.log(userOganisation?.data)
 
   return (
-    <nav className="fixed h-auto flex justify-between items-center py-4 px-8 w-full top-0 left-0 right-0 z-10 mb-10 bg-white">
+    <nav className="fixed h-auto flex justify-between items-center py-4 px-8 md:px-12 w-full top-0 left-0 right-0 z-10 mb-10 bg-white">
       <div className="logo">
         <Link to={"/"}>
           <img src={dark_logo} alt="logo" width="152" height="40" />
@@ -270,7 +319,7 @@ const Navbar = () => {
         />
         <div className="search flex items-center gap-10">
           <div className="flex search-box rounded w-[18rem]">
-            <div className="cursor-pointer" onClick={handleSearch}>
+            <div className="cursor-pointer" onClick={()=>debouncedSearch(searchString)}>
               {searching ? (
                 <BeatLoader color="#ffffff" loading={true} />
               ) : (
@@ -286,19 +335,110 @@ const Navbar = () => {
             />
           </div>
           <div className="search flex gap-5 items-center">
-            {/* <div className="flex  "> */}
-            <div className="cursor-pointer hidden lg:flex items-center gap-5 bg-[#efefef]  rounded-[2.5rem] p-[0.5rem]">
-              <img src={escrow_tech} alt="search" />
-              <p>Escrow-Tech</p>
-              <IoIosArrowDown size={20} className="text-[#838383]" />
-              {/* </div> */}
+            <div className="cursor-pointer hidden lg:flex items-center gap-5 bg-[#efefef]  rounded-[2.5rem] px-[0.5rem]">
+              <DropdownMenu
+                dropdownRef={organisationRef}
+                aria_label={"organisation"}
+                onClick={() => {
+                  setIsOrganisationOpen(!isOrganisationOpen);
+                }}
+                display_value={
+                  <>
+                  <span className="w-6 h-6 rounded-full">
+                    <img src={profile?.data?.current_organization?.logo_url} alt="organisation logo" />
+                  </span>
+                    <p>{profile?.data?.current_organization?.organization_name}</p>
+                    <IoIosArrowDown size={20} className="text-[#838383]" />
+                  </>
+                }
+                isDropdownOpen={isOrganisationOpen}
+                listItem={
+                  <div className="px-4 py-5">
+                    <div className="flex search-box rounded w-full">
+                      <div className="cursor-pointer" onClick={handleSearch}>
+                        {searching ? (
+                          <BeatLoader color="#ffffff" loading={true} />
+                        ) : (
+                          <img src={search} alt="search" />
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        className="search-input w-full focus:outline-none focus:ring-0"
+                        placeholder="Search"
+                        value={searchString}
+                        onChange={(e) => setSearchString(e.target.value)}
+                      />
+                    </div>
+                    {/* Organisations list goes here */}
+                    <ul className="w-full mt-3">
+                      {
+                        userOganisation?.data?.map((org) => (
+                          <li key={org._id} className="w-full border-b">
+                            <Link to={`#`} className="py-2 w-full flex items-center gap-2">
+                            {/* <Link to={`/dashboard/organisation/${org.id}`}> */}
+                           <span className="w-6 h-6 rounded-full">
+                            <img src={org?.logo_url} alt={org?.organization_name} className="w-full" />
+                            </span> 
+                            {org?.organization_name}
+                            </Link>
+                          </li>
+                        )) || <p>No Organisations found</p>
+                      }
+                    </ul>
+                  </div>
+                }
+              />
             </div>
             <BsBell size={20} className="text-[]" />
-            <div className="w-[3rem] h-[3rem] flex justify-center items-center] border rounded-full">
-              <img
-                src={profile?.data?.photo_url}
-                alt=""
-                className="rounded-full w-full object-cover"
+            <div className="w-[3rem] h-[3rem] flex justify-center items-center border rounded-full">
+              <DropdownMenu
+                aria_label={"Profile"}
+                dropdownRef={profileRef}
+                onClick={() => {
+                  setIsProfileOpen(!isProfileOpen);
+                }}
+                display_value={
+                  <>
+                    <img
+                      src={profile?.data?.photo_url}
+                      alt=""
+                      className="rounded-full w-full object-cover"
+                    />
+                  </>
+                }
+                isDropdownOpen={isProfileOpen}
+                listItem={
+                  <>
+                    <Link
+                      to={PROFILE}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                      }}
+                    >
+                      <FaRegUser className="w-4 h-4 mr-2 inline" />
+                      Profile
+                    </Link>
+                    <Link
+                      to={"/settings"}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                      onClick={() => {
+                        setIsProfileOpen(false);
+                      }}
+                    >
+                      <IoSettingsOutline className="w-4 h-4 mr-2 inline" />
+                      Settings
+                    </Link>
+                    <button
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                      onClick={() => Logout()}
+                    >
+                      <CiLogout className="w-4 h-4 mr-2 inline" />
+                      Logout
+                    </button>
+                  </>
+                }
               />
             </div>
           </div>
@@ -314,9 +454,9 @@ const Navbar = () => {
           <GeneralSearch data={searchedData} />
         </Modals>
       )}
-      <div className="sm:flex md:hidden gap-4 items-center">
-      <RiSearch2Line size={30} />
-      <AiOutlineMenu size={30} />
+      <div className="sm:flex md:hidden gap- items-center">
+        <RiSearch2Line size={30} className="inline-block"/>
+        <AiOutlineMenu size={30} className="inline-block"/>
       </div>
     </nav>
   );

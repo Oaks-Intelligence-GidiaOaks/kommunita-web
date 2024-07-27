@@ -18,12 +18,12 @@ const MainLayout = ({ children }) => {
   return (
     <div className="flex flex-col h-screen w-full p bg-[#F7F7F7] ">
       <Nav />
-      <div className="bg-[#F7F7F7] flex items-center overflow-hidden mt-24">
+      <div className="bg-[#F7F7F7] flex px-10 items-center overflow-hidden mt-24">
         {" "}
         {/* Added pt-16 for top padding */}
         {/* Sidebar */}
         <div
-          className="overflow-y-auto custom-scrollbar md:w-1/3 lg:w-1/4"
+          className="overflow-y-auto custom-scrollbar md:w-1/3 lg:w-[20%]"
           style={{ height: "90vh" }}
         >
           <SideNav />
@@ -41,7 +41,7 @@ const MainLayout = ({ children }) => {
           isFollowRoute ||
           isBookmarkRoute) && (
           <div
-            className="ads-container overflow-y-auto custom-scrollbar hidden lg:flex lg:w-1/4"
+            className="ads-container overflow-y-auto custom-scrollbar hidden lg:flex lg:w-[30%]"
             style={{ height: "90vh" }}
           >
             <AdsSection />
