@@ -11,7 +11,15 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Story"],
     }),
+    addStories: builder.mutation({
+      query: (data) => ({
+        url: STORIES,
+        method: "POST",
+        body: data,
+      }),
+      providesTags: ["Story"],
+    }),
   }),
 });
 
-export const { useGetStoriesQuery } = organizationApiSlice;
+export const { useGetStoriesQuery, useAddStoriesMutation } = organizationApiSlice;

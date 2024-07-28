@@ -69,7 +69,7 @@ function MakePost() {
   const [audience, setAudience] = useState("Public");
   const [scheduleDate, setScheduleDate] = useState("");
   const [scheduleTime, setScheduleTime] = useState("");
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
   const { refetch } = useGetFeedsQuery();
   const viewMoreRef = useRef(null);
 
@@ -361,28 +361,22 @@ function MakePost() {
                   isDropdownOpen={viewMore}
                   listItem={
                     <div className="px-4 py-2">
-                      <Link
-                        to={PROFILE}
+                      <button
                         className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
-                        onClick={() => {
-                          setIsProfileOpen(false);
-                        }}
+                        onClick={() => setOpenScheduleModal(true)}
                       >
                         <LuCalendarClock className="w-4 h-4 mr-2 inline" />
                         <span className="font-semibold">Schedule Post</span>
-                      </Link>
-                      <Link
-                        to={PROFILE}
+                      </button>
+                      <button
+                      
                         className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
-                        onClick={() => {
-                          setIsProfileOpen(false);
-                        }}
+                        onClick={() => setOpenDiaryModal(true)}
                       >
                         <GiBlackBook className="w-4 h-4 mr-2 inline" />
                         <span className="font-semibold">Diary</span>
-                      </Link>
-                      <Link
-                        to={PROFILE}
+                      </button>
+                      <button
                         className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
                         onClick={() => {
                           setIsProfileOpen(false);
@@ -390,17 +384,15 @@ function MakePost() {
                       >
                         <HiOutlineDocumentDuplicate className="w-4 h-4 mr-2 inline" />
                         <span className="font-semibold">Draft</span>
-                      </Link>
-                      <Link
-                        to={PROFILE}
+                      </button>
+                      <button
+                       
                         className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
-                        onClick={() => {
-                          setIsProfileOpen(false);
-                        }}
+                        onClick={() => setOpenPoll(true)}
                       >
                         <CgPoll className="w-4 h-4 mr-2 inline" />
                         <span className="font-semibold">Polls</span>
-                      </Link>
+                      </button>
                     </div>
                   }
                 />
