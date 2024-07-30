@@ -12,20 +12,21 @@ import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
 import {
   useUpdatePasswordMutation,
-  useGetCodeMutation,
+  useGetCodeMutation
 } from "../../service/user.service";
 import { TbPasswordFingerprint } from "react-icons/tb";
+import PropTypes from "prop-types"; // Import PropTypes
 
 const constraints = {
   code: {
-    presence: true,
+    presence: true
   },
   newPassword: {
-    presence: true,
+    presence: true
   },
   confirmPassword: {
-    presence: true,
-  },
+    presence: true
+  }
 };
 
 const ResetPasswordPage = ({ email }) => {
@@ -47,7 +48,7 @@ const ResetPasswordPage = ({ email }) => {
   };
 
   const [Reset, { error, isSuccess }] = useUpdatePasswordMutation({
-    provideTag: ["User"],
+    provideTag: ["User"]
   });
 
   const onSubmit = async (values) => {
@@ -64,13 +65,13 @@ const ResetPasswordPage = ({ email }) => {
       showAlert("Password changed Successfully!", "Pls Login", "success");
       navigate(LOGIN);
     } else if (error) {
-      showAlert("Oops", "Invalid Otp or Otp expired", "error");
+      showAlert("", error?.data?.message, "error");
     }
   }, [isSuccess, error, navigate]);
 
   const [Forgot, { error: otpError, isSuccess: otpSuccess, isLoading }] =
     useGetCodeMutation({
-      provideTag: ["User"],
+      provideTag: ["User"]
     });
 
   const resendOtp = async () => {
@@ -233,6 +234,10 @@ const ResetPasswordPage = ({ email }) => {
       </div>
     </div>
   );
+};
+
+ResetPasswordPage.propTypes = {
+  email: PropTypes.string.isRequired
 };
 
 export default ResetPasswordPage;
