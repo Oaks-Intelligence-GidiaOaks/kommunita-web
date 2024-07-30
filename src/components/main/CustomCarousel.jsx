@@ -24,7 +24,7 @@ const CustomCarousel = ({
 
   return (
     <div className="post-media rounded-md w-full">
-      {media_urls.map((media, index) => (
+      {media_urls?.map((media, index) => (
         <div
           key={index}
           className={`items-center justify-center rounded-md relative flex-row ${

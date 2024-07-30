@@ -1,5 +1,6 @@
 import React from "react";
 import { LiaTimesCircle } from "react-icons/lia";
+import NotificationsHome from "./NotificationsHome";
 
 const NotificationModal = ({onClick}) => {
   return (
@@ -8,6 +9,10 @@ const NotificationModal = ({onClick}) => {
             <div className="flex justify-between items-center px-5 py-4">
                 <h3 className="text-lg text-[#3D7100] font-semibold">Notifications</h3>
                 <button className="text-sm font-semibold text-gray-600" onClick={onClick}><LiaTimesCircle size={30}/></button>
+            </div>
+            <div className="overflow-y-auto custom-scrollbar">
+
+      <NotificationsHome />
             </div>
       </div>
     </div>

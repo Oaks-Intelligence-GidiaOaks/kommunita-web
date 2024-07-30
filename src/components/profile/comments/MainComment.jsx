@@ -18,6 +18,9 @@ const MainComment = ({ comment }) => {
   const onReply = () => {
     setAddReply(!addReply);
   };
+
+  console.log(getTimeAgoString(comment))
+  console.log(comment)
   return (
     <div className="relative mt-5 text-primary-dark-gray ">
       {/* <Comment id={comment._id} onComment={onReply} /> */}
@@ -31,7 +34,7 @@ const MainComment = ({ comment }) => {
             }}
           >
             <img
-              src={comment.user_id?.photo_url || avatar4}
+              src={comment?.user_id?.photo_url || avatar4}
               className="rounded-full w-full h-full object-cover"
               alt="user-thumbnail"
             />
@@ -43,10 +46,10 @@ const MainComment = ({ comment }) => {
                 <GoDotFill />
               </h2>
               <h4 className="text-[9px]">
-                {getTimeAgoString(comment.createdAt)}
+                {getTimeAgoString(comment?.createdAt)} yyy
               </h4>
             </div>
-            <p className="mt-1 comment">{comment.content}</p>
+            <p className="mt-1 comment">{comment?.content}</p>
             {/* <div className="flex w-full justify-between"> */}
 
             {/* </div> */}

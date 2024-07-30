@@ -131,7 +131,7 @@ const DiaryContainer = ({ comment }) => {
           data={"234"}
         />
       </div>
-      {comment && <MainComment />}
+      {comment && <MainComment  />}
     </div>
   );
 };

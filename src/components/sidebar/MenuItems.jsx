@@ -52,7 +52,7 @@ function MenuItems() {
         icon: <GoStar/>,
         activeIcon: notificationsActive,
         text: "Favourites",
-        to: "/notifications",
+        to: "/bookmarks",
       },
       {
         id: 3,

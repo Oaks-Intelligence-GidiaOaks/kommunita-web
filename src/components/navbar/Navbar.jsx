@@ -235,6 +235,7 @@ const Navbar = () => {
   const organisationRef = useRef(null);
   const profileRef = useRef(null);
   const [searchString, setSearchString] = useState("");
+  const [searchOrganisation, setSearchOrganisation] = useState("");
   const { data: profile } = useGetUserProfiileQuery();
   const { data:userOganisation, } = useGetUserOrganisationQuery()
 
@@ -357,7 +358,7 @@ const Navbar = () => {
                 listItem={
                   <div className="px-4 py-5">
                     <div className="flex search-box rounded w-full">
-                      <div className="cursor-pointer" onClick={handleSearch}>
+                      <div className="cursor-pointer">
                         {searching ? (
                           <BeatLoader color="#ffffff" loading={true} />
                         ) : (
@@ -368,8 +369,8 @@ const Navbar = () => {
                         type="text"
                         className="search-input w-full focus:outline-none focus:ring-0"
                         placeholder="Search"
-                        value={searchString}
-                        onChange={(e) => setSearchString(e.target.value)}
+                        value={searchOrganisation}
+                        onChange={(e) => setSearchOrganisation(e.target.value)}
                       />
                     </div>
                     {/* Organisations list goes here */}

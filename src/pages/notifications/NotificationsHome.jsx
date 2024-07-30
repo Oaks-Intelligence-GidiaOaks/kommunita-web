@@ -23,7 +23,8 @@ const NotificationsHome = () => {
 
   console.log(data?.data);
   return (
-    <MainLayout>
+    <>
+    {/* <MainLayout> */}
       {isLoading ? (
         <div className="flex justify-center pt-10">
           <Spinner />
@@ -49,7 +50,7 @@ const NotificationsHome = () => {
               {/* <div className="flex gap-2">
                 <p className="post-name pb-1">{fullname || "Eko Rugged"}</p>{" "}
                 {verifiedUser && (
-                  <span>
+                  <span> 
                     <img src={verified || avatar4} alt="" className="pb-1" />
                   </span>
                 )}
@@ -95,7 +96,8 @@ const NotificationsHome = () => {
           // <div>hello</div>
         ))
       )}
-    </MainLayout>
+    {/* </MainLayout> */}
+    </>
   );
 };
 
