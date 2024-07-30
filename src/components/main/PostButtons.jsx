@@ -185,7 +185,7 @@ function PostButtons({
         whileHover={{ scale: 1.1 }}
         onClick={handleRespost}
       >
-        <img src={retweet} alt="" /> yyy
+        <img src={retweet} alt="" />
         {repost}
       </motion.button>
       <motion.button

@@ -46,7 +46,7 @@ const MainComment = ({ comment }) => {
                 <GoDotFill />
               </h2>
               <h4 className="text-[9px]">
-                {getTimeAgoString(comment?.createdAt)} yyy
+                {getTimeAgoString(comment?.createdAt)}
               </h4>
             </div>
             <p className="mt-1 comment">{comment?.content}</p>
