@@ -1,7 +1,7 @@
 const getTimeAgoString = (uploadTime) => {
   const now = new Date();
   const uploadDate = new Date(uploadTime);
-  const timeDifference = now.getTime() - uploadDate.getTime();
+  const timeDifference = now.getTime() - uploadDate?.getTime();
   const secondsDifference = timeDifference / 1000;
   if (secondsDifference < 60) {
     return "Just now";

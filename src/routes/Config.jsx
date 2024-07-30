@@ -14,7 +14,7 @@ import {
   Messages,
   Live,
   Post,
-  Notifications,
+  // Notifications,
   PollHistory,
   FollowHome,
   ForgotPasswordPage,
@@ -119,10 +119,10 @@ const Config = () => {
           path={routes.SURVEY}
           element={<ProtectedRoute component={SurveyHome} />}
         />
-        <Route
+        {/* <Route
           path={routes.NOTIFICATION}
           element={<ProtectedRoute component={Notifications} />}
-        />
+        /> */}
 
         {/* Redirect to home for unknown routes */}
         <Route path={"*"} element={<Navigate to={"/"} />} />

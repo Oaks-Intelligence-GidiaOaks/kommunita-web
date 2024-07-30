@@ -58,10 +58,10 @@ function PostButtons({
   }, [userData, id, isBookmarked, refetchUser]);
 
   const [ref, inView] = useInView();
-  const likes = reaction.like.length + reaction.love.length;
-  const likeUserIds = reaction.like.map((user) => user._id);
+  const likes = reaction?.like?.length + reaction?.love?.length;
+  const likeUserIds = reaction?.like?.map((user) => user._id);
 
-  const isLikedByCurrentUser = likeUserIds.includes(login_user_id);
+  const isLikedByCurrentUser = likeUserIds?.includes(login_user_id);
 
   const [lovePost, { error, isSuccess }] = useLovePostMutation();
 

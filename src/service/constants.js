@@ -6,6 +6,7 @@ export const RESET_PASSWORD = "user/reset-password";
 
 export const GETUSER = "user/me";
 export const ALL_ORGANIZATIONS = "user/organizations";
+export const ALL_uSER_ORGANIZATIONS = "/user/my-organizations";
 export const FEEDS = "user/feeds";
 export const NOTIFICATIONS = "user/notifications";
 export const FAVORITE = "user/feeds/favourite";
