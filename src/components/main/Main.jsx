@@ -10,10 +10,12 @@ import PollDisplay from "../polls/PollDisplay";
 import { Link } from "react-router-dom";
 import { Spinner } from "flowbite-react";
 import StoryList from "../ui/StoryList";
+import Repost from "./Repost";
 
 function Main() {
   const { data, isLoading, refetch } = useGetFeedsQuery();
   const posts = data?.data || [];
+  console.log(posts.action_type, "posts");
   console.log(posts, "posts");
 
   return (
@@ -42,7 +44,7 @@ function Main() {
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .map((post, index) =>
             post.shared_by ? (
-              <Posts
+              <Repost
                 key={index}
                 fullname={
                   post?.post_id?.user_id.display_name ||
@@ -53,8 +55,8 @@ function Main() {
                   post?.diary_id?.user_id.username
                 }
                 verifiedUser={false} // Adjust based on your data
-                postTime={getTimeAgoString(post?.createdAt || post?.createdAt)}
-                content={post?.post_id?.content || post?.diary_id?.content}
+                // postTime={getTimeAgoString(post?.createdAt || post?.createdAt)}
+                content={post?.post_id?.content + " 76766777777777" || post?.diary_id?.content}
                 media_urls={
                   post?.post_id?.media_urls || post?.diary_id?.media_urls
                 }
@@ -63,19 +65,21 @@ function Main() {
                 repost={post?.post_id?.repost || post?.diary_id?.repost}
                 share={post?.post_id?.share || post?.diary_id?.share}
                 reaction={post?.post_id?.reaction || post?.diary_id?.reaction}
-                avatar={
-                  post?.post_id?.user_id.photo_url ||
-                  post?.diary_id?.user_id.photo_url ||
-                  avatar4
-                }
-                badgeColor={
-                  post?.post_id?.user_id?.department[0]?.badge?.color ||
-                  post?.diary_id?.user_id?.department[0]?.badge?.color
-                }
-                department={
-                  post?.post_id?.user_id?.department[0]?.badge?.department ||
-                  post?.diary_id?.user_id?.department[0]?.badge?.department
-                }
+                shared_by={ post?.shared_by?.username ||
+                  post?.diary_id?.username}
+                // avatar={
+                //   post?.post_id?.user_id.photo_url ||
+                //   post?.diary_id?.user_id.photo_url ||
+                //   avatar4
+                // }
+                // badgeColor={
+                //   post?.post_id?.user_id?.department[0]?.badge?.color ||
+                //   post?.diary_id?.user_id?.department[0]?.badge?.color
+                // }
+                // department={
+                //   post?.post_id?.user_id?.department[0]?.badge?.department ||
+                //   post?.diary_id?.user_id?.department[0]?.badge?.department
+                // }
                 userId={
                   post?.post_id?.user_id?._id || post?.diary_id?.user_id?._id
                 }

@@ -1,20 +1,18 @@
-import Tweet from '../../components/main/Tweet'
-import MainLayout from '../../components/main/MainLayout'
-import React from 'react'
-import { useGetFeedsQuery } from '../../service/feeds.service';
+import Tweet from "../../components/main/Tweet";
+import MainLayout from "../../components/main/MainLayout";
+import React from "react";
+import { useGetFeedsQuery } from "../../service/feeds.service";
 import { Spinner } from "flowbite-react";
-import getTimeAgoString from '../../utils/getTimeAgoString';
+import getTimeAgoString from "../../utils/getTimeAgoString";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
-
-
 
 const CommunityHome = () => {
   const { data, isLoading, refetch } = useGetFeedsQuery();
   const posts = data?.data || [];
+  console.log(data?.data.action_type)
   return (
     <MainLayout>
-
-{/* {isLoading ? (
+      {isLoading ? (
         <div className="flex justify-center pt-10">
           <Spinner />
         </div>
@@ -44,7 +42,7 @@ const CommunityHome = () => {
                   post?.post_id?.user_id.username ||
                   post?.diary_id?.user_id.username
                 }
-                verifiedUser={false} // Adjust based on your data
+                verifiedUser={false} 
                 postTime={getTimeAgoString(post?.createdAt || post?.createdAt)}
                 content={post?.post_id?.content || post?.diary_id?.content}
                 media_urls={
@@ -116,12 +114,12 @@ const CommunityHome = () => {
               </div>
             )
           )
-      )} */}
-<div className="mt-1 min-h-screen px-5 pt-5 bg-white">
+      )}
+      {/* <div className="mt-1 min-h-screen px-5 pt-5 bg-white">
 <h1>Coming Soon...</h1>
-</div>
+</div> */}
     </MainLayout>
-  )
-}
+  );
+};
 
-export default CommunityHome
+export default CommunityHome;

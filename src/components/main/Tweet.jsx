@@ -85,7 +85,9 @@ const Tweet = ({
   department,
   type,
   userId,
-  refetchFav,
+  refetchFav,  
+action_type,
+
 }) => {
   const [retweetCount, setRetweetCount] = useState(initialRetweetCount);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
@@ -152,12 +154,19 @@ const Tweet = ({
 
   const id = useSelector((state) => state.user?.user?._id);
 
+  // console.log(content)
+  console.log(action_type)
+
   return (
     <>
-          <Tweet2 content="In this age of Aquarius, no one will be about to say they did not know. Ignorance will never be an excuse. Knowledge of hidden things will be poured out freely and lavishly. Challenge yourselves to transform these knowledge you get into power. C’est fini." initialRetweetCount={7} initialLikeCount={48} />
+      <Tweet2
+        content="In this age of Aquarius, no one will be about to say they did not know. Ignorance will never be an excuse. Knowledge of hidden things will be poured out freely and lavishly. Challenge yourselves to transform these knowledge you get into power. C’est fini."
+        initialRetweetCount={7}
+        initialLikeCount={48}
+      />
       <div className="w-full">
         <div className="pt-3 w-full">
-          {content ? (
+          {content && type === 'repost' ? (
             <div className="post-card p-5 h-auto">
               <div className="relative flex items-center justify-between">
                 <div className="flex gap-3 items-center">
@@ -248,11 +257,15 @@ const Tweet = ({
                 onComment={onComment}
                 refetchFav={refetchFav}
                 type={type}
+                handleRespost={() => {
+                  setIsModalOpen(!isModalOpen);
+                  // console.log('Clicked')
+                }}
               />
 
               {sortedComments.slice(0, visibleComments).map((comment, id) => (
-              <MainComment key={id} comment={comment} />
-            ))}
+                <MainComment key={id} comment={comment} />
+              ))}
 
               {addComment &&
                 (type === "diary" ? (
@@ -268,15 +281,136 @@ const Tweet = ({
                     placeholder={"Comment"}
                   />
                 ))}
-              {/* 
-            {sortedComments.length > visibleComments && (
-              <button className="text-sm" onClick={loadMoreComments}>
-                Load more comments
-              </button>
-            )} */}
+
+              {sortedComments.length > visibleComments && (
+                <button className="text-sm" onClick={loadMoreComments}>
+                  Load more comments
+                </button>
+              )}
             </div>
           ) : (
-            <ShimmerSocialPost type="both" />
+            // <ShimmerSocialPost type="both" />
+            <div className="post-card p-5 h-auto bg-red-500">
+              <div className="relative flex items-center justify-between">
+                <div className="flex gap-3 items-center">
+                  <Link to={`/profile/${userId || user._id}`}>
+                    <div
+                      className={`rounded-full border-4 w-[40px] h-[40px]`}
+                      style={{ borderColor: badgeColor }}
+                    >
+                      <img
+                        src={avatar}
+                        className="rounded-full w-full h-full object-cover"
+                        alt=""
+                      />
+                    </div>
+                  </Link>
+                  <div>
+                    <div className="flex gap-2 items-center">
+                      <Link to={`/profile/${userId || user._id}`}>
+                        <p className="post-name">{fullname}</p>{" "}
+                        {verifiedUser && (
+                          <span>
+                            <img src={verified} alt="" className="pb-1" />
+                          </span>
+                        )}
+                      </Link>
+                      <span className="post-time ml-2 font-bold">
+                        {postTime}
+                      </span>
+                    </div>
+                    <div className="username flex gap-1 items-center">
+                      <p className="flex flex-col">
+                        @{username} <p>{department || ""}</p>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {userId === id ? (
+                  <button onClick={handlePostActionClick}>
+                    <img src={post_action} alt="" />
+                  </button>
+                ) : null}
+
+                {showPopup && (
+                  <div className="absolute -right-4 top-[30px] z-50 popup rounded-md bg-[#ffffff] p-2">
+                    <div className="  w-[110px] h-[69px] bg-[#ffffff] rounded-[10px] p-2 flex items-center justify-center flex-col gap-2">
+                      {/* EDIT POST */}
+
+                      <button
+                        onClick={() => handleShowEditModal(true)}
+                        className={`${
+                          type == "diary" ? "disabled" : ""
+                        }flex w-[89px] h-[26px] px-[19px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#838383] justify-center items-center border rounded-md hover:text-black`}
+                      >
+                        {type == "diary" ? "Edit diary" : "Edit post"}
+                      </button>
+
+                      <button
+                        onClick={() => removeFeed(post_id)}
+                        className="flex w-[89px] h-[26px] px-[15px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#E71D36] justify-center items-center border rounded-md hover:text-white hover:bg-red-600"
+                      >
+                        {/* <TbHttpDelete /> */}
+                        {type == "diary" ? "Delete diary" : "Delete post"}
+                      </button>
+                    </div>{" "}
+                  </div>
+                )}
+              </div>
+
+              <Diary content={content} />
+
+              <div className="post-media rounded-md w-full py-3">
+                <CustomCarousel
+                  media_urls={media_urls}
+                  left={left}
+                  right={right}
+                  dotsinactive={dotsinactive}
+                  dotsactive={dotsactive}
+                />
+              </div>
+
+              <PostButtons
+                id={post_id}
+                comment={comment?.length}
+                repost={repost?.length}
+                share={share?.length}
+                reaction={reaction || []}
+                onComment={onComment}
+                refetchFav={refetchFav}
+                type={type}
+                handleRespost={() => {
+                  setIsModalOpen(!isModalOpen);
+                  // console.log('Clicked')
+                }}
+              />
+
+              {sortedComments.slice(0, visibleComments).map((comment, id) => (
+                <MainComment key={id} comment={comment} />
+              ))}
+
+              {addComment &&
+                (type === "diary" ? (
+                  <DiaryComment
+                    id={post_id}
+                    onComment={onComment}
+                    placeholder={"Comment"}
+                  />
+                ) : (
+                  <Comment
+                    id={post_id}
+                    onComment={onComment}
+                    placeholder={"Comment"}
+                  />
+                ))}
+
+              {sortedComments.length > visibleComments && (
+                <button className="text-sm" onClick={loadMoreComments}>
+                  Load more comments
+                </button>
+              )}
+            </div>
           )}
         </div>
         {showEditModal && type == "post" ? (
@@ -323,107 +457,21 @@ const Tweet = ({
           </Modals>
         )}
       </div>
-      <div className="post-card p-5 h-auto">
-        <div className="flex gap-3 items-center">
-          <Link to={`/profile/${userId || user._id}`}>
-            <div
-              className={`rounded-full border-4 w-[40px] h-[40px]`}
-              style={{ borderColor: badgeColor }}
-            >
-              <img
-                src={avatar}
-                className="rounded-full w-full h-full object-cover"
-                alt=""
-              />
-            </div>
-          </Link>
-          <div>
-            <div className="flex gap-2 items-center">
-              <Link to={`/profile/${userId || user._id}`}>
-                <p className="post-name">{fullname}</p>{" "}
-                {verifiedUser && (
-                  <span>
-                    <img src={verified} alt="" className="pb-1" />
-                  </span>
-                )}
-              </Link>
-              <span className="post-time ml-2 font-bold">{postTime}</span>
-            </div>
-            <div className="username flex gap-1 items-center">
-              <p className="flex flex-col">
-                @{username} <p>{department || ""}</p>
-              </p>
-            </div>
-          </div>
-        </div>
 
-        {userId === id ? (
-          <button onClick={handlePostActionClick}>
-            <img src={post_action} alt="" />
-          </button>
-        ) : null}
-
-        {showPopup && (
-          <div className="absolute -right-4 top-[30px] z-50 popup rounded-md bg-[#ffffff] p-2">
-            <div className="  w-[110px] h-[69px] bg-[#ffffff] rounded-[10px] p-2 flex items-center justify-center flex-col gap-2">
-              {/* EDIT POST */}
-
-              <button
-                onClick={() => handleShowEditModal(true)}
-                className={`${
-                  type == "diary" ? "disabled" : ""
-                }flex w-[89px] h-[26px] px-[19px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#838383] justify-center items-center border rounded-md hover:text-black`}
-              >
-                {type == "diary" ? "Edit diary" : "Edit post"}
-              </button>
-
-              <button
-                onClick={() => removeFeed(post_id)}
-                className="flex w-[89px] h-[26px] px-[15px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#E71D36] justify-center items-center border rounded-md hover:text-white hover:bg-red-600"
-              >
-                {/* <TbHttpDelete /> */}
-                {type == "diary" ? "Delete diary" : "Delete post"}
-              </button>
-            </div>{" "}
-          </div>
-        )}
-
-        <Diary content={content} />
-
-        <div className="post-media rounded-md w-full py-3">
-          <CustomCarousel
-            media_urls={media_urls}
-            left={left}
-            right={right}
-            dotsinactive={dotsinactive}
-            dotsactive={dotsactive}
-          />
-        </div>
-
-        <PostButtons
-          id={post_id}
-          comment={comment?.length}
-          repost={repost?.length}
-          share={share?.length}
-          reaction={reaction || []}
-          onComment={onComment}
-          refetchFav={refetchFav}
-          type={type}
+      {isModalOpen && (
+        <RetweetModal
+          postBy={username}
+          onClose={() => setIsModalOpen(false)}
+          onRetweet={handleRetweet}
         />
-        {isModalOpen && (
-          <RetweetModal
-            onClose={() => setIsModalOpen(false)}
-            onRetweet={handleRetweet}
-          />
-        )}
-        {retweets.map((retweet, index) => (
-          <Retweet
-            key={index}
-            originalContent={retweet.content1}
-            quote={retweet.quote}
-          />
-        ))}
-      </div>
+      )}
+      {retweets.map((retweet, index) => (
+        <Retweet
+          key={index}
+          originalContent={retweet.content1}
+          quote={retweet.quote}
+        />
+      ))}
     </>
   );
 };

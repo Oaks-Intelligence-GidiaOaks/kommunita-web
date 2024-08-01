@@ -30,7 +30,7 @@ function Main() {
   // } = useGetFilteredFavoritesQuery();
 
   const posts = data?.data || [];
-  console.log(data?.data);
+  console.log(data?.data.action_type);
 
   const [filterString, setFilterString] = useState("");
   const [filterData, setFilterData] = useState("");

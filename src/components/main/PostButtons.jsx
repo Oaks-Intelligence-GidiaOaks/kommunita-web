@@ -32,6 +32,7 @@ function PostButtons({
   refetchFav,
   onComment,
   type,
+  handleRespost
 }) {
   const location = useLocation();
   const { pathname } = location;
@@ -81,34 +82,34 @@ function PostButtons({
       showAlert("Oops", "An error occurred while liking the post", "error");
     }
   };
-  const handleRespost = async () => {
-    if (type.includes("pos")) {
-      const postData = { post_id: id };
-      try {
-        await rtkMutation(repostPost, postData);
-      } catch (error) {
-        console.error("Error reposting post:", error);
-        showAlert(
-          "Oops",
-          "An error occurred while reposting the post",
-          "error"
-        );
-      }
-    } else {
-      const diaryData = { diary_id: id };
-      console.log("Diary repost");
-      try {
-        await rtkMutation(repostDiary, diaryData);
-      } catch (error) {
-        console.error("Error reposting diary:", error);
-        showAlert(
-          "Oops",
-          "An error occurred while reposting the diary",
-          "error"
-        );
-      }
-    }
-  };
+  // const handleRespost = async () => {
+  //   if (type.includes("pos")) {
+  //     const postData = { post_id: id };
+  //     try {
+  //       await rtkMutation(repostPost, postData);
+  //     } catch (error) {
+  //       console.error("Error reposting post:", error);
+  //       showAlert(
+  //         "Oops",
+  //         "An error occurred while reposting the post",
+  //         "error"
+  //       );
+  //     }
+  //   } else {
+  //     const diaryData = { diary_id: id };
+  //     console.log("Diary repost");
+  //     try {
+  //       await rtkMutation(repostDiary, diaryData);
+  //     } catch (error) {
+  //       console.error("Error reposting diary:", error);
+  //       showAlert(
+  //         "Oops",
+  //         "An error occurred while reposting the diary",
+  //         "error"
+  //       );
+  //     }
+  //   }
+  // };
 
   // Bookmark
   const handleBookmark = async () => {

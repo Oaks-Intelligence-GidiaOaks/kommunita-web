@@ -20,12 +20,15 @@ import { useSelector } from "react-redux";
 import { IoIosCloseCircle } from "react-icons/io";
 import { TbHttpDelete } from "react-icons/tb";
 import { CiEdit } from "react-icons/ci";
-import { useDeleteDiaryMutation } from "../../service/diary.service";
+import { useDeleteDiaryMutation, useRepostDiaryMutation } from "../../service/diary.service";
 import { useDeleteFeedMutation } from "../../service/feeds.service";
 import Modals from "../modals/Modal";
 // import EditPost from "./EditPost";
 import EditMyPost from "./EditMyPost";
 import EditMyDiary from "./EditMyDiary";
+import { useRepostPostMutation } from "../../service/post.service";
+import rtkMutation from "../../utils/rtkMutation";
+import RetweetModal from "../tweets/RetweetModal";
 
 const Diary = ({ content }) => {
   const sanitizedContent = DOMPurify.sanitize(content);
@@ -87,6 +90,10 @@ function Post({
   const [deleteFeeds] = useDeleteFeedMutation();
   const [deleteDiary] = useDeleteDiaryMutation();
   const [showEditModal, setShowEditModal] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [repostPost, { error: err, isSuccess: scs }] = useRepostPostMutation();
+  const [repostDiary, { error: errDiary, isSuccess: scsDiary }] =
+    useRepostDiaryMutation();
 
   const user = useSelector((state) => state.user.user);
   // console.log("User: ", user);
@@ -130,6 +137,36 @@ function Post({
       (prevVisibleComments) => prevVisibleComments + nextCommentsToShow
     );
   };
+
+  const handleRepost = async () => {
+    if (type.includes("pos")) {
+      const postData = { post_id: id };
+      try {
+        await rtkMutation(repostPost, postData);
+      } catch (error) {
+        console.error("Error reposting post:", error);
+        showAlert(
+          "Oops",
+          "An error occurred while reposting the post",
+          "error"
+        );
+      }
+    } else {
+      const diaryData = { diary_id: id };
+      console.log("Diary repost");
+      try {
+        await rtkMutation(repostDiary, diaryData);
+      } catch (error) {
+        console.error("Error reposting diary:", error);
+        showAlert(
+          "Oops",
+          "An error occurred while reposting the diary",
+          "error"
+        );
+      }
+    }
+  };
+
 
   const id = useSelector((state) => state.user?.user?._id);
 
@@ -225,6 +262,9 @@ function Post({
               onComment={onComment}
               refetchFav={refetchFav}
               type={type}
+              handleRespost={() => {
+                setIsModalOpen(!isModalOpen);
+              }}
             />
 
             {sortedComments.slice(0, visibleComments).map((comment, id) => (
@@ -298,6 +338,13 @@ function Post({
             </div>
           </div>
         </Modals>
+      )}
+          {isModalOpen && (
+        <RetweetModal
+          postBy={username}
+          onClose={() => setIsModalOpen(false)}
+          onRetweet={()=>handleRepost(post_id)}
+        />
       )}
     </div>
   );
