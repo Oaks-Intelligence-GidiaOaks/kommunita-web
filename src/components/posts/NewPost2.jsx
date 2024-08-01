@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import getTimeAgoString from "../../utils/getTimeAgoString";
 import CustomCarousel from "../main/CustomCarousel";
 import {
-  useFavoritePostMutation,
+  useFavoritePostsMutation,
   useLovePostMutation,
   usePostCommentMutation,
 } from "../../service/post.service";
@@ -36,11 +36,12 @@ const NewPost2 = ({ post, comment }) => {
   const isLikedByCurrentUser = likeUserIds?.includes(login_user_id);
   const { data: userData, refetch: refetchUser } = useGetUserProfiileQuery();
   const [favoritePost, { error: bookmarkError, isSuccess: bookMarkSuccess }] =
-    useFavoritePostMutation();
+    useFavoritePostsMutation();
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const toggleComments = () => {
     setShowComments(!showComments);
+    onComment()
   };
 
   //   LIKE AND UNLIKE FUNTUIONALITY
@@ -110,7 +111,7 @@ const NewPost2 = ({ post, comment }) => {
     console.log(post._id);
 
     try {
-      await favoritePost({ post_id: post?._id, typ: "post" }).unwrap();
+      await favoritePost({ post_id: post?._id, }).unwrap();
     } catch (error) {
       setIsBookmarked(previousState);
     }
@@ -238,7 +239,7 @@ const NewPost2 = ({ post, comment }) => {
         <MainComment key={index} comment={comment} />
       ))}
 
-      <Comment id={post?._id} onComment={onComment} placeholder={"Comment"} />
+     {addComment && <Comment id={post?._id} onComment={onComment} placeholder={"Comment"} />}
     </div>
   );
 };

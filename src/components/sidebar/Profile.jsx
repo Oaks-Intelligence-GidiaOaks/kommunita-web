@@ -4,6 +4,7 @@ import emoji from "../../assets/images/sidebar/emoji.svg";
 import { useSelector } from "react-redux";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import { profile_placeholder } from "../../assets/images";
+import { Link } from "react-router-dom";
 
 function Profile() {
   const { data: profile } = useGetUserProfiileQuery();
@@ -39,27 +40,32 @@ function Profile() {
         </div> */}
 
         <div className="stats flex gap-1 xl:gap-2 px-12 justify-center items-center mt-4">
+          <Link to="#">
           <div className="flex flex-col text-center">
             <p className="stats-number text-xs xl:text-sm font-semibold">
               {profile?.data?.posts_count}
             </p>
             <p className="stats-title text-xs xl:text-sm">Posts</p>
           </div>
+          </Link>
           <div className="w-1 h-1 bg-[#3D7100] rounded-full"></div>
+          <Link to="#">
           <div className="flex flex-col text-center">
             <p className="stats-number text-xs xl:text-sm font-semibold">
               {profile?.data?.followers.length}
             </p>
             <p className="stats-title text-xs xl:text-sm">Followers</p>
           </div>
+          </Link>
           <div className="w-1 h-1 bg-[#3D7100] rounded-full"></div>
-
+            <Link to={'#'}>
           <div className="flex flex-col text-center">
             <p className="stats-number text-xs xl:text-sm font-semibold">
               {profile?.data?.following.length}
             </p>
             <p className="stats-title text-xs xl:text-sm">Following</p>
           </div>
+            </Link>
         </div>
       </div>
       <div className="px-1 xl:px-5 pt-2">

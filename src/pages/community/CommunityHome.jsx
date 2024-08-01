@@ -1,8 +1,9 @@
-import MainLayout from "../../components/main/MainLayout";
 import React, { useEffect } from "react";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import NewPost2 from "../../components/posts/NewPost2";
 import RepostNew from "../../components/posts/RepostNew";
+import CommunityLayout from "../../components/main/CommunityLayout";
+import CommunityHeader from "../../components/community/CommunityHeader";
 
 const CommunityHome = () => {
   const { data, isLoading, refetch } = useGetFeedsQuery();
@@ -17,8 +18,8 @@ const CommunityHome = () => {
   }
 
   return (
-    <MainLayout>
-      {data?.data.map((post) => {
+    <CommunityLayout>
+      {/* {data?.data.map((post) => {
         if (post.type === "post") {
           return <NewPost2 key={post?._id} post={post} />;
         } else if (post.action_type === "Repost") {
@@ -26,8 +27,10 @@ const CommunityHome = () => {
         } else {
           return null;
         }
-      })}
-    </MainLayout>
+      })} */}
+
+      <CommunityHeader />
+    </CommunityLayout>
   );
 };
 

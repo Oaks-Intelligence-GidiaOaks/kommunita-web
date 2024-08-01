@@ -187,17 +187,17 @@ import { IoIosArrowDown } from "react-icons/io";
 import { BsBell } from "react-icons/bs";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import { AiOutlineMenu } from "react-icons/ai";
-import { RiSearch2Line } from "react-icons/ri";
 import DropdownMenu from "../ui/DropdownMenu";
 import { FaRegUser } from "react-icons/fa6";
 import { IoSettingsOutline } from "react-icons/io5";
-import { CiLogout } from "react-icons/ci";
+import { CiLogout, CiSearch } from "react-icons/ci";
 import { useGetUserOrganisationQuery } from "../../service/organization.service";
 import { debounce } from "lodash";
 import { useDispatch } from "react-redux";
 import { handleLogout } from "../../static/logout";
 import { PROFILE } from "../../routes/routes";
 import NotificationModal from "../../pages/notifications/NotificationModal";
+import MobileSidebar from "../sidebar/MobileSidebar";
 
 const NavItem = ({ to, icon: Icon, label, exact }) => {
   const location = useLocation();
@@ -293,7 +293,14 @@ const Navbar = () => {
 
   // console.log(userOganisation?.data)
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMobileSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
+    <>
     <nav className="fixed h-auto flex justify-between items-center py-4 px-8 md:px-0 lg:px-12 w-full top-0 left-0 right-0 z-10 mb-10 bg-white">
       <div className="md:hidden xl:block">
         <Link to={"/"}>
@@ -465,10 +472,12 @@ const Navbar = () => {
         </Modals>
       )}
       <div className="sm:flex md:hidden gap- items-center">
-        <RiSearch2Line size={30} className="inline-block"/>
-        <AiOutlineMenu size={30} className="inline-block"/>
+        <CiSearch size={30} className="inline-block"/>
+        <AiOutlineMenu size={30} className="inline-block" onClick={toggleMobileSidebar}/>
       </div>
     </nav>
+      {isOpen && <MobileSidebar onClick={toggleMobileSidebar} isOpen={isOpen}/>}
+    </>
   );
 };
 
