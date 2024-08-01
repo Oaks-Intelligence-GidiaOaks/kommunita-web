@@ -36,10 +36,10 @@ const ReplyComment = ({ reply }) => {
             <div>
               <p className="mt-2 comment">{reply.content}</p>
             </div>
-            <div className="flex text-[7px] pt-1 gap-2 text-primary-gray">
+            {/* <div className="flex text-[7px] pt-1 gap-2 text-primary-gray">
               <p className="cursor-pointer">Like</p>
               <p className="cursor-pointer">Reply</p>
-            </div>
+            </div> */}
           </div>
         </div>
 

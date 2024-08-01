@@ -1,30 +1,29 @@
+import React from 'react'
+import CommentButtons from '../main/CommentButtons';
 import { useState } from "react";
-import ReplyComment from "./ReplyComment";
-import getTimeAgoString from "../../../utils/getTimeAgoString";
-import CommentButtons from "./../../main/CommentButtons";
-import Comment from "../../main/Comment";
-import avatar4 from "../../../assets/images/sidebar/avatar4.svg";
-import PropTypes from "prop-types";
 import { GoDotFill } from "react-icons/go";
 import "./style.css";
-import { profile_placeholder } from "../../../assets/images";
+import Comment from '../main/Comment';
+import ReplyComment from '../profile/comments/ReplyComment';
+import getTimeAgoString from '../../utils/getTimeAgoString';
+import { profile_placeholder } from '../../assets/images';
+import fav from "../../assets/images/main/fav.svg";
+import reply from "../../assets/images/reply.png";
 
-const MainComment = ({ comment }) => {
-  let bordercolor = "";
-  if (comment?.user_id?.department) {
-    bordercolor = comment.user_id?.department[0]?.badge?.color;
-  }
-  const [addReply, setAddReply] = useState(false);
-  // console.log(comment);
-  const onReply = () => {
-    setAddReply(!addReply);
-  };
 
-  console.log(getTimeAgoString(comment))
-  console.log(comment)
-  
+const CommentSection = ({comment, }) => {
+    let bordercolor = "";
+    if (comment?.user_id?.department) {
+      bordercolor = comment.user_id?.department[0]?.badge?.color;
+    }
+    const [addReply, setAddReply] = useState(false);
+    // console.log(comment);
+    const onReply = () => {
+      setAddReply(!addReply);
+    };
   return (
-    <div className="relative mt-5 text-primary-dark-gray ">
+    <div>
+          <div className="relative mt-5 text-primary-dark-gray ">
       {/* <Comment id={comment._id} onComment={onReply} /> */}
       <div className="flex justify-between items-center">
         <div className="flex gap-2 justify-center items-center">
@@ -72,7 +71,6 @@ const MainComment = ({ comment }) => {
           />
         </svg>
 
-        {/* This is the comment reply section */}
         {comment?.replies?.length > 0 && (
           <div className="absolute top-11 left-[2%]">
             <svg
@@ -94,7 +92,25 @@ const MainComment = ({ comment }) => {
         )}
       </div>
       <div className="self-end">
-        <CommentButtons comment={comment?.replies} onComment={onReply} />
+      <div
+      className="post-buttons flex gap-3 justify-end z-50"
+    >
+      <button
+        className="flex gap-1 items-center"
+        onClick={onReply}
+      >
+        <img className="w-[20px]" src={reply} alt="" />
+        {comment?.length}
+      </button>
+
+      <button
+        className="flex gap-1 items-center"
+      >
+        <img src={fav} alt="" />
+        {/* {likes} */}
+      </button>
+    </div>
+        {/* <CommentButtons comment={comment?.replies} onComment={onReply} /> */}
       </div>
 
       {addReply && (
@@ -114,24 +130,8 @@ const MainComment = ({ comment }) => {
           </div>
         ))}
     </div>
-  );
-};
+    </div>
+  )
+}
 
-MainComment.propTypes = {
-  comment: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    user_id: PropTypes.shape({
-      photo_url: PropTypes.string,
-      display_name: PropTypes.string.isRequired,
-    }).isRequired,
-    createdAt: PropTypes.string.isRequired,
-    content: PropTypes.string.isRequired,
-    replies: PropTypes.arrayOf(
-      PropTypes.shape({
-        // Define shape of each reply if needed
-      })
-    ),
-  }).isRequired,
-};
-
-export default MainComment;
+export default CommentSection

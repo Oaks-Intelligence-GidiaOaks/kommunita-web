@@ -10,8 +10,8 @@ const RetweetModal = ({ onClose, onRetweet, postBy, type }) => {
     useRepostDiaryMutation();
     const [repostPost, { error: err, isSuccess: scs }] = useRepostPostMutation();
 
-  const handleRespost = async (id) => {
-    // if (type === "post") {
+  const handleRespost = async () => {
+    if (type === "pos") {
       const postData = { post_id: id };
       try {
         await rtkMutation(repostPost, postData);
@@ -23,22 +23,21 @@ const RetweetModal = ({ onClose, onRetweet, postBy, type }) => {
           "error"
         );
       }
-    } 
-    // else {
-    //   const diaryData = { diary_id: id };
-    //   console.log("Diary repost");
-    //   try {
-    //     await rtkMutation(repostDiary, diaryData);
-    //   } catch (error) {
-    //     console.error("Error reposting diary:", error);
-    //     showAlert(
-    //       "Oops",
-    //       "An error occurred while reposting the diary",
-    //       "error"
-    //     );
-    //   }
-    // }
-//   };
+    }else {
+      const diaryData = { diary_id: id };
+      console.log("Diary repost");
+      try {
+        await rtkMutation(repostDiary, diaryData);
+      } catch (error) {
+        console.error("Error reposting diary:", error);
+        showAlert(
+          "Oops",
+          "An error occurred while reposting the diary",
+          "error"
+        );
+      }
+    }
+  };
 
   const handleSubmit = () => {
     onRetweet(quote);
@@ -47,7 +46,7 @@ const RetweetModal = ({ onClose, onRetweet, postBy, type }) => {
   return (
     <div className="fixed z-40 inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white rounded-lg p-6 max-w-lg w-full">
-        <h2 className="text-xl font-semibold mb-4">Retweet post by: @{postBy}</h2>
+        <h2 className="text-xl font-semibold mb-4">Retweet post by_____: @{postBy}</h2>
         {/* <textarea
           className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500"
           placeholder="Add a comment"
@@ -63,7 +62,7 @@ const RetweetModal = ({ onClose, onRetweet, postBy, type }) => {
           </button>
           <button
             onClick={handleRespost}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+            className="bg-[#3D7100] text-white px-4 py-2 rounded-lg"
           >
             Retweet
           </button>

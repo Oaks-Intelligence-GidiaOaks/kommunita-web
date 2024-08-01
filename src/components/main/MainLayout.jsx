@@ -21,7 +21,7 @@ const MainLayout = ({ children }) => {
       <Nav />
     
 
-      <div className="bg-[#F7F7F7] flex md:px-10 items-center overflow-hidden mt-24">
+      <div className="bg-[#F7F7F7] flex xl:px-10 items-center overflow-hidden mt-24">
         {" "}
         {/* Added pt-16 for top padding */}
         {/* Sidebar */}
@@ -53,7 +53,7 @@ const MainLayout = ({ children }) => {
           </div>
         )}
       </div>
-      <div className="sm:flex md:hidden border py-auto w-full z-40 absolute bottom-0 h-20 bg-white">
+      <div className="sm:flex md:hidden border py-auto w-full z-40 fixed bottom-0 h-20 bg-white">
         <MobileNavbar />
       </div>
     </div>

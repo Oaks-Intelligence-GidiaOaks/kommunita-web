@@ -20,13 +20,16 @@ import { useSelector } from "react-redux";
 import { IoIosCloseCircle } from "react-icons/io";
 import { TbHttpDelete } from "react-icons/tb";
 import { CiEdit } from "react-icons/ci";
-import { useDeleteDiaryMutation, useRepostDiaryMutation } from "../../service/diary.service";
+import {
+  useDeleteDiaryMutation,
+  useRepostDiaryMutation,
+} from "../../service/diary.service";
 import { useDeleteFeedMutation } from "../../service/feeds.service";
 import Modals from "../modals/Modal";
 // import EditPost from "./EditPost";
 import EditMyPost from "./EditMyPost";
 import EditMyDiary from "./EditMyDiary";
-import RetweetModal from "../tweets/RetweetModal";
+// import RetweetModal from "../tweets/RetweetModal";
 import rtkMutation from "../../utils/rtkMutation";
 import { useRepostPostMutation } from "../../service/post.service";
 
@@ -96,7 +99,6 @@ function Repost({
   const [repostDiary, { error: errDiary, isSuccess: scsDiary }] =
     useRepostDiaryMutation();
 
-
   const user = useSelector((state) => state.user.user);
   // console.log("User: ", user);
 
@@ -127,21 +129,20 @@ function Repost({
     setAddComment(!addComment);
   };
 
-  const [visibleComments, setVisibleComments] = useState(5);
-  const sortedComments = [...comment].sort(
-    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-  );
+  // const [visibleComments, setVisibleComments] = useState(5);
+  // const sortedComments = [...comment].sort(
+  //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  // );
 
-  const loadMoreComments = () => {
-    const remainingComments = sortedComments.length - visibleComments;
-    const nextCommentsToShow = Math.min(5, remainingComments);
-    setVisibleComments(
-      (prevVisibleComments) => prevVisibleComments + nextCommentsToShow
-    );
-  };
+  // const loadMoreComments = () => {
+  //   const remainingComments = sortedComments.length - visibleComments;
+  //   const nextCommentsToShow = Math.min(5, remainingComments);
+  //   setVisibleComments(
+  //     (prevVisibleComments) => prevVisibleComments + nextCommentsToShow
+  //   );
+  // };
 
-
-   const handleRepost = async () => {
+  const handleRepost = async () => {
     if (type.includes("pos")) {
       const postData = { post_id: id };
       try {
@@ -170,15 +171,16 @@ function Repost({
     }
   };
 
-
   const id = useSelector((state) => state.user?.user?._id);
 
   return (
     <div className="w-full  rounded-lg">
       <div className="pt-3 w-full">
         {content ? (
-            <div className="post-card p-5 h-auto">
-              <p>Reposted by {shared_by || ''}</p>
+          <div className="post-card p-5 h-auto">
+            <p className="text-sm font-bold pb-2">
+              Reposted by @{shared_by || ""}
+            </p>
             <div className="relative flex items-center justify-between">
               <div className="flex gap-3 items-center">
                 <Link to={`/profile/${userId || user._id}`}>
@@ -258,19 +260,19 @@ function Repost({
             </div>
 
             <PostButtons
-                id={post_id}
-                comment={comment?.length}
-                repost={repost?.length}
-                share={share?.length}
-                reaction={reaction || []}
-                onComment={onComment}
-                refetchFav={refetchFav}
-                type={type}
-                handleRespost={() => {
-                  setIsModalOpen(!isModalOpen);
-                  // console.log('Clicked')
-                }}
-              />
+              id={post_id}
+              comment={comment?.length}
+              repost={repost?.length}
+              share={share?.length}
+              reaction={reaction || []}
+              onComment={onComment}
+              refetchFav={refetchFav}
+              type={type}
+              handleRespost={() => {
+                setIsModalOpen(!isModalOpen);
+                // console.log('Clicked')
+              }}
+            />
 
             {/* {sortedComments.slice(0, visibleComments).map((comment, id) => (
               <MainComment key={id} comment={comment} />
@@ -344,12 +346,34 @@ function Repost({
           </div>
         </Modals>
       )} */}
-          {isModalOpen && (
-        <RetweetModal
-          postBy={username}
-          onClose={() => setIsModalOpen(false)}
-          onRetweet={handleRepost}
-        />
+      {isModalOpen && (
+        <div className="fixed z-40 inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 max-w-lg w-full">
+            <h2 className="text-xl font-semibold mb-4">
+              Retweet post by:______ @{postBy}
+            </h2>
+            {/* <textarea
+         className="w-full border border-gray-300 p-2 rounded-lg focus:outline-none focus:border-blue-500"
+         placeholder="Add a comment"
+         value={quote}
+         onChange={(e) => setQuote(e.target.value)}
+       ></textarea> */}
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={onClose}
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg mr-2"
+              >
+                Discard
+              </button>
+              <button
+                onClick={handleRepost}
+                className="bg-[#3D7100] text-white px-4 py-2 rounded-lg"
+              >
+                Retweet
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

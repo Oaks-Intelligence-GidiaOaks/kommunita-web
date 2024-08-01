@@ -103,7 +103,7 @@ function MenuItems() {
 
   return (
     <div className="mt-5 pb-5 w-full">
-      <div className="px-5">
+      <div className="px-1 xl:px-5">
         {links.map(({ id, icon, activeIcon, text, to }) => (
           <NavLink
             key={id}

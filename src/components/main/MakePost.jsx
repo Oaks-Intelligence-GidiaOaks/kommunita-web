@@ -55,6 +55,7 @@ import { LuCalendarClock } from "react-icons/lu";
 import { GiBlackBook } from "react-icons/gi";
 import { HiOutlineDocumentDuplicate } from "react-icons/hi2";
 import { CgPoll } from "react-icons/cg";
+import { profile_placeholder } from "../../assets/images";
 
 
 function MakePost() {
@@ -273,7 +274,7 @@ function MakePost() {
             <div>
               <div className="flex items-center justify-center h-[40px] w-[40px] rounded-full border-4">
                 <img
-                  src={photo}
+                  src={profile_placeholder}
                   className="rounded-full w-full h-full object-cover"
                   alt=""
                 />
