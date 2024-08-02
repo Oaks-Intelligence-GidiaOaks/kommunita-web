@@ -7,17 +7,18 @@ import {
   PAUSE,
   PERSIST,
   PURGE,
-  REGISTER,
+  REGISTER
 } from "redux-persist";
 import { encryptTransform } from "redux-persist-transform-encrypt";
 import storage from "redux-persist/lib/storage";
 import apiSlice from "../service/api/apiSlice";
 import user from "./slices/user.slice";
 import hardSet from "redux-persist/es/stateReconciler/hardSet";
+import logoutMiddleware from "./middleware/logoutMiddleware";
 
 const rootReducer = combineReducers({
   user,
-  [apiSlice.reducerPath]: apiSlice.reducer,
+  [apiSlice.reducerPath]: apiSlice.reducer
 });
 
 const persistConfig = {
@@ -29,12 +30,12 @@ const persistConfig = {
       secretKey: import.meta.env.VITE_REACT_APP_ENCRYPT_KEY,
       onError: function (error) {
         console.log(error);
-      },
-    }),
+      }
+    })
   ],
   stateReconciler: hardSet,
   // blacklist: apiSlice.reducerPath,
-  blacklist: [apiSlice.reducerPath],
+  blacklist: [apiSlice.reducerPath]
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -45,10 +46,10 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+      }
       // serializableCheck: false,
-    }).concat(apiSlice.middleware),
+    }).concat(apiSlice.middleware, logoutMiddleware)
 });
 
 const persistor = persistStore(store);
