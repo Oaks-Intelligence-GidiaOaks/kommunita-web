@@ -11,6 +11,7 @@ import right from "../carousel/right.svg";
 import dotsactive from "../carousel/dotsactive.svg";
 import dotsinactive from "../carousel/dotsinactive.svg";
 import placeholder_logo from './placeholder_logo.jpg'
+import media from './media.svg'
 
 
 
@@ -26,6 +27,7 @@ export {
     right,
     dotsactive,
     dotsinactive,
-    placeholder_logo
+    placeholder_logo,
+    media,
     
 }
