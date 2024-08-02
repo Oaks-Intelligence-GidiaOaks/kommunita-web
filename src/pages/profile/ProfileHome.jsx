@@ -89,7 +89,7 @@ const ProfileHome = () => {
     data?.data?.map((dt) => {
       // console.log("data: ", dt);
       if (dt.shared_by) {
-        if (dt.post_id.comment.length == 0) {
+        if (dt?.post_id?.comment.length == 0) {
           setSidePost(dt.post_id);
           // setSideDiary(dt.post_id);
         }

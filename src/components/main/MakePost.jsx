@@ -21,7 +21,7 @@ import { FaRegUser, FaTimes } from "react-icons/fa";
 import { IoCameraOutline } from "react-icons/io5";
 import { GoDeviceCameraVideo } from "react-icons/go";
 import {
-  BiGlobe,
+  BiWorld,
   BiLock,
   BiGroup,
   BiChevronDown,
@@ -55,6 +55,7 @@ import { LuCalendarClock } from "react-icons/lu";
 import { GiBlackBook } from "react-icons/gi";
 import { HiOutlineDocumentDuplicate } from "react-icons/hi2";
 import { CgPoll } from "react-icons/cg";
+import { media, profile_placeholder } from "../../assets/images";
 
 
 function MakePost() {
@@ -273,7 +274,7 @@ function MakePost() {
             <div>
               <div className="flex items-center justify-center h-[40px] w-[40px] rounded-full border-4">
                 <img
-                  src={photo}
+                  src={profile_placeholder}
                   className="rounded-full w-full h-full object-cover"
                   alt=""
                 />
@@ -312,8 +313,9 @@ function MakePost() {
               <div className="rounded-md pb- flex justify-between make-post-input">
                 <div className=" flex rounded-md">
                   <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
-                    <IoCameraOutline className="text-[#3D7100]" size={20} />
-                    <p className="make-post-input text-sm">Photo</p>
+                    {/* <IoCameraOutline className="text-[#3D7100]" size={20} /> */}
+                    <img src={media} alt="" />
+                    <p className="make-post-input text-sm">Media</p>
                     <input
                       type="file"
                       onChange={handleSchedulePostMediaChange}
@@ -324,7 +326,31 @@ function MakePost() {
                   </label>
                 </div>
               </div>
-              <div className="rounded-md pb- flex justify-between make-post-input">
+
+              <div className="bg-gray-200 rounded-md py- flex items-center px-">
+                    <div className="flex items-center space-x-2 w-35">
+                      <div className="text-gray-600 ">
+                        {audience === "Public" ? (
+                          <BiWorld size={20} className="text-[#3D7100]" />
+                        ) : audience === "Private" ? (
+                          <BiLock size={20} />
+                        ) : (
+                          <BiGroup size={20} />
+                        )}
+                      </div>
+                      <select
+                        value={audience}
+                        onChange={handleAudienceChange}
+                        className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full make-post-input"
+                      >
+                        <option value="Public">Public</option>
+                        <option value="Private">Private</option>
+                        <option value="Followers">Followers</option>
+                      </select>
+                    </div>
+                  </div>
+
+              {/* <div className="rounded-md pb- flex justify-between make-post-input">
                 <div className=" flex rounded-md">
                   <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
                     <GoDeviceCameraVideo className="text-[#3D7100]" size={20} />
@@ -339,8 +365,8 @@ function MakePost() {
                   </label>
                 </div>
 
-                {/* {isVisible && <div className=""> {content.length}/500</div>} */}
-              </div>
+                {isVisible && <div className=""> {content.length}/500</div>}
+              </div> */}
 
               <div className="text-center py-1 px-4 rounded-md bg-gray-200">
                 <DropdownMenu
@@ -399,7 +425,7 @@ function MakePost() {
               </div>
             </div>
 
-            {selectedPostMedia && (
+            {/* {selectedPostMedia && (
               <div className="uploaded-items-container p-2 rounded-md max-h-80 overflow-y-auto flex flex-wrap mt-3">
                 {[...selectedPostMedia].map((item, index) => (
                   <UploadedItem
@@ -410,7 +436,7 @@ function MakePost() {
                   />
                 ))}
               </div>
-            )}
+            )} */}
 
             <button
               onClick={handleSubmit}
@@ -514,6 +540,8 @@ function MakePost() {
                 </div>
               )}
             </div> */}
+
+            
           </div>
 
           {isExpanded && (
@@ -571,6 +599,18 @@ function MakePost() {
                 "Post"
               )}
             </button>
+            {selectedPostMedia && (
+              <div className="uploaded-items-container p-2 rounded-md max-h-80 overflow-y-auto flex flex-wrap mt-3">
+                {[...selectedPostMedia].map((item, index) => (
+                  <UploadedItem
+                    key={index}
+                    item={item}
+                    onRemove={handleRemove}
+                    onItemSelect={handleItemSelect}
+                  />
+                ))}
+              </div>
+            )}
         </div>
         
       </div>

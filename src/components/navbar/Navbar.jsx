@@ -178,7 +178,7 @@ import { showAlert } from "../../static/alert";
 import Modals from "../modals/Modal";
 import GeneralSearch from "../search/GeneralSearch";
 import { BeatLoader } from "react-spinners";
-import { dark_logo, escrow_tech, logo } from "../../assets/images";
+import { dark_logo, escrow_tech, logo, placeholder_logo, profile_placeholder } from "../../assets/images";
 import { RiHome5Line } from "react-icons/ri";
 import { TbUsersGroup } from "react-icons/tb";
 import { LuSquareStack } from "react-icons/lu";
@@ -187,17 +187,17 @@ import { IoIosArrowDown } from "react-icons/io";
 import { BsBell } from "react-icons/bs";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import { AiOutlineMenu } from "react-icons/ai";
-import { RiSearch2Line } from "react-icons/ri";
 import DropdownMenu from "../ui/DropdownMenu";
 import { FaRegUser } from "react-icons/fa6";
 import { IoSettingsOutline } from "react-icons/io5";
-import { CiLogout } from "react-icons/ci";
+import { CiLogout, CiSearch } from "react-icons/ci";
 import { useGetUserOrganisationQuery } from "../../service/organization.service";
 import { debounce } from "lodash";
 import { useDispatch } from "react-redux";
 import { handleLogout } from "../../static/logout";
 import { PROFILE } from "../../routes/routes";
 import NotificationModal from "../../pages/notifications/NotificationModal";
+import MobileSidebar from "../sidebar/MobileSidebar";
 
 const NavItem = ({ to, icon: Icon, label, exact }) => {
   const location = useLocation();
@@ -209,9 +209,9 @@ const NavItem = ({ to, icon: Icon, label, exact }) => {
 
   return (
     <Link to={to}>
-      <div className="items flex flex-col justify-center items-center w-[70px]">
+      <div className="items flex flex-col justify-center items-center w-[20px] md:w-[70px] ">
         <div
-          className={`flex justify-center items-center h-[28.327px] w-[28.327px] rounded-full ${
+          className={`flex justify-center items-center h-[28.327px] lg:w-[20px] xl:w-[28.327px] rounded-full ${
             isActive ? "text-[#3D7100]" : ""
           }`}
         >
@@ -293,14 +293,21 @@ const Navbar = () => {
 
   // console.log(userOganisation?.data)
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMobileSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <nav className="fixed h-auto flex justify-between items-center py-4 px-8 md:px-12 w-full top-0 left-0 right-0 z-10 mb-10 bg-white">
-      <div className="logo">
+    <>
+    <nav className="fixed h-auto flex justify-between items-center py-4 px-8 md:px-0 lg:px-12 w-full top-0 left-0 right-0 z-10 mb-10 bg-white">
+      <div className="md:hidden xl:block">
         <Link to={"/"}>
           <img src={dark_logo} alt="logo" width="152" height="40" />
         </Link>
       </div>
-      <div className="hidden md:flex items-center lg:space-x-10">
+      <div className="hidden md:flex items-center md:space-x-7  xl:space-x-10">
         <NavItem to="/" icon={RiHome5Line} label="My Feed" exact={true} />
         <NavItem
           to="/community"
@@ -321,7 +328,7 @@ const Navbar = () => {
           exact={true}
         />
         <div className="search flex items-center gap-10">
-          <div className="flex search-box rounded w-[18rem]">
+          <div className="flex search-box rounded lg:w-[15rem] xl:w-[18rem]">
             <div className="cursor-pointer" onClick={()=>debouncedSearch(searchString)}>
               {searching ? (
                 <BeatLoader color="#ffffff" loading={true} />
@@ -381,7 +388,7 @@ const Navbar = () => {
                             <Link to={`#`} className="py-2 w-full flex items-center gap-2">
                             {/* <Link to={`/dashboard/organisation/${org.id}`}> */}
                            <span className="w-6 h-6 rounded-full">
-                            <img src={org?.logo_url} alt={org?.organization_name} className="w-full" />
+                            <img src={org?.logo_url || placeholder_logo} alt={org?.organization_name} className="w-full" />
                             </span> 
                             {org?.organization_name}
                             </Link>
@@ -411,7 +418,7 @@ const Navbar = () => {
                 display_value={
                   <>
                     <img
-                      src={profile?.data?.photo_url}
+                      src={profile?.data?.photo_url || profile_placeholder}
                       alt=""
                       className="rounded-full w-full object-cover"
                     />
@@ -465,10 +472,12 @@ const Navbar = () => {
         </Modals>
       )}
       <div className="sm:flex md:hidden gap- items-center">
-        <RiSearch2Line size={30} className="inline-block"/>
-        <AiOutlineMenu size={30} className="inline-block"/>
+        <CiSearch size={30} className="inline-block"/>
+        <AiOutlineMenu size={30} className="inline-block" onClick={toggleMobileSidebar}/>
       </div>
     </nav>
+      {isOpen && <MobileSidebar onClick={toggleMobileSidebar} isOpen={isOpen}/>}
+    </>
   );
 };
 

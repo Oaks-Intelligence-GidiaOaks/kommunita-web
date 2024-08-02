@@ -20,6 +20,7 @@ import message from "../../assets/images/message.png";
 import { Modal } from "flowbite-react";
 import InputEmoji from "react-input-emoji";
 import { useSendInitialMessageMutation } from "../../service/message.service";
+import { profile_placeholder } from "../../assets/images";
 
 const ProfileHero = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
@@ -200,7 +201,7 @@ const ProfileHero = () => {
               <div className="flex flex-col lg:flex-row items-center lg:items-end gap-5 lg:ml-10">
                 <div className="border-white border-[5px] bg-white  w-[140px] h-[136px] overflow-hidden rounded-lg">
                   <img
-                    src={profile?.data.photo_url || avatar4}
+                    src={profile?.data.photo_url || profile_placeholder}
                     className="object-cover"
                   />
                 </div>
