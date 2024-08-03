@@ -5,9 +5,11 @@ import { useGetUserProfiileQuery } from "../../service/user.service";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 import { usePostCommentMutation } from "../../service/post.service";
 import PropTypes from "prop-types";
+import { useGetFeedsQuery } from "../../service/feeds.service";
 
 const Comment = ({ id, onComment, reply, placeholder }) => {
   const { data: profile } = useGetUserProfiileQuery();
+  const { refetch } = useGetFeedsQuery();
   const [content, setContent] = useState("");
   const [posting, setPosting] = useState(false);
   const [comments, setComments] = useState([]);
@@ -39,6 +41,7 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
         )
       );
     setPosting(false)
+        refetch()
       showAlert("Great!", "Comment added successfully", "success");
     } catch (error) {
       console.error("Error submitting comment:", error);
@@ -60,6 +63,7 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
           </div>
         ))}
       </div>
+
       <div className="w-full flex items-center gap-2">
         <div className="border-white overflow-hidden rounded">
           <img
@@ -79,7 +83,7 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
             placeholder={`${placeholder} as ${name}`}
           />
           <button
-            className="cursor-pointer"
+            className="cursor-pointer bord"
             onClick={handleComment}
             disabled={!content}
           >

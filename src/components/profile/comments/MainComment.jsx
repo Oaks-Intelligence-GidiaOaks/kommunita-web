@@ -20,7 +20,7 @@ const MainComment = ({ comment }) => {
     setAddReply(!addReply);
   };
 
-  console.log(getTimeAgoString(comment))
+  // console.log(getTimeAgoString(comment))
   console.log(comment)
   
   return (
@@ -94,7 +94,7 @@ const MainComment = ({ comment }) => {
         )}
       </div>
       <div className="self-end">
-        <CommentButtons comment={comment?.replies} onComment={onReply} />
+        <CommentButtons comment={comment?.replies} onComment={onReply} likes={''} onLike={()=>{}} />
       </div>
 
       {addReply && (

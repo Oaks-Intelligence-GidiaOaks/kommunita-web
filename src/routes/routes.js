@@ -10,6 +10,8 @@ export const PROFILE = "/profile";
 export const PROFILEDIARIES = "/profile/diaries";
 export const LIKES = "/profile/likes";
 export const MEDIA = "/profile/media";
+export const FOLLOWERS = "/profile/followers";
+export const FOLLOWING = "/profile/following";
 
 //FAVORITE PAGE RPUTES
 export const BOOKMARK = "/bookmarks";

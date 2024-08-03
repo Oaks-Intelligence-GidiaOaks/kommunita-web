@@ -13,11 +13,14 @@ import StoryList from "../ui/StoryList";
 import Repost from "./Repost";
 import NewPost2 from "../posts/NewPost2";
 import RepostNew from "../posts/RepostNew";
+import PollList from "../newPolls/PollList";
+import NewPollssss from "../newPolls/NewPollssss";
+import Repost2 from "../posts/Repost2";
 
 function Main() {
   const { data, isLoading, refetch } = useGetFeedsQuery();
   const posts = data?.data || [];
-  console.log(posts.action_type, "posts");
+  // console.log(posts.action_type, "posts");
   console.log(posts, "posts");
 
   return (
@@ -136,8 +139,10 @@ function Main() {
           if (post.type === "post") {
             return <NewPost2 key={post?._id} post={post} />;
           } else if (post.action_type === "Repost") {
-            return <RepostNew key={post?._id} post={post} />;
-          } else {
+            return <Repost2 key={post?._id} post={post} />
+          } else if(post.type === 'poll') {
+            return <NewPollssss key={post?._id} poll={post} onRefresh={refetch} />;
+          } else{
             return null;
           }
         })

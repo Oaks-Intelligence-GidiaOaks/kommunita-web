@@ -12,7 +12,7 @@ const ReplyComment = ({ reply }) => {
   return (
     <div className="relative bg-primary-light-gray bg-opacity-10 p-2 rounded-lg mt-5 text-primary-dark-gray">
       <div className="flex justify-between items-center">
-        <div className="flex gap-2 justify-start items-start">
+        <div className="flex gap- justify-start items-start">
           <div
             style={{
               borderColor: bordercolor,
@@ -29,12 +29,12 @@ const ReplyComment = ({ reply }) => {
 
           <div className="pt-2 flex justify-start flex-col">
             <div>
-              <h2 className="comment-name -mt-[6px]">
+              <h2 className="comment-name pl-2 -mt-[6px]">
                 {reply?.user_id?.display_name}
               </h2>
             </div>
             <div>
-              <p className="mt-2 comment">{reply.content}</p>
+              <p className="mt-2 pl-2 comment">{reply.content}</p>
             </div>
             {/* <div className="flex text-[7px] pt-1 gap-2 text-primary-gray">
               <p className="cursor-pointer">Like</p>
@@ -61,7 +61,7 @@ const ReplyComment = ({ reply }) => {
         </div>
       </div>
       <div className="self-end">
-        <CommentButtons comment={reply?.replies} />
+        {/* <CommentButtons comment={reply?.replies} /> */}
       </div>
     </div>
   );

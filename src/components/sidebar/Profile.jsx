@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 function Profile() {
   const { data: profile } = useGetUserProfiileQuery();
-  console.log(profile?.data);
+  // console.log(profile?.data);
 
   const user = useSelector((state) => state.user.user);
 
