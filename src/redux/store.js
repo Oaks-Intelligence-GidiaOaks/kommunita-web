@@ -14,9 +14,11 @@ import storage from "redux-persist/lib/storage";
 import apiSlice from "../service/api/apiSlice";
 import user from "./slices/user.slice";
 import hardSet from "redux-persist/es/stateReconciler/hardSet";
+import commentReducer from './slices/comment.slice'
 
 const rootReducer = combineReducers({
   user,
+  comment: commentReducer,
   [apiSlice.reducerPath]: apiSlice.reducer,
 });
 

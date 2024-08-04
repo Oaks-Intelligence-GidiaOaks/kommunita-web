@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { showAlert } from "../../static/alert";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 import { usePostCommentMutation } from "../../service/post.service";
 import PropTypes from "prop-types";
 import { useGetFeedsQuery } from "../../service/feeds.service";
+import { toggleComment } from "../../redux/slices/comment.slice";
 
 const Comment = ({ id, onComment, reply, placeholder }) => {
   const { data: profile } = useGetUserProfiileQuery();
@@ -15,9 +16,12 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
   const [comments, setComments] = useState([]);
   const [postComment] = usePostCommentMutation();
   const name = useSelector((state) => state.user?.user?.display_name);
+  const dispatch = useDispatch()
+
 
   const handleComment = async () => {
     if (!content) return;
+    dispatch(toggleComment())
     setPosting(!posting)
     const newComment = {
       id: Date.now(),

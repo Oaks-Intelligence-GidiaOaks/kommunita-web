@@ -20,6 +20,7 @@ import {
   ForgotPasswordPage,
   ResetPasswordPage,
   CommunityHome,
+  FollowerAndFollowing,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -74,6 +75,10 @@ const Config = () => {
         <Route
           path={routes.PROFILE}
           element={<ProtectedRoute component={ProfileHome} />}
+        />
+        <Route
+          path={routes.FOLLOWERS}
+          element={<ProtectedRoute component={FollowerAndFollowing} />}
         />
         <Route
           path={`${routes.PROFILE}/:user_id`}

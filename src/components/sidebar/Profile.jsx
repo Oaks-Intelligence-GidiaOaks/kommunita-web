@@ -49,7 +49,7 @@ function Profile() {
           </div>
           </Link>
           <div className="w-1 h-1 bg-[#3D7100] rounded-full"></div>
-          <Link to="#">
+          <Link to="profile/followers">
           <div className="flex flex-col text-center">
             <p className="stats-number text-xs xl:text-sm font-semibold">
               {profile?.data?.followers.length}
@@ -58,7 +58,7 @@ function Profile() {
           </div>
           </Link>
           <div className="w-1 h-1 bg-[#3D7100] rounded-full"></div>
-            <Link to={'#'}>
+            <Link to={'profile/followers'}>
           <div className="flex flex-col text-center">
             <p className="stats-number text-xs xl:text-sm font-semibold">
               {profile?.data?.following.length}
