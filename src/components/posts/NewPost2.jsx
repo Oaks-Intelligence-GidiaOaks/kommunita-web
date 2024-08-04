@@ -545,7 +545,7 @@ const NewPost2 = ({ post }) => {
                  userId={post?.user_id}
                 //  badgeColor={badgeColor}
                  onClose={() => setShowEditModal(false)}
-                 postId={post?.post_id}
+                 postId={post?._id}
               />
             </div>
           </div>
