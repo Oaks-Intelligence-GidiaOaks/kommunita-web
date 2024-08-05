@@ -86,7 +86,7 @@ const Layout = ({ children }) => {
               </div>
             </div>
           </div>
-          <div className="col-span-12 lg:col-span-9 xl:col-span-10 border-b-primary-dark-gray">
+          <div className="col-span-12 overflow-y-auto lg:col-span-9 xl:col-span-10 border-b-primary-dark-gray">
             {/* <ProfileNav /> */}
             {/* {children} */}
             <div className="">

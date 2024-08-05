@@ -10,6 +10,7 @@ export { default as ProfileLikes } from "./profile/ProfileLikes";
 export { default as ProfileMedia } from "./profile/ProfileMedia";
 export { default as FavoriteHome } from "./favorites/FavoriteHome";
 export { default as FollowHome } from "./follow/FollowHome";
+export { default as FollowerAndFollowing } from "./follow/FollowerAndFollowing";
 export { default as Explore } from "./explore/ExploreHome";
 export { default as Diaries } from "./diaries/DiariesHome";
 export { default as Settings } from "./settings/SettingsHome";

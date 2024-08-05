@@ -21,13 +21,13 @@ const CommunityLayout = ({ children }) => {
       <Nav />
       <div className="bg-[#F7F7F7] flex xl:px-10 items-center overflow-hidden mt-24">
         <div
-          className="overflow-y-auto overflow-x-hidden custom-scrollbar md:w-1/3 lg:w-[20%]"
+          className="overflow-y-auto overflow-x-hidden custom-scrollbar md:w-1/3 lg:w-[25%]"
           style={{ height: "90vh" }}
         >
           <SideNav />
         </div>
         <main
-          className="overflow-y-auto overflow-x-hidden custom-scrollbar w-full md:w-2/3 lg:w-[80%]"
+          className="overflow-y-auto overflow-x-hidden custom-scrollbar w-full md:w-2/3 lg:w-[75%]"
           style={{ height: "90vh" }}
         >
           {children}

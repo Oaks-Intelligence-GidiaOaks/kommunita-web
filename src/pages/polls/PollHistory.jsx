@@ -10,7 +10,7 @@ import { useGetFeedsQuery } from "../../service/feeds.service";
 const PollHistory = () => {
   const { data: polls } = useGetPollsQuery();
   const { refetch } = useGetFeedsQuery();
-  console.log(polls?.data);
+  // console.log(polls?.data);
 
   const [link, setLink] = useState("");
 

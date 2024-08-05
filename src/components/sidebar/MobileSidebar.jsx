@@ -15,6 +15,7 @@ import { CiLogout, CiMail, CiSearch } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
 import { BsBell } from "react-icons/bs";
 import { LiaTimesSolid } from "react-icons/lia";
+import { BOOKMARK, MESSAGES, PROFILE, SETTINGS, SURVEY, POLLS, NOTIFICATION } from "../../routes/routes";
 
 
 
@@ -111,31 +112,31 @@ const MobileSidebar = ({ isOpen, onClick }) => {
           <ul>
             <li className="flex items-center mb-6 text-[#1B1B1B]">
               <GoStar className="mr-3" />
-              <span className="text-[#1B1B1B] text-[1rem]" >Favourites</span>
+              <Link to={BOOKMARK} className="text-[#1B1B1B] text-[1rem]" >Favourites</Link>
             </li>
             <li className="flex items-center mb-6 text-[#1B1B1B]">
               <CgPoll className="mr-3" />
-              <span className="text-[#1B1B1B] text-[1rem]" >Polls</span>
+              <Link to={POLLS} className="text-[#1B1B1B] text-[1rem]" >Polls</Link>
             </li>
             <li className="flex items-center mb-6 text-[#1B1B1B]">
               <RiSurveyLine className="mr-3" />
-              <span className="text-[#1B1B1B] text-[1rem]" >Survey</span>
+              <Link to={SURVEY} className="text-[#1B1B1B] text-[1rem]" >Survey</Link>
             </li>
             <li className="flex items-center mb-6 text-[#1B1B1B]">
               <CiMail className="mr-3" />
-              <span className="text-[#1B1B1B] text-[1rem]" >Messages</span>
+              <Link to={MESSAGES} className="text-[#1B1B1B] text-[1rem]" >Messages</Link>
             </li>
             <li className="flex items-center mb-6 text-[#1B1B1B]">
               <BsBell className="mr-3" />
-              <span className="text-[#1B1B1B] text-[1rem]" >Notifications</span>
+              <Link to={NOTIFICATION} className="text-[#1B1B1B] text-[1rem]" >Notifications</Link>
             </li>
             <li className="flex items-center mb-6 text-[#1B1B1B]">
               <FaRegUser className="mr-3" />
-              <span className="text-[#1B1B1B] text-[1rem]" >Profile</span>
+              <Link to={PROFILE} className="text-[#1B1B1B] text-[1rem]" >Profile</Link>
             </li>
             <li className="flex items-center mb-6 text-[#1B1B1B]">
               <IoSettingsOutline className="mr-3" />
-              <span className="text-[#1B1B1B] text-[1rem]" >Settings</span>
+              <Link to={SETTINGS} className="text-[#1B1B1B] text-[1rem]" >Settings</Link>
             </li>
             <li className="flex items-center text-red-600">
               <CiLogout className="mr-3" />

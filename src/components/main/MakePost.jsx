@@ -315,7 +315,7 @@ function MakePost() {
                   <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
                     {/* <IoCameraOutline className="text-[#3D7100]" size={20} /> */}
                     <img src={media} alt="" />
-                    <p className="make-post-input text-sm">Media</p>
+                    <p className="make-post-input text-xs xl:text-sm">Media</p>
                     <input
                       type="file"
                       onChange={handleSchedulePostMediaChange}
@@ -329,19 +329,19 @@ function MakePost() {
 
               <div className="bg-gray-200 rounded-md py- flex items-center px-">
                     <div className="flex items-center space-x-2 w-35">
-                      <div className="text-gray-600 ">
+                      <div className="text-gray-600 text-xs xl:text-sm ">
                         {audience === "Public" ? (
                           <BiWorld size={20} className="text-[#3D7100]" />
                         ) : audience === "Private" ? (
-                          <BiLock size={20} />
+                          <BiLock size={20} className="text-xs xl:text-sm text-[#3D7100]" />
                         ) : (
-                          <BiGroup size={20} />
+                          <BiGroup size={20} className="text-xs xl:text-sm text-[#3D7100]" />
                         )}
                       </div>
                       <select
                         value={audience}
                         onChange={handleAudienceChange}
-                        className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full make-post-input"
+                        className="focus:outline-none focus:ring-0 border-0 text-xs xl:text-sm bg-transparent w-full h-full make-post-input"
                       >
                         <option value="Public">Public</option>
                         <option value="Private">Private</option>
@@ -350,23 +350,6 @@ function MakePost() {
                     </div>
                   </div>
 
-              {/* <div className="rounded-md pb- flex justify-between make-post-input">
-                <div className=" flex rounded-md">
-                  <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
-                    <GoDeviceCameraVideo className="text-[#3D7100]" size={20} />
-                    <p className="make-post-input text-sm">Video</p>
-                    <input
-                      type="file"
-                      onChange={handleSchedulePostMediaChange}
-                      accept="image/*,video/*"
-                      multiple
-                      style={{ display: "none" }}
-                    />
-                  </label>
-                </div>
-
-                {isVisible && <div className=""> {content.length}/500</div>}
-              </div> */}
 
               <div className="text-center py-1 px-4 rounded-md bg-gray-200">
                 <DropdownMenu
@@ -377,7 +360,7 @@ function MakePost() {
                   }}
                   display_value={
                     <>
-                      <span className="text-sm">View More</span>
+                      <small className="text-xs xl:text-sm">View More</small>
                       <MdOutlineKeyboardArrowRight
                         className="inline-block"
                         size={20}
@@ -425,18 +408,6 @@ function MakePost() {
               </div>
             </div>
 
-            {/* {selectedPostMedia && (
-              <div className="uploaded-items-container p-2 rounded-md max-h-80 overflow-y-auto flex flex-wrap mt-3">
-                {[...selectedPostMedia].map((item, index) => (
-                  <UploadedItem
-                    key={index}
-                    item={item}
-                    onRemove={handleRemove}
-                    onItemSelect={handleItemSelect}
-                  />
-                ))}
-              </div>
-            )} */}
 
             <button
               onClick={handleSubmit}

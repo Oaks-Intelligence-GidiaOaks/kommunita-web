@@ -38,7 +38,7 @@ const SettingsHome = () => {
   // const [techtitle, setTechtitle] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [country, setCountry] = useState("");
+  const [country, setCountry] = useState("Select a country");
   const [state, setState] = useState("");
   const [imageFile, setImageFile] = useState(null);
   const [previewSrc, setPreviewSrc] = useState("");
@@ -57,6 +57,7 @@ const SettingsHome = () => {
   // const [selectedImages, setSelectedImages] = useState([]);
 
   const { refetch } = useGetFeedsQuery();
+  const { refetch: refetchProfile} = useGetUserProfiileQuery()
   const token = useSelector((state) => state.user?.token);
 
   const setCountDown = () => {
@@ -170,11 +171,13 @@ const SettingsHome = () => {
           ...(token && { Authorization: `Bearer ${token}` }),
         },
       });
-
-      console.log("Profile updated successfully:", response.data);
-
-      showAlert("Great!", "Profile updated successfully", "success");
-      refetch();
+      console.log(response)
+      if (response.status === 200) {
+        console.log("Profile updated successfully:", response.data);
+        refetch();
+        refetchProfile()
+        showAlert("Great!", "Profile updated successfully", "success");
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
       showAlert(
@@ -320,7 +323,7 @@ const SettingsHome = () => {
           </li>
         </ul>
       </div>
-      <div>
+      <div className="w-full">
         <div
           className={`p-4 rounded-lg bg-gray-50 dark:bg-gray-800 ${
             activeTab === "profile" ? "" : "hidden"
@@ -370,10 +373,10 @@ const SettingsHome = () => {
                 )}
               </div>
             </div>
-            <div className="pt-10 mt-10">
-              <form onSubmit={handleSubmit}>
+            <div className="pt-10 mt-10 w-full">
+              <form onSubmit={handleSubmit} className="w-full">
                 {/* <div className="flex items-center lg:gap-16 lg:flex-row flex-col  justify-between pb-3">
-                  <div className="flex flex-col mb-5 w-full">
+                  <div className="flex flex-1 flex-col mb-5 w-full">
                     <label className="settings-label">Full Name</label>
                     <input
                       value={fullname}
@@ -383,7 +386,7 @@ const SettingsHome = () => {
                       placeholder={"Please enter your fullname"}
                     />
                   </div>
-                  <div className="flex flex-col mb-5 w-full">
+                  <div className="flex flex-1 flex-col mb-5 w-full">
                     <label className="settings-label">Tech Title</label>
                     <input
                       value={techtitle}
@@ -395,7 +398,7 @@ const SettingsHome = () => {
                   </div>
                 </div> */}
                 <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
-                  <div className="flex flex-col mb-5 w-full">
+                  <div className="flex flex-1 flex-col mb-5 w-full">
                     <label className="settings-label">Display Name</label>
                     <input
                       value={displayName}
@@ -405,7 +408,7 @@ const SettingsHome = () => {
                       placeholder={"Please enter your Display Name"}
                     />
                   </div>
-                  <div className="flex flex-col mb-5 w-full">
+                  <div className="flex flex-1 flex-col mb-5 w-full">
                     <label className="settings-label">Email</label>
                     <input
                       value={email}
@@ -417,20 +420,28 @@ const SettingsHome = () => {
                   </div>
                 </div>
                 <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
-                  <div className="flex flex-col mb-5 w-full">
-                    <label className="settings-label">Country</label>
-                    <select
+                  <div className="flex flex-1 flex-col mb-5 w-full">
+                    <label htmlFor="settings-label" className="settings-label">
+                      Country
+                    </label>
+                    <input
+                      list="countries"
+                      id="settings-label"
+                      name="settings-label"
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
-                      className="settings-input outline-none"
-                    >
-                      <option value="" disabled>
-                        Select Country
-                      </option>
+                      className="settings-input outline-none px-3"
+                    />
+                    <datalist id="countries" className="bg-gray-200">
                       {countries.map((ct) => (
-                        <option key={ct}>{ct.name}</option>
+                        <option
+                          key={ct}
+                          value={ct.name}
+                          className="bg-gray-200 px-2"
+                        />
                       ))}
-                    </select>
+                    </datalist>
+
                     {/* <input
                       value={country || ""}
                       onChange={(e) => setCountry(e.target.value)}
@@ -438,7 +449,7 @@ const SettingsHome = () => {
                       type="text"
                     /> */}
                   </div>
-                  <div className="flex flex-col mb-5 w-full">
+                  <div className="flex flex-1 flex-col mb-5 w-full">
                     <label className="settings-label">State</label>
                     <select
                       value={state}
@@ -455,7 +466,7 @@ const SettingsHome = () => {
                   </div>
                 </div>
                 <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
-                  <div className="flex flex-col mb-5 w-full ">
+                  <div className="flex flex-1 flex-col mb-5 w-full ">
                     <label className="settings-label">Phone Number</label>
 
                     <PhoneInput
@@ -467,7 +478,7 @@ const SettingsHome = () => {
                       placeholder="Enter phone number"
                     />
                   </div>
-                  <div className="flex flex-col mb-5 w-full ">
+                  <div className="flex flex-1 flex-col mb-5 w-full ">
                     <label className="settings-label">Username</label>
                     <input
                       value={username}
@@ -479,7 +490,7 @@ const SettingsHome = () => {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col mb-5 w-full pb-3">
+                <div className="flex flex-1 flex-col mb-5 w-full pb-3">
                   <label className="settings-label">Bio</label>
                   <textarea
                     placeholder=""
@@ -554,7 +565,7 @@ const SettingsHome = () => {
             <div className="pt-10 mt-10">
               <form onSubmit={handlePasswordUpdate}>
                 <div className="flex items-center lg:gap-5 lg:flex-row flex-col  justify-between pb-3">
-                  <div className="flex flex-col mb-5 w-full">
+                  <div className="flex flex-1 flex-col mb-5 w-full">
                     <label className="settings-label">Current Password</label>
                     <input
                       value={currentPassword}
@@ -564,7 +575,7 @@ const SettingsHome = () => {
                       placeholder={"Please enter your current password"}
                     />
                   </div>
-                  <div className="flex flex-col mb-5 w-full">
+                  <div className="flex flex-1 flex-col mb-5 w-full">
                     <label className="settings-label">New Password</label>
                     <input
                       value={newPassword}
@@ -576,7 +587,7 @@ const SettingsHome = () => {
                   </div>
                 </div>
                 <div className="flex relative items-center lg:gap-10 lg:flex-row flex-col  justify-between pb-3">
-                  <div className="flex flex-col mb-5 w-full lg:w-[49%]">
+                  <div className="flex flex-1 flex-col mb-5 w-full lg:w-[49%]">
                     <label className="settings-label">Re-enter Password</label>
                     <input
                       value={confirmPassword}
@@ -586,7 +597,7 @@ const SettingsHome = () => {
                       placeholder="Please re-enter Password"
                     />
                   </div>
-                  {/* <div className="flex flex-col mb-5 w-full">
+                  {/* <div className="flex flex-1 flex-col mb-5 w-full">
                     <label className="settings-label">Enter Code</label>
                     <input
                       value={code}

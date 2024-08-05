@@ -20,7 +20,9 @@ const MainComment = ({ comment }) => {
     setAddReply(!addReply);
   };
 
-  console.log(getTimeAgoString(comment))
+  
+
+  // console.log(getTimeAgoString(comment))
   console.log(comment)
   
   return (
@@ -48,7 +50,7 @@ const MainComment = ({ comment }) => {
                 <GoDotFill />
               </h2>
               <h4 className="text-[9px]">
-                {getTimeAgoString(comment?.createdAt)}
+                {getTimeAgoString(comment?.createdAt)}kkkk
               </h4>
             </div>
             <p className="mt-1 comment">{comment?.content}</p>
@@ -94,8 +96,14 @@ const MainComment = ({ comment }) => {
         )}
       </div>
       <div className="self-end">
-        <CommentButtons comment={comment?.replies} onComment={onReply} />
+        <CommentButtons comment={comment?.replies} onComment={onReply} likes={''} onLike={()=>{}} />
       </div>
+      {comment?.replies?.length > 0 &&
+        comment.replies.map((rp, id) => (
+          <div key={id} className="ml-11 -mt-4">
+            <ReplyComment reply={rp} />
+          </div>
+        ))}
 
       {addReply && (
         <div className="ml-11 mt-0">
@@ -107,12 +115,7 @@ const MainComment = ({ comment }) => {
           />
         </div>
       )}
-      {comment?.replies?.length > 0 &&
-        comment.replies.map((rp, id) => (
-          <div key={id} className="ml-11 -mt-4">
-            <ReplyComment reply={rp} />
-          </div>
-        ))}
+    
     </div>
   );
 };

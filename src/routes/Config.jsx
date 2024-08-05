@@ -14,12 +14,13 @@ import {
   Messages,
   Live,
   Post,
-  // Notifications,
+  Notifications,
   PollHistory,
   FollowHome,
   ForgotPasswordPage,
   ResetPasswordPage,
   CommunityHome,
+  FollowerAndFollowing,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -76,6 +77,10 @@ const Config = () => {
           element={<ProtectedRoute component={ProfileHome} />}
         />
         <Route
+          path={routes.FOLLOWERS}
+          element={<ProtectedRoute component={FollowerAndFollowing} />}
+        />
+        <Route
           path={`${routes.PROFILE}/:user_id`}
           element={<ProtectedRoute component={ProfileHome} />}
         />
@@ -119,10 +124,10 @@ const Config = () => {
           path={routes.SURVEY}
           element={<ProtectedRoute component={SurveyHome} />}
         />
-        {/* <Route
+        <Route
           path={routes.NOTIFICATION}
           element={<ProtectedRoute component={Notifications} />}
-        /> */}
+        />
 
         {/* Redirect to home for unknown routes */}
         <Route path={"*"} element={<Navigate to={"/"} />} />

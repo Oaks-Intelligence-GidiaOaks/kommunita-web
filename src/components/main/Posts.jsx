@@ -262,6 +262,7 @@ function Post({
               onComment={onComment}
               refetchFav={refetchFav}
               type={type}
+            
               handleRespost={() => {
                 setIsModalOpen(!isModalOpen);
               }}

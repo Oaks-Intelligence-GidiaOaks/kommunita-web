@@ -11,6 +11,20 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["WhoToFollow"],
     }),
+    getMyFollowers: builder.query({
+      query: () => ({
+        url: '/user/me/followers',
+        method: "GET",
+      }),
+      providesTags: ["WhoToFollow"],
+    }),
+    getMyFollowings: builder.query({
+      query: () => ({
+        url: 'user/me/followings',
+        method: "GET",
+      }),
+      providesTags: ["WhoToFollow"],
+    }),
     followUser: builder.mutation({
       query: (postData) => ({
         url: "/user/follow",
@@ -34,4 +48,6 @@ export const {
   useGetWhoToFollowQuery,
   useFollowUserMutation,
   useUnfollowUserMutation,
+  useGetMyFollowersQuery,
+  useGetMyFollowingsQuery,
 } = organizationApiSlice;
