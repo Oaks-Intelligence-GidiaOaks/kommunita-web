@@ -115,7 +115,7 @@ const MainComment = ({ comment }) => {
         ))}
         {
           comment.replies?.length > 1 && (
-            <Link className={`${location.pathname.includes("post/") ? 'hidden' : 'flex'} justify-end text-xs italic pt-1`} to={`post/${comment.post_id}`}>Read more</Link>
+            <Link className={`${location.pathname.includes("post/") ? 'hidden' : 'flex'} text-primary-dark-gray font-normal justify-end text-xs italic pt-1`} to={`post/${comment.post_id}`}>Read more replies</Link>
           )
         }
 

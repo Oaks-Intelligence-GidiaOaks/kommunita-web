@@ -284,10 +284,10 @@ const NewPost2 = ({ post }) => {
             <Link
               className={`${
                 location.pathname.includes("post/") ? "hidden" : "flex"
-              } flex justify-end text-xs italic pt-1`}
+              } flex justify-end text-xs italic pt-1 text-primary-dark-gray font-medium`}
               to={`post/${post?._id}`}
             >
-              Read more
+              Read more comments
             </Link>
           )}
 
