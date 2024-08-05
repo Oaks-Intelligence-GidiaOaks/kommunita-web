@@ -13,23 +13,13 @@ const CommunityHome = () => {
     refetch();
   }, [refetch]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <CommunityLayout>
-      {/* {data?.data.map((post) => {
-        if (post.type === "post") {
-          return <NewPost2 key={post?._id} post={post} />;
-        } else if (post.action_type === "Repost") {
-          return <RepostNew key={post?._id} post={post} />;
-        } else {
-          return null;
-        }
-      })} */}
-
       <CommunityHeader />
+
+
+      
     </CommunityLayout>
   );
 };

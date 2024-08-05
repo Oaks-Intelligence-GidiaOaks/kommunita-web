@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import FollowCard from "./FollowCard";
 import { AdsSection } from "../ads";
 import { useGetUserProfiileQuery } from "../../service/user.service";
-import {
-  useGetMyFollowersQuery,
-  useGetMyFollowingsQuery,
-} from "../../service/whotofollow.service";
+import { useGetMyFollowersQuery, useGetMyFollowingsQuery } from "../../service/whotofollow.service";
+import { useSelector } from "react-redux";
 
 const FollowersList = () => {
   const [activeTab, setActiveTab] = useState("followers");
+  const user_id = useSelector((state) => state.user.user._id);
+  
 
   const handleTabClick = (tabId) => {
     setActiveTab(tabId);
@@ -16,7 +16,29 @@ const FollowersList = () => {
 
   const { data: user } = useGetUserProfiileQuery();
   const { data: followers, isLoading: loadingFollowers } = useGetMyFollowersQuery();
-  const { data: following, isLoading: loadingFollowing } = useGetMyFollowingsQuery();
+  const { data: followings, isLoading: loadingFollowing } = useGetMyFollowingsQuery();
+
+  const isFollower = followers?.data.map(follower => follower.followers.some(id => id === user_id))
+  // const isFollower = followers?.data.map(follower => follower.followers.some(id => id === user_id))
+  const isFollowing = followings?.data.map(follow => follow)
+  console.log(isFollower)
+  console.log(isFollowing)
+
+  // const checkFollowerStatus = ({followId}) => {
+  //   return followers?.data.some(follower => follower.followers.some(id => id === followId));
+  // };
+
+  // console.log(followers?.data.some(follower => follower.followers.includes(user_id)))
+
+  const checkFollowingStatus = ({followId, type}) => {
+    return type?.data.some(following => following._id === followId);
+  };
+
+  const checkFollowerStatus = (followId) => {
+    return isFollower
+    // return followers?.data.map(follower => follower.followers.find(id => id === user_id))
+    // return followers?.data.some(follower => follower.followers.includes(user_id));
+  };
 
   return (
     <>
@@ -28,7 +50,7 @@ const FollowersList = () => {
           >
             <li className="me-2" role="presentation">
               <button
-                className={`inline-block p-4 rounded-t-lg  ${
+                className={`inline-block p-4 rounded-t-lg ${
                   activeTab === "followers"
                     ? "border-[#4C9C25] text-[#4C9C25] border-b-4"
                     : "text-[#8D92AC]"
@@ -43,7 +65,7 @@ const FollowersList = () => {
             </li>
             <li className="me-2" role="presentation">
               <button
-                className={`inline-block p-4 rounded-t-lg  ${
+                className={`inline-block p-4 rounded-t-lg ${
                   activeTab === "followings"
                     ? "border-[#4C9C25] text-[#4C9C25] border-b-4"
                     : "text-[#8D92AC]"
@@ -74,7 +96,15 @@ const FollowersList = () => {
           <div className="grid grid-cols-12 w-full gap-3">
             <div className="w-full col-span-12 md:col-span-8">
               {followers?.data.map((follower) => (
-                <FollowCard key={follower.id} follow={follower} />
+                <FollowCard
+                  key={follower.id}
+                  follow={follower}
+                  // isFollowing={isFollower}
+                  isFollowing={checkFollowerStatus(follower._id)}
+                  onClick={() =>{ console.log(`Follow/Unfollow ${follower._id}`)
+                  console.log(checkFollowerStatus(follower._id))
+                }}
+                />
               ))}
             </div>
             <div className="hidden md:block col-span-4">
@@ -92,13 +122,18 @@ const FollowersList = () => {
       >
         {loadingFollowing ? (
           <div className="mt-3 justify-center flex">Loading...</div>
-        ) : following?.data.length === 0 ? (
+        ) : followings?.data.length === 0 ? (
           <div className="mt-3 justify-center flex">No Followings</div>
         ) : (
           <div className="grid grid-cols-12 w-full gap-3">
             <div className="w-full col-span-12 md:col-span-8">
-              {following?.data.map((follow) => (
-                <FollowCard key={follow.id} follow={follow} />
+              {followings?.data.map((follow) => (
+                <FollowCard
+                  key={follow.id}
+                  follow={follow}
+                  isFollowing={true}
+                  onClick={() => console.log(`Follow/Unfollow ${follow._id}`)}
+                />
               ))}
             </div>
             <div className="hidden md:block col-span-4">

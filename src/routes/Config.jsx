@@ -21,6 +21,7 @@ import {
   ResetPasswordPage,
   CommunityHome,
   FollowerAndFollowing,
+  SinglePostPage,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -45,6 +46,10 @@ const Config = () => {
         <Route
           path={routes.INDEX}
           element={<ProtectedRoute component={Homepage} />}
+        ></Route>
+        <Route
+          path={routes.POST + "/:id"}
+          element={<ProtectedRoute component={SinglePostPage} />}
         ></Route>
 
         <Route

@@ -9,12 +9,13 @@ import {
   right,
   verified,
 } from "../../assets/images";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import getTimeAgoString from "../../utils/getTimeAgoString";
 import CustomCarousel from "../main/CustomCarousel";
 import { useSelector } from "react-redux";
 
 const Repost2 = ({ post }) => {
+  const navigate = useNavigate()
   const login_user_id = useSelector((state) => state.user?.user?._id);
   console.log(post)
   return (
@@ -55,16 +56,18 @@ const Repost2 = ({ post }) => {
               </p>
             </div>
           </div>
+            <Link  to={`/post${post?.post_id}`}>
           <p className="mb-4">{post?.post_id?.content || "This is a demo post"}</p>
-          <div className="post-media rounded-md w-full py-3">
+          <div className="post-media rounded-md w-full py-3" >
             <CustomCarousel
               media_urls={post?.post_id?.media_urls}
               left={left}
               right={right}
               dotsinactive={dotsinactive}
               dotsactive={dotsactive}
-            />
+              />
           </div>
+              </Link>
           <div className="flex justify-between items-center text-gray-500 mb-2">
             <div className="flex items-center space-x-2 cursor-pointer">
               <FaHeart className={""} />

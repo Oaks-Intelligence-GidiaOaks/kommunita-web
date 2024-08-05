@@ -367,7 +367,7 @@ const Navbar = () => {
                       <span className="w-6 h-6 rounded-full">
                         <img
                           src={profile?.data?.current_organization?.logo_url}
-                          alt="organisation logo"
+                          alt="l"
                         />
                       </span>
                       <p>

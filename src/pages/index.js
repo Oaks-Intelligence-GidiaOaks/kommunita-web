@@ -17,8 +17,10 @@ export { default as Settings } from "./settings/SettingsHome";
 export { default as Messages } from "./mesages/MessagesHome";
 export { default as Live } from "./live/LiveHome";
 export { default as Post } from "./post/PostHome";
+export { default as SinglePostPage } from "./post/SinglePostPage";
 export { default as Notifications } from "./notifications/NotificationsHome";
 export { default as Polls } from "./polls/PollsHome";
 export { default as PollHistory } from "./polls/PollHistory";
 export { default as Survey } from "./survey/SurveyHome";
 export { default as CommunityHome } from "./community/CommunityHome";
+
