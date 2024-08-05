@@ -10,7 +10,6 @@ import PollDisplay from "../polls/PollDisplay";
 import { Link } from "react-router-dom";
 import { Spinner } from "flowbite-react";
 import StoryList from "../ui/StoryList";
-import Repost from "./Repost";
 import NewPost2 from "../posts/NewPost2";
 import RepostNew from "../posts/RepostNew";
 import PollList from "../newPolls/PollList";

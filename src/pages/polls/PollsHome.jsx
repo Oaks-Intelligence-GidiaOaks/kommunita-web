@@ -8,7 +8,7 @@ import getTimeAgoString from "../../utils/getTimeAgoString";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 
 const PollsHome = () => {
-  const { data: polls } = useGetPollsQuery();
+  const { data: polls, isLoading:isLoadingPolls } = useGetPollsQuery();
   const { refetch } = useGetFeedsQuery();
   console.log(polls?.data);
 
@@ -42,24 +42,44 @@ const PollsHome = () => {
 
         {/* Polls content */}
         <div className="mt-5">
-          {polls?.data
+          {
+            isLoadingPolls ? (
+              <div className="flex justify-center items-center h-screen">
+                <div className="spinner-border text-primary-dark-gray" role="status">
+                  <span className="sr-only">Loading...</span>
+                </div>
+              </div>
+            ) :  !polls?.data?.length || polls?.data == undefined ? (
+              <div className="flex items-center flex-col mt-10 justify-center h-auto">
+              <img src={search} alt="Search icon" />
+              <h2 className="font-bold text-4xl mt-5 mb-5">NO BOOKMARKS YET</h2>
+              {/* <p>Follow other users to begin to see posts</p> */}
+              <Link to="/explore">
+                <p className="text-primary-bright-green mt-2 font-semibold">
+                  Click here to explore post and diaries
+                </p>
+              </Link>
+            </div>
+            ) : (
+              polls?.data
             .filter((it) => !it.expired)
             .map((poll, id) => (
               <PollDisplay
-                key={id}
-                expired={poll.expired}
-                question={poll?.question}
-                fullname={poll.created_by.display_name}
-                username={poll.created_by.username}
-                pollId={poll._id}
-                votes={poll.votes}
-                result={poll.result}
-                onRefresh={refetch}
-                totalVotes={poll.totalVotes}
-                postTime={getTimeAgoString(poll.createdAt)}
-              />
-            ))}
-          {/* <PollDisplay /> */}
+              key={poll._id}
+              expired={poll.expired}
+              question={poll?.question}
+              fullname={poll.created_by.display_name}
+              username={poll.created_by.username}
+              pollId={poll._id}
+              votes={poll.votes}
+              result={poll.result}
+              onRefresh={refetch}
+              totalVotes={poll.totalVotes}
+              postTime={getTimeAgoString(poll.createdAt)}
+            />
+            )
+            ))
+          }
         </div>
       </div>
     </MainLayout>

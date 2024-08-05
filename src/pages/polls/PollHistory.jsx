@@ -3,14 +3,14 @@ import MainLayout from "../../components/main/MainLayout";
 import Story from "../../components/main/Story";
 import { Link } from "react-router-dom";
 import PollDisplay from "../../components/polls/PollDisplay";
-import { useGetPollsQuery } from "../../service/polls.service";
+import { useGetPollHistoryQuery, useGetPollsQuery } from "../../service/polls.service";
 import getTimeAgoString from "../../utils/getTimeAgoString";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 
 const PollHistory = () => {
-  const { data: polls } = useGetPollsQuery();
+  const { data: polls } = useGetPollHistoryQuery();
   const { refetch } = useGetFeedsQuery();
-  // console.log(polls?.data);
+  console.log(polls?.data);
 
   const [link, setLink] = useState("");
 

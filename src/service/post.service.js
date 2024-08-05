@@ -11,6 +11,13 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Post"],
     }),
+    getSinglePost: builder.query({
+      query: (id) => ({
+        url: `/user/post/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Post"],
+    }),
     createPost: builder.mutation({
       query: (postData) => ({
         url: "/user/post",
@@ -90,4 +97,5 @@ export const {
   useRepostPostMutation,
   usePostCommentMutation,
   useGetOtherUserPostMutation,
+  useGetSinglePostQuery,
 } = organizationApiSlice;

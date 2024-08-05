@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReplyComment from "./ReplyComment";
 import getTimeAgoString from "../../../utils/getTimeAgoString";
 import CommentButtons from "./../../main/CommentButtons";
@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import { GoDotFill } from "react-icons/go";
 import "./style.css";
 import { profile_placeholder } from "../../../assets/images";
+import { Link, useLocation } from "react-router-dom";
 
 const MainComment = ({ comment }) => {
   let bordercolor = "";
@@ -19,6 +20,14 @@ const MainComment = ({ comment }) => {
   const onReply = () => {
     setAddReply(!addReply);
   };
+  const [visibleComments, setVisibleComments] = useState(2);
+  const location = useLocation()
+
+  useEffect(()=>{
+    if(location.pathname.includes("post/")){
+      setVisibleComments(100)
+    }
+  }, [location])
 
   
 
@@ -50,7 +59,7 @@ const MainComment = ({ comment }) => {
                 <GoDotFill />
               </h2>
               <h4 className="text-[9px]">
-                {getTimeAgoString(comment?.createdAt)}kkkk
+                {getTimeAgoString(comment?.createdAt)}
               </h4>
             </div>
             <p className="mt-1 comment">{comment?.content}</p>
@@ -99,11 +108,16 @@ const MainComment = ({ comment }) => {
         <CommentButtons comment={comment?.replies} onComment={onReply} likes={''} onLike={()=>{}} />
       </div>
       {comment?.replies?.length > 0 &&
-        comment.replies.map((rp, id) => (
+        comment.replies?.slice(0,visibleComments)?.map((rp, id) => (
           <div key={id} className="ml-11 -mt-4">
             <ReplyComment reply={rp} />
           </div>
         ))}
+        {
+          comment.replies?.length > 1 && (
+            <Link className={`${location.pathname.includes("post/") ? 'hidden' : 'flex'} text-primary-dark-gray font-normal justify-end text-xs italic pt-1`} to={`post/${comment.post_id}`}>Read more replies</Link>
+          )
+        }
 
       {addReply && (
         <div className="ml-11 mt-0">
