@@ -24,21 +24,25 @@ import { useGetUserProfiileQuery } from "../../service/user.service";
 import { showAlert } from "../../static/alert";
 import rtkMutation from "../../utils/rtkMutation";
 import MainComment from "../profile/comments/MainComment";
-import { useGetFeedsQuery } from "../../service/feeds.service";
+import { useDeleteFeedMutation, useGetFeedsQuery } from "../../service/feeds.service";
 import { RxDotsHorizontal } from "react-icons/rx";
 import Modals from "../modals/Modal";
 import EditMyPost from "../main/EditMyPost";
 import EditMyDiary from "../main/EditMyDiary";
+import { useDeleteDiaryMutation } from "../../service/diary.service";
 
 const NewPost2 = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
+  const [deleteFeeds, {isLoading:isLoadingDeleteFeeds, isSuccess:isSuccessDeleteFeed, isError: isErrorFeedError}] = useDeleteFeedMutation();
+  const [selectedFeedId, setSelectedFeedId] = useState(null);
+  const [deleteDiary] = useDeleteDiaryMutation();
   const [lovePost] = useLovePostMutation();
   const [repostPost] = useRepostPostMutation();
   const { isSuccess: feedsSuccess, refetch: refetchFeeds } = useGetFeedsQuery();
   const user = useSelector((state) => state.user.user);
-  const login_user_id = useSelector((state) => state.user?.user?._id);
+  const login_user_id = useSelector((state) => state.post?.user_id?.post?.user_id?._id);
   const verifiedUser = false;
-  const [liked, setLiked] = useState(post?.reaction?.like?.includes(user?._id));
+  const [liked, setLiked] = useState(post?.reaction?.like?.includes(post?.user_id?._id));
   const [likeCount, setLikeCount] = useState(post?.reaction?.like?.length || 0);
   const likeUserIds = post?.reaction?.like?.map((user) => user._id);
   const isLikedByCurrentUser = likeUserIds?.includes(login_user_id);
@@ -160,10 +164,24 @@ const NewPost2 = ({ post }) => {
 
   console.log(post)
 
+  // const removeFeed = async (id) => {
+  //   type === "diary" ? await deleteDiary(id) : await deleteFeeds(id);
+  //   setShowPopup(false);
+  // };
+
+  const handleDeleteFeed = async (feed_id) => {
+    setSelectedFeedId(feed_id);
+    await deleteFeeds(feed_id);
+    refetchFeeds(); 
+    setShowPopup(false);
+  };
+
+  
+
   return (
     <div className="mx-auto bg-white border rounded-lg shadow-md p-4 my-4">
       <div className="flex items-center mb-4 relative">
-        <Link to={`/profile/${user?._id}`}>
+        <Link to={`/profile/${post?.user_id?._id}`}>
           <div className={`rounded-full border-4 w-[3rem] h-[3rem]`}>
             <img
               src={post?.user_id?.photo_url || profile_placeholder}
@@ -175,7 +193,7 @@ const NewPost2 = ({ post }) => {
         <div className=" flex justify-between w-full items-center">
           <div className="">
             <div className="flex gap-2 items-center">
-              <Link to={`/profile/${user?._id}`}>
+              <Link to={`/profile/${post?.user_id?._id}`}>
                 <h4 className="font-semibold post-name">
                   {post?.user_id?.display_name}
                 </h4>
@@ -214,15 +232,17 @@ const NewPost2 = ({ post }) => {
               </button>
 
               <button
-                // onClick={() => removeFeed(post_id)}
+                onClick={() => handleDeleteFeed(post?._id)}
+                disabled={isLoadingDeleteFeeds && selectedFeedId === post?._id}
                 className="flex w-[89px] h-[26px] px-[15px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#E71D36] justify-center items-center border rounded-md hover:text-white hover:bg-red-600"
               >
-                {/* <TbHttpDelete /> */}
-                {"Delete post"}
+              {isLoadingDeleteFeeds && selectedFeedId === post?._id ? "Deleting..." : "Delete Post"}
               </button>
             </div>{" "}
           </div>
         )}
+        {isSuccessDeleteFeed && showAlert("Great", "Feed deleted successfully!")}
+        {isErrorFeedError &&  showAlert("Ooops", "Failed to delete the feed. Please try again.")}
       </div>
       <Link to={`/post/${post?._id}`}>
         <p className="mb-4">{post?.content}</p>
@@ -336,7 +356,7 @@ const NewPost2 = ({ post }) => {
               <EditMyDiary
                 content={post?.content}
                 medias={post?.media_urls}
-                avatar={post?.user_id.photo_url || profile_placeholder}
+                avatar={post?.user_id?.photo_url || profile_placeholder}
                 userId={post?.user_id}
                 //  badgeColor={badgeColor}
                 onClose={() => setShowEditModal(false)}

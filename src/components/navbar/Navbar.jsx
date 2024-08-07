@@ -319,7 +319,7 @@ const Navbar = () => {
           <NavItem
             to="/community"
             icon={TbUsersGroup}
-            label="Community"
+            label="Kommunity"
             exact={true}
           />
           <NavItem

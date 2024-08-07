@@ -22,7 +22,7 @@ function Category() {
                 >
                   <img
                     src={cat?.photo_url}
-                    className="w-full h-[161px]"
+                    className="w-full h-[161px] rounded-md"
                     alt=""
                   />
 

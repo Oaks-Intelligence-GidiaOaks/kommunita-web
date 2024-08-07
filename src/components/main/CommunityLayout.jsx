@@ -11,11 +11,6 @@ const CommunityLayout = ({ children }) => {
   const location = useLocation();
   const { pathname } = location;
 
-  const isHomeRoute = pathname === "/";
-  const isFollowRoute = pathname === "/follow";
-  const isNotificationRoute = pathname === "/notifications";
-  const isBookmarkRoute = pathname === "/bookmarks";
-
   return (
     <div className="flex  flex-col h-screen w-full p bg-[#F7F7F7] ">
       <Nav />

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useGetFeedsQuery } from "../../service/feeds.service";
-import NewPost2 from "../../components/posts/NewPost2";
-import RepostNew from "../../components/posts/RepostNew";
 import CommunityLayout from "../../components/main/CommunityLayout";
 import CommunityHeader from "../../components/community/CommunityHeader";
+import { Outlet } from "react-router-dom";
+import { AdsSection } from "../../components/ads";
 
 const CommunityHome = () => {
   const { data, isLoading, refetch } = useGetFeedsQuery();
@@ -13,13 +13,17 @@ const CommunityHome = () => {
     refetch();
   }, [refetch]);
 
-
   return (
     <CommunityLayout>
       <CommunityHeader />
-
-
-      
+      <div className="flex justify-between items-center">
+        <div className="w-2/3">
+          <Outlet />
+        </div>
+        <div className="w-1/3">
+          <AdsSection />
+        </div>
+      </div>
     </CommunityLayout>
   );
 };

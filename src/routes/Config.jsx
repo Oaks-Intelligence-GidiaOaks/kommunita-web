@@ -22,6 +22,7 @@ import {
   CommunityHome,
   FollowerAndFollowing,
   SinglePostPage,
+  PopularPost,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -59,7 +60,12 @@ const Config = () => {
         <Route
           path={routes.COMMUNITY}
           element={<ProtectedRoute component={CommunityHome} />}
-        ></Route>
+        >
+          <Route
+            index
+            element={<ProtectedRoute component={PopularPost} />}
+          />
+        </Route>
 
         <Route
           path={routes.PROFILEDIARIES}

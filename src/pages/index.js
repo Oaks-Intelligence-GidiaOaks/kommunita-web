@@ -23,4 +23,5 @@ export { default as Polls } from "./polls/PollsHome";
 export { default as PollHistory } from "./polls/PollHistory";
 export { default as Survey } from "./survey/SurveyHome";
 export { default as CommunityHome } from "./community/CommunityHome";
+export { default as PopularPost } from "./community/Popular_Post";
 

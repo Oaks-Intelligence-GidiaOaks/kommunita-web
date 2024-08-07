@@ -32,7 +32,7 @@ const MainComment = ({ comment }) => {
   
 
   // console.log(getTimeAgoString(comment))
-  console.log(comment)
+  // console.log(comment)
   
   return (
     <div className="relative mt-5 text-primary-dark-gray ">
@@ -113,11 +113,11 @@ const MainComment = ({ comment }) => {
             <ReplyComment reply={rp} />
           </div>
         ))}
-        {
+        {/* {
           comment.replies?.length > 1 && (
             <Link className={`${location.pathname.includes("post/") ? 'hidden' : 'flex'} text-primary-dark-gray font-normal justify-end text-xs italic pt-1`} to={`post/${comment.post_id}`}>Read more replies</Link>
           )
-        }
+        } */}
 
       {addReply && (
         <div className="ml-11 mt-0">

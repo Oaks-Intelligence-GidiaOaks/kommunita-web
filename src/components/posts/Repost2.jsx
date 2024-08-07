@@ -9,17 +9,55 @@ import {
   right,
   verified,
 } from "../../assets/images";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import getTimeAgoString from "../../utils/getTimeAgoString";
 import CustomCarousel from "../main/CustomCarousel";
 import { useSelector } from "react-redux";
+import EditMyDiary from "../main/EditMyDiary";
+import Modals from "../modals/Modal";
+import EditMyPost from "../main/EditMyPost";
+import Comment from "../main/Comment";
+import MainComment from "../profile/comments/MainComment";
 
 const Repost2 = ({ post }) => {
+  const [showComments, setShowComments] = useState(false);
   const navigate = useNavigate()
   const login_user_id = useSelector((state) => state.user?.user?._id);
+
+  const [showPopup, setShowPopup] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const [addComment, setAddComment] = useState(false);
+  const onComment = () => {
+    setAddComment(!addComment);
+  };
+
+  const toggleComments = () => {
+    setShowComments(!showComments);
+    setAddComment(!addComment);
+    onComment();
+  };
+
+  const handleShowEditModal = () => {
+    setShowEditModal(true);
+    setShowPopup(false);
+  };
+
+
+  const [visibleComments, setVisibleComments] = useState(2);
+  const location = useLocation()
+
+  useEffect(()=>{
+    if(location.pathname.includes("post/")){
+      setVisibleComments(100)
+    }
+  }, [location])
+
+
+
   console.log(post)
   return (
-    <div className="mx-auto bg-white border rounded-lg shadow-md pt-4 pb-2 pr-2 my-4">
+    <div className="mx-auto bg-white border rounded-lg shadow-md pt-4 pb- pr-2 my-4">
       <div className="py-2 pl-4 italic">
         {/* You reposted this */}
         {post?.post_id?.user_id?._id === login_user_id
@@ -68,7 +106,7 @@ const Repost2 = ({ post }) => {
               />
           </div>
               </Link>
-          <div className="flex justify-between items-center text-gray-500 mb-2">
+          {/* <div className="flex justify-between items-center text-gray-500 mb-2">
             <div className="flex items-center space-x-2 cursor-pointer">
               <FaHeart className={""} />
               <span>{"4"}</span>
@@ -89,9 +127,106 @@ const Repost2 = ({ post }) => {
               <CiBookmark className={""} />
               <span>{"0"}</span>
             </div>
-          </div>
+          </div> */}
         </div>
       </Link>
+      <div className="flex justify-between items-center text-gray-500 mb-2 pl-6 pr-2 pt-2">
+            <div className="flex items-center space-x-2 cursor-pointer">
+              <FaHeart className={""} />
+              <span>{"4"}</span>
+            </div>
+            <div className="flex items-center space-x-2 cursor-pointer">
+              <FaCommentAlt />
+              <span>{post?.comment?.length}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <FaRetweet />
+              <span>{post?.repost?.length}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <FaShare />
+              <span>{post?.share?.length}</span>
+            </div>
+            <div className="flex items-center space-x-2 cursor-pointer">
+              <CiBookmark className={""} />
+              <span>{"0"}</span>
+            </div>
+          </div>
+
+
+
+          {showComments && (
+        <>
+          {post?.comment?.slice(0,visibleComments).map((comment, index) => (
+            <MainComment key={index} comment={comment} />
+          ))}
+
+          {post?.comment?.length > 2 && (
+            <Link
+              className={`${
+                location.pathname.includes("post/") ? "hidden" : "flex"
+              } flex justify-end text-xs italic pt-1 text-primary-dark-gray font-medium`}
+              to={`post/${post?._id}`}
+            >
+              Read more comments
+            </Link>
+          )}
+
+          {addComment && (
+            <Comment
+              id={post?._id}
+              onComment={() => setAddComment(false)}
+              placeholder={"Comment"}
+            />
+          )}
+        </>
+      )}
+
+
+
+{showEditModal && post?.type == "post" ? (
+        <Modals
+          title={"Edit post"}
+          openModal={showEditModal}
+          modalSize="2xl"
+          onClose={() => setShowEditModal(false)}
+        >
+          <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
+            <div className="post-media rounded-md w-full py-3">
+              <EditMyPost
+                content={post?.content}
+                medias={post?.media_urls}
+                avatar={post?.user_id.photo_url || profile_placeholder}
+                userId={post?.user_id}
+                // badgeColor={badgeColor}
+                onClose={() => setShowEditModal(false)}
+                postId={post?._id}
+              />
+            </div>
+          </div>
+        </Modals>
+      ) : (
+        <Modals
+          title={"Edit Diary"}
+          openModal={showEditModal}
+          modalSize="2xl"
+          onClose={() => setShowEditModal(false)}
+        >
+          <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
+            <div className="post-media rounded-md w-full py-3">
+              <EditMyDiary
+                content={post?.content}
+                medias={post?.media_urls}
+                avatar={post?.user_id?.photo_url || profile_placeholder}
+                userId={post?.user_id}
+                //  badgeColor={badgeColor}
+                onClose={() => setShowEditModal(false)}
+                postId={post?._id}
+              />
+            </div>
+          </div>
+        </Modals>
+      )}
     </div>
   );
 };
