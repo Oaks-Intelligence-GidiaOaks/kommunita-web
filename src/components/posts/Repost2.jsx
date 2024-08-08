@@ -58,12 +58,17 @@ const Repost2 = ({ post }) => {
   console.log(post)
   return (
     <div className="mx-auto bg-white border rounded-lg shadow-md pt-4 pb- pr-2 my-4">
-      <div className="py-2 pl-4 italic">
+      <div className="pt-2 pl-4 italic">
         {/* You reposted this */}
-        {post?.post_id?.user_id?._id === login_user_id
+        {/* {post?.share_by?._id === login_user_id
             ? "You reposted this"
             : `@${post?.shared_by?.username} reposted this`
-            }
+            } */}
+      {post?.message ?  <p className="py-2 pl-4">{post?.message}</p>
+      : post?.post_id?.user_id?._id === login_user_id
+      ? "You reposted this"
+      : `@${post?.shared_by?.username} reposted this`
+      }
       </div>
       <Link to={``}>
         <div className="ml-5 bg-[#f9f8f8] border rounded-lg shadow-md p-4 ">

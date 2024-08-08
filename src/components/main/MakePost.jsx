@@ -56,7 +56,7 @@ import { GiBlackBook } from "react-icons/gi";
 import { HiOutlineDocumentDuplicate } from "react-icons/hi2";
 import { CgPoll } from "react-icons/cg";
 import { media, profile_placeholder } from "../../assets/images";
-
+import { useGetUserProfiileQuery } from "../../service/user.service";
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
@@ -73,6 +73,7 @@ function MakePost() {
   const [isExpanded, setIsExpanded] = useState(false);
   const { refetch } = useGetFeedsQuery();
   const viewMoreRef = useRef(null);
+  const { data: profile } = useGetUserProfiileQuery();
 
   const [editorHtml, setEditorHtml] = useState("");
   const [viewMore, setIsViewMore] = useState(false);
@@ -274,7 +275,7 @@ function MakePost() {
             <div>
               <div className="flex items-center justify-center h-[40px] w-[40px] rounded-full border-4">
                 <img
-                  src={profile_placeholder}
+                  src={profile?.data?.photo_url || profile_placeholder}
                   className="rounded-full w-full h-full object-cover"
                   alt=""
                 />
@@ -307,8 +308,9 @@ function MakePost() {
             </div>
           </div>
 
-          {/* upload picture or video */}
-          <div className="bg-white flex justify-between items-center px-5 md:px-7 pb-1 md:pb-5 pt-7">
+          <div className="bg-white fle justify-between items-center px-5 md:px-7 pb-1 md:pb-5 pt-7">
+
+              {/* upload picture or video */}
             <div className="flex items-center justify-between md:gap-10">
               <div className="rounded-md pb- flex justify-between make-post-input">
                 <div className=" flex rounded-md">
@@ -326,32 +328,39 @@ function MakePost() {
                   </label>
                 </div>
               </div>
-
-              <div className="bg-gray-200 rounded-md py- flex items-center px-">
-                    <div className="flex items-center space-x-2 w-35">
-                      <div className="text-gray-600 text-xs xl:text-sm ">
-                        {audience === "Public" ? (
-                          <BiWorld size={20} className="text-[#3D7100]" />
-                        ) : audience === "Private" ? (
-                          <BiLock size={20} className="text-xs xl:text-sm text-[#3D7100]" />
-                        ) : (
-                          <BiGroup size={20} className="text-xs xl:text-sm text-[#3D7100]" />
-                        )}
-                      </div>
-                      <select
-                        value={audience}
-                        onChange={handleAudienceChange}
-                        className="focus:outline-none focus:ring-0 border-0 text-xs xl:text-sm bg-transparent w-full h-full make-post-input"
-                      >
-                        <option value="Public">Public</option>
-                        <option value="Private">Private</option>
-                        <option value="Followers">Followers</option>
-                      </select>
-                    </div>
+                  {/* Categories */}
+              <div className="bg-gray-100 rounded-full py- flex items-center px-2">
+                <div className="flex items-center space-x-2 w-35">
+                  <div className="text-gray-600 text-xs xl:text-sm ">
+                    {audience === "Public" ? (
+                      <BiWorld size={20} className="text-[#3D7100]" />
+                    ) : audience === "Private" ? (
+                      <BiLock
+                        size={20}
+                        className="text-xs xl:text-sm text-[#3D7100]"
+                      />
+                    ) : (
+                      <BiGroup
+                        size={20}
+                        className="text-xs xl:text-sm text-[#3D7100]"
+                      />
+                    )}
                   </div>
+                  <select
+                    value={audience}
+                    onChange={handleAudienceChange}
+                    className="focus:outline-none focus:ring-0 border-0 text-xs xl:text-sm bg-transparent w-full h-full make-post-input"
+                  >
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                    <option value="Followers">Followers</option>
+                  </select>
+                </div>
+              </div>
 
+              {/* view more */}
 
-              <div className="text-center py-1 px-4 rounded-md bg-gray-200">
+              <div className="text-center py-[6px] px-4 rounded-full bg-gray-100">
                 <DropdownMenu
                   aria_label={"viewMore"}
                   dropdownRef={viewMoreRef}
@@ -378,7 +387,6 @@ function MakePost() {
                         <span className="font-semibold">Schedule Post</span>
                       </button>
                       <button
-                      
                         className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
                         onClick={() => setOpenDiaryModal(true)}
                       >
@@ -395,7 +403,6 @@ function MakePost() {
                         <span className="font-semibold">Draft</span>
                       </button>
                       <button
-                       
                         className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
                         onClick={() => setOpenPoll(true)}
                       >
@@ -406,15 +413,12 @@ function MakePost() {
                   }
                 />
               </div>
-            </div>
-
-
             <button
               onClick={handleSubmit}
               disabled={submitting || !content}
               className={`${
                 !content
-                  ? "bg-gray-200 text-gray-600"
+                  ? "bg-gray-100 text-gray-600"
                   : "bg-[#3D7100] text-white"
               } hidden md:block px-8 h-10 rounded-3xl`}
             >
@@ -424,6 +428,8 @@ function MakePost() {
                 "Post"
               )}
             </button>
+            </div>
+
 
             {/* <div className="flex justify-end gap-3">
               {isVisible && (
@@ -511,8 +517,6 @@ function MakePost() {
                 </div>
               )}
             </div> */}
-
-            
           </div>
 
           {isExpanded && (
@@ -555,35 +559,32 @@ function MakePost() {
               </button>
             </div>
           )}
-            <button
-              onClick={handleSubmit}
-              disabled={submitting || !content}
-              className={`${
-                !content
-                  ? "bg-gray-200 text-gray-600"
-                  : "bg-[#3D7100] text-white"
-              } md:hidden mx-6 px-8 py-1 mb-3 rounded-3xl`}
-            >
-              {submitting ? (
-                <BeatLoader color="#ffffff" loading={true} />
-              ) : (
-                "Post"
-              )}
-            </button>
-            {selectedPostMedia && (
-              <div className="uploaded-items-container p-2 rounded-md max-h-80 overflow-y-auto flex flex-wrap mt-3">
-                {[...selectedPostMedia].map((item, index) => (
-                  <UploadedItem
-                    key={index}
-                    item={item}
-                    onRemove={handleRemove}
-                    onItemSelect={handleItemSelect}
-                  />
-                ))}
-              </div>
+          <button
+            onClick={handleSubmit}
+            disabled={submitting || !content}
+            className={`${
+              !content ? "bg-gray-200 text-gray-600" : "bg-[#3D7100] text-white"
+            } md:hidden mx-6 px-8 py-1 mb-3 rounded-3xl`}
+          >
+            {submitting ? (
+              <BeatLoader color="#ffffff" loading={true} />
+            ) : (
+              "Post"
             )}
+          </button>
+          {selectedPostMedia && (
+            <div className={`${selectedPostMedia ? "flex" : "hidden"} uploaded-items-container pt-2 rounded-md max-h-80 overflow-y-auto flex-wrap mt-`}>
+              {[...selectedPostMedia].map((item, index) => (
+                <UploadedItem
+                  key={index}
+                  item={item}
+                  onRemove={handleRemove}
+                  onItemSelect={handleItemSelect}
+                />
+              ))}
+            </div>
+          )}
         </div>
-        
       </div>
 
       {viewModalOpen && selectedItem && (

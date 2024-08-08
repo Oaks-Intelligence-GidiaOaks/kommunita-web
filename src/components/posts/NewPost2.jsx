@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaHeart, FaCommentAlt, FaShare, FaRetweet } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
 import Comment from "../main/Comment";
@@ -24,25 +24,42 @@ import { useGetUserProfiileQuery } from "../../service/user.service";
 import { showAlert } from "../../static/alert";
 import rtkMutation from "../../utils/rtkMutation";
 import MainComment from "../profile/comments/MainComment";
-import { useDeleteFeedMutation, useGetFeedsQuery } from "../../service/feeds.service";
+import {
+  useDeleteFeedMutation,
+  useGetFeedsQuery,
+} from "../../service/feeds.service";
 import { RxDotsHorizontal } from "react-icons/rx";
 import Modals from "../modals/Modal";
 import EditMyPost from "../main/EditMyPost";
 import EditMyDiary from "../main/EditMyDiary";
 import { useDeleteDiaryMutation } from "../../service/diary.service";
+import DropdownMenu from "../ui/DropdownMenu";
+import { GoShareAndroid } from "react-icons/go";
+import { CiEdit } from "react-icons/ci";
 
 const NewPost2 = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
-  const [deleteFeeds, {isLoading:isLoadingDeleteFeeds, isSuccess:isSuccessDeleteFeed, isError: isErrorFeedError}] = useDeleteFeedMutation();
+  const [
+    deleteFeeds,
+    {
+      isLoading: isLoadingDeleteFeeds,
+      isSuccess: isSuccessDeleteFeed,
+      isError: isErrorFeedError,
+    },
+  ] = useDeleteFeedMutation();
   const [selectedFeedId, setSelectedFeedId] = useState(null);
   const [deleteDiary] = useDeleteDiaryMutation();
   const [lovePost] = useLovePostMutation();
   const [repostPost] = useRepostPostMutation();
   const { isSuccess: feedsSuccess, refetch: refetchFeeds } = useGetFeedsQuery();
   const user = useSelector((state) => state.user.user);
-  const login_user_id = useSelector((state) => state.post?.user_id?.post?.user_id?._id);
+  const login_user_id = useSelector(
+    (state) => state.post?.user_id?.post?.user_id?._id
+  );
   const verifiedUser = false;
-  const [liked, setLiked] = useState(post?.reaction?.like?.includes(post?.user_id?._id));
+  const [liked, setLiked] = useState(
+    post?.reaction?.like?.includes(post?.user_id?._id)
+  );
   const [likeCount, setLikeCount] = useState(post?.reaction?.like?.length || 0);
   const likeUserIds = post?.reaction?.like?.map((user) => user._id);
   const isLikedByCurrentUser = likeUserIds?.includes(login_user_id);
@@ -57,6 +74,8 @@ const NewPost2 = ({ post }) => {
 
   const [showPopup, setShowPopup] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [shareThought, setShareThought] = useState(false);
+  const [thought, setThought ] = useState('');
 
   const toggleComments = () => {
     setShowComments(!showComments);
@@ -141,6 +160,27 @@ const NewPost2 = ({ post }) => {
     }
   };
 
+  const handleRespostWithThought = async () => {
+    const previousState = isRepost;
+    const previousCount = repostCount;
+
+    setIsRepost(!isRepost);
+    setRepostCount((prevCount) => (isRepost ? prevCount - 1 : prevCount + 1));
+
+    const postData = { post_id: post._id, message:thought };
+    console.log(postData);
+    try {
+      await rtkMutation(repostPost, postData);
+      showAlert("Great", "You reposted this post");
+      setShareThought(false)
+    } catch (error) {
+      setIsRepost(previousState);
+      setRepostCount(previousCount);
+      console.error("Error reposting post:", error);
+      showAlert("Oops", "An error occurred while reposting the post", "error");
+    }
+  };
+
   useEffect(() => {
     if (feedsSuccess) {
       refetchFeeds();
@@ -151,18 +191,16 @@ const NewPost2 = ({ post }) => {
     setShowPopup(!showPopup);
   };
 
-
-
   const [visibleComments, setVisibleComments] = useState(2);
-  const location = useLocation()
+  const location = useLocation();
 
-  useEffect(()=>{
-    if(location.pathname.includes("post/")){
-      setVisibleComments(100)
+  useEffect(() => {
+    if (location.pathname.includes("post/")) {
+      setVisibleComments(100);
     }
-  }, [location])
+  }, [location]);
 
-  console.log(post)
+  console.log(post);
 
   // const removeFeed = async (id) => {
   //   type === "diary" ? await deleteDiary(id) : await deleteFeeds(id);
@@ -172,11 +210,12 @@ const NewPost2 = ({ post }) => {
   const handleDeleteFeed = async (feed_id) => {
     setSelectedFeedId(feed_id);
     await deleteFeeds(feed_id);
-    refetchFeeds(); 
+    refetchFeeds();
     setShowPopup(false);
   };
 
-  
+  const [isRepostOpen, setIsRepostOpen] = useState(false);
+  const repostRef = useRef(null);
 
   return (
     <div className="mx-auto bg-white border rounded-lg shadow-md p-4 my-4">
@@ -236,13 +275,17 @@ const NewPost2 = ({ post }) => {
                 disabled={isLoadingDeleteFeeds && selectedFeedId === post?._id}
                 className="flex w-[89px] h-[26px] px-[15px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#E71D36] justify-center items-center border rounded-md hover:text-white hover:bg-red-600"
               >
-              {isLoadingDeleteFeeds && selectedFeedId === post?._id ? "Deleting..." : "Delete Post"}
+                {isLoadingDeleteFeeds && selectedFeedId === post?._id
+                  ? "Deleting..."
+                  : "Delete Post"}
               </button>
             </div>{" "}
           </div>
         )}
-        {isSuccessDeleteFeed && showAlert("Great", "Feed deleted successfully!")}
-        {isErrorFeedError &&  showAlert("Ooops", "Failed to delete the feed. Please try again.")}
+        {isSuccessDeleteFeed &&
+          showAlert("Great", "Feed deleted successfully!")}
+        {isErrorFeedError &&
+          showAlert("Ooops", "Failed to delete the feed. Please try again.")}
       </div>
       <Link to={`/post/${post?._id}`}>
         <p className="mb-4">{post?.content}</p>
@@ -273,8 +316,46 @@ const NewPost2 = ({ post }) => {
           <FaCommentAlt />
           <span>{post?.comment?.length}</span>
         </div>
-        <div className="flex items-center space-x-2" onClick={handleRespost}>
-          <FaRetweet />
+        <div
+          className="flex items-center space-x-2"
+          onClick={() => setIsRepostOpen(!isRepostOpen)}
+        >
+          <div className="">
+            <DropdownMenu
+              aria_label={"repost"}
+              dropdownRef={repostRef}
+              onClick={() => {
+                setIsRepostOpen(!isRepostOpen);
+              }}
+              display_value={
+                <>
+                  <FaRetweet />
+                </>
+              }
+              isDropdownOpen={isRepostOpen}
+              listItem={
+                <div className="px-2 py-1 w-full">
+                  <ul className="py-3">
+                    <li
+                      className="flex  gap-1 items-center pb-5 cursor-pointer text-sm"
+                      onClick={handleRespost}
+                    >
+                      <GoShareAndroid />
+                      <span>Share Post</span>
+                    </li>
+                    <li
+                      className="flex  gap-1 items-center cursor-pointer text-sm"
+                      onClick={() => setShareThought(!shareThought)}
+                    >
+                      <CiEdit />
+                      <span>Share your own thoughts</span>
+                    </li>
+                  </ul>
+                </div>
+              }
+            />
+          </div>
+
           <span>{repostCount}</span>
         </div>
         <div className="flex items-center space-x-2">
@@ -296,7 +377,7 @@ const NewPost2 = ({ post }) => {
 
       {showComments && (
         <>
-          {post?.comment?.slice(0,visibleComments).map((comment, index) => (
+          {post?.comment?.slice(0, visibleComments).map((comment, index) => (
             <MainComment key={index} comment={comment} />
           ))}
 
@@ -363,6 +444,30 @@ const NewPost2 = ({ post }) => {
                 postId={post?._id}
               />
             </div>
+          </div>
+        </Modals>
+      )}
+
+      {shareThought && (
+        <Modals
+          title={"Repost this post"}
+          openModal={shareThought}
+          modalSize="2xl"
+          onClose={() => setShareThought(false)}
+        >
+          <div className="w-full  mx-auto">
+            <div className="rounded-md w-full py-3">
+              <textarea name="" id="" className="w-full rounded-md min-h-[10rem]" value={thought} onChange={(e)=>setThought(e.target.value)}>
+
+              </textarea>
+            </div>
+            <button 
+        className={`bg-[#3D7100] w-full py-2 rounded-md text-white font-semibold text-[1.2rem] ${thought.length < 1 ? 'opacity-50 cursor-not-allowed' : ''}`} 
+        disabled={thought.length < 1} 
+        onClick={handleRespostWithThought}
+      >
+        Post
+      </button>
           </div>
         </Modals>
       )}

@@ -32,4 +32,7 @@ export const SURVEY = "/survey";
 
 
 
-export const COMMUNITY = "/community";
+export const COMMUNITY = "community";
+export const K_VIDEOS = "k_videos";
+export const K_IMAGES = "k_images";
+export const k_DAIRIES = "k_diaries";

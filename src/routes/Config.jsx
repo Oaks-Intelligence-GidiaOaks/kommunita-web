@@ -23,6 +23,9 @@ import {
   FollowerAndFollowing,
   SinglePostPage,
   PopularPost,
+  Komunity_Diaries,
+  Komunity_Videos,
+  Komunity_Images,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -64,6 +67,18 @@ const Config = () => {
           <Route
             index
             element={<ProtectedRoute component={PopularPost} />}
+          />
+          <Route
+            path={routes.k_DAIRIES}
+            element={<ProtectedRoute component={Komunity_Diaries} />}
+          />
+          <Route
+            path={routes.K_VIDEOS}
+            element={<ProtectedRoute component={Komunity_Videos} />}
+          />
+          <Route
+            path={routes.K_IMAGES}
+            element={<ProtectedRoute component={Komunity_Images} />}
           />
         </Route>
 

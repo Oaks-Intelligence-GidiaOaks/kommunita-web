@@ -24,4 +24,7 @@ export { default as PollHistory } from "./polls/PollHistory";
 export { default as Survey } from "./survey/SurveyHome";
 export { default as CommunityHome } from "./community/CommunityHome";
 export { default as PopularPost } from "./community/Popular_Post";
+export { default as Komunity_Videos } from "./community/Komunity_Videos";
+export { default as Komunity_Images } from "./community/Komunity_Images";
+export { default as Komunity_Diaries } from "./community/Komunity_Dairies";
 

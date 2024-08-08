@@ -18,7 +18,7 @@ const KommunityTab = () => {
         <ul className="flex justify-between items-center gap-10 w-full"  role="tablist">
           <li
             className={`pb-1  ${
-              selected?.pathname?.includes("community") ? "border-[#3D7100] text-[#3D7100] border-b-4" : "text-[#8D92AC]"
+              selected?.pathname === ("/community") ? "border-[#3D7100] text-[#3D7100] border-b-4" : "text-[#8D92AC]"
             }  `}
             onClick={() => {
               handleDivClick(1);
@@ -34,7 +34,7 @@ const KommunityTab = () => {
           </li>
           <li
             className={`pb-1  ${
-              selected?.pathname?.includes("diaries") ? "border-[#3D7100] text-[#3D7100] border-b-4" : "text-[#8D92AC]"
+              selected?.pathname?.includes("k_diaries") ? "border-[#3D7100] text-[#3D7100] border-b-4" : "text-[#8D92AC]"
             }  `}
             onClick={() => {
               handleDivClick(2);
@@ -43,7 +43,7 @@ const KommunityTab = () => {
             <Link
               className={`text-[1.25rem] font-normal${selected?.pathname?.includes() ? 'text-[#3d7100]' : ""}`}
               style={{ color: "#9696C4" }}
-              to="diaries"
+              to="k_diaries"
             >
               Diaries
             </Link>
@@ -57,25 +57,25 @@ const KommunityTab = () => {
             }}
           >
             <Link
-              className={`text-[1.25rem] font-normal${selected?.pathname?.includes() ? 'text-[#3d7100]' : ""}`}
+              className={`text-[1.25rem] font-normal${selected?.pathname?.includes('k_videos') ? 'text-[#3d7100]' : ""}`}
               style={{ color: "#9696C4" }}
-              to="Videos"
+              to="k_videos"
             >
               Videos
             </Link>
           </li>
           <li
             className={`pb-1  ${
-              selected?.pathname?.includes("images") ? "border-[#3D7100] text-[#3D7100] border-b-4" : "text-[#8D92AC]"
+              selected?.pathname?.includes("k_images") ? "border-[#3D7100] text-[#3D7100] border-b-4" : "text-[#8D92AC]"
             }  `}
             onClick={() => {
               handleDivClick(4);
             }}
           >
             <Link
-              className={`text-[1.25rem] font-normal${selected?.pathname?.includes() ? 'text-[#3d7100]' : ""}`}
+              className={`text-[1.25rem] font-normal${selected?.pathname?.includes('k_images') ? 'text-[#3d7100]' : ""}`}
               style={{ color: "#9696C4" }}
-              to="Videos"
+              to="k_images"
             >
               Images
             </Link>
