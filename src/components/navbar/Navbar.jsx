@@ -204,7 +204,7 @@ import {
 import { debounce } from "lodash";
 import { useDispatch } from "react-redux";
 import { handleLogout } from "../../static/logout";
-import { PROFILE } from "../../routes/routes";
+import { KOMMUNITY, PROFILE } from "../../routes/routes";
 import NotificationModal from "../../pages/notifications/NotificationModal";
 import MobileSidebar from "../sidebar/MobileSidebar";
 
@@ -330,7 +330,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center md:space-x-5  xl:space-x-12">
           <NavItem to="/" icon={RiHome5Line} label="My Feed" exact={true} />
           <NavItem
-            to="/community"
+            to={KOMMUNITY}
             icon={TbUsersGroup}
             label="Kommunity"
             exact={true}

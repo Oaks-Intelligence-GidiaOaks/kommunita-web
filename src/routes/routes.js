@@ -27,12 +27,12 @@ export const LIVE = "/live";
 export const NOTIFICATION = "/notifications";
 export const POST = "/post";
 export const POLLS = "/polls";
-export const POLLHISTORY = "/polls/history";
+export const POLLHISTORY = "poll_history";
 export const SURVEY = "/survey";
 
 
 
-export const COMMUNITY = "community";
-export const K_VIDEOS = "k_videos";
-export const K_IMAGES = "k_images";
-export const k_DAIRIES = "k_diaries";
+export const KOMMUNITY = "/kommunity";
+export const E_VIDEOS = "k_videos";
+export const E_IMAGES = "k_images";
+export const E_DAIRIES = "k_diaries";

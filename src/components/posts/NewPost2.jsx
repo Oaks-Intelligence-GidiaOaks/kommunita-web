@@ -200,7 +200,7 @@ const NewPost2 = ({ post }) => {
     }
   }, [location]);
 
-  console.log(post);
+  // console.log(post);
 
   // const removeFeed = async (id) => {
   //   type === "diary" ? await deleteDiary(id) : await deleteFeeds(id);

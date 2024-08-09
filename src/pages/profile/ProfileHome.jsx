@@ -29,6 +29,9 @@ import {
   useGetOtherUserDiariesMutation,
 } from "../../service/diary.service";
 import Modals from "../../components/modals/Modal";
+import NewPost2 from "../../components/posts/NewPost2";
+import Repost2 from "../../components/posts/Repost2";
+import NewPollssss from "../../components/newPolls/NewPollssss";
 
 const ProfileHome = () => {
   const { data } = useGetPostQuery();
@@ -243,7 +246,7 @@ const ProfileHome = () => {
         ) : (
           <div className="grid grid-cols-12 w-full gap-3">
             <div className="w-full col-span-12 md:col-span-8">
-              {[...post]
+              {/* {[...post]
                 .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort posts by latest first
                 .map((post, index) => {
                   let badgeColor = "";
@@ -302,7 +305,24 @@ const ProfileHome = () => {
                       />
                     )
                   );
-                })}
+                })} */
+                
+                  data?.data.map((post) => {
+                    if (post.type === "post") {
+                      return <NewPost2 key={post?._id} post={post} />;
+                    } else if (post.action_type === "Repost") {
+                      return <Repost2 key={post?._id} post={post} />
+                    } else if(post.type === 'poll') {
+                      return <NewPollssss key={post?._id} poll={post} onRefresh={refetch} />;
+                    } else{
+                      return null;
+                    }
+                  })
+                
+                
+                }
+
+                
 
               {/* <MediaContainer /> */}
             </div>
@@ -505,26 +525,8 @@ const ProfileHome = () => {
                   }
 
                   return (
-                    post.user_id && (
-                      <Posts
-                        key={index}
-                        fullname={post.user_id.display_name}
-                        username={post.user_id.username}
-                        verifiedUser={false} // Adjust based on your data
-                        postTime={getTimeAgoString(post.createdAt)}
-                        content={post.content}
-                        media_urls={post.media_urls}
-                        post_id={post._id}
-                        comment={post.comment}
-                        repost={post.repost}
-                        share={post.share}
-                        reaction={post.reaction}
-                        avatar={post.user_id.photo_url || avatar1}
-                        badgeColor={badgeColor}
-                        department={dept}
-                        userId={post.user_id?._id}
-                        type={post?.type}
-                        // user_id={post.user_id?._id}
+                    post?.user_id && (
+                      <NewPost2 key={post?._id} post={post}
                       />
                     )
                   );

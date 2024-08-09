@@ -21,7 +21,7 @@ import MainComment from "../profile/comments/MainComment";
 
 const Repost2 = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const login_user_id = useSelector((state) => state.user?.user?._id);
 
   const [showPopup, setShowPopup] = useState(false);
@@ -43,45 +43,69 @@ const Repost2 = ({ post }) => {
     setShowPopup(false);
   };
 
-
   const [visibleComments, setVisibleComments] = useState(2);
-  const location = useLocation()
+  const location = useLocation();
 
-  useEffect(()=>{
-    if(location.pathname.includes("post/")){
-      setVisibleComments(100)
+  useEffect(() => {
+    if (location.pathname.includes("post/")) {
+      setVisibleComments(100);
     }
-  }, [location])
+  }, [location]);
 
-
-
-  console.log(post)
+  console.log(post);
   return (
     <div className="mx-auto bg-white border rounded-lg shadow-md pt-4 pb- pr-2 my-4">
-      <div className="pt-2 pl-4 italic">
+      <div className="flex items-center pl-4 mb-">
+        {/* <Link to={`/profile/`}> */}
+        <div className={`rounded-full border-4 w-[3rem] h-[3rem]`}>
+          <img
+            // src={profile_placeholder}
+            src={post?.shared_by?.photo_url || profile_placeholder}
+            alt="profile"
+            className="w-[3rem] h-[3rem] rounded-full object-cover"
+          />
+        </div>
+        {/* </Link> */}
+        <div className="ml-4">
+          <div className="flex gap-2 items-center">
+            <Link to={`/profile/`}>
+              <h4 className="font-semibold post-name">
+                {post?.shared_by?.display_name || "Anonymous"}
+              </h4>
+            </Link>
+          </div>
+          <p className="text-gray-500">
+            @{post?.shared_by?.username || "Anonymous"} ·{" "}
+            <span className="post-time ml-2 font-bold">
+              {getTimeAgoString(post?.createdAt) || "unknown"}
+            </span>
+          </p>
+        </div>
+      </div>
+      <div className="pt-2 pl-4 ">
         {/* You reposted this */}
         {/* {post?.share_by?._id === login_user_id
             ? "You reposted this"
             : `@${post?.shared_by?.username} reposted this`
             } */}
-      {post?.message ?  <p className="py-2 pl-4">{post?.message}</p>
-      : post?.post_id?.user_id?._id === login_user_id
-      ? "You reposted this"
-      : `@${post?.shared_by?.username} reposted this`
-      }
+        {post?.message ? (
+          <p className="py-2 pl-4">{post?.message}</p>
+        ) : post?.post_id?.user_id?._id === login_user_id ? (
+          <span className="italic">You reposted this</span>
+        ) : (
+          <span className="">@{post?.shared_by?.username} reposted this</span>
+        )}
       </div>
       <Link to={``}>
         <div className="ml-5 bg-[#f9f8f8] border rounded-lg shadow-md p-4 ">
           <div className="flex items-center mb-4">
-            {/* <Link to={`/profile/`}> */}
-              <div className={`rounded-full border-4 w-[3rem] h-[3rem]`}>
-                <img
-                  // src={profile_placeholder}
-                  src={post?.post_id?.user_id?.photo_url || profile_placeholder}
-                  alt="profile"
-                  className="w-[3rem] h-[3rem] rounded-full object-cover"
-                />
-              </div>
+            <div className={`rounded-full border-4 w-[3rem] h-[3rem]`}>
+              <img
+                src={post?.post_id?.user_id?.photo_url || profile_placeholder}
+                alt="profile"
+                className="w-[3rem] h-[3rem] rounded-full object-cover"
+              />
+            </div>
             {/* </Link> */}
             <div className="ml-4">
               <div className="flex gap-2 items-center">
@@ -99,18 +123,20 @@ const Repost2 = ({ post }) => {
               </p>
             </div>
           </div>
-            <Link  to={`/post${post?.post_id}`}>
-          <p className="mb-4">{post?.post_id?.content || "This is a demo post"}</p>
-          <div className="post-media rounded-md w-full py-3" >
-            <CustomCarousel
-              media_urls={post?.post_id?.media_urls}
-              left={left}
-              right={right}
-              dotsinactive={dotsinactive}
-              dotsactive={dotsactive}
+          <Link to={`/post${post?.post_id}`}>
+            <p className="mb-4">
+              {post?.post_id?.content || "This is a demo post"}
+            </p>
+            <div className="post-media rounded-md w-full py-3">
+              <CustomCarousel
+                media_urls={post?.post_id?.media_urls}
+                left={left}
+                right={right}
+                dotsinactive={dotsinactive}
+                dotsactive={dotsactive}
               />
-          </div>
-              </Link>
+            </div>
+          </Link>
           {/* <div className="flex justify-between items-center text-gray-500 mb-2">
             <div className="flex items-center space-x-2 cursor-pointer">
               <FaHeart className={""} />
@@ -136,33 +162,31 @@ const Repost2 = ({ post }) => {
         </div>
       </Link>
       <div className="flex justify-between items-center text-gray-500 mb-2 pl-6 pr-2 pt-2">
-            <div className="flex items-center space-x-2 cursor-pointer">
-              <FaHeart className={""} />
-              <span>{"4"}</span>
-            </div>
-            <div className="flex items-center space-x-2 cursor-pointer">
-              <FaCommentAlt />
-              <span>{post?.comment?.length}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <FaRetweet />
-              <span>{post?.repost?.length}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <FaShare />
-              <span>{post?.share?.length}</span>
-            </div>
-            <div className="flex items-center space-x-2 cursor-pointer">
-              <CiBookmark className={""} />
-              <span>{"0"}</span>
-            </div>
-          </div>
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <FaHeart className={""} />
+          <span>{"4"}</span>
+        </div>
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <FaCommentAlt />
+          <span>{post?.comment?.length}</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <FaRetweet />
+          <span>{post?.repost?.length}</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <FaShare />
+          <span>{post?.share?.length}</span>
+        </div>
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <CiBookmark className={""} />
+          <span>{"0"}</span>
+        </div>
+      </div>
 
-
-
-          {showComments && (
+      {showComments && (
         <>
-          {post?.comment?.slice(0,visibleComments).map((comment, index) => (
+          {post?.comment?.slice(0, visibleComments).map((comment, index) => (
             <MainComment key={index} comment={comment} />
           ))}
 
@@ -187,9 +211,7 @@ const Repost2 = ({ post }) => {
         </>
       )}
 
-
-
-{showEditModal && post?.type == "post" ? (
+      {showEditModal && post?.type == "post" ? (
         <Modals
           title={"Edit post"}
           openModal={showEditModal}

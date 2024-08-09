@@ -2,16 +2,16 @@ import { Spinner } from "flowbite-react";
 import { useGetCategoriesQuery } from "../../service/categories.service";
 import React from "react";
 import { BiArrowBack } from "react-icons/bi";
-import KommunityTab from "./KommunityTab";
+import ExploreTab from "./ExploreTab";
 
-const CommunityHeader = () => {
+const ExploreHeader = () => {
   const { data, isLoading } = useGetCategoriesQuery();
 
   return (
     <div className="mt-2 px-4 flex flex-col overflow-y-auto ">
       <div className="flex items-center gap-4">
         <BiArrowBack size={25} />
-        <h1 className="font-semibold text-[1.5rem]">Kommunity</h1>
+        <h1 className="font-semibold text-[1.5rem]">Explore</h1>
       </div>
       <div className="flex mt-2 flex-col">
         <h2 className="text-[1.25rem] font-semibold">Categories</h2>
@@ -51,7 +51,7 @@ const CommunityHeader = () => {
       </div>
       <div className="w-full">
         <div className="w-2/3">
-          <KommunityTab />
+          <ExploreTab />
         </div>
         <hr className="divider" />
       </div>
@@ -59,4 +59,4 @@ const CommunityHeader = () => {
   );
 };
 
-export default CommunityHeader;
+export default ExploreHeader;

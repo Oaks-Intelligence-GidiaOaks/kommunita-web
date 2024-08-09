@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useGetCategoriesQuery } from "../../service/categories.service";
 
 function Category() {
@@ -11,11 +12,15 @@ function Category() {
           <div className="p-4">
             <div className="flex justify-between">
               <p className="category">Categories</p>
-              <button className="category-btn">See all</button>
+              <button className="category-btn">
+                <Link to={'/explore'}>
+                See all
+                </Link>
+              </button>
             </div>
 
             <div className="flex justify-center flex-col gap-3 pt-4 pb-5">
-              {category.map((cat, id) => (
+              {category?.slice(0,3).map((cat, id) => (
                 <div
                   key={id}
                   className="category-card relative border shadow-lg rounded-sm"

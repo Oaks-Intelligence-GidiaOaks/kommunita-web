@@ -11,6 +11,7 @@ import avatar1 from "../../assets/images/sidebar/avatar1.svg";
 import { useGetLikedPostQuery } from "../../service/likedPost.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import ProfileNav from "../../components/profile/ProfileNav";
+import NewPost2 from "../../components/posts/NewPost2";
 
 const ProfileLikes = () => {
   const { data } = useGetLikedPostQuery();
@@ -21,22 +22,7 @@ const ProfileLikes = () => {
       <div className="grid grid-cols-12 w-full gap-3">
         <div className="w-full col-span-12 md:col-span-8">
           {post?.data.map((post, index) => (
-            <Posts
-              key={index}
-              fullname={post.user_id.display_name}
-              username={post.user_id.username}
-              verifiedUser={false} // You need to adjust this based on your data
-              postTime={getTimeAgoString(post.createdAt)} // Assuming createdAt is the post time
-              // postTime={moment(post.createdAt).fromNow()} // Assuming createdAt is the post time
-              content={post.content}
-              media_urls={post.media_urls}
-              post_id={post._id}
-              comment={post.comment}
-              repost={post.repost}
-              share={post.share}
-              reaction={post.reaction}
-              avatar={post.user_id.photo_url || avatar1} // You need to provide the avatar source
-            />
+            <NewPost2 key={post?._id} post={post} />
           ))}
         </div>
         <div className="w-full hidden md:block -mt-5 col-span-4">
