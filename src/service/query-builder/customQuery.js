@@ -13,7 +13,7 @@ const baseQuery = fetchBaseQuery({
       headers.set("authorization", `Bearer ${token}`);
     }
     return headers;
-  },
+  }
 });
 
 const customBaseQuery = async (args, api, extraOptions) => {
@@ -22,20 +22,12 @@ const customBaseQuery = async (args, api, extraOptions) => {
   // console.log(result, "res");
   if (result.error && result.error.status === 406) {
     api.dispatch(logoutUser());
-    showAlert(
-      "Inactive for too long",
-      "Please login again to continue",
-      "error"
-    );
+    showAlert("", result.error.data.message, "error");
 
     return;
   } else if (result.error && result.error.status === 401) {
     api.dispatch(logoutUser());
-    showAlert(
-      "Access Token Expired",
-      "Please login again to continue",
-      "error"
-    );
+    showAlert("", result.error.data.message, "error");
   }
   return result;
 };
