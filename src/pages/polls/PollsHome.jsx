@@ -15,10 +15,7 @@ const PollsHome = () => {
   const { refetch } = useGetFeedsQuery();
   console.log(polls?.data);
 
-  const [link, setLink] = useState("");
 
-  const activeLink =
-    "border-b-[5px] border-primary-dark-green text-primary-dark-green pb-4";
   return (
     <>
       {/* <Story /> */}
@@ -35,12 +32,6 @@ const PollsHome = () => {
               <div className="flex items-center flex-col mt-10 justify-center h-auto">
               <img src={search} alt="Search icon" />
               <h2 className="font-bold text-4xl mt-5 mb-5">NO ACTIVE POLL</h2>
-              {/* <p>Follow other users to begin to see posts</p> */}
-              {/* <Link to="/explore">
-                <p className="text-primary-bright-green mt-2 font-semibold">
-                  Click here to explore post and diaries
-                </p>
-              </Link> */}
             </div>
             ) : (
               polls?.data.map((poll) => (
