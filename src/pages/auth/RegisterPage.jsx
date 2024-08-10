@@ -12,47 +12,15 @@ import { motion } from "framer-motion";
 import {
   InputField,
   PasswordField,
-  DropDownMenu,
+  DropDownMenu
 } from "../../components/auth-form";
 import { Form, Field } from "react-final-form";
-import validate from "validate.js";
 // import logo from "../../assets/images/new-logo.svg";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
 import { useRegisterUserMutation } from "../../service/user.service";
 import { INDEX, LOGIN } from "../../routes/routes";
 import { logo, user_phone, world_2 } from "../../assets/images";
-
-const constraints = {
-  display_name: {
-    presence: true,
-  },
-  email: {
-    presence: true,
-  },
-  username: {
-    presence: true,
-  },
-  password: {
-    presence: true,
-    length: {
-      minimum: 6,
-    },
-  },
-  confirm_password: {
-    presence: true,
-    equality: "password",
-  },
-  terms: {
-    presence: {
-      message: "must be accepted",
-    },
-    inclusion: {
-      within: [true],
-      message: "^must be accepted",
-    },
-  },
-};
 
 const RegisterPage = () => {
   const [org, setOrg] = useState("");
@@ -99,11 +67,64 @@ const RegisterPage = () => {
   };
 
   const validateForm = (values) => {
-    return validate(values, constraints) || {};
+    const errors = {};
+
+    // Validate presence
+    if (!values.password) {
+      errors.password = "Password is required";
+    } else {
+      // Validate length
+      if (values.password.length < 8) {
+        errors.password = "Password must be at least 8 characters long";
+      }
+
+      // Validate format
+      const lowercase = /[a-z]/.test(values.password);
+      const uppercase = /[A-Z]/.test(values.password);
+      const number = /\d/.test(values.password);
+      const specialChar = /[!@#$%^&*]/.test(values.password);
+
+      if (!lowercase) {
+        errors.password = "Password must contain at least one lowercase letter";
+      } else if (!uppercase) {
+        errors.password = "Password must contain at least one uppercase letter";
+      } else if (!number) {
+        errors.password = "Password must contain at least one number";
+      } else if (!specialChar) {
+        errors.password =
+          "Password must contain at least one special character (!@#$%^&*)";
+      }
+    }
+
+    // Validate confirm_password
+    if (!values.confirm_password) {
+      errors.confirm_password = "Please confirm your password";
+    } else if (values.confirm_password !== values.password) {
+      errors.confirm_password = "Passwords do not match";
+    }
+
+    // Other validations for display_name, email, username, and terms
+    if (!values.display_name) {
+      errors.display_name = "Display Name is required";
+    }
+
+    if (!values.username) {
+      errors.username = "Username is required";
+    }
+
+    if (!values.email) {
+      errors.email = "Email is required";
+    }
+
+    if (!values.terms) {
+      errors.terms = "You must accept the terms of use";
+    }
+
+    return errors;
   };
 
   const [registerUser, { error, isSuccess }] = useRegisterUserMutation({
-    provideTag: ["User"],
+    provideTag: ["User"]
   });
 
   const onSubmit = async (values) => {
@@ -112,7 +133,7 @@ const RegisterPage = () => {
 
       const formData = {
         ...values,
-        organization_id: organizationId,
+        organization_id: organizationId
       };
 
       console.log(formData);
@@ -163,7 +184,7 @@ const RegisterPage = () => {
           </div>
         </div>
       </div> */}
-         <div className="w-full flex-1">
+      <div className="w-full flex-1">
         <div className="relative">
           <div className="h-screen w-full flex justify-center items-center bg-[#001900] bg-no-repeat overflow-hidden relative">
             <Link to={INDEX} className="flex" smooth={true}>
@@ -187,7 +208,7 @@ const RegisterPage = () => {
                 style={{
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
-                  color: "transparent",
+                  color: "transparent"
                 }}
                 src={logo}
               />
@@ -223,11 +244,7 @@ const RegisterPage = () => {
               alt=""
               className="mt-24 w- mx-auto   "
             /> */}
-            <img
-              src={world_2}
-              alt=""
-              className="mt-24 w- mx-auto   "
-            />
+            <img src={world_2} alt="" className="mt-24 w- mx-auto   " />
           </div>
         </div>
       </div>
@@ -237,20 +254,20 @@ const RegisterPage = () => {
         </div> */}
         <div className="mx-auto w-[80%] lg:mt-10 2xl:mt-40">
           <div className="">
-          <div className="flex justify-center items-center mb-10">
-          <div className="flex font-[500] mx-auto text-xs items-center">
-              <p className=" bg-[#F7F7F8] text-sm w-[8.8rem] text-center rounded-lg text-[#757682]">
-                Built for you
-              </p>
-              <p className="text-[#3D7100]">Change</p>
+            <div className="flex justify-center items-center mb-10">
+              <div className="flex font-[500] mx-auto text-xs items-center">
+                <p className=" bg-[#F7F7F8] text-sm w-[8.8rem] text-center rounded-lg text-[#757682]">
+                  Built for you
+                </p>
+                <p className="text-[#3D7100]">Change</p>
+              </div>
             </div>
-          </div>
             <Form
               onSubmit={onSubmit}
               validate={validateForm}
               render={({ handleSubmit, form, submitting }) => (
                 <form onSubmit={handleSubmit}>
-                 <h1 className="font-Inter mb-7 flex justify-center items-center lg:py-0 text-primary-dark-green font-bold text-3xl">
+                  <h1 className="font-Inter mb-7 flex justify-center items-center lg:py-0 text-primary-dark-green font-bold text-3xl">
                     Create Account
                   </h1>
 
@@ -348,8 +365,7 @@ const RegisterPage = () => {
                     </div>
                     <span className="text-xs font-Inter font-normal pt-1">
                       I accept the{" "}
-                      <span className=" text-[#3D7100]">terms of use</span>{" "}
-                      and{" "}
+                      <span className=" text-[#3D7100]">terms of use</span> and{" "}
                       <span className=" text-[#3D7100]">privacy policy</span>
                     </span>
                   </div>
