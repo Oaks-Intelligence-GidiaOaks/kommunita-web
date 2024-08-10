@@ -139,8 +139,31 @@ const NewPost2 = ({ post }) => {
   const onComment = () => {
     setAddComment(!addComment);
   };
-
+  
+  const hasAlreadyReposted = post?.repost?.filter(
+    (repost) =>{
+        // console.log(repost)
+        repost._id === user._id
+      }
+  );
+  
   const handleRespost = async () => {
+
+    console.log(post.repost);
+    console.log(user._id)
+
+    const hasAlreadyReposted = post?.repost?.filter(
+      (repost) =>{ repost._id === user._id
+    });
+
+    console.log(hasAlreadyReposted)
+  
+    if (hasAlreadyReposted) {
+      showAlert("Notice", "You have already shared this post.", "info");
+      return;
+    }
+
+
     const previousState = isRepost;
     const previousCount = repostCount;
 
@@ -161,6 +184,16 @@ const NewPost2 = ({ post }) => {
   };
 
   const handleRespostWithThought = async () => {
+
+    const hasAlreadyReposted = post?.repost?.some(
+      (repost) => repost._id === login_user_id
+    );
+  
+    if (hasAlreadyReposted) {
+      showAlert("Notice", "You have already shared this post.", "info");
+      return;
+    }
+
     const previousState = isRepost;
     const previousCount = repostCount;
 
@@ -329,7 +362,7 @@ const NewPost2 = ({ post }) => {
               }}
               display_value={
                 <>
-                  <FaRetweet />
+                  <FaRetweet className={`${hasAlreadyReposted ? "text-[#3D7100] font-bold text-2xl" : "" }`} />
                 </>
               }
               isDropdownOpen={isRepostOpen}

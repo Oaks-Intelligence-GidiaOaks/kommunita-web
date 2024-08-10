@@ -52,7 +52,7 @@ const Repost2 = ({ post }) => {
     }
   }, [location]);
 
-  console.log(post);
+  // console.log(post);
   return (
     <div className="mx-auto bg-white border rounded-lg shadow-md pt-4 pb- pr-2 my-4">
       <div className="flex items-center pl-4 mb-">

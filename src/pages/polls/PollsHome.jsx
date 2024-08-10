@@ -44,7 +44,7 @@ const PollsHome = () => {
             </div>
             ) : (
               polls?.data.map((poll) => (
-                <NewPollssss key={post?._id} poll={post} onRefresh={refetch} />
+                <NewPollssss key={poll?.post?._id} poll={poll} onRefresh={refetch} />
             )
             ))
           }

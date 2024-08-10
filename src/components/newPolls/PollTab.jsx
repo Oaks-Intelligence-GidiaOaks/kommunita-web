@@ -64,6 +64,7 @@ const PollTab = () => {
           </li>
         </ul>
       </div>
+        <hr className="divider" />
     </div>
   );
 };
