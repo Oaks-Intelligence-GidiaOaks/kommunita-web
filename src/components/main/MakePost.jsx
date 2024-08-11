@@ -1,37 +1,19 @@
 import { useState, useRef, useMemo, useEffect } from "react";
 import Modals from "../modals/Modal";
-import more_btn from "../../assets/images/main/more.svg";
-import photo_btn from "../../assets/images/main/photo.svg";
-import video_btn from "../../assets/images/main/video.svg";
-import go_live_btn from "../../assets/images/main/go-live.svg";
-import diary from "../../assets/images/main/diary.svg";
-import polls from "../../assets/images/main/polls.svg";
-import schedule from "../../assets/images/main/schedule.svg";
-import scheduleActive from "../../assets/images/main/schedule-active.svg";
-
-import draft from "../../assets/images/main/draft.svg";
 import Date from "../../assets/images/modals/date.svg";
 import time from "../../assets/images/modals/time.svg";
 import globe from "../../assets/images/modals/globe.svg";
-import photos from "../../assets/images/modals/photos.svg";
-import videoIcon from "../../assets/images/modals/video.svg";
-import location from "../../assets/images/modals/location.svg";
-import gallery from "../../assets/images/gallery.png";
-import { FaRegUser, FaTimes } from "react-icons/fa";
-import { IoCameraOutline } from "react-icons/io5";
-import { GoDeviceCameraVideo } from "react-icons/go";
+import { FaTimes } from "react-icons/fa";
+
 import {
   BiWorld,
   BiLock,
   BiGroup,
-  BiChevronDown,
-  BiChevronUp,
 } from "react-icons/bi";
 import UploadedItem from "./UploadedItem";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { showAlert } from "../../static/alert";
-import Resizer from "react-image-file-resizer";
 import { useGetCategoriesQuery } from "../../service/categories.service";
 import { BeatLoader } from "react-spinners";
 import { useGetFeedsQuery } from "../../service/feeds.service";
@@ -40,8 +22,6 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Spinner } from "flowbite-react";
 import "./style.css";
-import { motion } from "framer-motion";
-import { AiOutlineClose } from "react-icons/ai";
 import { MdAddAPhoto } from "react-icons/md";
 import { CiCalendarDate } from "react-icons/ci";
 import { SlNotebook } from "react-icons/sl";
@@ -49,14 +29,13 @@ import { BiPoll } from "react-icons/bi";
 import { IoMdCopy } from "react-icons/io";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import DropdownMenu from "../ui/DropdownMenu";
-import { Link } from "react-router-dom";
-import { PROFILE } from "../../routes/routes";
 import { LuCalendarClock } from "react-icons/lu";
 import { GiBlackBook } from "react-icons/gi";
 import { HiOutlineDocumentDuplicate } from "react-icons/hi2";
 import { CgPoll } from "react-icons/cg";
 import { media, profile_placeholder } from "../../assets/images";
 import { useGetUserProfiileQuery } from "../../service/user.service";
+import CreateDiary from "../diary/CreateDiary";
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
@@ -77,6 +56,7 @@ function MakePost() {
 
   const [editorHtml, setEditorHtml] = useState("");
   const [viewMore, setIsViewMore] = useState(false);
+  const [pageNumber, setPageNumber] = useState(null);
 
   // console.log(editorHtml);
 
@@ -211,6 +191,7 @@ function MakePost() {
     selectedDiaryMedia.forEach((media) => formData.append("media", media));
     formData.append("content", editorHtml);
     formData.append("category", category);
+    formData.append("pages", pageNumber)
 
     if (!editorHtml.trim()) {
       showAlert("", "Diary content cannot be empty", "error");
@@ -613,79 +594,11 @@ function MakePost() {
         </div>
       )}
 
-      <Modals
-        openModal={openDiaryModal}
-        modalSize="4xl"
-        onClose={() => setOpenDiaryModal(false)}
-        title={"Diary"}
-      >
-        <div className="pb-5 flex flex-col gap-2 justify-start">
-          {/* <label htmlFor="content" className="text-sm">
-            Type content here
-          </label> */}
-
-          <ReactQuill
-            value={editorHtml}
-            onChange={setEditorHtml}
-            theme="snow"
-            placeholder="Write something amazing..."
-          />
-        </div>
-
-        <div className="flex flex-col justify-start gap-2 pb-5">
-          <label htmlFor="category" className="text-sm">
-            Select Category (optional)
-          </label>
-          <select
-            value={category}
-            onChange={handleCategoryChange}
-            className="focus:outline-none focus:ring-0 rounded-md bg-transparent post-input w-full border-2 border-gray-300"
-          >
-            <option value="">Select Category</option>
-            {Category?.data?.map((data, index) => (
-              <option value={data?.name} key={index}>
-                {data.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-2 pb-5">
-          <label htmlFor="content" className="text-sm">
-            Select Media Files
-          </label>
-
-          <input
-            type="file"
-            onChange={handleDiaryMediaChange}
-            accept="image/*,video/*"
-            multiple
-          />
-        </div>
-
-        <div className="uploaded-items-container p-4 border border-gray-200 rounded-md max-h-80 overflow-y-auto mt-4 flex flex-wrap">
-          {[...selectedDiaryMedia].map((item, index) => (
-            <UploadedItem
-              key={index}
-              item={item}
-              onRemove={handleDiaryRemove}
-              onItemSelect={handleItemSelect}
-            />
-          ))}
-        </div>
-
-        {editorHtml ? (
-          <div className="flex justify-end pt-5">
-            <button
-              className="p-2 rounded-md border text-[#fff] bg-[#34B53A]"
-              onClick={handleDiarySubmit}
-              disabled={submitting}
-            >
-              {submitting ? <Spinner /> : "Post Diary"}
-            </button>
-          </div>
-        ) : null}
-      </Modals>
+   {
+     openDiaryModal && (
+      <CreateDiary openDiaryModal={openDiaryModal} onClick={()=>setOpenDiaryModal(!openDiaryModal)} /> 
+     )
+   }
 
       <Modals
         openModal={openScheduleModal}

@@ -10,17 +10,6 @@ function DiariesHome() {
     <MainLayout>
       <DiaryMain />
     </MainLayout>
-    // <>
-
-    //   <Nav />
-    //   <section className="bg-[#EFF2FC]">
-    //     <div className="container flex justify-between w-full">
-    //       <SideNav />
-
-    //       <AdsSection />
-    //     </div>
-    //   </section>
-    // </>
   );
 }
 
