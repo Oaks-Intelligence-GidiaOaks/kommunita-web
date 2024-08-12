@@ -147,18 +147,16 @@ const NewPost2 = ({ post }) => {
     setShowPopup(!showPopup);
   };
 
-
-
   const [visibleComments, setVisibleComments] = useState(2);
-  const location = useLocation()
+  const location = useLocation();
 
-  useEffect(()=>{
-    if(location.pathname.includes("post/")){
-      setVisibleComments(100)
+  useEffect(() => {
+    if (location.pathname.includes("post/")) {
+      setVisibleComments(100);
     }
-  }, [location])
+  }, [location]);
 
-  console.log(post)
+  console.log(post);
 
   return (
     <div className="mx-auto bg-white border rounded-lg shadow-md p-4 my-4">
@@ -276,7 +274,7 @@ const NewPost2 = ({ post }) => {
 
       {showComments && (
         <>
-          {post?.comment?.slice(0,visibleComments).map((comment, index) => (
+          {post?.comment?.slice(0, visibleComments).map((comment, index) => (
             <MainComment key={index} comment={comment} />
           ))}
 
@@ -336,7 +334,7 @@ const NewPost2 = ({ post }) => {
               <EditMyDiary
                 content={post?.content}
                 medias={post?.media_urls}
-                avatar={post?.user_id.photo_url || profile_placeholder}
+                avatar={post?.user_id?.photo_url || profile_placeholder}
                 userId={post?.user_id}
                 //  badgeColor={badgeColor}
                 onClose={() => setShowEditModal(false)}
