@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import { FaCheckCircle } from "react-icons/fa";
 import { profile_placeholder } from "../../assets/images";
+import getTimeAgoString from "../../utils/getTimeAgoString";
+import PollTimeLeft from "./PollTimeLeft";
 
 const NewPollssss = ({ poll, onRefresh }) => {
   const { data: user } = useGetUserProfiileQuery();
@@ -78,6 +80,14 @@ const NewPollssss = ({ poll, onRefresh }) => {
     handleSubmitPoll(i.option_index);
   };
 
+  const getLeadingOption = () => {
+    return pollState.answers.reduce((max, option) =>
+      option.percentage > max.percentage ? option : max
+    );
+  };
+
+  const leadingOption = getLeadingOption();
+
   return (
     <div className="flex items-center justify-center mt-5 rounded-lg mb-5">
       <div className="bg-white rounded-lg w-full p-10">
@@ -104,21 +114,26 @@ const NewPollssss = ({ poll, onRefresh }) => {
               <p className="username">
                 @{poll.created_by?.username || "malenxe"}{" "}
                 <span className="post-time ml-2 font-bold">
-                  {poll.postTime || "5h"}
+                  {getTimeAgoString(poll?.createdAt)}
                 </span>
               </p>
             </div>
           </div>
         </div>
-        <div className="flex justify-between items-center mb-5">
+        <div className="flex justify-between items-end mb-5">
           <h2 className="font-semibold text-xl">{pollState.question}</h2>
+          <PollTimeLeft targetDate={poll?.duration} />
         </div>
         <section>
           {pollState.answers?.map((option, id) => (
             <div
               key={id}
               onClick={() => !poll.expired && markAnswer(option)}
-              className="flex relative cursor-pointer items-center mb-4 justify-between rounded-lg text-gray-400 border-b-2"
+              className={`flex relative cursor-pointer items-center mb-4 justify-between rounded-lg text-gray-400 border-b-2 ${
+                option.option_index === leadingOption.option_index
+                  ? "border-[#2CC84A] border-2"
+                  : ""
+              }`}
             >
               <div
                 style={{
@@ -127,14 +142,14 @@ const NewPollssss = ({ poll, onRefresh }) => {
                 }}
                 className={`flex ${
                   poll.expired ? "bg-gray-600" : "bg-[#2CC84A4D] bg-opacity-30"
-                } justify-between h-[50px] relative items-center gap-4 p-1 rounded-lg px-2 overflow-visible `}
+                } justify-between h-[50px] relative items-center gap-4 p-1 rounded-tl-lg rounded-tr-full rounded-br-full px-2 overflow-visible `}
               >
                 <p className="mr-3">{option.option_index + 1}.</p>
                 <div className="absolute left-7 lg:left-10 bg-border-none w-[300px] flex-1 ">
                   {option.option}
                 </div>
               </div>
-              <div className="z-50 absolute right-0">
+              <div className="z-50 absolute right-14">
                 <span className="text-gray-400 text-sm">
                   {Math.round(option.percentage) + "%"}
                 </span>

@@ -21,6 +21,8 @@ import { Modal } from "flowbite-react";
 import InputEmoji from "react-input-emoji";
 import { useSendInitialMessageMutation } from "../../service/message.service";
 import { profile_placeholder } from "../../assets/images";
+import { LuBellPlus } from "react-icons/lu";
+import { RxDotsHorizontal } from "react-icons/rx";
 
 const ProfileHero = () => {
   const [showMobileNav, setShowMobileNav] = useState(false);
@@ -171,14 +173,18 @@ const ProfileHero = () => {
       <div className="relative px-10 lg:px-20 ">
         <div className="lg:absolute -mt-10 lg:mt-0 -top-10 lg:h-[150px] rounded-xl lg:w-[90%] bg-white p-4">
           <div className="relative flex justify-center items-center">
-            {!user_id && (
-              <div className="absolute top-0 right-5 h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center">
-                <img src="/src/assets/images/AddNotification.svg" />
+            {!user_id ? (
+              <div className="absolute top-0 right-5 h-[41px] w-[41px] rounded-full bg-[#D8E3CC] flex items-center justify-center">
+                <LuBellPlus className="text-[#3D7100] " />
+              </div>
+            ) : (
+              <div className="absolute top-0 right-5 h-[41px] w-[41px] rounded-full bg-[#D8E3CC] flex items-center justify-center">
+                <RxDotsHorizontal />
               </div>
             )}
             <div
               onClick={() => setShowMobileNav(!showMobileNav)}
-              className="absolute top-0 left-5 h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center cursor-pointer lg:!hidden"
+              className="absolute top-0 left-5 h-[41px] w-[41px] rounded-full bg-[#3D7100] flex items-center justify-center cursor-pointer lg:!hidden"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -199,17 +205,17 @@ const ProfileHero = () => {
 
             <div className="flex lg:items-end gap-5 -mt-[50px] flex-col items-center lg:flex-row lg:justify-between w-full">
               <div className="flex flex-col lg:flex-row items-center lg:items-end gap-5 lg:ml-10">
-                <div className="border-white border-[5px] bg-white  w-[140px] h-[136px] overflow-hidden rounded-lg">
+                <div className="border-white border-[5px] bg-white  w-[8.75rem] h-[8.5rem] overflow-hidden rounded-lg">
                   <img
                     src={profile?.data.photo_url || profile_placeholder}
                     className="object-cover"
                   />
                 </div>
-                <div className="flex flex-col items-center lg:block">
+                <div className="flex flex-col w-full items-center lg:block">
                   <h1 className="font-bold text-3xl xl:text-5xl mb-5">
                     {profile?.data?.display_name}
                   </h1>
-                  <div className="flex gap-5">
+                  <div className="flex justify-between w-full gap-5">
                     <div>
                       {profile?.data.tech_title && (
                         <HeroLabel
@@ -329,7 +335,7 @@ const ProfileHero = () => {
                 </div>
               </div>
 
-              {user_id && (
+              {/* {user_id && (
                 <div>
                   <img
                     src={message}
@@ -338,7 +344,7 @@ const ProfileHero = () => {
                     alt=""
                   />
                 </div>
-              )}
+              )} */}
 
               <div>
                 {" "}
@@ -389,16 +395,19 @@ const ProfileHero = () => {
                   </div>
                   {user_id && (
                     <div className="flex items-center gap-2 mt-2 lg:-mb-5">
-                      <div className="h-[41px] w-[41px] rounded-full flex items-center justify-center">
-                        <img src={hug} />
-                      </div>
+                      <button
+                        onClick={handleSendMessage}
+                        className="p-2 border-2 border-[#3D7100] text-[#3D7100] rounded-lg w-[122px] text-center font-semibold px-3"
+                      >
+                        Message
+                      </button>
                       {following ? (
                         <button
                           onClick={() => handleUnFollow(user_id)}
-                          className="p-2 border-2 border-[#02BA09] text-[#02BA09] rounded-lg w-[122px] text-center font-semibold px-3"
+                          className="p-2 border-2 border-[#3D7100] text-[#3D7100] rounded-lg w-[122px] text-center font-semibold px-3"
                         >
                           {submitting ? (
-                            <BeatLoader color="#02BA09" loading={true} />
+                            <BeatLoader color="#3D7100" loading={true} />
                           ) : (
                             "Following"
                           )}
@@ -406,7 +415,7 @@ const ProfileHero = () => {
                       ) : (
                         <button
                           onClick={() => handleFollow(user_id)}
-                          className="p-2 bg-[#02BA09] text-white rounded-lg w-[122px] text-center font-semibold px-5"
+                          className="p-2 bg-[#3D7100] text-white rounded-lg w-[122px] text-center font-semibold px-5"
                         >
                           {submitting ? (
                             <BeatLoader color="#ffffff" loading={true} />
@@ -415,11 +424,8 @@ const ProfileHero = () => {
                           )}
                         </button>
                       )}
-                      {/* <button className="text-white bg-[#02BA09] rounded-lg py-2 px-5">
-                        Follow
-                      </button> */}
-                      <div className="h-[41px] w-[41px] rounded-full bg-[#02BA09] flex items-center justify-center">
-                        <img src="/src/assets/images/AddNotification.svg" />
+                      <div className="h-[41px] w-[41px] rounded-full bg-[#D8E3CC] flex items-center justify-center">
+                        <LuBellPlus className="text-[#3D7100] " />
                       </div>
                     </div>
                   )}

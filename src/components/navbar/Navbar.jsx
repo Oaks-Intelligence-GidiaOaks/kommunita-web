@@ -197,11 +197,14 @@ import DropdownMenu from "../ui/DropdownMenu";
 import { FaRegUser } from "react-icons/fa6";
 import { IoSettingsOutline } from "react-icons/io5";
 import { CiLogout, CiSearch } from "react-icons/ci";
-import { useGetUserOrganisationQuery } from "../../service/organization.service";
+import {
+  useGetUserOrganisationQuery,
+  useSwitchOrganisationMutation,
+} from "../../service/organization.service";
 import { debounce } from "lodash";
 import { useDispatch } from "react-redux";
 import { handleLogout } from "../../static/logout";
-import { PROFILE } from "../../routes/routes";
+import { KOMMUNITY, PROFILE } from "../../routes/routes";
 import NotificationModal from "../../pages/notifications/NotificationModal";
 import MobileSidebar from "../sidebar/MobileSidebar";
 
@@ -232,6 +235,7 @@ const NavItem = ({ to, icon: Icon, label, exact }) => {
 
 const Navbar = () => {
   const [openSearchModal, setOpenSearchModal] = useState(false);
+  const [reloadPage, setReloadPage] = useState(false);
   const [searchOnSmallScreen, setSearchOnSmallScreen] = useState(false);
   const [searchGeneral, { error, isSuccess }] = useSearchGeneralMutation();
   const [searchedData, setSearchedData] = useState(null);
@@ -244,7 +248,10 @@ const Navbar = () => {
   const [searchString, setSearchString] = useState("");
   const [searchOrganisation, setSearchOrganisation] = useState("");
   const { data: profile } = useGetUserProfiileQuery();
-  const { data: userOganisation } = useGetUserOrganisationQuery();
+  const { data: userOganisation, refetch: refetchOrganisation } =
+    useGetUserOrganisationQuery();
+  const [switchOrganisation, { isSuccess: isSwitchOrgSuccess }] =
+    useSwitchOrganisationMutation();
 
   const dispatch = useDispatch();
 
@@ -252,25 +259,31 @@ const Navbar = () => {
     handleLogout(dispatch);
   };
 
-  const handleSearch = async () => {
-    // setSearching(true);
-    // if (searchString) {
-    //   const postData = {
-    //     search_term: searchString,
-    //   };
-    //   try {
-    //     const res = await rtkMutation(searchGeneral, { ...postData });
-    //     console.log(res.data);
-    //     setSearchedData(res.data);
-    //     setOpenSearchModal(true);
-    //   } catch (error) {
-    //     console.error("Error making search: ", error);
-    //     showAlert("Oops", "An error occurred while searching content", "error");
-    //   }
-    // }
-    // setSearching(false);
-    console.log("saerch organisation");
+  console.log(userOganisation?.data);
+
+  const SwitchOrg = async (org_id) => {
+    setIsOrganisationOpen(!isOrganisationOpen);
+    // console.log(org_id)
+    const postData = { organization_id: org_id };
+    try {
+      const res = await rtkMutation(switchOrganisation, postData);
+      console.log(res.data);
+      refetchOrganisation();
+      setReloadPage(!reloadPage);
+    } catch (error) {
+      console.error("Error switching organisation: ", error);
+      showAlert("Oops", "An error occurred while searching content", "error");
+    }
+    console.log("switch organisation");
   };
+
+  useEffect(() => {
+    if (isSwitchOrgSuccess) {
+      setIsOrganisationOpen(false);
+      refetchOrganisation();
+      window.location.reload();
+    }
+  }, [isSuccess]);
 
   const debouncedSearch = useRef(
     debounce(async (searchTerm) => {
@@ -317,9 +330,9 @@ const Navbar = () => {
         <div className="hidden md:flex items-center md:space-x-5  xl:space-x-12">
           <NavItem to="/" icon={RiHome5Line} label="My Feed" exact={true} />
           <NavItem
-            to="/community"
+            to={KOMMUNITY}
             icon={TbUsersGroup}
-            label="Community"
+            label="Kommunity"
             exact={true}
           />
           <NavItem
@@ -363,11 +376,15 @@ const Navbar = () => {
                     setIsOrganisationOpen(!isOrganisationOpen);
                   }}
                   display_value={
-                    <>
+                    <span className="py-1 flex items-center gap-2">
                       <span className="w-6 h-6 rounded-full">
                         <img
-                          src={profile?.data?.current_organization?.logo_url}
+                          src={
+                            profile?.data?.current_organization?.logo_url ||
+                            placeholder_logo
+                          }
                           alt="l"
+                          className="w-full rounded-full"
                         />
                       </span>
                       <p>
@@ -378,7 +395,7 @@ const Navbar = () => {
                         ...
                       </p>
                       <IoIosArrowDown size={20} className="text-[#838383]" />
-                    </>
+                    </span>
                   }
                   isDropdownOpen={isOrganisationOpen}
                   listItem={
@@ -402,14 +419,14 @@ const Navbar = () => {
                         />
                       </div>
                       {/* Organisations list goes here */}
-                      <ul className="w-full mt-3">
+                      <ul className="w-full mt-3 max-h-[15rem] overflow-y-auto custom-scrollbar">
                         {userOganisation?.data?.map((org) => (
-                          <li key={org._id} className="w-full border-b">
-                            <Link
-                              to={`#`}
-                              className="py-2 w-full flex items-center gap-2"
-                            >
-                              {/* <Link to={`/dashboard/organisation/${org.id}`}> */}
+                          <li
+                            key={org._id}
+                            className="w-full border-b"
+                            onClick={() => SwitchOrg(org._id)}
+                          >
+                            <span className="py-2 w-full flex items-center gap-2">
                               <span className="w-6 h-6 rounded-full">
                                 <img
                                   src={org?.logo_url || placeholder_logo}
@@ -418,7 +435,7 @@ const Navbar = () => {
                                 />
                               </span>
                               {org?.organization_name}
-                            </Link>
+                            </span>
                           </li>
                         )) || <p>No Organisations found</p>}
                       </ul>
@@ -470,6 +487,27 @@ const Navbar = () => {
                     </div>
                   </Modals>
                 )}
+                {reloadPage && (
+                  <Modals
+                    title={""}
+                    openModal={reloadPage}
+                    modalSize="2xl"
+                    onClose={() => setReloadPage(!reloadPage)}
+                  >
+                    <div className="flex flex-col text-center gap-4 justify-center rounded w-full">
+                      <h1 className="font-semibold text-3xl">Great</h1>
+                      <p className="font-medium">
+                        You have successfully switched to another organisation
+                      </p>
+                      <button
+                        className="bg-[#3D7100] w-full py-2 rounded-md text-white font-semibold text-[1.2rem]"
+                        onClick={() => window.location.reload()}
+                      >
+                        OK
+                      </button>
+                    </div>
+                  </Modals>
+                )}
 
                 {notificationBox && (
                   <NotificationModal
@@ -491,7 +529,7 @@ const Navbar = () => {
                       <img
                         src={profile?.data?.photo_url || profile_placeholder}
                         alt=""
-                        className="rounded-full w-full object-cover"
+                        className="rounded-full w-[3rem] h-[3rem] object-cover"
                       />
                     </>
                   }
@@ -543,10 +581,14 @@ const Navbar = () => {
           </Modals>
         )}
         <div className="sm:flex md:hidden gap- items-center">
-          <CiSearch size={30} className="inline-block"   onClick={() => {
-                    setSearchOnSmallScreen(!searchOnSmallScreen);
-                    console.log("clicked me");
-                  }} />
+          <CiSearch
+            size={30}
+            className="inline-block"
+            onClick={() => {
+              setSearchOnSmallScreen(!searchOnSmallScreen);
+              console.log("clicked me");
+            }}
+          />
           <AiOutlineMenu
             size={30}
             className="inline-block"

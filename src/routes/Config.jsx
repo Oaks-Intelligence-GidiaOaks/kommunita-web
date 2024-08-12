@@ -19,9 +19,15 @@ import {
   FollowHome,
   ForgotPasswordPage,
   ResetPasswordPage,
-  CommunityHome,
   FollowerAndFollowing,
   SinglePostPage,
+  PopularPost,
+  Komunity_Diaries,
+  Komunity_Videos,
+  Komunity_Images,
+  ExploreHome,
+  KommunityHome,
+  PollsContainer,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -56,10 +62,33 @@ const Config = () => {
           path={routes.SWITCH}
           element={<ProtectedRoute component={Homepage} />}
         ></Route>
+        
         <Route
-          path={routes.COMMUNITY}
-          element={<ProtectedRoute component={CommunityHome} />}
-        ></Route>
+          path={routes.KOMMUNITY}
+          element={<ProtectedRoute component={KommunityHome} />}
+        />
+
+        {/* Explore */}
+        <Route
+          path={routes.EXPLORE}
+          element={<ProtectedRoute component={ExploreHome} />}
+        >
+          <Route index element={<ProtectedRoute component={PopularPost} />} />
+          <Route
+            path={routes.E_DAIRIES}
+            element={<ProtectedRoute component={Komunity_Diaries} />}
+          />
+          <Route
+            path={routes.E_VIDEOS}
+            element={<ProtectedRoute component={Komunity_Videos} />}
+          />
+          <Route
+            path={routes.E_IMAGES}
+            element={<ProtectedRoute component={Komunity_Images} />}
+          />
+        </Route>
+
+
 
         <Route
           path={routes.PROFILEDIARIES}
@@ -97,10 +126,10 @@ const Config = () => {
           path={routes.FOLLOW}
           element={<ProtectedRoute component={FollowHome} />}
         />
-        <Route
+        {/* <Route
           path={routes.EXPLORE}
           element={<ProtectedRoute component={Explore} />}
-        />
+        /> */}
         <Route
           path={routes.SETTINGS}
           element={<ProtectedRoute component={Settings} />}
@@ -119,12 +148,15 @@ const Config = () => {
         />
         <Route
           path={routes.POLLS}
-          element={<ProtectedRoute component={PollsHome} />}
-        />
+          element={<ProtectedRoute component={PollsContainer} />}
+        >
+          <Route index element={<ProtectedRoute component={PollsHome} />} />
         <Route
           path={routes.POLLHISTORY}
           element={<ProtectedRoute component={PollHistory} />}
         />
+        </Route>
+
         <Route
           path={routes.SURVEY}
           element={<ProtectedRoute component={SurveyHome} />}

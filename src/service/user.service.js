@@ -62,6 +62,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["User"],
     }),
+    
+    getAUserProfile: builder.query({
+      query: (id) => ({
+        url: `/user/profile/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["User"],
+    }),
 
     // Get other user route
     getOtherUserProfile: builder.mutation({
@@ -128,4 +136,5 @@ export const {
   useGetOrganizationQuery,
   useGetCodeMutation,
   useUpdatePasswordMutation,
+  useGetAUserProfileQuery
 } = userApiSlice;

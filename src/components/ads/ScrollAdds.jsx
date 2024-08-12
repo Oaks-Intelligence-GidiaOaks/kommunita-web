@@ -48,7 +48,7 @@ const ScrollAdds = () => {
           >
             {imageTypes.includes(filteredAds[0].media_urls[0]?.media_type) ? (
               <img
-                className="w-full object-fill max-w-[410px] h-[450px]"
+                className="w-full object-fill max-w-[410px] rounded-md h-[450px]"
                 src={filteredAds[0].media_urls[0]?.media_url}
                 // alt={filteredAds[0].description}
               />

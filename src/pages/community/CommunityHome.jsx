@@ -1,27 +1,15 @@
-import React, { useEffect } from "react";
-import { useGetFeedsQuery } from "../../service/feeds.service";
-import NewPost2 from "../../components/posts/NewPost2";
-import RepostNew from "../../components/posts/RepostNew";
-import CommunityLayout from "../../components/main/CommunityLayout";
-import CommunityHeader from "../../components/community/CommunityHeader";
+import MainLayout from '../../components/main/MainLayout'
+import Kommunity from '../../components/community/Kommunity'
+import React from 'react'
+import StoryList from '../../components/ui/StoryList'
 
 const CommunityHome = () => {
-  const { data, isLoading, refetch } = useGetFeedsQuery();
-  console.log(data?.data);
-
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-
   return (
-    <CommunityLayout>
-      <CommunityHeader />
+    <MainLayout>
+      {/* <StoryList /> */}
+      <Kommunity />
+    </MainLayout>
+  )
+}
 
-
-      
-    </CommunityLayout>
-  );
-};
-
-export default CommunityHome;
+export default CommunityHome

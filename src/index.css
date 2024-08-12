@@ -73,3 +73,21 @@ html {
   /* background-color: #eff2fc; */
   border-radius: 10px;
 }
+
+
+hr {
+  border: none;
+  border-top: 2px solid #D1D8E1;
+  color: #D1D8E1;
+  /* overflow: visible; */
+  text-align: center;
+  height: 5px;
+}
+
+/* hr::after {
+  background: #fff;
+  content: '§';
+  padding: 0 4px;
+  position: relative;
+  top: -13px;
+} */
