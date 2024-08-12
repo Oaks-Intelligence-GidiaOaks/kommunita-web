@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from "react";
 import PollSurveyHeader from "./PollSurveyHeader";
-import axios from "axios";
-import { useSelector } from "react-redux";
+// import axios from "axios";
+// import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import { showAlert } from "../../static/alert";
-import DateTimePicker from "react-datetime-picker";
-import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
+// import DateTimePicker from "react-datetime-picker";
+// import { DateTimePickerComponent } from "@syncfusion/ej2-react-calendars";
 import rtkMutation from "../../utils/rtkMutation";
 import { useCreatePollMutation } from "../../service/polls.service";
+import { BiWorld } from "react-icons/bi";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { IoTimeOutline } from "react-icons/io5";
+import { LiaTimesCircle } from "react-icons/lia";
+import { useGetFeedsQuery } from "../../service/feeds.service";
 
 const PollSchedule = ({ onclick }) => {
   const [createPoll, { error, isSuccess }] = useCreatePollMutation();
+  const {refetch } = useGetFeedsQuery()
   // let count = 1;
   // let ops = ["Option"];
   const [options, setOptions] = useState([]);
   const [pollQuestion, setPollQuestion] = useState("");
   const [audience, setAudience] = useState("Public");
-  const [duration, setDuration] = useState(new Date());
+  const [duration, setDuration] = useState(null);
   const [submitting, setSubmitting] = useState("");
 
-  // const [value, onC] = useState(new Date());
-
   const [openAddOption, setOpenAddOption] = useState(false);
-
-  // const token = useSelector((state) => state.user?.token);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,38 +37,14 @@ const PollSchedule = ({ onclick }) => {
       audience,
       duration,
     };
-    // console.log(data);
     setSubmitting(true);
-    // const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
-
-    // try {
-    //   const response = await axios.post(`${apiUrl}/user/poll`, data, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       ...(token && { Authorization: `Bearer ${token}` }),
-    //     },
-    //   });
-
-    //   console.log("Post submitted successfully:", response.data);
-
-    //   setOptions([]);
-    //   setAudience("");
-    //   setDuration("");
-    //   setPollQuestion("");
-    // } catch (error) {
-    //   console.error("Error submitting post:", error);
-    //   showAlert(
-    //     "Oops!",
-    //     error?.response?.data?.message || "An error occurred",
-    //     "error"
-    //   );
     try {
       await rtkMutation(createPoll, postData);
       setOptions([]);
       setAudience("");
       setDuration("");
       setPollQuestion("");
-      // setIsLoved((prevIsLoved) => !prevIsLoved);
+      refetch()
     } catch (error) {
       console.error("Error liking post:", error);
       showAlert("Oops", "An error occurred while liking the post", "error");
@@ -78,6 +57,7 @@ const PollSchedule = ({ onclick }) => {
   useEffect(() => {
     if (isSuccess) {
       console.log("success");
+      refetch()
     } else if (error) {
       // showAlert("Oops", error.data.message || "An error occurred", "error");
       showAlert("Oops", "An error occurred", "error");
@@ -105,66 +85,28 @@ const PollSchedule = ({ onclick }) => {
 
   return (
     <div className="w-screen h-screen flex items-center justify-center rounded-lg">
-      <div className="bg-white relative rounded-lg md:w-[400px] lg:w-[500px] p-10">
-        <div
-          className="absolute top-2 right-2 cursor-pointer hover:bg-slate-400"
-          onClick={onclick}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6 18 18 6M6 6l12 12"
-            />
-          </svg>
-        </div>
+      <div className="bg-white relative z-40 rounded-lg md:w-[400px] lg:w-[500px] p-10">
         <div className="flex justify-between items-center">
-          <PollSurveyHeader title={"Create Poll"} />
-          <div className="flex items-center bg-gray-100 rounded-sm p-2 gap-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="#a6a6a6"
-              className="w-6 h-6"
+          <PollSurveyHeader title={"Create Poll"} color={"#3D7100"} />
+          <div className="flex items-center gap-4">
+            <div className="flex items-center bg-gray-100 rounded-sm px-2 gap-2">
+              <BiWorld size={20} className="text-[#3D7100]" />
+
+              <select
+                value={audience}
+                onChange={(e) => setAudience(e.target.value)}
+                className="bg-transparent border-none  focus:outline-none focus:ring-0"
+              >
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+              </select>
+            </div>
+            <div
+              className=" cursor-pointer hover:bg-slate-400"
+              onClick={onclick}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"
-              />
-            </svg>
-            <select
-              value={audience}
-              onChange={(e) => setAudience(e.target.value)}
-              className="bg-transparent border-none  focus:outline-none focus:ring-0"
-            >
-              <option value="public">Public</option>
-              <option value="private">Private</option>
-            </select>
-            {/* <p className="text-[#a6a6a6]">Public</p> */}
-            {/* <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="#a6a6a6"
-              className="w-6 h-6 cursor-pointer"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-              />
-            </svg> */}
+            <LiaTimesCircle size={25} />
+            </div>
           </div>
         </div>
         <form onSubmit={handleSubmit1}>
@@ -206,14 +148,14 @@ const PollSchedule = ({ onclick }) => {
                 // onClick={handlePlaceholderIncrease}
                 onClick={() => setOpenAddOption(true)}
               >
-                <p>
+                <>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="#a6a6a6"
-                    className="w-6 h-6 cursor-pointer"
+                    className="w-4 h-4 cursor-pointer"
                   >
                     <path
                       strokeLinecap="round"
@@ -221,51 +163,33 @@ const PollSchedule = ({ onclick }) => {
                       d="M12 4.5v15m7.5-7.5h-15"
                     />
                   </svg>
-                </p>
-                <p className=" text-xs rounded-lg text-primary-green cursor-pointer">
+                </>
+                <span className=" text-xs rounded-lg text-primary-green cursor-pointer">
                   Add Option
-                </p>
+                </span>
               </button>
             </div>
             {/* <div className="flex w-full flex-1 items-center mb-4 justify-between bg-gray-100 px-3"> */}
-            <div className="">
-              <div className="w-full flex-1 p-5">
-                {/* <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="#a6a6a6"
-                  className="w-6 h-6 cursor-pointer"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
-                </svg> */}
-
-                {/* <input
-                  className="w-full focus:outline-none focus:ring-0 flex-1 bg-transparent outline-none border-none"
-                  type="text"
-                  value={duration}
-                  onChange={(e) => setDuration(e.target.value)}
-                  pattern="[0-9]{2}:[0-5][0-9]:[0-5][0-9]"
-                  placeholder="Duration: (HH:MM:SS)"
-                  required
-                /> */}
-                <DateTimePickerComponent
-                  onChange={(e) => setDuration(e.target.value)}
-                  value={duration}
-                  format="yyyy-MM-dd HH:mm:ss"
-                ></DateTimePickerComponent>
-                {/* <DateTimePicker onChange={setDuration} value={duration} /> */}
+            <div className="w-full pb-5">
+              <div className="w-full bg-[#F4F4F4] border">
+                <DatePicker
+                  selected={duration}
+                  onChange={(date) => setDuration(date)}
+                  showTimeSelect
+                  showIcon
+                  icon={
+                    <IoTimeOutline className="inline-block mt-1 mr-2 text-[#A6A6A6] " />
+                  }
+                  dateFormat="Pp"
+                  placeholderText="Duration"
+                  className="w-full border-none text-[#A6A6A6] bg-[#F4F4F4] flex items-center p-2 rounded ring-0 focus:ring-transparent"
+                />
               </div>
             </div>
           </section>
           <button
             onClick={handleSubmit}
-            className="bg-primary--bright-green w-full rounded-lg p-2 font-semibold text-white"
+            className="bg-[#3D7100] w-full rounded-lg p-2 font-semibold text-white"
           >
             {submitting ? (
               <BeatLoader color="#ffffff" loading={true} />

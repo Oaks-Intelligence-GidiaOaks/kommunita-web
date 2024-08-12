@@ -19,7 +19,7 @@ const DropdownMenu = memo(({ aria_label, onClick, display_value, isDropdownOpen,
       <button
         aria-label={aria_label}
         onClick={onClick}
-        className="flex flex-nowrap gap-2 items-center p-1"
+        className="flex flex-nowrap gap-2 items-center"
       >
         {display_value}
       </button>

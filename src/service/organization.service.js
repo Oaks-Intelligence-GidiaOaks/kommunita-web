@@ -1,4 +1,4 @@
-import { ALL_ORGANIZATIONS, ALL_uSER_ORGANIZATIONS } from "./constants";
+import { ALL_ORGANIZATIONS, ALL_uSER_ORGANIZATIONS, SWITCH_ORGANIZATIONS } from "./constants";
 import apiSlice from "./api/apiSlice";
 
 export const organizationApiSlice = apiSlice.injectEndpoints({
@@ -18,7 +18,15 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Organization"],
     }),
+    switchOrganisation: builder.mutation({
+      query: (postData) => ({
+        url: SWITCH_ORGANIZATIONS,
+        body: postData,
+        method: "POST",
+      }),
+      providesTags: ["Organization"],
+    }),
   }),
 });
 
-export const { useGetAllOrganizationQuery, useGetUserOrganisationQuery } = organizationApiSlice;
+export const { useGetAllOrganizationQuery, useGetUserOrganisationQuery, useSwitchOrganisationMutation } = organizationApiSlice;

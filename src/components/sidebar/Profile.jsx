@@ -40,7 +40,7 @@ function Profile() {
         </div> */}
 
         <div className="stats flex gap-1 xl:gap-2 px-12 justify-center items-center mt-4">
-          <Link to="#">
+          <Link to="/profile">
           <div className="flex flex-col text-center">
             <p className="stats-number text-xs xl:text-sm font-semibold">
               {profile?.data?.posts_count}

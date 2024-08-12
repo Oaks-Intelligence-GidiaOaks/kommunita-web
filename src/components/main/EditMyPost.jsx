@@ -192,7 +192,7 @@ const EditMyPost = ({
           </Link>
           <div className=" w-full rounded-md py-2 flex justify-between make-post-input">
             <textarea
-              className="make-post-input focus:outline-none focus:ring-0 w-full text-wrap h-auto border-0 rounded-md resize-none"
+              className="make-post-input focus:outline-none focus:ring-0 w-full text-wrap min-h-[6rem] border-0 rounded-md resize-none"
               placeholder="Share your thoughts..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}

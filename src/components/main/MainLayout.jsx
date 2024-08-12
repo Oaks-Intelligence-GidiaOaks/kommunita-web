@@ -5,6 +5,7 @@ import { AdsSection } from "../ads";
 import { useLocation } from "react-router-dom";
 import Story from "./Story";
 import MobileNavbar from "../navbar/MobileNavbar";
+import { KOMMUNITY } from "../../routes/routes";
 // import "../../index.css";
 
 const MainLayout = ({ children }) => {
@@ -44,6 +45,7 @@ const MainLayout = ({ children }) => {
         {(isHomeRoute ||
           isNotificationRoute ||
           isFollowRoute ||
+          KOMMUNITY ||
           isBookmarkRoute) && (
           <div
             className="ads-container overflow-y-auto custom-scrollbar hidden lg:flex lg:w-[30%]"

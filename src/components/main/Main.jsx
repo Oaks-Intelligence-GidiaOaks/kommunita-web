@@ -15,6 +15,7 @@ import RepostNew from "../posts/RepostNew";
 import PollList from "../newPolls/PollList";
 import NewPollssss from "../newPolls/NewPollssss";
 import Repost2 from "../posts/Repost2";
+import Diary from "../diary/Diary";
 
 function Main() {
   const { data, isLoading, refetch } = useGetFeedsQuery();
@@ -141,6 +142,8 @@ function Main() {
             return <Repost2 key={post?._id} post={post} />
           } else if(post.type === 'poll') {
             return <NewPollssss key={post?._id} poll={post} onRefresh={refetch} />;
+          } else if(post.type === 'diary') {
+            return <Diary key={post?._id} post={post} />;
           } else{
             return null;
           }

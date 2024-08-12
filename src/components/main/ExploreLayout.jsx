@@ -1,23 +1,14 @@
 import PropTypes from "prop-types";
 import { Nav } from "../navbar";
 import { SideNav } from "../sidebar";
-import { AdsSection } from "../ads";
 import { useLocation } from "react-router-dom";
-import Story from "./Story";
 import MobileNavbar from "../navbar/MobileNavbar";
 // import "../../index.css";
 
-const CommunityLayout = ({ children }) => {
-  const location = useLocation();
-  const { pathname } = location;
-
-  const isHomeRoute = pathname === "/";
-  const isFollowRoute = pathname === "/follow";
-  const isNotificationRoute = pathname === "/notifications";
-  const isBookmarkRoute = pathname === "/bookmarks";
+const ExploreLayout = ({ children }) => {
 
   return (
-    <div className="flex  flex-col h-screen w-full p bg-[#F7F7F7] ">
+    <div className="flex  flex-col w-full p bg-[#F7F7F7] ">
       <Nav />
       <div className="bg-[#F7F7F7] flex xl:px-10 items-center overflow-hidden mt-24">
         <div
@@ -41,8 +32,8 @@ const CommunityLayout = ({ children }) => {
   );
 };
 
-CommunityLayout.propTypes = {
+ExploreLayout.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default CommunityLayout;
+export default ExploreLayout;

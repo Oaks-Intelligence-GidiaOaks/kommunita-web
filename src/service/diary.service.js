@@ -11,6 +11,13 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Diary"],
     }),
+    getDiaries: builder.query({
+      query: (category) => ({
+        url: `${DIARY}${category}`,
+        method: "GET",
+      }),
+      providesTags: ["Diary"],
+    }),
 
     createDiary: builder.mutation({
       query: (data) => ({
@@ -64,6 +71,7 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
 
 export const {
   useGetDiaryQuery,
+  useGetDiariesQuery,
   useCreateDiaryMutation,
   useDiaryCommentMutation,
   useDeleteDiaryMutation,

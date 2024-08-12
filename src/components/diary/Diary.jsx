@@ -17,7 +17,6 @@ import CustomCarousel from "../main/CustomCarousel";
 import {
   useFavoritePostsMutation,
   useLovePostMutation,
-  usePostCommentMutation,
   useRepostPostMutation,
 } from "../../service/post.service";
 import { useGetUserProfiileQuery } from "../../service/user.service";
@@ -36,8 +35,9 @@ import { useDeleteDiaryMutation } from "../../service/diary.service";
 import DropdownMenu from "../ui/DropdownMenu";
 import { GoShareAndroid } from "react-icons/go";
 import { CiEdit } from "react-icons/ci";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
-const NewPost2 = ({ post }) => {
+const Diary = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
   const [
     deleteFeeds,
@@ -76,6 +76,7 @@ const NewPost2 = ({ post }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [shareThought, setShareThought] = useState(false);
   const [thought, setThought] = useState("");
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   const toggleComments = () => {
     setShowComments(!showComments);
@@ -110,11 +111,11 @@ const NewPost2 = ({ post }) => {
   useEffect(() => {
     if (userData?.data?.favourites) {
       const postBookmarked = userData.data.favourites.some(
-        (fid) => fid === post._id
+        (fid) => fid === post?._id
       );
       setIsBookmarked(postBookmarked);
     }
-  }, [userData, post._id]);
+  }, [userData, post?._id]);
 
   const handleBookmark = async () => {
     const previousState = isBookmarked || isLikedByCurrentUser;
@@ -228,13 +229,6 @@ const NewPost2 = ({ post }) => {
     }
   }, [location]);
 
-  // console.log(post);
-
-  // const removeFeed = async (id) => {
-  //   type === "diary" ? await deleteDiary(id) : await deleteFeeds(id);
-  //   setShowPopup(false);
-  // };
-
   const handleDeleteFeed = async (feed_id) => {
     setSelectedFeedId(feed_id);
     await deleteFeeds(feed_id);
@@ -244,6 +238,22 @@ const NewPost2 = ({ post }) => {
 
   const [isRepostOpen, setIsRepostOpen] = useState(false);
   const repostRef = useRef(null);
+
+  console.log(post?.pages);
+
+  const navigatePage = (direction) => {
+    if (direction === "next" && currentPageIndex < post?.pages.length - 1) {
+      setCurrentPageIndex((prevIndex) => prevIndex + 1);
+    } else if (direction === "prev" && currentPageIndex > 0) {
+      setCurrentPageIndex((prevIndex) => prevIndex - 1);
+    }
+  };
+
+  const EditorData = ({ htmlContent }) => {
+    return (
+      <div className="mb-4" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+    );
+  };
 
   return (
     <div className="mx-auto bg-white border rounded-lg shadow-md p-4 my-4">
@@ -278,12 +288,38 @@ const NewPost2 = ({ post }) => {
               </span>
             </p>
           </div>
-          {post?.user_id?._id === login_user_id ? (
-            <RxDotsHorizontal
-              className="ml-auto"
-              onClick={handlePostActionClick}
-            />
-          ) : null}
+
+          <div className="flex items-center gap-4">
+            {post?.pages.length > 0 && (
+              <div className="flex items-center gap-4">
+                <button
+                  className={`inline-block border rounded-full bg-[#D9D9D999] p-1 cursor-pointer ${
+                    currentPageIndex === 0 && "invisible"
+                  }`}
+                  onClick={() => navigatePage("prev")}
+                  disabled={currentPageIndex === 0}
+                >
+                  <MdKeyboardArrowLeft size={20} />
+                </button>
+                <button
+                  className={`inline-block border rounded-full bg-[#D9D9D999] p-1 cursor-pointer ${
+                    currentPageIndex === post.pages.length - 1 && "invisible"
+                  }`}
+                  onClick={() => navigatePage("next")}
+                  disabled={currentPageIndex === post.pages.length - 1}
+                >
+                  <MdKeyboardArrowRight size={20} />
+                </button>
+              </div>
+            )}
+
+            {post?.user_id?._id === user._id ? (
+              <RxDotsHorizontal
+                className="ml-auto"
+                onClick={handlePostActionClick}
+              />
+            ) : null}
+          </div>
         </div>
 
         {showPopup && (
@@ -316,10 +352,11 @@ const NewPost2 = ({ post }) => {
           showAlert("Ooops", "Failed to delete the feed. Please try again.")}
       </div>
       <Link to={`/post/${post?._id}`}>
-        <p className="mb-4">{post?.content}</p>
+      <EditorData htmlContent={post?.pages[currentPageIndex].content} />
+        {/* <p className="mb-4">{post?.pages[0].content}</p> */}
         <div className="post-media rounded-md w-full py-3">
           <CustomCarousel
-            media_urls={post?.media_urls}
+            media_urls={post?.pages[currentPageIndex].media_urls}
             left={left}
             right={right}
             dotsinactive={dotsinactive}
@@ -404,11 +441,6 @@ const NewPost2 = ({ post }) => {
           <span>{bookmarkCount}</span>
         </div>
       </div>
-
-      {/* {post?.comment?.map((comment, index) => (
-        <MainComment key={index} comment={comment} />
-      ))} */}
-
       {showComments && (
         <>
           {post?.comment?.slice(0, visibleComments).map((comment, index) => (
@@ -515,4 +547,4 @@ const NewPost2 = ({ post }) => {
   );
 };
 
-export default NewPost2;
+export default Diary;

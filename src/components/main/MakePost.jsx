@@ -1,37 +1,19 @@
 import { useState, useRef, useMemo, useEffect } from "react";
 import Modals from "../modals/Modal";
-import more_btn from "../../assets/images/main/more.svg";
-import photo_btn from "../../assets/images/main/photo.svg";
-import video_btn from "../../assets/images/main/video.svg";
-import go_live_btn from "../../assets/images/main/go-live.svg";
-import diary from "../../assets/images/main/diary.svg";
-import polls from "../../assets/images/main/polls.svg";
-import schedule from "../../assets/images/main/schedule.svg";
-import scheduleActive from "../../assets/images/main/schedule-active.svg";
-
-import draft from "../../assets/images/main/draft.svg";
 import Date from "../../assets/images/modals/date.svg";
 import time from "../../assets/images/modals/time.svg";
 import globe from "../../assets/images/modals/globe.svg";
-import photos from "../../assets/images/modals/photos.svg";
-import videoIcon from "../../assets/images/modals/video.svg";
-import location from "../../assets/images/modals/location.svg";
-import gallery from "../../assets/images/gallery.png";
-import { FaRegUser, FaTimes } from "react-icons/fa";
-import { IoCameraOutline } from "react-icons/io5";
-import { GoDeviceCameraVideo } from "react-icons/go";
+import { FaTimes } from "react-icons/fa";
+
 import {
   BiWorld,
   BiLock,
   BiGroup,
-  BiChevronDown,
-  BiChevronUp,
 } from "react-icons/bi";
 import UploadedItem from "./UploadedItem";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { showAlert } from "../../static/alert";
-import Resizer from "react-image-file-resizer";
 import { useGetCategoriesQuery } from "../../service/categories.service";
 import { BeatLoader } from "react-spinners";
 import { useGetFeedsQuery } from "../../service/feeds.service";
@@ -40,8 +22,6 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Spinner } from "flowbite-react";
 import "./style.css";
-import { motion } from "framer-motion";
-import { AiOutlineClose } from "react-icons/ai";
 import { MdAddAPhoto } from "react-icons/md";
 import { CiCalendarDate } from "react-icons/ci";
 import { SlNotebook } from "react-icons/sl";
@@ -49,14 +29,13 @@ import { BiPoll } from "react-icons/bi";
 import { IoMdCopy } from "react-icons/io";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import DropdownMenu from "../ui/DropdownMenu";
-import { Link } from "react-router-dom";
-import { PROFILE } from "../../routes/routes";
 import { LuCalendarClock } from "react-icons/lu";
 import { GiBlackBook } from "react-icons/gi";
 import { HiOutlineDocumentDuplicate } from "react-icons/hi2";
 import { CgPoll } from "react-icons/cg";
 import { media, profile_placeholder } from "../../assets/images";
-
+import { useGetUserProfiileQuery } from "../../service/user.service";
+import CreateDiary from "../diary/CreateDiary";
 
 function MakePost() {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
@@ -73,9 +52,11 @@ function MakePost() {
   const [isExpanded, setIsExpanded] = useState(false);
   const { refetch } = useGetFeedsQuery();
   const viewMoreRef = useRef(null);
+  const { data: profile } = useGetUserProfiileQuery();
 
   const [editorHtml, setEditorHtml] = useState("");
   const [viewMore, setIsViewMore] = useState(false);
+  const [pageNumber, setPageNumber] = useState(null);
 
   // console.log(editorHtml);
 
@@ -210,6 +191,7 @@ function MakePost() {
     selectedDiaryMedia.forEach((media) => formData.append("media", media));
     formData.append("content", editorHtml);
     formData.append("category", category);
+    formData.append("pages", pageNumber)
 
     if (!editorHtml.trim()) {
       showAlert("", "Diary content cannot be empty", "error");
@@ -274,7 +256,7 @@ function MakePost() {
             <div>
               <div className="flex items-center justify-center h-[40px] w-[40px] rounded-full border-4">
                 <img
-                  src={profile_placeholder}
+                  src={profile?.data?.photo_url || profile_placeholder}
                   className="rounded-full w-full h-full object-cover"
                   alt=""
                 />
@@ -307,8 +289,9 @@ function MakePost() {
             </div>
           </div>
 
-          {/* upload picture or video */}
-          <div className="bg-white flex justify-between items-center px-5 md:px-7 pb-1 md:pb-5 pt-7">
+          <div className="bg-white fle justify-between items-center px-5 md:px-7 pb-1 md:pb-5 pt-7">
+
+              {/* upload picture or video */}
             <div className="flex items-center justify-between md:gap-10">
               <div className="rounded-md pb- flex justify-between make-post-input">
                 <div className=" flex rounded-md">
@@ -326,32 +309,39 @@ function MakePost() {
                   </label>
                 </div>
               </div>
-
-              <div className="bg-gray-200 rounded-md py- flex items-center px-">
-                    <div className="flex items-center space-x-2 w-35">
-                      <div className="text-gray-600 text-xs xl:text-sm ">
-                        {audience === "Public" ? (
-                          <BiWorld size={20} className="text-[#3D7100]" />
-                        ) : audience === "Private" ? (
-                          <BiLock size={20} className="text-xs xl:text-sm text-[#3D7100]" />
-                        ) : (
-                          <BiGroup size={20} className="text-xs xl:text-sm text-[#3D7100]" />
-                        )}
-                      </div>
-                      <select
-                        value={audience}
-                        onChange={handleAudienceChange}
-                        className="focus:outline-none focus:ring-0 border-0 text-xs xl:text-sm bg-transparent w-full h-full make-post-input"
-                      >
-                        <option value="Public">Public</option>
-                        <option value="Private">Private</option>
-                        <option value="Followers">Followers</option>
-                      </select>
-                    </div>
+                  {/* Categories */}
+              <div className="bg-gray-100 rounded-full py- flex items-center px-2">
+                <div className="flex items-center space-x-2 w-35">
+                  <div className="text-gray-600 text-xs xl:text-sm ">
+                    {audience === "Public" ? (
+                      <BiWorld size={20} className="text-[#3D7100]" />
+                    ) : audience === "Private" ? (
+                      <BiLock
+                        size={20}
+                        className="text-xs xl:text-sm text-[#3D7100]"
+                      />
+                    ) : (
+                      <BiGroup
+                        size={20}
+                        className="text-xs xl:text-sm text-[#3D7100]"
+                      />
+                    )}
                   </div>
+                  <select
+                    value={audience}
+                    onChange={handleAudienceChange}
+                    className="focus:outline-none focus:ring-0 border-0 text-xs xl:text-sm bg-transparent w-full h-full make-post-input"
+                  >
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                    <option value="Followers">Followers</option>
+                  </select>
+                </div>
+              </div>
 
+              {/* view more */}
 
-              <div className="text-center py-1 px-4 rounded-md bg-gray-200">
+              <div className="text-center py-[6px] px-4 rounded-full bg-gray-100">
                 <DropdownMenu
                   aria_label={"viewMore"}
                   dropdownRef={viewMoreRef}
@@ -378,7 +368,6 @@ function MakePost() {
                         <span className="font-semibold">Schedule Post</span>
                       </button>
                       <button
-                      
                         className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
                         onClick={() => setOpenDiaryModal(true)}
                       >
@@ -395,7 +384,6 @@ function MakePost() {
                         <span className="font-semibold">Draft</span>
                       </button>
                       <button
-                       
                         className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
                         onClick={() => setOpenPoll(true)}
                       >
@@ -406,15 +394,12 @@ function MakePost() {
                   }
                 />
               </div>
-            </div>
-
-
             <button
               onClick={handleSubmit}
               disabled={submitting || !content}
               className={`${
                 !content
-                  ? "bg-gray-200 text-gray-600"
+                  ? "bg-gray-100 text-gray-600"
                   : "bg-[#3D7100] text-white"
               } hidden md:block px-8 h-10 rounded-3xl`}
             >
@@ -424,6 +409,8 @@ function MakePost() {
                 "Post"
               )}
             </button>
+            </div>
+
 
             {/* <div className="flex justify-end gap-3">
               {isVisible && (
@@ -511,8 +498,6 @@ function MakePost() {
                 </div>
               )}
             </div> */}
-
-            
           </div>
 
           {isExpanded && (
@@ -555,35 +540,32 @@ function MakePost() {
               </button>
             </div>
           )}
-            <button
-              onClick={handleSubmit}
-              disabled={submitting || !content}
-              className={`${
-                !content
-                  ? "bg-gray-200 text-gray-600"
-                  : "bg-[#3D7100] text-white"
-              } md:hidden mx-6 px-8 py-1 mb-3 rounded-3xl`}
-            >
-              {submitting ? (
-                <BeatLoader color="#ffffff" loading={true} />
-              ) : (
-                "Post"
-              )}
-            </button>
-            {selectedPostMedia && (
-              <div className="uploaded-items-container p-2 rounded-md max-h-80 overflow-y-auto flex flex-wrap mt-3">
-                {[...selectedPostMedia].map((item, index) => (
-                  <UploadedItem
-                    key={index}
-                    item={item}
-                    onRemove={handleRemove}
-                    onItemSelect={handleItemSelect}
-                  />
-                ))}
-              </div>
+          <button
+            onClick={handleSubmit}
+            disabled={submitting || !content}
+            className={`${
+              !content ? "bg-gray-200 text-gray-600" : "bg-[#3D7100] text-white"
+            } md:hidden mx-6 px-8 py-1 mb-3 rounded-3xl`}
+          >
+            {submitting ? (
+              <BeatLoader color="#ffffff" loading={true} />
+            ) : (
+              "Post"
             )}
+          </button>
+          {selectedPostMedia && (
+            <div className={`${selectedPostMedia ? "flex" : "hidden"} uploaded-items-container pt-2 rounded-md max-h-80 overflow-y-auto flex-wrap mt-`}>
+              {[...selectedPostMedia].map((item, index) => (
+                <UploadedItem
+                  key={index}
+                  item={item}
+                  onRemove={handleRemove}
+                  onItemSelect={handleItemSelect}
+                />
+              ))}
+            </div>
+          )}
         </div>
-        
       </div>
 
       {viewModalOpen && selectedItem && (
@@ -612,79 +594,11 @@ function MakePost() {
         </div>
       )}
 
-      <Modals
-        openModal={openDiaryModal}
-        modalSize="4xl"
-        onClose={() => setOpenDiaryModal(false)}
-        title={"Diary"}
-      >
-        <div className="pb-5 flex flex-col gap-2 justify-start">
-          {/* <label htmlFor="content" className="text-sm">
-            Type content here
-          </label> */}
-
-          <ReactQuill
-            value={editorHtml}
-            onChange={setEditorHtml}
-            theme="snow"
-            placeholder="Write something amazing..."
-          />
-        </div>
-
-        <div className="flex flex-col justify-start gap-2 pb-5">
-          <label htmlFor="category" className="text-sm">
-            Select Category (optional)
-          </label>
-          <select
-            value={category}
-            onChange={handleCategoryChange}
-            className="focus:outline-none focus:ring-0 rounded-md bg-transparent post-input w-full border-2 border-gray-300"
-          >
-            <option value="">Select Category</option>
-            {Category?.data?.map((data, index) => (
-              <option value={data?.name} key={index}>
-                {data.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex flex-col gap-2 pb-5">
-          <label htmlFor="content" className="text-sm">
-            Select Media Files
-          </label>
-
-          <input
-            type="file"
-            onChange={handleDiaryMediaChange}
-            accept="image/*,video/*"
-            multiple
-          />
-        </div>
-
-        <div className="uploaded-items-container p-4 border border-gray-200 rounded-md max-h-80 overflow-y-auto mt-4 flex flex-wrap">
-          {[...selectedDiaryMedia].map((item, index) => (
-            <UploadedItem
-              key={index}
-              item={item}
-              onRemove={handleDiaryRemove}
-              onItemSelect={handleItemSelect}
-            />
-          ))}
-        </div>
-
-        {editorHtml ? (
-          <div className="flex justify-end pt-5">
-            <button
-              className="p-2 rounded-md border text-[#fff] bg-[#34B53A]"
-              onClick={handleDiarySubmit}
-              disabled={submitting}
-            >
-              {submitting ? <Spinner /> : "Post Diary"}
-            </button>
-          </div>
-        ) : null}
-      </Modals>
+   {
+     openDiaryModal && (
+      <CreateDiary openDiaryModal={openDiaryModal} onClick={()=>setOpenDiaryModal(!openDiaryModal)} /> 
+     )
+   }
 
       <Modals
         openModal={openScheduleModal}

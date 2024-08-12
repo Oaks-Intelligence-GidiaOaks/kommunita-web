@@ -1,4 +1,4 @@
-import { POLLHISTORY, POLLS } from "./constants";
+import { ACTIVEPOLL, POLLHISTORY, POLLS } from "./constants";
 import apiSlice from "./api/apiSlice";
 
 export const organizationApiSlice = apiSlice.injectEndpoints({
@@ -18,6 +18,13 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Polls"],
     }),
+    getActivPoll: builder.query({
+      query: () => ({
+        url: ACTIVEPOLL,
+        method: "GET",
+      }),
+      providesTags: ["Polls"],
+    }),
     createPoll: builder.mutation({
       query: (postData) => ({
         url: "/user/poll",
@@ -31,4 +38,4 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetPollsQuery, useCreatePollMutation, useGetPollHistoryQuery } = organizationApiSlice;
+export const { useGetPollsQuery, useCreatePollMutation, useGetPollHistoryQuery, useGetActivPollQuery } = organizationApiSlice;

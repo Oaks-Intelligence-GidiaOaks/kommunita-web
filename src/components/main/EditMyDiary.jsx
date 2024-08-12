@@ -178,7 +178,6 @@ const EditMyDiary = ({
   return (
     <div>
       <form onSubmit={(e) => e.preventDefault()}>
-        {/* <Diary content={message} /> */}
 
         <div className="flex-1 w-full mb-5">
           <ReactQuill
@@ -260,11 +259,6 @@ const EditMyDiary = ({
               <option className="w-full" value="private">
                 Private
               </option>
-              {/* {Category?.data?.map((data, index) => (
-                <option value={data?.name} key={index}>
-                  {data.name}
-                </option>
-              ))} */}
             </select>
           </div>
         </div>
