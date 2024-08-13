@@ -5,6 +5,7 @@ import { useGetUserProfiileQuery } from "../../service/user.service";
 import { useGetMyFollowersQuery, useGetMyFollowingsQuery, useUnfollowUserMutation } from "../../service/whotofollow.service";
 import { useSelector } from "react-redux";
 import { showAlert } from "../../static/alert";
+import { Spinner } from "flowbite-react";
 
 
 const FollowersList = () => {
@@ -89,12 +90,14 @@ console.log(followings?.data)
         aria-labelledby="profile-followers-tab"
       >
         {loadingFollowers ? (
-          <div className="mt-3 justify-center flex">Loading...</div>
+          <div className="mt-3 justify-center flex">
+            <Spinner />
+          </div>
         ) : followers?.data.length === 0 ? (
           <div className="mt-3 justify-center flex">No Followers</div>
         ) : (
           <div className="grid grid-cols-12 w-full gap-3">
-            <div className="w-full col-span-12 md:col-span-8">
+            <div className="w-full col-span-12 md:col-span-8 overflow-y-auto h-[55vh] custom-scrollbar">
               {followers?.data.map((follower) => (
                 <FollowCard
                   key={follower.id}
@@ -107,7 +110,7 @@ console.log(followings?.data)
                 />
               ))}
             </div>
-            <div className="hidden md:block col-span-4">
+            <div className="hidden md:block col-span-4 overflow-y-auto h-[55vh] custom-scrollbar">
               <AdsSection />
             </div>
           </div>
@@ -121,12 +124,14 @@ console.log(followings?.data)
         aria-labelledby="profile-followings-tab"
       >
         {loadingFollowing ? (
-          <div className="mt-3 justify-center flex">Loading...</div>
+          <div className="mt-3 justify-center flex">
+            <Spinner />
+          </div>
         ) : followings?.data.length === 0 ? (
           <div className="mt-3 justify-center flex">No Followings</div>
         ) : (
           <div className="grid grid-cols-12 w-full gap-3">
-            <div className="w-full col-span-12 md:col-span-8">
+            <div className="w-full col-span-12 md:col-span-8 overflow-y-auto h-[55vh] custom-scrollbar">
               {followings?.data.map((follow) => (
                 <FollowCard
                   key={follow?._id}
@@ -136,7 +141,7 @@ console.log(followings?.data)
                 />
               ))}
             </div>
-            <div className="hidden md:block col-span-4">
+            <div className="hidden md:block col-span-4 overflow-y-auto h-[55vh] custom-scrollbar">
               <AdsSection />
             </div>
           </div>

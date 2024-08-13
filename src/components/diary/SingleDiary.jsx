@@ -38,6 +38,7 @@ import DiaryComment from "../main/DiaryComment";
 import StoryList from "../ui/StoryList";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { Spinner } from "flowbite-react";
+import CustomCarousel2 from "../main/CustomCarousel2";
 
 const SingleDiary = () => {
   const { id } = useParams();
@@ -389,7 +390,7 @@ console.log(diary?.reaction?.like);
       <EditorData htmlContent={diary?.pages[currentPageIndex].content} />
         {/* <p className="mb-4">{diary?.pages[0].content}</p> */}
         <div className="post-media rounded-md w-full py-3">
-          <CustomCarousel
+          <CustomCarousel2
             media_urls={diary?.pages[currentPageIndex].media_urls}
             left={left}
             right={right}

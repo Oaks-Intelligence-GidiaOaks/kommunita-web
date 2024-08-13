@@ -286,7 +286,7 @@ const ProfileHome = () => {
                   className="text-primary-dark-green font-semibold "
                   href="/"
                 >
-                  See more
+                  {/* See more */}
                 </Link>
               </div>
             </div>
@@ -347,7 +347,7 @@ const ProfileHome = () => {
               )}
 
               <Link className="text-primary-dark-green font-semibold" href="#">
-                See more
+                {/* See more */}
               </Link>
             </div>
           </div>

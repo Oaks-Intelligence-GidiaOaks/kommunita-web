@@ -75,35 +75,35 @@ function MenuItems() {
         feature: "Direct Messaging"
       },
       // IF PROFILE IS LOGGED IN USER PROFILE
-     ...(login_user_id === profile?.data._id &&
-     location.pathname === "/profile"
-       ? [
-           {
-             id: 4,
-             icon: <MdOutlineLibraryBooks />,
-             activeIcon: settingsActive,
-             text: "My Diary",
-             to: "/diary",
-        feature: "Diary"
-             },
-             {
-               id: 5,
-               icon: <AiOutlineUser />,
-               activeIcon: settingsActive,
-               text: "Profile",
-               to: "/profile",
-              feature: ["Self Service", "Account Management"]
-             },
-             {
-               id: 11,
-               icon: <MdOutlineSettings />,
-               activeIcon: settingsActive,
-               text: "Settings",
-               to: "/settings",
-              feature: ["Self Service", "Account Management"]
-             }
-           ]
-         : [])
+    //  ...(login_user_id === profile?.data._id &&
+    //  location.pathname === "/profile"
+    //    ? [
+    //        {
+    //          id: 4,
+    //          icon: <MdOutlineLibraryBooks />,
+    //          activeIcon: settingsActive,
+    //          text: "My Diary",
+    //          to: "/diary",
+    //     feature: "Diary"
+    //          },
+    //          {
+    //            id: 5,
+    //            icon: <AiOutlineUser />,
+    //            activeIcon: settingsActive,
+    //            text: "Profile",
+    //            to: "/profile",
+    //           feature: ["Self Service", "Account Management"]
+    //          },
+    //          {
+    //            id: 11,
+    //            icon: <MdOutlineSettings />,
+    //            activeIcon: settingsActive,
+    //            text: "Settings",
+    //            to: "/settings",
+    //           feature: ["Self Service", "Account Management"]
+    //          }
+    //        ]
+    //      : [])
     ],
     [login_user_id, profile?.data._id, location.pathname]
   );

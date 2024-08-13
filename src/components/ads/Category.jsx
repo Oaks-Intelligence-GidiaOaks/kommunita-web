@@ -6,7 +6,7 @@ function Category() {
   const category = Category?.data;
 
   const location = useLocation()
-  if(location.pathname === '/explore' || location.pathname.includes('/profile')){
+  if(location.pathname.includes('/explore') || location.pathname.includes('/profile')){
     return null
   }
 

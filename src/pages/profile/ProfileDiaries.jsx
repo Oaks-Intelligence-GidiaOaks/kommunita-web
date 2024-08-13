@@ -52,7 +52,7 @@ const ProfileDiaries = () => {
             )}
 
             <Link className="text-primary-dark-green font-semibold" href="/">
-              See more
+              {/* See more */}
             </Link>
           </div>
         </div>
