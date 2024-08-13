@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import PollSurveyHeader from "./PollSurveyHeader";
 // import axios from "axios";
 // import { useSelector } from "react-redux";
@@ -17,7 +17,7 @@ import { useGetFeedsQuery } from "../../service/feeds.service";
 
 const PollSchedule = ({ onclick }) => {
   const [createPoll, { error, isSuccess }] = useCreatePollMutation();
-  const {refetch } = useGetFeedsQuery()
+  const { refetch } = useGetFeedsQuery();
   // let count = 1;
   // let ops = ["Option"];
   const [options, setOptions] = useState([]);
@@ -44,7 +44,7 @@ const PollSchedule = ({ onclick }) => {
       setAudience("");
       setDuration("");
       setPollQuestion("");
-      refetch()
+      refetch();
     } catch (error) {
       console.error("Error liking post:", error);
       showAlert("Oops", "An error occurred while liking the post", "error");
@@ -57,12 +57,12 @@ const PollSchedule = ({ onclick }) => {
   useEffect(() => {
     if (isSuccess) {
       console.log("success");
-      refetch()
+      refetch();
     } else if (error) {
       // showAlert("Oops", error.data.message || "An error occurred", "error");
       showAlert("Oops", "An error occurred", "error");
     }
-  }, [isSuccess, error]);
+  }, [isSuccess, error, refetch]);
 
   const handleCloseAddOption = () => {
     setOpenAddOption(false);
@@ -84,8 +84,8 @@ const PollSchedule = ({ onclick }) => {
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center rounded-lg">
-      <div className="bg-white relative z-40 rounded-lg md:w-[400px] lg:w-[500px] p-10">
+    <div className="w-screen h-screen flex items-center justify-center rounded-lg px-2">
+      <div className="bg-white relative z-40 rounded-lg w-full max-w-[685px] h-auto p-4 md:p-10">
         <div className="flex justify-between items-center">
           <PollSurveyHeader title={"Create Poll"} color={"#3D7100"} />
           <div className="flex items-center gap-4">
@@ -97,15 +97,15 @@ const PollSchedule = ({ onclick }) => {
                 onChange={(e) => setAudience(e.target.value)}
                 className="bg-transparent border-none  focus:outline-none focus:ring-0"
               >
-                <option value="public">Public</option>
-                <option value="private">Private</option>
+                <option value="Public">Public</option>
+                <option value="Private">Private</option>
               </select>
             </div>
             <div
-              className=" cursor-pointer hover:bg-slate-400"
+              className="cursor-pointer hover:bg-red-500 hover:text-white rounded-full"
               onClick={onclick}
             >
-            <LiaTimesCircle size={25} />
+              <LiaTimesCircle size={25} />
             </div>
           </div>
         </div>
@@ -178,11 +178,11 @@ const PollSchedule = ({ onclick }) => {
                   showTimeSelect
                   showIcon
                   icon={
-                    <IoTimeOutline className="inline-block mt-1 mr-2 text-[#A6A6A6] " />
+                    <IoTimeOutline className="text-center text-[#A6A6A6] " />
                   }
                   dateFormat="Pp"
                   placeholderText="Duration"
-                  className="w-full border-none text-[#A6A6A6] bg-[#F4F4F4] flex items-center p-2 rounded ring-0 focus:ring-transparent"
+                  className="w-full border-none text-[#A6A6A6] bg-[#F4F4F4] flex items-center p-2 rounded ring-0 focus:ring-transparent font-Inter text-[14px] justify-center"
                 />
               </div>
             </div>
@@ -228,7 +228,7 @@ const AddOption = ({ onclick, handleAdd }) => {
     <div className="w-screen h-screen flex items-center justify-center rounded-lg">
       <div className="bg-white relative rounded-lg md:w-[400px] lg:w-[500px] p-10">
         <div
-          className="absolute top-2 right-2 cursor-pointer hover:bg-slate-400"
+          className="absolute top-2 right-2 cursor-pointer hover:bg-red-500 hover:text-white rounded-full"
           onClick={onclick}
         >
           <svg
@@ -255,7 +255,12 @@ const AddOption = ({ onclick, handleAdd }) => {
             onChange={(e) => setOption(e.target.value)}
           />
 
-          <button className="bg-slate-400 w-full rounded-lg p-2 font-semibold text-white">
+          <button
+            className={`${
+              option ? "bg-[#3D7100]" : "bg-[#afc595]"
+            } w-full rounded-lg p-2 font-semibold text-white`}
+            disabled={!option}
+          >
             Add
           </button>
         </form>

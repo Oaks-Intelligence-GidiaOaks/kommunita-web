@@ -4,6 +4,7 @@ import { RiHome5Line } from "react-icons/ri";
 import { TbUsersGroup } from "react-icons/tb";
 import { LuSquareStack } from "react-icons/lu";
 import { MdOutlineLibraryBooks } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 const NavItem = ({ to, icon: Icon, label, exact }) => {
   const location = useLocation();
@@ -31,6 +32,9 @@ const NavItem = ({ to, icon: Icon, label, exact }) => {
 };
 
 const MobileNavbar = () => {
+  const features = useSelector(
+    (state) => state?.user?.user?.organization_features
+  );
   return (
     <nav className="w-full mx-auto flex items-center py-auto">
       <div className=" flex items-center space-y-1 space-x-10">
@@ -47,12 +51,14 @@ const MobileNavbar = () => {
           label="Explore"
           exact={true}
         />
-        <NavItem
-          to="/diary"
-          icon={MdOutlineLibraryBooks}
-          label="Diaries"
-          exact={true}
-        />
+        {features.includes("Diary") && (
+          <NavItem
+            to="/diary"
+            icon={MdOutlineLibraryBooks}
+            label="Diaries"
+            exact={true}
+          />
+        )}
       </div>
     </nav>
   );

@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import Story from "./Story";
 import MobileNavbar from "../navbar/MobileNavbar";
 import { KOMMUNITY } from "../../routes/routes";
+import { KOMMUNITY } from "../../routes/routes";
 // import "../../index.css";
 
 const MainLayout = ({ children }) => {
