@@ -5,11 +5,7 @@ import time from "../../assets/images/modals/time.svg";
 import globe from "../../assets/images/modals/globe.svg";
 import { FaTimes } from "react-icons/fa";
 
-import {
-  BiWorld,
-  BiLock,
-  BiGroup,
-} from "react-icons/bi";
+import { BiWorld, BiLock, BiGroup } from "react-icons/bi";
 import UploadedItem from "./UploadedItem";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -160,8 +156,8 @@ function MakePost() {
       const response = await axios.post(`${apiUrl}/user/post`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
+          ...(token && { Authorization: `Bearer ${token}` })
+        }
       });
 
       console.log("Post submitted successfully:", response.data);
@@ -191,7 +187,7 @@ function MakePost() {
     selectedDiaryMedia.forEach((media) => formData.append("media", media));
     formData.append("content", editorHtml);
     formData.append("category", category);
-    formData.append("pages", pageNumber)
+    formData.append("pages", pageNumber);
 
     if (!editorHtml.trim()) {
       showAlert("", "Diary content cannot be empty", "error");
@@ -205,8 +201,8 @@ function MakePost() {
       const response = await axios.post(`${apiUrl}/user/diary`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
+          ...(token && { Authorization: `Bearer ${token}` })
+        }
       });
 
       console.log("Diary created successfully:", response.data);
@@ -243,6 +239,10 @@ function MakePost() {
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
   };
+
+  const features = useSelector(
+    (state) => state?.user?.user?.organization_features
+  );
 
   return (
     <>
@@ -290,8 +290,7 @@ function MakePost() {
           </div>
 
           <div className="bg-white fle justify-between items-center px-5 md:px-7 pb-1 md:pb-5 pt-7">
-
-              {/* upload picture or video */}
+            {/* upload picture or video */}
             <div className="flex items-center justify-between md:gap-10">
               <div className="rounded-md pb- flex justify-between make-post-input">
                 <div className=" flex rounded-md">
@@ -309,7 +308,7 @@ function MakePost() {
                   </label>
                 </div>
               </div>
-                  {/* Categories */}
+              {/* Categories */}
               <div className="bg-gray-100 rounded-full py- flex items-center px-2">
                 <div className="flex items-center space-x-2 w-35">
                   <div className="text-gray-600 text-xs xl:text-sm ">
@@ -367,13 +366,17 @@ function MakePost() {
                         <LuCalendarClock className="w-4 h-4 mr-2 inline" />
                         <span className="font-semibold">Schedule Post</span>
                       </button>
-                      <button
-                        className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
-                        onClick={() => setOpenDiaryModal(true)}
-                      >
-                        <GiBlackBook className="w-4 h-4 mr-2 inline" />
-                        <span className="font-semibold">Diary</span>
-                      </button>
+
+                      {features.includes("Diary") && (
+                        <button
+                          className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
+                          onClick={() => setOpenDiaryModal(true)}
+                        >
+                          <GiBlackBook className="w-4 h-4 mr-2 inline" />
+                          <span className="font-semibold">Diary</span>
+                        </button>
+                      )}
+
                       <button
                         className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
                         onClick={() => {
@@ -383,34 +386,36 @@ function MakePost() {
                         <HiOutlineDocumentDuplicate className="w-4 h-4 mr-2 inline" />
                         <span className="font-semibold">Draft</span>
                       </button>
-                      <button
-                        className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
-                        onClick={() => setOpenPoll(true)}
-                      >
-                        <CgPoll className="w-4 h-4 mr-2 inline" />
-                        <span className="font-semibold">Polls</span>
-                      </button>
+
+                      {features.includes("Poll") && (
+                        <button
+                          className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
+                          onClick={() => setOpenPoll(true)}
+                        >
+                          <CgPoll className="w-4 h-4 mr-2 inline" />
+                          <span className="font-semibold">Polls</span>
+                        </button>
+                      )}
                     </div>
                   }
                 />
               </div>
-            <button
-              onClick={handleSubmit}
-              disabled={submitting || !content}
-              className={`${
-                !content
-                  ? "bg-gray-100 text-gray-600"
-                  : "bg-[#3D7100] text-white"
-              } hidden md:block px-8 h-10 rounded-3xl`}
-            >
-              {submitting ? (
-                <BeatLoader color="#ffffff" loading={true} />
-              ) : (
-                "Post"
-              )}
-            </button>
+              <button
+                onClick={handleSubmit}
+                disabled={submitting || !content}
+                className={`${
+                  !content
+                    ? "bg-gray-100 text-gray-600"
+                    : "bg-[#3D7100] text-white"
+                } hidden md:block px-8 h-10 rounded-3xl`}
+              >
+                {submitting ? (
+                  <BeatLoader color="#ffffff" loading={true} />
+                ) : (
+                  "Post"
+                )}
+              </button>
             </div>
-
 
             {/* <div className="flex justify-end gap-3">
               {isVisible && (
@@ -554,7 +559,11 @@ function MakePost() {
             )}
           </button>
           {selectedPostMedia && (
-            <div className={`${selectedPostMedia ? "flex" : "hidden"} uploaded-items-container pt-2 rounded-md max-h-80 overflow-y-auto flex-wrap mt-`}>
+            <div
+              className={`${
+                selectedPostMedia ? "flex" : "hidden"
+              } uploaded-items-container pt-2 rounded-md max-h-80 overflow-y-auto flex-wrap mt-`}
+            >
               {[...selectedPostMedia].map((item, index) => (
                 <UploadedItem
                   key={index}
@@ -594,11 +603,12 @@ function MakePost() {
         </div>
       )}
 
-   {
-     openDiaryModal && (
-      <CreateDiary openDiaryModal={openDiaryModal} onClick={()=>setOpenDiaryModal(!openDiaryModal)} /> 
-     )
-   }
+      {openDiaryModal && (
+        <CreateDiary
+          openDiaryModal={openDiaryModal}
+          onClick={() => setOpenDiaryModal(!openDiaryModal)}
+        />
+      )}
 
       <Modals
         openModal={openScheduleModal}

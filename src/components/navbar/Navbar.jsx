@@ -183,7 +183,7 @@ import {
   escrow_tech,
   logo,
   placeholder_logo,
-  profile_placeholder,
+  profile_placeholder
 } from "../../assets/images";
 import { RiHome5Line } from "react-icons/ri";
 import { TbUsersGroup } from "react-icons/tb";
@@ -199,7 +199,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { CiLogout, CiSearch } from "react-icons/ci";
 import {
   useGetUserOrganisationQuery,
-  useSwitchOrganisationMutation,
+  useSwitchOrganisationMutation
 } from "../../service/organization.service";
 import { debounce } from "lodash";
 import { useDispatch } from "react-redux";
@@ -207,6 +207,7 @@ import { handleLogout } from "../../static/logout";
 import { KOMMUNITY, PROFILE } from "../../routes/routes";
 import NotificationModal from "../../pages/notifications/NotificationModal";
 import MobileSidebar from "../sidebar/MobileSidebar";
+import { useSelector } from "react-redux";
 
 const NavItem = ({ to, icon: Icon, label, exact }) => {
   const location = useLocation();
@@ -319,6 +320,10 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
+  const features = useSelector(
+    (state) => state?.user?.user?.organization_features
+  );
+
   return (
     <>
       <nav className="fixed h-auto flex justify- items-center py-4 px-4 md:px-0 lg:px-12 w-full top-0 left-0 right-0 z-10 mb-10 bg-white">
@@ -341,12 +346,16 @@ const Navbar = () => {
             label="Explore"
             exact={true}
           />
-          <NavItem
-            to="/diary"
-            icon={MdOutlineLibraryBooks}
-            label="Diaries"
-            exact={true}
-          />
+
+          {features.includes("Diary") && (
+            <NavItem
+              to="/diary"
+              icon={MdOutlineLibraryBooks}
+              label="Diaries"
+              exact={true}
+            />
+          )}
+
           <div className="search flex items-center gap-10">
             <div className="hidden xl:flex search-box rounded lg:w-[15rem] xl:w-[18rem]">
               <div
