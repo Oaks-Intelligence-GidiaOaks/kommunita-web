@@ -65,9 +65,9 @@ const MessagesHome = () => {
     <MainLayout>
       <div className="chat-container w-full">
         <div className="h-auto w-full flex pt-4 pr-4">
-          <div className="bg-white w-full max-w-[380px] border-r flex flex-col point ">
+          <div className="bg-white w-full max-w-[380px] flex flex-col point border-r">
             <Header />
-            <div className="overflow-y-auto bg-[#F8F9FD]">
+            <div className="overflow-y-auto bg-transparent">
               {isLoading ? (
                 <div className="loading-container flex justify-center mt-10">
                   <Spinner />
@@ -117,7 +117,7 @@ const MessagesHome = () => {
             </div>
           </div>
 
-          <div className="w-full flex flex-col border chat-window relative point">
+          <div className="w-full flex flex-col border border-l-0 chat-window relative point">
             {currentChat ? (
               <View chat={currentChat} currentUserId={user._id} />
             ) : (

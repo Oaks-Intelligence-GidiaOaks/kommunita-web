@@ -35,7 +35,7 @@ const PollSchedule = ({ onclick }) => {
       question: pollQuestion,
       options,
       audience,
-      duration
+      duration,
     };
     setSubmitting(true);
     try {
