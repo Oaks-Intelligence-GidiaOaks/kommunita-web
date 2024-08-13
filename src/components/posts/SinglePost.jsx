@@ -184,7 +184,7 @@ const SinglePost = () => {
 
   return (
     <div className=" pt-4 main-wrapper w-full pb-24 sm:pb-20 md:pb-10" ref={ref}>
-      <StoryList />
+      {/* <StoryList /> */}
       <div className="flex mt-10 justify-end">
         <button
           className="bg-white border rounded-lg shadow-md py-2 px-8"
