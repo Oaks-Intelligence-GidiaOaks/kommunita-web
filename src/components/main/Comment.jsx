@@ -69,13 +69,13 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
       </div>
 
       <div className="w-full flex items-center gap-2">
-        <div className="border-white overflow-hidden rounded">
+        <div className="border-white overflow-hidden w-6 h-6 rounded-full">
           <img
             src={profile?.data?.photo_url || avatar4}
             width={40}
             height={40}
             alt="user-thumbnail"
-            className="rounded-md"
+            className="w-6 h-6 rounded-full"
           />
         </div>
         <div className="w-full rounded-md flex items-center bg-white pr-2 h-[36px] border-2">

@@ -33,13 +33,14 @@ import NewPost2 from "../../components/posts/NewPost2";
 import Repost2 from "../../components/posts/Repost2";
 import NewPollssss from "../../components/newPolls/NewPollssss";
 import Diary from "../../components/diary/Diary";
+import { Spinner } from "flowbite-react";
 
 const ProfileHome = () => {
-  const { data } = useGetPostQuery();
+  const { data, isLoading } = useGetPostQuery();
   // console.log(data);
-  const { data: diaryData } = useGetDiaryQuery();
-  const { data: mediaData } = useGetMediaQuery();
-  const { data: likedData } = useGetLikedPostQuery();
+  const { data: diaryData, isLoading: diariesLoading } = useGetDiaryQuery();
+  const { data: mediaData, isLoading: mediaLoading } = useGetMediaQuery();
+  const { data: likedData, isLoading: likesLoading } = useGetLikedPostQuery();
 
   const [getOtherUserPost, { isSuccess: feedSuccess, isError: feedsError }] =
     useGetOtherUserPostMutation();
@@ -110,12 +111,11 @@ const ProfileHome = () => {
           setSideDiary(dt.diary_id);
         }
       } else {
-        // setSidePost(dt);
+ 
         setSideDiary(dt);
       }
     });
-    // setSidePost(data?.data?.filter((fd) => fd.comment.length == 0));
-    // setSideDiary(diaryData?.data?.filter((fd) => fd.comment.length == 0));
+
   }, [id, data, diaryData]);
 
   // const posts =  || [];
@@ -143,21 +143,7 @@ const ProfileHome = () => {
     }
   };
 
-  // function showModal(src) {
-  //   console.log("Media: ", src);
-  //   setMedia(src);
-  //   setShowMediaModal(true);
-  // }
 
-  // console.log("profile: ", post);
-  // console.log("logs:", diaryData?.data);
-
-  const handleChatUser = (user) => {
-    // setSelectedUser(user);
-    // setOpenModal(true);
-    // setSearchTerm("");
-    // console.log("Selected User ID:", user._id);
-  };
 
   return (
     <Layout>
@@ -239,7 +225,11 @@ const ProfileHome = () => {
         role="tabpanel"
         aria-labelledby="profile-tab"
       >
-        {post == null ? (
+       { isLoading ? (
+          <div className="mt-3 justify-center flex">
+              <Spinner />
+        </div>
+       ) :  post == null ? (
           <div className="mt-3 justify-center flex">
             {/* <ShimmerSocialPost type="both" /> */}
             No Post Available
@@ -311,10 +301,12 @@ const ProfileHome = () => {
         role="tabpanel"
         aria-labelledby="diaries-tab"
       >
-        {diary == null ? (
+        { diariesLoading ? (<div className="mt-3">
+            <div>No diary available yet or resource is loading</div>
+           <Spinner />
+          </div>) : diary == null ? (
           <div className="mt-3">
             <div>No diary available yet or resource is loading</div>
-            {/* <ShimmerSocialPost type="both" /> */}
           </div>
         ) : (
           <div className="grid grid-cols-12 w-full gap-3 ">
@@ -372,8 +364,13 @@ const ProfileHome = () => {
         >
           <div>
             <div className="flex flex-wrap flex-row gap-4">
-              {!medias ? (
+              { mediaLoading ? (
+                <div className="mt-3">
                 <div>No media available yet or resource is loading</div>
+                  <Spinner />
+              </div>
+              ) : !medias ? (
+                <div className="flex flex-wrap flex-row gap-4">No media available yet</div>
               ) : (
                 // <ShimmerSocialPost type="both" />
                 <div className=" w-full flex justify-between items-center flex-wrap overflow-y-auto h-[55vh] custom-scrollbar">
@@ -403,7 +400,12 @@ const ProfileHome = () => {
         <div>
           <div className="grid grid-cols-12 w-full gap-3">
             <div className="w-full col-span-12 md:col-span-8 overflow-y-auto h-[55vh] custom-scrollbar">
-              {liked == null ? (
+              { likesLoading ? (
+                <div className="mt-3">
+                <div>You haven't liked any post or diary yet or resource is loading</div>
+             <Spinner />
+              </div>
+              ) : liked == null ? (
                 <div>You haven't liked any post or diary yet</div>
               ) : (
                 liked?.map((post, index) => {

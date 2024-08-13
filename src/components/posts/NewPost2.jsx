@@ -440,7 +440,7 @@ const NewPost2 = ({ post }) => {
 
       {/* {addComment && <Comment id={post?._id} onComment={onComment} placeholder={"Comment"} />} */}
 
-      {showEditModal && post?.type == "post" ? (
+      {showEditModal &&  (
         <Modals
           title={"Edit post"}
           openModal={showEditModal}
@@ -455,27 +455,6 @@ const NewPost2 = ({ post }) => {
                 avatar={post?.user_id.photo_url || profile_placeholder}
                 userId={post?.user_id}
                 // badgeColor={badgeColor}
-                onClose={() => setShowEditModal(false)}
-                postId={post?._id}
-              />
-            </div>
-          </div>
-        </Modals>
-      ) : (
-        <Modals
-          title={"Edit Diary"}
-          openModal={showEditModal}
-          modalSize="2xl"
-          onClose={() => setShowEditModal(false)}
-        >
-          <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
-            <div className="post-media rounded-md w-full py-3">
-              <EditMyDiary
-                content={post?.content}
-                medias={post?.media_urls}
-                avatar={post?.user_id?.photo_url || profile_placeholder}
-                userId={post?.user_id}
-                //  badgeColor={badgeColor}
                 onClose={() => setShowEditModal(false)}
                 postId={post?._id}
               />
