@@ -29,7 +29,6 @@ function Main() {
 
   return (
     <div className=" pt-4 main-wrapper w-full pb-10">
-      {/* <Story /> */}
       {features.includes("Story") && <StoryList />}
       {features.includes("Post") && <MakePost />}
 
