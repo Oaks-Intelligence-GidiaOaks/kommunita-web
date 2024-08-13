@@ -12,6 +12,7 @@ import {
   useReadMessageMutation,
   useDeleteMessageMutation,
 } from "../../service/message.service";
+import { FaUser } from "react-icons/fa6";
 
 const MessageCard = ({
   message,
@@ -51,7 +52,7 @@ const MessageCard = ({
   };
 
   return (
-    <div key={chatId}>
+    <div key={chatId} className="">
       <motion.div
         className={`chat-list-container flex gap-4 items-start hover:bg-[#F8F9FD] cursor-pointer relative ${cardClassName}`}
         onClick={onClick}
@@ -77,11 +78,20 @@ const MessageCard = ({
             alt=""
           />
         ) : (
-          <img
-            src={user}
-            className="h-[35px] w-[35px] rounded-full border"
-            alt=""
-          />
+          // <img
+          //   src={user}
+          //   className="h-[35px] w-[35px] rounded-full border"
+          //   alt=""
+          // />
+
+          <div className="h-[35px] w-[35px] flex justify-center items-center rounded-lg bg-[#efece7] border">
+            {/* <img
+                    className="rounded-lg object-cover"
+                    src={avatar}
+                    alt=""
+                  /> */}
+            <FaUser size={24} className="text-gray-950/40" />
+          </div>
         )}
 
         <div>

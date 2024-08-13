@@ -7,6 +7,7 @@ import InputEmoji from "react-input-emoji";
 import rtkMutation from "../../utils/rtkMutation";
 import { useSendInitialMessageMutation } from "../../service/message.service";
 import "./style.css";
+import { Search } from "lucide-react";
 
 function Header() {
   const { data } = useGetWhoToFollowQuery();
@@ -70,11 +71,11 @@ function Header() {
   return (
     <>
       <div className="flex flex-col w-full">
-        <div className="flex justify-between items-center p-3 w-full border-b-[1px]">
+        <div className="flex justify-between items-center p-3 py-0 h-[75px] w-full border-b-[1px]">
           <select
             name=""
             id=""
-            className="chat-filter border-0 focus:outline-none focus:ring-0"
+            className="chat-filter border-0 focus:outline-none focus:ring-0 m-0"
           >
             <option value="">All Messages</option>
             {/* <option value="">Unread</option>
@@ -82,18 +83,19 @@ function Header() {
           <option value="">Archived</option>
           <option value="">Spam</option> */}
           </select>
-          <button>
+          <button className="mt-1.5">
             <img src={elipses} alt="" />
           </button>
         </div>
 
         <div className="p-4 bg-white border-b-[1px]">
           <div className="flex p-1 rounded-xl bg-[#F8F9FD] w-full">
-            <img className="ml-3 cursor-pointer" src={search} alt="" />
+            {/* <img className="ml-3 cursor-pointer" src={search} alt="" /> */}
+            <Search className="text-[#C7B300] ml-3 mt-3.5" size={14} />
             <input
               type="text"
               className="w-full bg-transparent border-none focus:outline-none focus:ring-0 message-search"
-              placeholder="Search and tap to start a new chat"
+              placeholder="Search or start a new chat"
               value={searchTerm}
               onChange={handleSearchChange}
             />
