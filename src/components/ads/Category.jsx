@@ -1,9 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useGetCategoriesQuery } from "../../service/categories.service";
 
 function Category() {
   const { data: Category } = useGetCategoriesQuery();
   const category = Category?.data;
+
+  const location = useLocation()
+  if(location.pathname.includes('/explore') || location.pathname.includes('/profile')){
+    return null
+  }
 
   return (
     <>

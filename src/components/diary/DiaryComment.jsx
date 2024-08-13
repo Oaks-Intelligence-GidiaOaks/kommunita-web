@@ -7,14 +7,15 @@ import { usePostCommentMutation } from "../../service/post.service";
 import PropTypes from "prop-types";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import { toggleComment } from "../../redux/slices/comment.slice";
+import { useDiaryCommentMutation } from "../../service/diary.service";
 
-const Comment = ({ id, onComment, reply, placeholder }) => {
+const DiaryComment = ({ id, onComment, reply, placeholder }) => {
   const { data: profile } = useGetUserProfiileQuery();
   const { refetch } = useGetFeedsQuery();
   const [content, setContent] = useState("");
   const [posting, setPosting] = useState(false);
   const [comments, setComments] = useState([]);
-  const [postComment] = usePostCommentMutation();
+  const [diaryComment] = useDiaryCommentMutation();
   const name = useSelector((state) => state.user?.user?.display_name);
   const dispatch = useDispatch()
 
@@ -35,7 +36,7 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
 
     try {
       const commentData = { content, id, reply };
-      await postComment(commentData).unwrap();
+      await diaryComment(commentData).unwrap();
 
       setComments((prevComments) =>
         prevComments.map((comment) =>
@@ -69,13 +70,13 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
       </div>
 
       <div className="w-full flex items-center gap-2">
-        <div className="border-white overflow-hidden w-6 h-6 rounded-full">
+        <div className="border-white overflow-hidden rounded">
           <img
             src={profile?.data?.photo_url || avatar4}
             width={40}
             height={40}
             alt="user-thumbnail"
-            className="w-6 h-6 rounded-full"
+            className="rounded-md"
           />
         </div>
         <div className="w-full rounded-md flex items-center bg-white pr-2 h-[36px] border-2">
@@ -120,4 +121,4 @@ Comment.propTypes = {
   placeholder: PropTypes.string,
 };
 
-export default Comment;
+export default DiaryComment;

@@ -11,13 +11,11 @@ import {
   verified,
 } from "../../assets/images";
 import { useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import getTimeAgoString from "../../utils/getTimeAgoString";
 import CustomCarousel from "../main/CustomCarousel";
 import {
   useFavoritePostsMutation,
-  useLovePostMutation,
-  usePostCommentMutation,
   useRepostPostMutation,
 } from "../../service/post.service";
 import { useGetUserProfiileQuery } from "../../service/user.service";
@@ -30,15 +28,25 @@ import {
 } from "../../service/feeds.service";
 import { RxDotsHorizontal } from "react-icons/rx";
 import Modals from "../modals/Modal";
-import EditMyPost from "../main/EditMyPost";
 import EditMyDiary from "../main/EditMyDiary";
-import { useDeleteDiaryMutation } from "../../service/diary.service";
+import { useBookMarkDiariesMutation, useDeleteDiaryMutation, useGetADiaryQuery, useLoveDiaryMutation } from "../../service/diary.service";
 import DropdownMenu from "../ui/DropdownMenu";
 import { GoShareAndroid } from "react-icons/go";
 import { CiEdit } from "react-icons/ci";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import DiaryComment from "../main/DiaryComment";
+import StoryList from "../ui/StoryList";
+import { FaArrowLeftLong } from "react-icons/fa6";
+import { Spinner } from "flowbite-react";
+import CustomCarousel2 from "../main/CustomCarousel2";
 
-const NewPost2 = ({ post }) => {
-  const [showComments, setShowComments] = useState(false);
+const SingleDiary = () => {
+  const { id } = useParams();
+  const { data: singleDiary, isLoading, isError } = useGetADiaryQuery(id);
+  const diary = singleDiary?.data || [];
+  console.log(diary)
+
+  const [showComments, setShowComments] = useState(true);
   const [
     deleteFeeds,
     {
@@ -49,33 +57,44 @@ const NewPost2 = ({ post }) => {
   ] = useDeleteFeedMutation();
   const [selectedFeedId, setSelectedFeedId] = useState(null);
   const [deleteDiary] = useDeleteDiaryMutation();
-  const [lovePost] = useLovePostMutation();
+  const [loveDiary] = useLoveDiaryMutation();
   const [repostPost] = useRepostPostMutation();
   const { isSuccess: feedsSuccess, refetch: refetchFeeds } = useGetFeedsQuery();
   const user = useSelector((state) => state.user.user);
   const login_user_id = useSelector(
-    (state) => state.post?.user_id?.post?.user_id?._id
+    (state) => state.diary?.user_id?.diary?.user_id?._id
   );
   const verifiedUser = false;
   const [liked, setLiked] = useState(
-    post?.reaction?.like?.includes(post?.user_id?._id)
+    diary?.reaction?.like?.includes(diary?.user_id?._id)
   );
-  const [likeCount, setLikeCount] = useState(post?.reaction?.like?.length || 0);
-  const likeUserIds = post?.reaction?.like?.map((user) => user._id);
-  const isLikedByCurrentUser = likeUserIds?.includes(user._id);
+  const [likeCount, setLikeCount] = useState(diary?.reaction?.like?.length || 0);
+  const likeUserIds = diary?.reaction?.like?.map((user) => user._id);
+
+
+  const check = diary?.reaction?.like?.map((user) => {
+    console.log(user)
+    user._id}
+);
+console.log(check);
+console.log(diary?.reaction?.like);
+
+
+  const isLikedByCurrentUser = likeUserIds?.includes(login_user_id);
   const { data: userData, refetch: refetchUser } = useGetUserProfiileQuery();
-  const [favoritePost] = useFavoritePostsMutation();
+  const [bookMarkDiaries] = useBookMarkDiariesMutation();
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [bookmarkCount, setBookmarkCount] = useState(
-    post?.favourites?.length || 0
+    diary?.favourites?.length || 0
   );
-  const [repostCount, setRepostCount] = useState(post?.repost?.length || 0);
+  const [repostCount, setRepostCount] = useState(diary?.repost?.length || 0);
   const [isRepost, setIsRepost] = useState(false);
 
   const [showPopup, setShowPopup] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [shareThought, setShareThought] = useState(false);
   const [thought, setThought] = useState("");
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
   const toggleComments = () => {
     setShowComments(!showComments);
@@ -98,7 +117,7 @@ const NewPost2 = ({ post }) => {
     setLikeCount((prevCount) => (liked ? prevCount - 1 : prevCount + 1));
 
     try {
-      await lovePost({ post_id: post._id, reaction_type: "like" }).unwrap();
+      await loveDiary({ diary_id: diary._id, reaction_type: "like" }).unwrap();
     } catch (error) {
       // Revert the state if the request fails
       setLiked(previousState);
@@ -110,11 +129,11 @@ const NewPost2 = ({ post }) => {
   useEffect(() => {
     if (userData?.data?.favourites) {
       const postBookmarked = userData.data.favourites.some(
-        (fid) => fid === post._id
+        (fid) => fid === diary?._id
       );
       setIsBookmarked(postBookmarked);
     }
-  }, [userData, post._id]);
+  }, [userData, diary?._id]);
 
   const handleBookmark = async () => {
     const previousState = isBookmarked || isLikedByCurrentUser;
@@ -127,7 +146,7 @@ const NewPost2 = ({ post }) => {
     );
 
     try {
-      await favoritePost({ post_id: post._id }).unwrap();
+      await bookMarkDiaries({ diary_id: diary._id }).unwrap();
     } catch (error) {
       setIsBookmarked(previousState);
       setBookmarkCount(previousCount);
@@ -140,24 +159,19 @@ const NewPost2 = ({ post }) => {
     setAddComment(!addComment);
   };
 
-  const hasAlreadyReposted = post?.repost?.filter((repost) => {
-    // console.log(repost)
-    repost._id === user._id;
-  });
-
-  const repostUserIds = post?.repost?.map((user) => user._id);
-  // console.log(repostUserIds)
+  const repostUserIds = diary?.repost?.map((user) => user._id);
+  console.log(repostUserIds)
   const isRepostedByCurrentUser = repostUserIds?.includes(user._id);
-  // console.log(isRepostedByCurrentUser)
+  console.log(isRepostedByCurrentUser)
 
   const handleRespost = async () => {
-    const repostUserIds = post?.repost?.map((user) => user._id);
-    console.log(repostUserIds);
+    const repostUserIds = diary?.repost?.map((user) => user._id);
+    console.log(repostUserIds)
     const isRepostedByCurrentUser = repostUserIds?.includes(user._id);
-    console.log(isRepostedByCurrentUser);
+    console.log(isRepostedByCurrentUser)
 
     if (isRepostedByCurrentUser) {
-      showAlert("Notice", "You have already shared this post.", "info");
+      showAlert("Notice", "You have already shared this diary.", "info");
       return;
     }
 
@@ -167,27 +181,27 @@ const NewPost2 = ({ post }) => {
     setIsRepost(!isRepost);
     setRepostCount((prevCount) => (isRepost ? prevCount - 1 : prevCount + 1));
 
-    const postData = { post_id: post._id };
+    const postData = { post_id: diary._id };
     console.log(postData);
     try {
       await rtkMutation(repostPost, postData);
-      showAlert("Great", "You reposted this post");
+      showAlert("Great", "You reposted this diary");
     } catch (error) {
       setIsRepost(previousState);
       setRepostCount(previousCount);
-      console.error("Error reposting post:", error);
-      showAlert("Oops", "An error occurred while reposting the post", "error");
+      console.error("Error reposting diary:", error);
+      showAlert("Oops", "An error occurred while reposting the diary", "error");
     }
   };
 
   const handleRespostWithThought = async () => {
-    const repostUserIds = post?.repost?.map((user) => user._id);
-    console.log(repostUserIds);
+    const repostUserIds = diary?.repost?.map((user) => user._id);
+    console.log(repostUserIds)
     const isRepostedByCurrentUser = repostUserIds?.includes(user._id);
-    console.log(isRepostedByCurrentUser);
+    console.log(isRepostedByCurrentUser)
 
     if (isRepostedByCurrentUser) {
-      showAlert("Notice", "You have already shared this post.", "info");
+      showAlert("Notice", "You have already shared this diary.", "info");
       return;
     }
 
@@ -197,17 +211,17 @@ const NewPost2 = ({ post }) => {
     setIsRepost(!isRepost);
     setRepostCount((prevCount) => (isRepost ? prevCount - 1 : prevCount + 1));
 
-    const postData = { post_id: post._id, message: thought };
+    const postData = { post_id: diary._id, message: thought };
     console.log(postData);
     try {
       await rtkMutation(repostPost, postData);
-      showAlert("Great", "You reposted this post");
+      showAlert("Great", "You reposted this diary");
       setShareThought(false);
     } catch (error) {
       setIsRepost(previousState);
       setRepostCount(previousCount);
-      console.error("Error reposting post:", error);
-      showAlert("Oops", "An error occurred while reposting the post", "error");
+      console.error("Error reposting diary:", error);
+      showAlert("Oops", "An error occurred while reposting the diary", "error");
     }
   };
 
@@ -225,17 +239,10 @@ const NewPost2 = ({ post }) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname.includes("post/")) {
+    if (location.pathname.includes("diary/")) {
       setVisibleComments(100);
     }
   }, [location]);
-
-  // console.log(post);
-
-  // const removeFeed = async (id) => {
-  //   type === "diary" ? await deleteDiary(id) : await deleteFeeds(id);
-  //   setShowPopup(false);
-  // };
 
   const handleDeleteFeed = async (feed_id) => {
     setSelectedFeedId(feed_id);
@@ -247,13 +254,49 @@ const NewPost2 = ({ post }) => {
   const [isRepostOpen, setIsRepostOpen] = useState(false);
   const repostRef = useRef(null);
 
+  console.log(diary?.pages);
+
+  const navigatePage = (direction) => {
+    if (direction === "next" && currentPageIndex < diary?.pages.length - 1) {
+      setCurrentPageIndex((prevIndex) => prevIndex + 1);
+    } else if (direction === "prev" && currentPageIndex > 0) {
+      setCurrentPageIndex((prevIndex) => prevIndex - 1);
+    }
+  };
+  const navigate = useNavigate();
+
+
+  const EditorData = ({ htmlContent }) => {
+    return (
+      <div className="mb-4" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+    );
+  };
+
+
   return (
+    <div className=" pt-4 main-wrapper w-full pb-24 sm:pb-20 md:pb-10">
+    <StoryList />
+    <div className="flex mt-10 justify-end">
+      <button
+        className="bg-white border rounded-lg shadow-md py-2 px-8"
+        onClick={() => navigate(-1)}
+      >
+        <FaArrowLeftLong className="inline-block" /> <span>Back</span>
+      </button>
+    </div>
+
+{
+    isLoading ? (
+        <div className="flex justify-center pt-10  min-h-[70vh]">
+        <Spinner />
+      </div>
+    ) : (
     <div className="mx-auto bg-white border rounded-lg shadow-md p-4 my-4">
       <div className="flex items-center mb-4 relative">
-        <Link to={`/profile/${post?.user_id?._id}`}>
+        <Link to={`/profile/${diary?.user_id?._id}`}>
           <div className={`rounded-full border-4 w-[3rem] h-[3rem]`}>
             <img
-              src={post?.user_id?.photo_url || profile_placeholder}
+              src={diary?.user_id?.photo_url || profile_placeholder}
               alt="profile"
               className="w-[3rem] h-[3rem] rounded-full object-cover"
             />
@@ -262,9 +305,9 @@ const NewPost2 = ({ post }) => {
         <div className=" flex justify-between w-full items-center">
           <div className="">
             <div className="flex gap-2 items-center">
-              <Link to={`/profile/${post?.user_id?._id}`}>
+              <Link to={`/profile/${diary?.user_id?._id}`}>
                 <h4 className="font-semibold post-name">
-                  {post?.user_id?.display_name}
+                  {diary?.user_id?.display_name}
                 </h4>
                 {verifiedUser && (
                   <span>
@@ -274,40 +317,66 @@ const NewPost2 = ({ post }) => {
               </Link>
             </div>
             <p className="text-gray-500">
-              @{post?.user_id?.username} ·{" "}
+              @{diary?.user_id?.username} ·{" "}
               <span className="post-time ml-2 font-bold">
-                {getTimeAgoString(post?.createdAt)}
+                {getTimeAgoString(diary?.createdAt)}
               </span>
             </p>
           </div>
-          {post?.user_id?._id === login_user_id ? (
-            <RxDotsHorizontal
-              className="ml-auto"
-              onClick={handlePostActionClick}
-            />
-          ) : null}
+
+          <div className="flex items-center gap-4">
+            {diary?.pages.length > 0 && (
+              <div className="flex items-center gap-4">
+                <button
+                  className={`inline-block border rounded-full bg-[#D9D9D999] p-1 cursor-pointer ${
+                    currentPageIndex === 0 && "invisible"
+                  }`}
+                  onClick={() => navigatePage("prev")}
+                  disabled={currentPageIndex === 0}
+                >
+                  <MdKeyboardArrowLeft size={20} />
+                </button>
+                <button
+                  className={`inline-block border rounded-full bg-[#D9D9D999] p-1 cursor-pointer ${
+                    currentPageIndex === diary.pages.length - 1 && "invisible"
+                  }`}
+                  onClick={() => navigatePage("next")}
+                  disabled={currentPageIndex === diary.pages.length - 1}
+                >
+                  <MdKeyboardArrowRight size={20} />
+                </button>
+              </div>
+            )}
+
+            {diary?.user_id?._id === user._id ? (
+              <RxDotsHorizontal
+                className="ml-auto"
+                onClick={handlePostActionClick}
+              />
+            ) : null}
+          </div>
         </div>
 
         {showPopup && (
           <div className="absolute -right-4 top-[30px] z-50 popup rounded-md bg-[#ffffff] p-2">
             <div className="  w-[110px] h-[69px] bg-[#ffffff] rounded-[10px] p-2 flex items-center justify-center flex-col gap-2">
-              {/* EDIT POST */}
+              {/* EDIT diary */}
 
               <button
                 onClick={() => handleShowEditModal(true)}
                 className={`flex w-[89px] h-[26px] px-[19px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#838383] justify-center items-center border rounded-md hover:text-black`}
               >
-                {"Edit post"}
+                {"Edit diary"}
               </button>
 
               <button
-                onClick={() => handleDeleteFeed(post?._id)}
-                disabled={isLoadingDeleteFeeds && selectedFeedId === post?._id}
+                onClick={() => handleDeleteFeed(diary?._id)}
+                disabled={isLoadingDeleteFeeds && selectedFeedId === diary?._id}
                 className="flex w-[89px] h-[26px] px-[15px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#E71D36] justify-center items-center border rounded-md hover:text-white hover:bg-red-600"
               >
-                {isLoadingDeleteFeeds && selectedFeedId === post?._id
+                {isLoadingDeleteFeeds && selectedFeedId === diary?._id
                   ? "Deleting..."
-                  : "Delete Post"}
+                  : "Delete diary"}
               </button>
             </div>{" "}
           </div>
@@ -317,25 +386,26 @@ const NewPost2 = ({ post }) => {
         {isErrorFeedError &&
           showAlert("Ooops", "Failed to delete the feed. Please try again.")}
       </div>
-      <Link to={`/post/${post?._id}`}>
-        <p className="mb-4">{post?.content}</p>
+      {/* <Link to={`/diary/${diary?._id}`}> */}
+      <EditorData htmlContent={diary?.pages[currentPageIndex].content} />
+        {/* <p className="mb-4">{diary?.pages[0].content}</p> */}
         <div className="post-media rounded-md w-full py-3">
-          <CustomCarousel
-            media_urls={post?.media_urls}
+          <CustomCarousel2
+            media_urls={diary?.pages[currentPageIndex].media_urls}
             left={left}
             right={right}
             dotsinactive={dotsinactive}
             dotsactive={dotsactive}
           />
         </div>
-      </Link>
+      {/* </Link> */}
       <div className="flex justify-between items-center text-gray-500 mb-2">
         <div
           className="flex items-center space-x-2 cursor-pointer"
           onClick={handleLike}
         >
           <FaHeart
-            className={liked || isLikedByCurrentUser ? "text-[#E71D36]" : ""}
+            className={liked || isLikedByCurrentUser ? "text-red-500" : ""}
           />
           <span>{likeCount}</span>
         </div>
@@ -344,7 +414,7 @@ const NewPost2 = ({ post }) => {
           onClick={toggleComments}
         >
           <FaCommentAlt />
-          <span>{post?.comment?.length}</span>
+          <span>{diary?.comment?.length}</span>
         </div>
         <div
           className="flex items-center space-x-2"
@@ -362,7 +432,7 @@ const NewPost2 = ({ post }) => {
                   <FaRetweet
                     className={`${
                       isRepostedByCurrentUser
-                        ? "text-[#E71D36] font-bold text-2xl"
+                        ? "text-[#3D7100] font-bold text-2xl"
                         : ""
                     }`}
                   />
@@ -377,7 +447,7 @@ const NewPost2 = ({ post }) => {
                       onClick={handleRespost}
                     >
                       <GoShareAndroid />
-                      <span>Share Post</span>
+                      <span>Share Posdiary</span>
                     </li>
                     <li
                       className="flex  gap-1 items-center cursor-pointer text-sm"
@@ -396,69 +466,62 @@ const NewPost2 = ({ post }) => {
         </div>
         <div className="flex items-center space-x-2">
           <FaShare />
-          <span>{post?.share?.length}</span>
+          <span>{diary?.share?.length}</span>
         </div>
         <div
           className="flex items-center space-x-2 cursor-pointer"
           onClick={handleBookmark}
         >
-          <CiBookmark
-            className={isBookmarked ? "text-[#E71D36] font-[900] text-lg" : ""}
-          />
+          <CiBookmark className={isBookmarked ? "text-red-500" : ""} />
           <span>{bookmarkCount}</span>
         </div>
       </div>
-
-      {/* {post?.comment?.map((comment, index) => (
-        <MainComment key={index} comment={comment} />
-      ))} */}
-
       {showComments && (
         <>
-          {post?.comment?.slice(0, visibleComments).map((comment, index) => (
+          {diary?.comment?.slice(0, visibleComments).map((comment, index) => (
             <MainComment key={index} comment={comment} />
           ))}
 
-          {post?.comment?.length > 2 && (
+          {diary?.comment?.length > 2 && (
             <Link
               className={`${
-                location.pathname.includes("post/") ? "hidden" : "flex"
+                location.pathname.includes("diary/") ? "hidden" : "flex"
               } flex justify-end text-xs italic pt-1 text-primary-dark-gray font-medium`}
-              to={`post/${post?._id}`}
+              to={`diary/${diary?._id}`}
             >
               Read more comments
             </Link>
           )}
 
           {addComment && (
-            <Comment
-              id={post?._id}
+            <DiaryComment
+              id={diary?._id}
               onComment={() => setAddComment(false)}
               placeholder={"Comment"}
+              reply={false}
             />
           )}
         </>
       )}
 
-      {/* {addComment && <Comment id={post?._id} onComment={onComment} placeholder={"Comment"} />} */}
 
       {showEditModal && (
         <Modals
-          title={"Edit post"}
+          title={"Edit Diary"}
           openModal={showEditModal}
           modalSize="2xl"
           onClose={() => setShowEditModal(false)}
         >
           <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
             <div className="post-media rounded-md w-full py-3">
-              <EditMyPost
-                content={post?.content}
-                medias={post?.media_urls}
-                avatar={post?.user_id.photo_url || profile_placeholder}
-                userId={post?.user_id}
-                // badgeColor={badgeColor}
+              <EditMyDiary
+                content={diary?.content}
+                medias={diary?.media_urls}
+                avatar={diary?.user_id?.photo_url || profile_placeholder}
+                userId={diary?.user_id}
+                //  badgeColor={badgeColor}
                 onClose={() => setShowEditModal(false)}
-                postId={post?._id}
+                postId={diary?._id}
               />
             </div>
           </div>
@@ -489,13 +552,19 @@ const NewPost2 = ({ post }) => {
               disabled={thought.length < 1}
               onClick={handleRespostWithThought}
             >
-              Post
+              diary
             </button>
           </div>
         </Modals>
       )}
     </div>
+
+    )
+}
+
+
+    </div>
   );
 };
 
-export default NewPost2;
+export default SingleDiary;

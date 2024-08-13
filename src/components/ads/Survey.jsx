@@ -4,9 +4,14 @@ import survey_bg from "../../assets/carousel/survey-bg.svg";
 import left from "../../assets/carousel/left.svg";
 import right from "../../assets/carousel/right.svg";
 import Carousel from "./Carousel";
+import { useLocation } from "react-router-dom";
 
 const Survey = ({ feeds }) => {
   // console.log(feeds, "feeds")
+  const location = useLocation()
+  if(location.pathname === '/explore'){
+    return null
+  }
   return (
     <>
       {feeds?.length > 0 && (

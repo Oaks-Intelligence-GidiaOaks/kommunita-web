@@ -158,7 +158,7 @@ const ProfileHero = () => {
 
   return (
     <div className="lg:h-[300px] text-primary-dark-gray">
-      <div className="h-[200px] w-full bg-[url('/src/assets/images/green_bg.jpeg')]"></div>
+      <div className="h-[150px] w-full bg-[url('/src/assets/images/green_bg.jpeg')]"></div>
       {showMobileNav && (
         <div className="lg:hidden fixed bg-white z-50 h-screen top-0 sm:w-[50%]">
           <MenuItems />

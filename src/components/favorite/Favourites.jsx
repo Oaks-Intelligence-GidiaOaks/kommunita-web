@@ -21,6 +21,7 @@ import { useSelector } from "react-redux";
 import NewPost2 from "../posts/NewPost2";
 import Repost2 from "../posts/Repost2";
 import NewPollssss from "../newPolls/NewPollssss";
+import Diary from "../diary/Diary";
 
 function Favourites() {
   const { data, isLoading, refetch } = useGetFavoritesQuery();
@@ -69,7 +70,9 @@ function Favourites() {
                   return <Repost2 key={post?._id} post={post} />
                 } else if(post.type === 'poll') {
                   return <NewPollssss key={post?._id} poll={post} onRefresh={refetch} />;
-                } else{
+                }else if(post.type === 'diary') {
+                  return <Diary key={post?._id} post={post} />;
+                }else{
                   return null;
                 }
               })

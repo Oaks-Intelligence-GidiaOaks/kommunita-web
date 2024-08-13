@@ -142,7 +142,7 @@ const NewPollssss = ({ poll, onRefresh }) => {
                 }}
                 className={`flex ${
                   poll.expired ? "bg-gray-600" : "bg-[#2CC84A4D] bg-opacity-30"
-                } justify-between h-[50px] relative items-center gap-4 p-1 rounded-tl-lg rounded-tr-full rounded-br-full px-2 overflow-visible `}
+                } justify-between h-[50px] relative items-center gap-4 p-1 ${option.option_index === leadingOption.option_index ? "rounded-tr-full rounded-br-full" : " rounded-lg" } rounded-tl-lg  px-2 overflow-visible `}
               >
                 <p className="mr-3">{option.option_index + 1}.</p>
                 <div className="absolute left-7 lg:left-10 bg-border-none w-[300px] flex-1 ">

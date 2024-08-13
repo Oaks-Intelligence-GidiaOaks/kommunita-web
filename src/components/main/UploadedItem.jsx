@@ -19,7 +19,7 @@ function UploadedItem({ item, onRemove, onItemSelect }) {
     <div className="h-20 w-20 relative overflow-hidden shadow-lg mr-4 mb-4 rounded-lg flex flex-grow">
       {item.type.startsWith("image") ? (
         <img
-          src={URL.createObjectURL(item)}
+          src={URL.createObjectURL(item) || item}
           alt=""
           className="object-cover w-full h-full cursor-pointer"
           onClick={handleItemClick}

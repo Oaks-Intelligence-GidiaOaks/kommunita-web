@@ -3,18 +3,18 @@ import { showAlert } from "../../static/alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import avatar4 from "../../assets/images/sidebar/avatar4.svg";
-import { usePostCommentMutation } from "../../service/post.service";
+import { usePostCommentMutation, usePostCommentOnRepostMutation } from "../../service/post.service";
 import PropTypes from "prop-types";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import { toggleComment } from "../../redux/slices/comment.slice";
 
-const Comment = ({ id, onComment, reply, placeholder }) => {
+const CommentOnRepost = ({ id, onComment, reply, placeholder }) => {
   const { data: profile } = useGetUserProfiileQuery();
   const { refetch } = useGetFeedsQuery();
   const [content, setContent] = useState("");
   const [posting, setPosting] = useState(false);
   const [comments, setComments] = useState([]);
-  const [postComment] = usePostCommentMutation();
+  const [postCommentOnRepost] = usePostCommentOnRepostMutation();
   const name = useSelector((state) => state.user?.user?.display_name);
   const dispatch = useDispatch()
 
@@ -34,8 +34,9 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
     setContent("");
 
     try {
-      const commentData = { content, id, reply };
-      await postComment(commentData).unwrap();
+      const commentData = { repost_id : id, content: content };
+    //   const commentData = { content, id, reply };
+      await postCommentOnRepost(commentData).unwrap();
 
       setComments((prevComments) =>
         prevComments.map((comment) =>
@@ -50,7 +51,7 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
     } catch (error) {
       console.error("Error submitting comment:", error);
       showAlert("Error", error.message, "error");
-
+        onComment()
       setComments((prevComments) =>
         prevComments.filter((comment) => comment.id !== newComment.id)
       );
@@ -113,11 +114,11 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
   );
 };
 
-Comment.propTypes = {
+CommentOnRepost.propTypes = {
   id: PropTypes.string.isRequired,
   onComment: PropTypes.func.isRequired,
   reply: PropTypes.bool,
   placeholder: PropTypes.string,
 };
 
-export default Comment;
+export default CommentOnRepost;

@@ -8,7 +8,7 @@ const FollowCard = ({ follow, isFollowing, submitting, onClick }) => {
       <div className="flex justify-between overflow-y-auto items-center gap-3 mb-3 bg-white/50 p-2">
         <div className="flex gap-4">
           <img
-            src={follow?.profile_image || noimage}
+            src={follow?.photo_url || noimage}
             className="w-[50.782px] h-[50.726px]"
             alt="avatar"
           />

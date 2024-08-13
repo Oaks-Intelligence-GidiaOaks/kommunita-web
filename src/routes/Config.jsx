@@ -28,6 +28,7 @@ import {
   ExploreHome,
   KommunityHome,
   PollsContainer,
+  SingleDiaryPage,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -97,6 +98,10 @@ const Config = () => {
         <Route
           path={routes.DIARIES}
           element={<ProtectedRoute component={Diaries} />}
+        />
+        <Route
+          path={routes.DIARIES + '/:id'}
+          element={<ProtectedRoute component={SingleDiaryPage} />}
         />
         <Route
           path={routes.LIKES}
