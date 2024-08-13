@@ -377,7 +377,7 @@ function MakePost() {
                         </button>
                       )}
 
-                      <button
+                      {/* <button
                         className="block px-1 py-3 text-[1rem] text-black font-Inter hover:bg-gray-100 w-full text-left"
                         onClick={() => {
                           setIsProfileOpen(false);
@@ -385,7 +385,7 @@ function MakePost() {
                       >
                         <HiOutlineDocumentDuplicate className="w-4 h-4 mr-2 inline" />
                         <span className="font-semibold">Draft</span>
-                      </button>
+                      </button> */}
 
                       {features.includes("Poll") && (
                         <button
