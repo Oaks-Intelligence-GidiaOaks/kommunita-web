@@ -35,8 +35,7 @@ const MainLayout = ({ children }) => {
         {/* Main Content Area */}
         <main
           className={
-            ("overflow-y-auto overflow-x-hidden custom-scrollbar w-full md:w-2/3 lg:w-2/4",
-            isMessaging ? "flex-1" : "flex-1")
+            `overflow-y-auto overflow-x-hidden custom-scrollbar w-full md:w-2/3 lg:w-2/4 ${isMessaging ? "flex-1" : "flex-1"}`
           }
           style={{ height: "90vh" }}
         >
