@@ -23,6 +23,8 @@ const Repost2 = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
   const navigate = useNavigate();
   const login_user_id = useSelector((state) => state.user?.user?._id);
+  const user = useSelector((state) => state.user.user);
+
 
   const [showPopup, setShowPopup] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -52,12 +54,17 @@ const Repost2 = ({ post }) => {
     }
   }, [location]);
 
+  const repostUserIds = post?.post_id?.repost?.map((users) => users?._id);
+  // console.log(repostUserIds)
+  const isRepostedByCurrentUser = repostUserIds?.includes(user?._id);
+  // console.log(isRepostedByCurrentUser)
+
   // console.log(post);
   return (
     <div className="mx-auto bg-white border rounded-lg shadow-md pt-4 pb- pr-2 my-4">
       <div className="flex items-center pl-4 mb-">
         {/* <Link to={`/profile/`}> */}
-        <div className={`rounded-full border-4 w-[3rem] h-[3rem]`}>
+      <div className={`rounded-full border-4 w-[3rem] h-[3rem]`}>
           <img
             // src={profile_placeholder}
             src={post?.shared_by?.photo_url || profile_placeholder}
@@ -66,7 +73,7 @@ const Repost2 = ({ post }) => {
           />
         </div>
         {/* </Link> */}
-        <div className="ml-4">
+      <div className="ml-4">
           <div className="flex gap-2 items-center">
             <Link to={`/profile/`}>
               <h4 className="font-semibold post-name">
@@ -79,22 +86,17 @@ const Repost2 = ({ post }) => {
             <span className="post-time ml-2 font-bold">
               {getTimeAgoString(post?.createdAt) || "unknown"}
             </span>
-          </p>
-        </div>
+          </p> 
+        </div> 
       </div>
       <div className="pt-2 pl-4 ">
-        {/* You reposted this */}
-        {/* {post?.share_by?._id === login_user_id
-            ? "You reposted this"
-            : `@${post?.shared_by?.username} reposted this`
-            } */}
         {post?.message ? (
           <p className="py-2 pl-4">{post?.message}</p>
-        ) : post?.post_id?.user_id?._id === login_user_id ? (
+        ) : isRepostedByCurrentUser ? (
           <span className="italic">You reposted this</span>
-        ) : (
+        ) : !isRepostedByCurrentUser ? (
           <span className="">@{post?.shared_by?.username} reposted this</span>
-        )}
+        ): null }
       </div>
       <Link to={``}>
         <div className="ml-5 bg-[#f9f8f8] border rounded-lg shadow-md p-4 ">
@@ -123,9 +125,9 @@ const Repost2 = ({ post }) => {
               </p>
             </div>
           </div>
-          <Link to={`/post${post?.post_id}`}>
+          <Link to={`/post${post?.post_id}`} className="z-0">
             <p className="mb-4">
-              {post?.post_id?.content || "This is a demo post"}
+              {post?.post_id?.content || "Something went wrong"}
             </p>
             <div className="post-media rounded-md w-full py-3">
               <CustomCarousel

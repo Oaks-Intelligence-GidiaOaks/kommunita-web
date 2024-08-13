@@ -51,6 +51,26 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       },
       invalidatesTags: ["Feeds", "Diary"],
     }),
+    // user/reaction/diary
+    loveDiary: builder.mutation({
+      query: (postData) => ({
+        url: "/user/reaction/diary",
+        method: "POST",
+        body: postData,
+      }),
+      invalidatesTags: ["Diary"],
+    }),
+
+    // /user/diary/favourite
+
+    bookMarkDiaries: builder.mutation({
+      query: (postData) => ({
+        url: `/user/diary/favourite`,
+        method: "POST",
+        body: postData,
+      }),
+      invalidatesTags: ["Diary"],
+    }),
 
     deleteDiary: builder.mutation({
       query: (id) => ({
@@ -66,6 +86,13 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Post"],
     }),
+    getADiary: builder.query({
+      query: (id) => ({
+        url: `/user/diary/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["Post"],
+    }),
   }),
 });
 
@@ -77,4 +104,7 @@ export const {
   useDeleteDiaryMutation,
   useRepostDiaryMutation,
   useGetOtherUserDiariesMutation,
+  useGetADiaryQuery,
+  useLoveDiaryMutation,
+  useBookMarkDiariesMutation
 } = organizationApiSlice;

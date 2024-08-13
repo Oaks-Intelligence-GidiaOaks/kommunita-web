@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import FollowCard from "./FollowCard";
 import { AdsSection } from "../ads";
 import { useGetUserProfiileQuery } from "../../service/user.service";
-import { useGetMyFollowersQuery, useGetMyFollowingsQuery } from "../../service/whotofollow.service";
+import { useGetMyFollowersQuery, useGetMyFollowingsQuery, useUnfollowUserMutation } from "../../service/whotofollow.service";
 import { useSelector } from "react-redux";
+import { showAlert } from "../../static/alert";
+
 
 const FollowersList = () => {
   const [activeTab, setActiveTab] = useState("followers");
   const user_id = useSelector((state) => state.user.user._id);
+  const [submitting, setSubmitting] = useState(false);
+
   
 
   const handleTabClick = (tabId) => {
@@ -16,29 +20,25 @@ const FollowersList = () => {
 
   const { data: user } = useGetUserProfiileQuery();
   const { data: followers, isLoading: loadingFollowers } = useGetMyFollowersQuery();
-  const { data: followings, isLoading: loadingFollowing } = useGetMyFollowingsQuery();
+  const { data: followings, isLoading: loadingFollowing, refetch:refetchFollowingList } = useGetMyFollowingsQuery();
+  const [unfollowUser, { isLoading: unfollowLoading}] = useUnfollowUserMutation();
 
-  const isFollower = followers?.data.map(follower => follower.followers.some(id => id === user_id))
-  // const isFollower = followers?.data.map(follower => follower.followers.some(id => id === user_id))
-  const isFollowing = followings?.data.map(follow => follow)
-  console.log(isFollower)
-  console.log(isFollowing)
-
-  // const checkFollowerStatus = ({followId}) => {
-  //   return followers?.data.some(follower => follower.followers.some(id => id === followId));
-  // };
-
-  // console.log(followers?.data.some(follower => follower.followers.includes(user_id)))
-
-  const checkFollowingStatus = ({followId, type}) => {
-    return type?.data.some(following => following._id === followId);
+  const handleUnFollow = async (id) => {
+    setSubmitting(true);
+    const postData = {
+      user_to_unfollow_id: id,
+    };
+    try {
+      await rtkMutation(unfollowUser, postData);
+      refetchFollowingList()
+  
+    } catch (error) {
+      console.error("Error unfollowing user: ", error);
+      showAlert("Oops", "An error occurred while unfollowing this user", "error");
+    } 
   };
 
-  const checkFollowerStatus = (followId) => {
-    return isFollower
-    // return followers?.data.map(follower => follower.followers.find(id => id === user_id))
-    // return followers?.data.some(follower => follower.followers.includes(user_id));
-  };
+console.log(followings?.data)
 
   return (
     <>
@@ -100,9 +100,9 @@ const FollowersList = () => {
                   key={follower.id}
                   follow={follower}
                   // isFollowing={isFollower}
-                  isFollowing={checkFollowerStatus(follower._id)}
+                  // isFollowing={checkFollowerStatus(follower._id)}
                   onClick={() =>{ console.log(`Follow/Unfollow ${follower._id}`)
-                  console.log(checkFollowerStatus(follower._id))
+                  // console.log(checkFollowerStatus(follower._id))
                 }}
                 />
               ))}
@@ -129,10 +129,10 @@ const FollowersList = () => {
             <div className="w-full col-span-12 md:col-span-8">
               {followings?.data.map((follow) => (
                 <FollowCard
-                  key={follow.id}
+                  key={follow?._id}
                   follow={follow}
                   isFollowing={true}
-                  onClick={() => console.log(`Follow/Unfollow ${follow._id}`)}
+                  onClick={() => handleUnFollow(follow?._id)(`Follow/Unfollow ${follow._id}`)}
                 />
               ))}
             </div>

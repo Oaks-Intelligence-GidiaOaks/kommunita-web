@@ -32,6 +32,7 @@ import Modals from "../../components/modals/Modal";
 import NewPost2 from "../../components/posts/NewPost2";
 import Repost2 from "../../components/posts/Repost2";
 import NewPollssss from "../../components/newPolls/NewPollssss";
+import Diary from "../../components/diary/Diary";
 
 const ProfileHome = () => {
   const { data } = useGetPostQuery();
@@ -233,7 +234,7 @@ const ProfileHome = () => {
 
       {/* Post Section */}
       <div
-        className={`${activeTab === "profile" ? "" : "hidden"}`}
+        className={`${activeTab === "profile" ? "" : "hidden"} `}
         id="profile"
         role="tabpanel"
         aria-labelledby="profile-tab"
@@ -245,67 +246,9 @@ const ProfileHome = () => {
           </div>
         ) : (
           <div className="grid grid-cols-12 w-full gap-3">
-            <div className="w-full col-span-12 md:col-span-8">
-              {/* {[...post]
-                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort posts by latest first
-                .map((post, index) => {
-                  let badgeColor = "";
-                  let dept = "";
-                  if (post.user_id?.department) {
-                    badgeColor = post.user_id?.department[0]?.badge?.color;
-                    dept = post.user_id?.department[0]?.badge?.department;
-                  }
-
-                  return post.shared_by ? (
-                    <Posts
-                      key={index}
-                      fullname={post?.post_id?.user_id.display_name}
-                      username={post?.post_id?.user_id.username}
-                      verifiedUser={false} // Adjust based on your data
-                      postTime={getTimeAgoString(post?.post_id?.createdAt)}
-                      content={post?.post_id?.content}
-                      media_urls={post?.post_id?.media_urls}
-                      post_id={post?.post_id?._id}
-                      comment={post?.post_id?.comment}
-                      repost={post?.post_id?.repost}
-                      share={post?.post_id?.share}
-                      reaction={post?.post_id?.reaction}
-                      avatar={post?.post_id?.user_id.photo_url || avatar1}
-                      badgeColor={
-                        post?.post_id?.user_id?.department[0]?.badge?.color
-                      }
-                      department={
-                        post?.post_id?.user_id?.department[0]?.badge?.department
-                      }
-                      userId={post?.post_id?.user_id?._id}
-                      type={post?.post_id?.type}
-                      // user_id={post?.post_id?.user_id?._id}
-                    />
-                  ) : (
-                    post.user_id && (
-                      <Posts
-                        key={index}
-                        fullname={post.user_id.display_name}
-                        username={post.user_id.username}
-                        verifiedUser={false} // Adjust based on your data
-                        postTime={getTimeAgoString(post.createdAt)}
-                        content={post.content}
-                        media_urls={post.media_urls}
-                        post_id={post._id}
-                        comment={post.comment}
-                        repost={post.repost}
-                        share={post.share}
-                        reaction={post.reaction}
-                        avatar={post.user_id.photo_url || avatar1}
-                        badgeColor={badgeColor}
-                        department={dept}
-                        userId={post.user_id?._id}
-                        type={post?.type}
-                        // user_id={post.user_id?._id}
-                      />
-                    )
-                  );
-                })} */
+            <div className="w-full col-span-12 md:col-span-8 overflow-y-auto h-[55vh] custom-scrollbar">
+          
+          {
                 
                   data?.data.map((post) => {
                     if (post.type === "post") {
@@ -326,26 +269,8 @@ const ProfileHome = () => {
 
               {/* <MediaContainer /> */}
             </div>
-            <div className="hidden md:block col-span-4">
+            <div className="hidden md:block col-span-4 overflow-y-auto h-[55vh] custom-scrollbar">
               <p className="mb-1 mt-2">Trending Diary Posts</p>
-
-              {/* {sidePost && (
-                <TrendingPost
-                  fullname={sidePost[0]?.user_id.display_name}
-                  username={sidePost[0]?.user_id.username}
-                  verifiedUser={false} // You need to adjust this based on your data
-                  postTime={getTimeAgoString(sidePost[0]?.createdAt)} // Assuming createdAt is the post time
-                  // postTime={moment(sidePost[0]?.createdAt).fromNow()} // Assuming createdAt is the post time
-                  content={sidePost[0]?.content}
-                  media_urls={sidePost[0]?.media_urls}
-                  post_id={sidePost[0]?._id}
-                  comment={sidePost[0]?.comment}
-                  repost={sidePost[0]?.repost}
-                  share={sidePost[0]?.share}
-                  reaction={sidePost[0]?.reaction}
-                  avatar={sidePost[0]?.user_id.photo_url || avatar1} // You need to provide the avatar source
-                />
-              )} */}
 
               {sideDiary && (
                 <Posts
@@ -364,25 +289,9 @@ const ProfileHome = () => {
                   avatar={avatar1} // You need to provide the avatar source
                 />
               )}
-              {/* {sideDiary && (
-                <Posts
-                  fullname={sideDiary[0].user_id.display_name}
-                  username={sideDiary[0].user_id.username}
-                  verifiedUser={false} // You need to adjust this based on your data
-                  postTime={getTimeAgoString(sideDiary[0].createdAt)} // Assuming createdAt is the post time
-                  // postTime={moment(sideDiary[0].createdAt).fromNow()} // Assuming createdAt is the post time
-                  content={sideDiary[0].content}
-                  media_urls={sideDiary[0].media_urls}
-                  post_id={sideDiary[0]._id}
-                  comment={sideDiary[0].comment}
-                  repost={sideDiary[0].repost}
-                  share={sideDiary[0].share}
-                  reaction={sideDiary[0].reaction}
-                  avatar={avatar1} // You need to provide the avatar source
-                />
-              )} */}
+     
 
-              <div className="">
+              <div className="overflow-y-auto  custom-scrollbar">
                 <Link
                   className="text-primary-dark-green font-semibold "
                   href="/"
@@ -408,8 +317,8 @@ const ProfileHome = () => {
             {/* <ShimmerSocialPost type="both" /> */}
           </div>
         ) : (
-          <div className="grid grid-cols-12 w-full gap-3">
-            <div className="w-full col-span-12 md:col-span-8">
+          <div className="grid grid-cols-12 w-full gap-3 ">
+            <div className="w-full col-span-12 md:col-span-8 overflow-y-auto h-[55vh] custom-scrollbar">
               {diary?.map((post, index) => {
                 let badgeColor = "";
                 let dept = "";
@@ -420,26 +329,7 @@ const ProfileHome = () => {
 
                 return (
                   post.user_id && (
-                    <Posts
-                      key={index}
-                      fullname={post.user_id.display_name}
-                      username={post.user_id.username}
-                      verifiedUser={false} // Adjust based on your data
-                      postTime={getTimeAgoString(post.createdAt)}
-                      content={post.content}
-                      media_urls={post.media_urls}
-                      post_id={post._id}
-                      comment={post.comment}
-                      repost={post.repost}
-                      share={post.share}
-                      reaction={post.reaction}
-                      avatar={post.user_id.photo_url || avatar1}
-                      badgeColor={badgeColor}
-                      department={dept}
-                      userId={post.user_id?._id}
-                      type={post?.type}
-                      // user_id={post.user_id?._id}
-                    />
+                    <Diary key={post?._id} post={post} />
                   )
                 );
               })}
@@ -486,17 +376,17 @@ const ProfileHome = () => {
                 <div>No media available yet or resource is loading</div>
               ) : (
                 // <ShimmerSocialPost type="both" />
-                <>
+                <div className=" w-full flex justify-between items-center flex-wrap overflow-y-auto h-[55vh] custom-scrollbar">
                   {medias?.map((dt, id) => (
                     <div
                       key={id}
-                      className="cursor-pointer mb-4"
+                      className="cursor-pointer mb-4 overflow-y-auto h-[55vh] custom-scrollbar"
                       // onClick={() => showModal(dt)}
                     >
                       <GaleryBox media={dt} />
                     </div>
                   ))}
-                </>
+                </div>
               )}
             </div>
           </div>
@@ -505,14 +395,14 @@ const ProfileHome = () => {
 
       {/* Likes Section */}
       <div
-        className={`${activeTab === "likes" ? "" : "hidden"}`}
+        className={`${activeTab === "likes" ? "" : "hidden"} `}
         id="likes"
         role="tabpanel"
         aria-labelledby="likes-tab"
       >
         <div>
           <div className="grid grid-cols-12 w-full gap-3">
-            <div className="w-full col-span-12 md:col-span-8">
+            <div className="w-full col-span-12 md:col-span-8 overflow-y-auto h-[55vh] custom-scrollbar">
               {liked == null ? (
                 <div>You haven't liked any post or diary yet</div>
               ) : (
@@ -533,7 +423,7 @@ const ProfileHome = () => {
                 })
               )}
             </div>
-            <div className="w-full hidden md:block -mt-5 col-span-4">
+            <div className="w-full hidden md:block -mt-5 col-span-4 overflow-y-auto h-[55vh] custom-scrollbar">
               <Likes />
             </div>
           </div>

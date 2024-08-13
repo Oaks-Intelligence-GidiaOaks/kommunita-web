@@ -12,9 +12,10 @@ import { useGetDiaryQuery } from "../../service/diary.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import { ShimmerSocialPost } from "react-shimmer-effects";
 import ProfileNav from "../../components/profile/ProfileNav";
+import Diary from "../../components/diary/Diary";
 
 const ProfileDiaries = () => {
-  const { data } = useGetDiaryQuery();
+  const { data, isLoading,  } = useGetDiaryQuery();
 
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -35,48 +36,19 @@ const ProfileDiaries = () => {
       <div>
         <ProfileNav />
       </div>
-      {post == null ? (
+      {isLoading === null ? (
         <ShimmerSocialPost type="both" />
       ) : (
         <div className="grid grid-cols-12 w-full gap-3">
           <div className="w-full col-span-12 md:col-span-8">
-            {post?.data.map((post, index) => (
-              <Posts
-                key={index}
-                fullname={post.user_id.display_name}
-                username={post.user_id.username}
-                verifiedUser={false} // You need to adjust this based on your data
-                postTime={getTimeAgoString(post.createdAt)} // Assuming createdAt is the post time
-                // postTime={moment(post.createdAt).fromNow()} // Assuming createdAt is the post time
-                content={post.content}
-                media_urls={post.media_urls}
-                post_id={post._id}
-                comment={post.comment}
-                repost={post.repost}
-                share={post.share}
-                reaction={post.reaction}
-                avatar={post.user_id.photo_url || avatar2} // You need to provide the avatar source
-              />
+            {data?.data.map((post) => (
+             <Diary key={post?._id} post={post} />
             ))}
           </div>
           <div className="hidden md:block w-full col-span-4">
             <p className="mb-3">Trending Diary Posts</p>
             {sideDiary && (
-              <Posts
-                fullname={sideDiary[0].user_id.display_name}
-                username={sideDiary[0].user_id.username}
-                verifiedUser={false} // You need to adjust this based on your data
-                postTime={getTimeAgoString(sideDiary[0].createdAt)} // Assuming createdAt is the post time
-                // postTime={moment(sideDiary[0].createdAt).fromNow()} // Assuming createdAt is the post time
-                content={sideDiary[0].content}
-                media_urls={sideDiary[0].media_urls}
-                post_id={sideDiary[0]._id}
-                comment={sideDiary[0].comment}
-                repost={sideDiary[0].repost}
-                share={sideDiary[0].share}
-                reaction={sideDiary[0].reaction}
-                avatar={avatar1} // You need to provide the avatar source
-              />
+            <Diary key={post?._id} post={post} />
             )}
 
             <Link className="text-primary-dark-green font-semibold" href="/">

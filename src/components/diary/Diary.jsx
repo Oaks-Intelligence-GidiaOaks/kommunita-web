@@ -31,11 +31,13 @@ import { RxDotsHorizontal } from "react-icons/rx";
 import Modals from "../modals/Modal";
 import EditMyPost from "../main/EditMyPost";
 import EditMyDiary from "../main/EditMyDiary";
-import { useDeleteDiaryMutation } from "../../service/diary.service";
+import { useBookMarkDiariesMutation, useDeleteDiaryMutation, useLoveDiaryMutation } from "../../service/diary.service";
 import DropdownMenu from "../ui/DropdownMenu";
 import { GoShareAndroid } from "react-icons/go";
 import { CiEdit } from "react-icons/ci";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import DiaryComment from "../main/DiaryComment";
+import EditDiary2 from "./EditDiary2";
 
 const Diary = ({ post }) => {
   const [showComments, setShowComments] = useState(false);
@@ -49,7 +51,7 @@ const Diary = ({ post }) => {
   ] = useDeleteFeedMutation();
   const [selectedFeedId, setSelectedFeedId] = useState(null);
   const [deleteDiary] = useDeleteDiaryMutation();
-  const [lovePost] = useLovePostMutation();
+  const [loveDiary] = useLoveDiaryMutation();
   const [repostPost] = useRepostPostMutation();
   const { isSuccess: feedsSuccess, refetch: refetchFeeds } = useGetFeedsQuery();
   const user = useSelector((state) => state.user.user);
@@ -64,7 +66,7 @@ const Diary = ({ post }) => {
   const likeUserIds = post?.reaction?.like?.map((user) => user._id);
   const isLikedByCurrentUser = likeUserIds?.includes(login_user_id);
   const { data: userData, refetch: refetchUser } = useGetUserProfiileQuery();
-  const [favoritePost] = useFavoritePostsMutation();
+  const [bookMarkDiaries] = useBookMarkDiariesMutation();
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [bookmarkCount, setBookmarkCount] = useState(
     post?.favourites?.length || 0
@@ -85,7 +87,7 @@ const Diary = ({ post }) => {
   };
 
   const handleShowEditModal = () => {
-    setShowEditModal(true);
+    setShowEditModal((prev)=>!prev);
     setShowPopup(false);
   };
 
@@ -99,7 +101,7 @@ const Diary = ({ post }) => {
     setLikeCount((prevCount) => (liked ? prevCount - 1 : prevCount + 1));
 
     try {
-      await lovePost({ post_id: post._id, reaction_type: "like" }).unwrap();
+      await loveDiary({ diary_id: post._id, reaction_type: "like" }).unwrap();
     } catch (error) {
       // Revert the state if the request fails
       setLiked(previousState);
@@ -128,7 +130,7 @@ const Diary = ({ post }) => {
     );
 
     try {
-      await favoritePost({ post_id: post._id }).unwrap();
+      await bookMarkDiaries({ diary_id: post._id }).unwrap();
     } catch (error) {
       setIsBookmarked(previousState);
       setBookmarkCount(previousCount);
@@ -141,22 +143,18 @@ const Diary = ({ post }) => {
     setAddComment(!addComment);
   };
 
-  const hasAlreadyReposted = post?.repost?.filter((repost) => {
-    // console.log(repost)
-    repost._id === user._id;
-  });
+  const repostUserIds = post?.repost?.map((user) => user._id);
+  console.log(repostUserIds)
+  const isRepostedByCurrentUser = repostUserIds?.includes(user._id);
+  console.log(isRepostedByCurrentUser)
 
   const handleRespost = async () => {
-    console.log(post.repost);
-    console.log(user._id);
+    const repostUserIds = post?.repost?.map((user) => user._id);
+    console.log(repostUserIds)
+    const isRepostedByCurrentUser = repostUserIds?.includes(user._id);
+    console.log(isRepostedByCurrentUser)
 
-    const hasAlreadyReposted = post?.repost?.filter((repost) => {
-      repost._id === user._id;
-    });
-
-    console.log(hasAlreadyReposted);
-
-    if (hasAlreadyReposted) {
+    if (isRepostedByCurrentUser) {
       showAlert("Notice", "You have already shared this post.", "info");
       return;
     }
@@ -181,11 +179,11 @@ const Diary = ({ post }) => {
   };
 
   const handleRespostWithThought = async () => {
-    const hasAlreadyReposted = post?.repost?.some(
-      (repost) => repost._id === login_user_id
-    );
-
-    if (hasAlreadyReposted) {
+    const repostUserIds = post?.repost?.map((user) => user._id);
+    console.log(repostUserIds)
+    const isRepostedByCurrentUser = repostUserIds?.includes(user._id);
+    console.log(isRepostedByCurrentUser)
+    if (isRepostedByCurrentUser) {
       showAlert("Notice", "You have already shared this post.", "info");
       return;
     }
@@ -331,7 +329,7 @@ const Diary = ({ post }) => {
                 onClick={() => handleShowEditModal(true)}
                 className={`flex w-[89px] h-[26px] px-[19px] py-[6px] bg-[#EFF4FF] text-[10px] text-[#838383] justify-center items-center border rounded-md hover:text-black`}
               >
-                {"Edit post"}
+                {"Edit Diary"}
               </button>
 
               <button
@@ -351,7 +349,7 @@ const Diary = ({ post }) => {
         {isErrorFeedError &&
           showAlert("Ooops", "Failed to delete the feed. Please try again.")}
       </div>
-      <Link to={`/post/${post?._id}`}>
+      <Link to={`/diary/${post?._id}`}>
       <EditorData htmlContent={post?.pages[currentPageIndex].content} />
         {/* <p className="mb-4">{post?.pages[0].content}</p> */}
         <div className="post-media rounded-md w-full py-3">
@@ -396,7 +394,7 @@ const Diary = ({ post }) => {
                 <>
                   <FaRetweet
                     className={`${
-                      hasAlreadyReposted
+                      isRepostedByCurrentUser
                         ? "text-[#3D7100] font-bold text-2xl"
                         : ""
                     }`}
@@ -450,68 +448,28 @@ const Diary = ({ post }) => {
           {post?.comment?.length > 2 && (
             <Link
               className={`${
-                location.pathname.includes("post/") ? "hidden" : "flex"
+                location.pathname.includes("diary/") ? "hidden" : "flex"
               } flex justify-end text-xs italic pt-1 text-primary-dark-gray font-medium`}
-              to={`post/${post?._id}`}
+              to={`diary/${post?._id}`}
             >
               Read more comments
             </Link>
           )}
 
           {addComment && (
-            <Comment
+            <DiaryComment
               id={post?._id}
               onComment={() => setAddComment(false)}
               placeholder={"Comment"}
+              reply={false}
             />
           )}
         </>
       )}
 
-      {/* {addComment && <Comment id={post?._id} onComment={onComment} placeholder={"Comment"} />} */}
 
-      {showEditModal && post?.type == "post" ? (
-        <Modals
-          title={"Edit post"}
-          openModal={showEditModal}
-          modalSize="2xl"
-          onClose={() => setShowEditModal(false)}
-        >
-          <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
-            <div className="post-media rounded-md w-full py-3">
-              <EditMyPost
-                content={post?.content}
-                medias={post?.media_urls}
-                avatar={post?.user_id.photo_url || profile_placeholder}
-                userId={post?.user_id}
-                // badgeColor={badgeColor}
-                onClose={() => setShowEditModal(false)}
-                postId={post?._id}
-              />
-            </div>
-          </div>
-        </Modals>
-      ) : (
-        <Modals
-          title={"Edit Diary"}
-          openModal={showEditModal}
-          modalSize="2xl"
-          onClose={() => setShowEditModal(false)}
-        >
-          <div className="pt-4 post-wrapper max-h-[550px] w-full max-w-[491px] mx-auto">
-            <div className="post-media rounded-md w-full py-3">
-              <EditMyDiary
-                content={post?.content}
-                medias={post?.media_urls}
-                avatar={post?.user_id?.photo_url || profile_placeholder}
-                userId={post?.user_id}
-                //  badgeColor={badgeColor}
-                onClose={() => setShowEditModal(false)}
-                postId={post?._id}
-              />
-            </div>
-          </div>
-        </Modals>
+      {showEditModal &&  (
+        <EditDiary2 openDiaryModal={showEditModal} existingDiary={post} onClick={handleShowEditModal} />
       )}
 
       {shareThought && (

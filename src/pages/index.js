@@ -14,6 +14,7 @@ export { default as FollowerAndFollowing } from "./follow/FollowerAndFollowing";
 export { default as KommunityHome } from "./community/CommunityHome";
 export { default as Explore } from "./explore/ExploreHome";
 export { default as Diaries } from "./diaries/DiariesHome";
+export { default as SingleDiaryPage } from "./diaries/SingleDiaryPage";
 export { default as Settings } from "./settings/SettingsHome";
 export { default as Messages } from "./mesages/MessagesHome";
 export { default as Live } from "./live/LiveHome";

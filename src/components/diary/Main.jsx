@@ -13,9 +13,10 @@ import { Spinner } from "flowbite-react";
 import StoryList from "../ui/StoryList";
 import NewPost2 from "../posts/NewPost2";
 import Diary from "./Diary";
+import { useGetExploreDiaryQuery } from "../../service/explore.service";
 
 function DiaryMain() {
-  const { data, isLoading } = useGetDiaryQuery();
+  const { data, isLoading } = useGetExploreDiaryQuery();
 
   console.log(data)
 

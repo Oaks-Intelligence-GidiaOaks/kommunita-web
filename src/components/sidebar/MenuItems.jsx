@@ -70,32 +70,32 @@ function MenuItems() {
         to: "/messages",
       },
       //  IF PROFILE IS LOGGED IN USER PROFILE 
-      ...(login_user_id === profile?.data._id &&
-      location.pathname === "/profile"
-        ? [
-            {
-              id: 4,
-              icon: <MdOutlineLibraryBooks />,
-              activeIcon: settingsActive,
-              text: "My Diary",
-              to: "/diary",
-            },
-            {
-              id: 5,
-              icon: <AiOutlineUser />,
-              activeIcon: settingsActive,
-              text: "Profile",
-              to: "/profile",
-            },
-            {
-              id: 11,
-              icon: <MdOutlineSettings />,
-              activeIcon: settingsActive,
-              text: "Settings",
-              to: "/settings",
-            },
-          ]
-        : []),
+      // ...(login_user_id === profile?.data._id &&
+      // location.pathname === "/profile"
+      //   ? [
+      //       {
+      //         id: 4,
+      //         icon: <MdOutlineLibraryBooks />,
+      //         activeIcon: settingsActive,
+      //         text: "My Diary",
+      //         to: "/diary",
+      //       },
+      //       {
+      //         id: 5,
+      //         icon: <AiOutlineUser />,
+      //         activeIcon: settingsActive,
+      //         text: "Profile",
+      //         to: "/profile",
+      //       },
+      //       {
+      //         id: 11,
+      //         icon: <MdOutlineSettings />,
+      //         activeIcon: settingsActive,
+      //         text: "Settings",
+      //         to: "/settings",
+      //       },
+      //     ]
+      //   : []),
     ],
     [login_user_id, profile?.data._id, location.pathname]
   );
