@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useParams } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -18,8 +18,8 @@ import settingsActive from "../../assets/images/sidebar/settingsActive.svg";
 import favoriteActive from "../../assets/images/sidebar/favoriteActive.svg";
 import { handleLogout } from "../../static/logout";
 import {
-  useGetAUserProfileQuery,
-  useGetUserProfiileQuery,
+  // useGetAUserProfileQuery,
+  useGetUserProfiileQuery
 } from "../../service/user.service";
 import { backToOak } from "../../assets/images";
 import { MdOutlineLibraryBooks, MdOutlineSettings } from "react-icons/md";
@@ -40,6 +40,7 @@ function MenuItems() {
         activeIcon: homeActive,
         text: "Home",
         to: "/",
+        feature: ""
       },
       {
         id: 2,
@@ -47,6 +48,7 @@ function MenuItems() {
         activeIcon: notificationsActive,
         text: "Favourites",
         to: "/bookmarks",
+        feature: ""
       },
       {
         id: 3,
@@ -54,6 +56,7 @@ function MenuItems() {
         activeIcon: favoriteActive,
         text: "Polls",
         to: "/polls",
+        feature: "Poll"
       },
       {
         id: 8,
@@ -61,6 +64,7 @@ function MenuItems() {
         activeIcon: profileActive,
         text: "Survey",
         to: "/survey",
+        feature: "Survey"
       },
       {
         id: 6,
@@ -68,8 +72,9 @@ function MenuItems() {
         activeIcon: mailActive,
         text: "Messages",
         to: "/messages",
+        feature: "Direct Messaging"
       },
-      //  IF PROFILE IS LOGGED IN USER PROFILE 
+      //  IF PROFILE IS LOGGED IN USER PROFILE
       // ...(login_user_id === profile?.data._id &&
       // location.pathname === "/profile"
       //   ? [
@@ -79,6 +84,7 @@ function MenuItems() {
       //         activeIcon: settingsActive,
       //         text: "My Diary",
       //         to: "/diary",
+              feature: "Diary"
       //       },
       //       {
       //         id: 5,
@@ -86,6 +92,7 @@ function MenuItems() {
       //         activeIcon: settingsActive,
       //         text: "Profile",
       //         to: "/profile",
+              feature: ["Self Service", "Account Management"]
       //       },
       //       {
       //         id: 11,
@@ -93,12 +100,34 @@ function MenuItems() {
       //         activeIcon: settingsActive,
       //         text: "Settings",
       //         to: "/settings",
-      //       },
+              feature: ["Self Service", "Account Management"]
+      //       }
       //     ]
-      //   : []),
+      //   : [])
     ],
     [login_user_id, profile?.data._id, location.pathname]
   );
+
+  const features = useSelector(
+    (state) => state?.user?.user?.organization_features
+  );
+
+  console.log(features);
+
+  const filteredItems = links.filter((item) => {
+    if (item.feature) {
+      if (Array.isArray(item.feature)) {
+        const hasFeature = item.feature.some((feature) =>
+          features.includes(feature)
+        );
+        if (!hasFeature) return false;
+      } else {
+        if (!features.includes(item.feature)) return false;
+      }
+    }
+
+    return true;
+  });
 
   useEffect(() => {
     const activeLinkIndex = links.findIndex(
@@ -118,7 +147,7 @@ function MenuItems() {
   return (
     <div className="mt-5 pb-5 w-full">
       <div className="px-1 xl:px-5">
-        {links?.map(({ id, icon, text, to }) => (
+        {filteredItems?.map(({ id, icon, text, to }) => (
           <NavLink
             key={id}
             to={to}

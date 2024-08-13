@@ -1,6 +1,6 @@
 // MobileSidebar.js
 import React, { useRef, useState } from "react";
-import { FaRegUser, } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { dark_logo, placeholder_logo } from "../../assets/images";
 import { RiSearch2Line, RiSurveyLine } from "react-icons/ri";
@@ -15,18 +15,28 @@ import { CiLogout, CiMail, CiSearch } from "react-icons/ci";
 import { IoSettingsOutline } from "react-icons/io5";
 import { BsBell } from "react-icons/bs";
 import { LiaTimesSolid } from "react-icons/lia";
-import { BOOKMARK, MESSAGES, PROFILE, SETTINGS, SURVEY, POLLS, NOTIFICATION } from "../../routes/routes";
-
-
+import {
+  BOOKMARK,
+  MESSAGES,
+  PROFILE,
+  SETTINGS,
+  SURVEY,
+  POLLS,
+  NOTIFICATION
+} from "../../routes/routes";
+import { useSelector } from "react-redux";
 
 const MobileSidebar = ({ isOpen, onClick }) => {
-  const { data:userOganisation, } = useGetUserOrganisationQuery()
+  const { data: userOganisation } = useGetUserOrganisationQuery();
   const { data: profile } = useGetUserProfiileQuery();
   const [isOrganisationOpen, setIsOrganisationOpen] = useState(false);
   const [searching, setSearching] = useState(false);
   const [searchOrganisation, setSearchOrganisation] = useState("");
   const organisationRef = useRef(null);
 
+  const features = useSelector(
+    (state) => state?.user?.user?.organization_features
+  );
 
   return (
     <div className="relative md:hidden">
@@ -55,92 +65,133 @@ const MobileSidebar = ({ isOpen, onClick }) => {
           </div>
           {/* <hr /> */}
           <div className="cursor-pointer w-[60%] flex items-center gap-5 bg-[#efefef] my-10  rounded-[2.5rem] px-[0.5rem]">
-              <DropdownMenu
-                dropdownRef={organisationRef}
-                aria_label={"organisation"}
-                onClick={() => {
-                  setIsOrganisationOpen(!isOrganisationOpen);
-                }}
-                display_value={
-                  <>
+            <DropdownMenu
+              dropdownRef={organisationRef}
+              aria_label={"organisation"}
+              onClick={() => {
+                setIsOrganisationOpen(!isOrganisationOpen);
+              }}
+              display_value={
+                <>
                   <span className="w-6 h-6 rounded-full">
-                    <img src={profile?.data?.current_organization?.logo_url} alt="organisation logo" />
+                    <img
+                      src={profile?.data?.current_organization?.logo_url}
+                      alt="organisation logo"
+                    />
                   </span>
-                    <p>{profile?.data?.current_organization?.organization_name}</p>
-                    <IoIosArrowDown size={20} className="text-[#838383]" />
-                  </>
-                }
-                isDropdownOpen={isOrganisationOpen}
-                listItem={
-                  <div className="px-4 py-5">
-                    <div className="flex search-box rounded w-full">
-                      <div className="cursor-pointer">
-                        {searching ? (
-                          <BeatLoader color="#ffffff" loading={true} />
-                        ) : (
-                            <RiSearch2Line size={30} className="inline-block" />
-                        )}
-                      </div>
-                      <input
-                        type="text"
-                        className="search-input w-full focus:outline-none focus:ring-0"
-                        placeholder="Search"
-                        value={searchOrganisation}
-                        onChange={(e) => setSearchOrganisation(e.target.value)}
-                      />
+                  <p>
+                    {profile?.data?.current_organization?.organization_name}
+                  </p>
+                  <IoIosArrowDown size={20} className="text-[#838383]" />
+                </>
+              }
+              isDropdownOpen={isOrganisationOpen}
+              listItem={
+                <div className="px-4 py-5">
+                  <div className="flex search-box rounded w-full">
+                    <div className="cursor-pointer">
+                      {searching ? (
+                        <BeatLoader color="#ffffff" loading={true} />
+                      ) : (
+                        <RiSearch2Line size={30} className="inline-block" />
+                      )}
                     </div>
-                    {/* Organisations list goes here */}
-                    <ul className="w-full mt-3">
-                      {
-                        userOganisation?.data?.map((org) => (
-                          <li key={org._id} className="w-full border-b">
-                            <Link to={`#`} className="py-2 w-full flex items-center gap-2">
-                            {/* <Link to={`/dashboard/organisation/${org.id}`}> */}
-                           <span className="w-6 h-6 rounded-full">
-                            <img src={org?.logo_url || placeholder_logo} alt={org?.organization_name} className="w-full" />
-                            </span> 
-                            {org?.organization_name}
-                            </Link>
-                          </li>
-                        )) || <p>No Organisations found</p>
-                      }
-                    </ul>
+                    <input
+                      type="text"
+                      className="search-input w-full focus:outline-none focus:ring-0"
+                      placeholder="Search"
+                      value={searchOrganisation}
+                      onChange={(e) => setSearchOrganisation(e.target.value)}
+                    />
                   </div>
-                }
-              />
-            </div>
+                  {/* Organisations list goes here */}
+                  <ul className="w-full mt-3">
+                    {userOganisation?.data?.map((org) => (
+                      <li key={org._id} className="w-full border-b">
+                        <Link
+                          to={`#`}
+                          className="py-2 w-full flex items-center gap-2"
+                        >
+                          {/* <Link to={`/dashboard/organisation/${org.id}`}> */}
+                          <span className="w-6 h-6 rounded-full">
+                            <img
+                              src={org?.logo_url || placeholder_logo}
+                              alt={org?.organization_name}
+                              className="w-full"
+                            />
+                          </span>
+                          {org?.organization_name}
+                        </Link>
+                      </li>
+                    )) || <p>No Organisations found</p>}
+                  </ul>
+                </div>
+              }
+            />
+          </div>
+
           <ul>
             <li className="flex items-center mb-6 text-[#1B1B1B]">
               <GoStar className="mr-3" />
-              <Link to={BOOKMARK} className="text-[#1B1B1B] text-[1rem]" >Favourites</Link>
+              <Link to={BOOKMARK} className="text-[#1B1B1B] text-[1rem]">
+                Favourites
+              </Link>
             </li>
-            <li className="flex items-center mb-6 text-[#1B1B1B]">
-              <CgPoll className="mr-3" />
-              <Link to={POLLS} className="text-[#1B1B1B] text-[1rem]" >Polls</Link>
-            </li>
-            <li className="flex items-center mb-6 text-[#1B1B1B]">
-              <RiSurveyLine className="mr-3" />
-              <Link to={SURVEY} className="text-[#1B1B1B] text-[1rem]" >Survey</Link>
-            </li>
-            <li className="flex items-center mb-6 text-[#1B1B1B]">
-              <CiMail className="mr-3" />
-              <Link to={MESSAGES} className="text-[#1B1B1B] text-[1rem]" >Messages</Link>
-            </li>
+
+            {features.includes("Poll") && (
+              <li className="flex items-center mb-6 text-[#1B1B1B]">
+                <CgPoll className="mr-3" />
+                <Link to={POLLS} className="text-[#1B1B1B] text-[1rem]">
+                  Polls
+                </Link>
+              </li>
+            )}
+
+            {features.includes("Survey") && (
+              <li className="flex items-center mb-6 text-[#1B1B1B]">
+                <RiSurveyLine className="mr-3" />
+                <Link to={SURVEY} className="text-[#1B1B1B] text-[1rem]">
+                  Survey
+                </Link>
+              </li>
+            )}
+
+            {features.includes("Direct Messaging") && (
+              <li className="flex items-center mb-6 text-[#1B1B1B]">
+                <CiMail className="mr-3" />
+                <Link to={MESSAGES} className="text-[#1B1B1B] text-[1rem]">
+                  Messages
+                </Link>
+              </li>
+            )}
+
             <li className="flex items-center mb-6 text-[#1B1B1B]">
               <BsBell className="mr-3" />
-              <Link to={NOTIFICATION} className="text-[#1B1B1B] text-[1rem]" >Notifications</Link>
+              <Link to={NOTIFICATION} className="text-[#1B1B1B] text-[1rem]">
+                Notifications
+              </Link>
             </li>
+
             <li className="flex items-center mb-6 text-[#1B1B1B]">
               <FaRegUser className="mr-3" />
-              <Link to={PROFILE} className="text-[#1B1B1B] text-[1rem]" >Profile</Link>
+              <Link to={PROFILE} className="text-[#1B1B1B] text-[1rem]">
+                Profile
+              </Link>
             </li>
-            <li className="flex items-center mb-6 text-[#1B1B1B]">
-              <IoSettingsOutline className="mr-3" />
-              <Link to={SETTINGS} className="text-[#1B1B1B] text-[1rem]" >Settings</Link>
-            </li>
+
+            {features.includes("Account Management") ||
+              (features.includes("Self Service") && (
+                <li className="flex items-center mb-6 text-[#1B1B1B]">
+                  <IoSettingsOutline className="mr-3" />
+                  <Link to={SETTINGS} className="text-[#1B1B1B] text-[1rem]">
+                    Settings
+                  </Link>
+                </li>
+              ))}
+
             <li className="flex items-center text-red-600">
               <CiLogout className="mr-3" />
-              <span className="text-[#1B1B1B] text-[1rem]" >Log out</span>
+              <span className="text-[#1B1B1B] text-[1rem]">Log out</span>
             </li>
           </ul>
         </div>

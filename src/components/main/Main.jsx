@@ -16,18 +16,22 @@ import PollList from "../newPolls/PollList";
 import NewPollssss from "../newPolls/NewPollssss";
 import Repost2 from "../posts/Repost2";
 import Diary from "../diary/Diary";
+import { useSelector } from "react-redux";
 
 function Main() {
   const { data, isLoading, refetch } = useGetFeedsQuery();
   const posts = data?.data || [];
   // console.log(posts, "posts");
   // console.log(posts?.map(item => item.action_type && item), "posts");
+  const features = useSelector(
+    (state) => state?.user?.user?.organization_features
+  );
 
   return (
     <div className=" pt-4 main-wrapper w-full pb-10">
       {/* <Story /> */}
-      <StoryList />
-      <MakePost />
+      {features.includes("Story") && <StoryList />}
+      {features.includes("Post") && <MakePost />}
 
       {isLoading ? (
         <div className="flex justify-center pt-10">
@@ -49,16 +53,17 @@ function Main() {
           if (post.type === "post") {
             return <NewPost2 key={post?._id} post={post} />;
           } else if (post.action_type === "Repost") {
-            return <Repost2 key={post?._id} post={post} />
-          } else if(post.type === 'poll') {
-            return <NewPollssss key={post?._id} poll={post} onRefresh={refetch} />;
-          } else if(post.type === 'diary') {
+            return <Repost2 key={post?._id} post={post} />;
+          } else if (post.type === "poll") {
+            return (
+              <NewPollssss key={post?._id} poll={post} onRefresh={refetch} />
+            );
+          } else if (post.type === "diary") {
             return <Diary key={post?._id} post={post} />;
-          } else{
+          } else {
             return null;
           }
         })
-          
       )}
     </div>
   );
