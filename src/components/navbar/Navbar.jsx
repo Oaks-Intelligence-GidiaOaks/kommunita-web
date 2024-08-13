@@ -501,7 +501,10 @@ const Navbar = () => {
                     title={""}
                     openModal={reloadPage}
                     modalSize="2xl"
-                    onClose={() => setReloadPage(!reloadPage)}
+                    onClose={() => { 
+                      window.location.reload()
+                      setReloadPage(!reloadPage)
+                     }}
                   >
                     <div className="flex flex-col text-center gap-4 justify-center rounded w-full">
                       <h1 className="font-semibold text-3xl">Great</h1>

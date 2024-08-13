@@ -11,8 +11,8 @@ function CommentButtons({ comment, onComment, likes, onLike }) {
         {comment?.length}
       </button>
       <button onClick={onLike} className="flex gap-1 items-center">
-        <img src={fav} alt="" />
-        {likes?.length}
+        {/* <img src={fav} alt="" /> */}
+        {/* {likes?.length} */}
       </button>
     </div>
   );

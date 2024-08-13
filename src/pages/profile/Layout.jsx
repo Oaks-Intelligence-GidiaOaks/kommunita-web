@@ -40,14 +40,14 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="bg-[#EFF2FC] overflow-x-hidden h-screen">
+    <div className="bg-[#EFF2FC] overflow-x-hidden flex flex-col h-screen">
       <div className="">
         <ProfileHero />
       </div>
-      <div className="mx-auto mt-5 px-4 md:px-8">
-        <div className=" pt-5 xl:pt-0 grid grid-cols-12 gap-3">
+      <div className="mx-auto px-4 md:px-8 xl:-mt-5">
+        <div className=" pt- xl:pt-0 grid grid-cols-12 gap-3">
           {/* <div className=" bg-red-400"> */}
-          <div className="col-span-4 lg:col-span-3 xl:col-span-2 max-w-[277px] w-full rounded  hidden lg:block max-h-[auto] overflow-hidden">
+          <div className="col-span-4 lg:col-span-3 xl:col-span-2 max-w-[277px] w-full rounded  hidden lg:block max-h-[auto] overflow-hidden  overflow-y-auto">
             <div className="">
               {profile?.data?.current_organization?.organization_name ? (
                 <div className="w-[70%] bg-white flex items-center justify-center">
@@ -79,9 +79,9 @@ const Layout = ({ children }) => {
                   </select>
                 </div>
               ) : (
-                <div className="h-[35px] w-[50px]">{""}</div>
+                <div className="h-[35px] w-[50px]">{""} </div>
               )}
-              <div className="bg-[#fff] -mt-2 rounded-lg">
+              <div className="bg-[#fff] -mt-2 rounded-lg ">
                 <MenuItems />
               </div>
             </div>

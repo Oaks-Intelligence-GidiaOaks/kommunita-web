@@ -36,6 +36,14 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Feeds"],
     }),
+    loveRepost: builder.mutation({
+      query: (postData) => ({
+        url: "/user/reaction/repost",
+        method: "POST",
+        body: postData,
+      }),
+      invalidatesTags: ["Feeds"],
+    }),
 
     favoritePost: builder.mutation({
       query: ({ postData, typ }) => ({
@@ -54,10 +62,26 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Feeds"],
     }),
+    favoriteReposts: builder.mutation({
+      query: ( postData ) => ({
+        url: `/user/repost/favourite`,
+        method: "POST",
+        body: postData,
+      }),
+      invalidatesTags: ["Feeds"],
+    }),
 
     repostPost: builder.mutation({
       query: (postData) => ({
         url: "/user/post/repost",
+        method: "POST",
+        body: postData,
+      }),
+      invalidatesTags: ["Feeds"],
+    }),
+    postCommentOnRepost: builder.mutation({
+      query: (postData) => ({
+        url: "/user/comment/repost",
         method: "POST",
         body: postData,
       }),
@@ -98,4 +122,7 @@ export const {
   usePostCommentMutation,
   useGetOtherUserPostMutation,
   useGetSinglePostQuery,
+  useLoveRepostMutation,
+  useFavoriteRepostsMutation,
+  usePostCommentOnRepostMutation,
 } = organizationApiSlice;
