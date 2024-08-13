@@ -75,7 +75,7 @@ const NewPost2 = ({ post }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [shareThought, setShareThought] = useState(false);
-  const [thought, setThought ] = useState('');
+  const [thought, setThought] = useState("");
 
   const toggleComments = () => {
     setShowComments(!showComments);
@@ -139,32 +139,27 @@ const NewPost2 = ({ post }) => {
   const onComment = () => {
     setAddComment(!addComment);
   };
-  
-  const hasAlreadyReposted = post?.repost?.filter(
-    (repost) =>{
-        // console.log(repost)
-        repost._id === user._id
-      }
-  );
 
+  const hasAlreadyReposted = post?.repost?.filter((repost) => {
+    // console.log(repost)
+    repost._id === user._id;
+  });
 
   const repostUserIds = post?.repost?.map((user) => user._id);
   // console.log(repostUserIds)
   const isRepostedByCurrentUser = repostUserIds?.includes(user._id);
   // console.log(isRepostedByCurrentUser)
-  
-  const handleRespost = async () => {
 
+  const handleRespost = async () => {
     const repostUserIds = post?.repost?.map((user) => user._id);
-    console.log(repostUserIds)
+    console.log(repostUserIds);
     const isRepostedByCurrentUser = repostUserIds?.includes(user._id);
-    console.log(isRepostedByCurrentUser)
-  
+    console.log(isRepostedByCurrentUser);
+
     if (isRepostedByCurrentUser) {
       showAlert("Notice", "You have already shared this post.", "info");
       return;
     }
-
 
     const previousState = isRepost;
     const previousCount = repostCount;
@@ -186,12 +181,11 @@ const NewPost2 = ({ post }) => {
   };
 
   const handleRespostWithThought = async () => {
-
     const repostUserIds = post?.repost?.map((user) => user._id);
-    console.log(repostUserIds)
+    console.log(repostUserIds);
     const isRepostedByCurrentUser = repostUserIds?.includes(user._id);
-    console.log(isRepostedByCurrentUser)
-  
+    console.log(isRepostedByCurrentUser);
+
     if (isRepostedByCurrentUser) {
       showAlert("Notice", "You have already shared this post.", "info");
       return;
@@ -203,12 +197,12 @@ const NewPost2 = ({ post }) => {
     setIsRepost(!isRepost);
     setRepostCount((prevCount) => (isRepost ? prevCount - 1 : prevCount + 1));
 
-    const postData = { post_id: post._id, message:thought };
+    const postData = { post_id: post._id, message: thought };
     console.log(postData);
     try {
       await rtkMutation(repostPost, postData);
       showAlert("Great", "You reposted this post");
-      setShareThought(false)
+      setShareThought(false);
     } catch (error) {
       setIsRepost(previousState);
       setRepostCount(previousCount);
@@ -365,7 +359,13 @@ const NewPost2 = ({ post }) => {
               }}
               display_value={
                 <>
-                  <FaRetweet className={`${isRepostedByCurrentUser ? "text-[#E71D36] font-bold text-2xl" : "" }`} />
+                  <FaRetweet
+                    className={`${
+                      isRepostedByCurrentUser
+                        ? "text-[#E71D36] font-bold text-2xl"
+                        : ""
+                    }`}
+                  />
                 </>
               }
               isDropdownOpen={isRepostOpen}
@@ -402,7 +402,9 @@ const NewPost2 = ({ post }) => {
           className="flex items-center space-x-2 cursor-pointer"
           onClick={handleBookmark}
         >
-          <CiBookmark className={isBookmarked ? "text-[#E71D36] font-[900] text-lg" : ""} />
+          <CiBookmark
+            className={isBookmarked ? "text-[#E71D36] font-[900] text-lg" : ""}
+          />
           <span>{bookmarkCount}</span>
         </div>
       </div>
@@ -440,7 +442,7 @@ const NewPost2 = ({ post }) => {
 
       {/* {addComment && <Comment id={post?._id} onComment={onComment} placeholder={"Comment"} />} */}
 
-      {showEditModal &&  (
+      {showEditModal && (
         <Modals
           title={"Edit post"}
           openModal={showEditModal}
@@ -472,17 +474,23 @@ const NewPost2 = ({ post }) => {
         >
           <div className="w-full  mx-auto">
             <div className="rounded-md w-full py-3">
-              <textarea name="" id="" className="w-full rounded-md min-h-[10rem]" value={thought} onChange={(e)=>setThought(e.target.value)}>
-
-              </textarea>
+              <textarea
+                name=""
+                id=""
+                className="w-full rounded-md min-h-[10rem]"
+                value={thought}
+                onChange={(e) => setThought(e.target.value)}
+              ></textarea>
             </div>
-            <button 
-        className={`bg-[#3D7100] w-full py-2 rounded-md text-white font-semibold text-[1.2rem] ${thought.length < 1 ? 'opacity-50 cursor-not-allowed' : ''}`} 
-        disabled={thought.length < 1} 
-        onClick={handleRespostWithThought}
-      >
-        Post
-      </button>
+            <button
+              className={`bg-[#3D7100] w-full py-2 rounded-md text-white font-semibold text-[1.2rem] ${
+                thought.length < 1 ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={thought.length < 1}
+              onClick={handleRespostWithThought}
+            >
+              Post
+            </button>
           </div>
         </Modals>
       )}

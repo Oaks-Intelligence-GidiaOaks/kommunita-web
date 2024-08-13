@@ -28,7 +28,7 @@
   gap: 10px;
   border-radius: 32px 32px 0px 32px;
   opacity: 0px;
-  background-color: #d7f4d9;
+  background-color: #d8e3cc;
   font-family: Inter;
   font-size: 12px;
   font-weight: 400;
@@ -129,6 +129,7 @@
 }
 .chat-window {
   background-image: url("./chat-window.svg");
+  background-position: 0 -100px;
   background-color: rgba(255, 255, 255, 0.45);
   background-blend-mode: overlay;
   background-size: cover;

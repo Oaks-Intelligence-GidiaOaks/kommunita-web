@@ -183,7 +183,7 @@ import {
   escrow_tech,
   logo,
   placeholder_logo,
-  profile_placeholder
+  profile_placeholder,
 } from "../../assets/images";
 import { RiHome5Line } from "react-icons/ri";
 import { TbUsersGroup } from "react-icons/tb";
@@ -199,7 +199,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { CiLogout, CiSearch } from "react-icons/ci";
 import {
   useGetUserOrganisationQuery,
-  useSwitchOrganisationMutation
+  useSwitchOrganisationMutation,
 } from "../../service/organization.service";
 import { debounce } from "lodash";
 import { useDispatch } from "react-redux";

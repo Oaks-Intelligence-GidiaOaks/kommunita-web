@@ -14,6 +14,7 @@ import sound from "../../assets/sound.mp3";
 import { Spinner } from "flowbite-react";
 import "./style.css";
 import avatar from "../../assets/images/user.png";
+import { FaUser } from "react-icons/fa6";
 
 function View({ chat, currentUserId }) {
   const socket = useRef(null);
@@ -180,8 +181,8 @@ function View({ chat, currentUserId }) {
                 <div
                   className={
                     isSender
-                      ? "sender flex flex-wrap"
-                      : "recipient flex flex-wrap"
+                      ? "sender flex flex-wrap shadow-lg"
+                      : "recipient flex flex-wrap shadow-lg"
                   }
                 >
                   {message.message}
@@ -216,8 +217,8 @@ function View({ chat, currentUserId }) {
   return (
     <>
       <div className="w-full overflow-y-auto blank">
-        <div className="flex flex-col px-2">
-          <div className="flex items-center gap-2 p-4 justify-between z-5 w-full h-[70px] border-b-[1px]">
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2 p-4 py-0 pt-2.5 justify-between z-5 w-full h-[74px] bg-[#D8E3CC] rounded-tr-md overflow-hidden sticky top-0 shadow-md">
             <div className="flex items-center gap-3">
               {chat.participants.find((user) => user._id === otherUserId)
                 ?.photo_url ? (
@@ -230,12 +231,13 @@ function View({ chat, currentUserId }) {
                   alt=""
                 />
               ) : (
-                <div className="h-[35px] w-[35px] flex justify-center items-center rounded-full border">
-                  <img
+                <div className="h-[35px] w-[35px] flex justify-center items-center rounded-lg bg-[#efece7] border">
+                  {/* <img
                     className="rounded-lg object-cover"
                     src={avatar}
                     alt=""
-                  />
+                  /> */}
+                  <FaUser size={24} className="text-gray-950/40" />
                 </div>
               )}
               <p className="message-name">
@@ -284,15 +286,15 @@ function View({ chat, currentUserId }) {
             </div>
           </div>
           {/* <div className=""> */}
-          <div className="overflow-y-auto">
+          <div className="overflow-y-auto px-2">
             <div className="">{messageContent}</div>
           </div>
           {/* </div> */}
         </div>
       </div>
 
-      <div className="bg-white h-auto flex items-center px-4 mt-5 absolute bottom-0 left-0 w-full">
-        <div className="flex w-full items-center gap-2 justify-evenly p-2 px-2">
+      <div className="bg-white h-auto flex items-center px-2 sm:px-4 mt-5 absolute bottom-0 left-0 w-full">
+        <div className="flex w-full items-center gap-2 justify-evenly p-2 px-0">
           <img src={add} alt="add" className="cursor-pointer mt-1" />
           <InputEmoji
             value={newMessage}
@@ -302,19 +304,20 @@ function View({ chat, currentUserId }) {
             // cleanOnEnter
             // onEnter={handleSend}
           />
-          {newMessage ? (
-            <button
-              className="p-2 border bg-[#34b53a] text-white rounded-md"
-              disabled={sendMessage || !newMessage}
-              onClick={handleSend}
-            >
-              {sendMessage ? "Sending..." : "Send"}
-            </button>
-          ) : null
-          // <div className="flex gap-4 items-center">
-          //   <img src={microphone} alt="microphone" />
-          //   <img src={like} alt="like" />
-          // </div>
+          {
+            newMessage ? (
+              <button
+                className="p-2 border bg-[#34b53a] text-white rounded-md"
+                disabled={sendMessage || !newMessage}
+                onClick={handleSend}
+              >
+                {sendMessage ? "Sending..." : "Send"}
+              </button>
+            ) : null
+            // <div className="flex gap-4 items-center">
+            //   <img src={microphone} alt="microphone" />
+            //   <img src={like} alt="like" />
+            // </div>
           }
         </div>
       </div>
