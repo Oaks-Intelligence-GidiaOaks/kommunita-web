@@ -30,4 +30,7 @@ export { default as PopularPost } from "./explore2/Popular_Post";
 export { default as Komunity_Videos } from "./explore2/Explore_Videos";
 export { default as Komunity_Images } from "./explore2/Explore_Images";
 export { default as Komunity_Diaries } from "./explore2/Explore_Dairies";
+export { default as StoriesHome } from "./stories/StoriesHome";
+export { default as AddStories } from "./stories/AddStories";
+export { default as ViewStories } from "./stories/ViewStories";
 

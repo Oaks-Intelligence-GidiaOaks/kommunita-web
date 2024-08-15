@@ -35,7 +35,7 @@ import { GoShareAndroid } from "react-icons/go";
 import { CiEdit } from "react-icons/ci";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import DiaryComment from "../main/DiaryComment";
-import StoryList from "../ui/StoryList";
+import StoryList from "../stories/StoryList";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { Spinner } from "flowbite-react";
 import CustomCarousel2 from "../main/CustomCarousel2";

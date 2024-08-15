@@ -30,6 +30,10 @@ export const POLLS = "/polls";
 export const POLLHISTORY = "poll_history";
 export const SURVEY = "/survey";
 
+export const STORIES = "/stories";
+export const CREATE = "create";
+// export const VIEWSTORY = "view";
+// export const STORIES = "/stories";
 
 
 export const KOMMUNITY = "/kommunity";

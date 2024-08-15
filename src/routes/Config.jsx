@@ -29,6 +29,9 @@ import {
   KommunityHome,
   PollsContainer,
   SingleDiaryPage,
+  StoriesHome,
+  AddStories,
+  ViewStories,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -63,7 +66,7 @@ const Config = () => {
           path={routes.SWITCH}
           element={<ProtectedRoute component={Homepage} />}
         ></Route>
-        
+
         <Route
           path={routes.KOMMUNITY}
           element={<ProtectedRoute component={KommunityHome} />}
@@ -89,7 +92,16 @@ const Config = () => {
           />
         </Route>
 
-
+        <Route
+          path={routes.STORIES}
+          element={<ProtectedRoute component={StoriesHome} />}
+        >
+          <Route index element={<ProtectedRoute component={ViewStories} />} />
+          <Route
+            path={routes.CREATE}
+            element={<ProtectedRoute component={AddStories} />}
+          />
+        </Route>
 
         <Route
           path={routes.PROFILEDIARIES}
@@ -100,7 +112,7 @@ const Config = () => {
           element={<ProtectedRoute component={Diaries} />}
         />
         <Route
-          path={routes.DIARIES + '/:id'}
+          path={routes.DIARIES + "/:id"}
           element={<ProtectedRoute component={SingleDiaryPage} />}
         />
         <Route
@@ -156,10 +168,10 @@ const Config = () => {
           element={<ProtectedRoute component={PollsContainer} />}
         >
           <Route index element={<ProtectedRoute component={PollsHome} />} />
-        <Route
-          path={routes.POLLHISTORY}
-          element={<ProtectedRoute component={PollHistory} />}
-        />
+          <Route
+            path={routes.POLLHISTORY}
+            element={<ProtectedRoute component={PollHistory} />}
+          />
         </Route>
 
         <Route

@@ -1,4 +1,4 @@
-import StoryList from "../ui/StoryList";
+import StoryList from "../stories/StoryList";
 import { useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { FaHeart, FaCommentAlt, FaShare, FaRetweet } from "react-icons/fa";

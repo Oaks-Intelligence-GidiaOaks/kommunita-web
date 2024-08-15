@@ -10,7 +10,7 @@ import { useGetDiaryQuery } from "../../service/diary.service";
 import getTimeAgoString from "./../../utils/getTimeAgoString";
 import search from "../../assets/images/Home/Search.png";
 import { Spinner } from "flowbite-react";
-import StoryList from "../ui/StoryList";
+import StoryList from "../stories/StoryList";
 import NewPost2 from "../posts/NewPost2";
 import Diary from "./Diary";
 import { useGetExploreDiaryQuery } from "../../service/explore.service";
