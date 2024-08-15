@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import {
   useGetConversationsQuery,
-  useReadMessageMutation,
+  useReadMessageMutation
 } from "../../service/message.service";
 import { Spinner } from "flowbite-react";
 import chat from "../../assets/images/chat.gif";

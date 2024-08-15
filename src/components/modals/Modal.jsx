@@ -14,7 +14,7 @@ function Modals({ title, openModal, modalSize, onClose, btnText, children }) {
         borderRadius: "5.489px",
         background: "#FFF",
         padding: "0",
-        zIndex: "100",
+        zIndex: "100"
       }}
     >
       <div className="flex justify-between mr-6 py-4">
@@ -25,7 +25,7 @@ function Modals({ title, openModal, modalSize, onClose, btnText, children }) {
       </div>
 
       <Modal.Body>
-        <div className="pb-5 p-2">{children}</div>
+        <div className="pb-5">{children}</div>
 
         {btnText && ( // Check if btnText is provided
           <div className="flex justify-center pb-10 p-3">
@@ -44,7 +44,7 @@ Modals.propTypes = {
   modalSize: PropTypes.string.isRequired,
   btnText: PropTypes.string,
   onClose: PropTypes.func.isRequired,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node.isRequired
 };
 
 export default Modals;
