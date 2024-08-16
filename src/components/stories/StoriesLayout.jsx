@@ -1,4 +1,5 @@
-// import React from 'react'
+import PropTypes from "prop-types";
+
 
 const StoriesLayout = ({children}) => {
   return (
@@ -8,6 +9,10 @@ const StoriesLayout = ({children}) => {
      {/* </main> */}
     </div>
   )
+}
+
+StoriesLayout.propTypes ={
+  children: PropTypes.node.isRequired,
 }
 
 

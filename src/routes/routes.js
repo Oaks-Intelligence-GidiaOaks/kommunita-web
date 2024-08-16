@@ -32,7 +32,7 @@ export const SURVEY = "/survey";
 
 export const STORIES = "/stories";
 export const CREATE = "create";
-// export const VIEWSTORY = "view";
+export const MYSTORY = "mystories";
 // export const STORIES = "/stories";
 
 

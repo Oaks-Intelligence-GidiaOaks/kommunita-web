@@ -57,6 +57,8 @@ function Main() {
     };
   }, [user, BASE_URL]);
 
+  console.log(posts)
+
   return (
     <div className=" pt-4 main-wrapper w-full pb-10">
       {features.includes("Story") && <StoryList />}
@@ -78,7 +80,7 @@ function Main() {
           </Link>
         </div>
       ) : (
-        data?.data.map((post) => {
+        data?.data?.map((post) => {
           if (post.type === "post") {
             return <NewPost2 key={post?._id} post={post} />;
           } else if (post.action_type === "Repost") {
