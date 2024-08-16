@@ -36,8 +36,8 @@ const MobileNavbar = () => {
     (state) => state?.user?.user?.organization_features
   );
   return (
-    <nav className="w-full mx-auto flex items-center justify-center py-auto">
-      <div className=" flex items-center w-full min-w-[260px] max-w-[480px] justify-between space-y-1">
+    <nav className="w-full mx-auto flex items-center py-auto">
+      <div className=" flex items-center space-y-1 space-x-10">
         <NavItem to="/" icon={RiHome5Line} label="My Feed" exact={true} />
         <NavItem
           to="/community"

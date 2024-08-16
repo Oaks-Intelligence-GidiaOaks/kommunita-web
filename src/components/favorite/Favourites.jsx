@@ -26,6 +26,7 @@ import Diary from "../diary/Diary";
 function Favourites() {
   const { data, isLoading, refetch } = useGetFavoritesQuery();
 
+
   const posts = data?.data || [];
   console.log(data?.data.action_type);
 
@@ -53,32 +54,28 @@ function Favourites() {
         ) : filterData.length === 0 ? (
           <div className="flex items-center flex-col mt-10 justify-center h-auto">
             <img src={search} alt="Search icon" />
-            <h2 className="font-bold text-4xl mt-5 mb-5 text-center">
-              NO BOOKMARKS YET
-            </h2>
+            <h2 className="font-bold text-4xl mt-5 mb-5">NO BOOKMARKS YET</h2>
             {/* <p>Follow other users to begin to see posts</p> */}
             <Link to="/explore">
-              <p className="text-primary-bright-green mt-2 font-semibold text-center">
+              <p className="text-primary-bright-green mt-2 font-semibold">
                 Click here to explore post and diaries
               </p>
             </Link>
           </div>
         ) : (
-          data?.data.map((post) => {
-            if (post.type === "post") {
-              return <NewPost2 key={post?._id} post={post} />;
-            } else if (post.action_type === "Repost") {
-              return <Repost2 key={post?._id} post={post} />;
-            } else if (post.type === "poll") {
-              return (
-                <NewPollssss key={post?._id} poll={post} onRefresh={refetch} />
-              );
-            } else if (post.type === "diary") {
-              return <Diary key={post?._id} post={post} />;
-            } else {
-              return null;
-            }
-          })
+            data?.data.map((post) => {
+                if (post.type === "post") {
+                  return <NewPost2 key={post?._id} post={post} />;
+                } else if (post.action_type === "Repost") {
+                  return <Repost2 key={post?._id} post={post} />
+                } else if(post.type === 'poll') {
+                  return <NewPollssss key={post?._id} poll={post} onRefresh={refetch} />;
+                }else if(post.type === 'diary') {
+                  return <Diary key={post?._id} post={post} />;
+                }else{
+                  return null;
+                }
+              })
         )}
       </div>
     </div>

@@ -6,6 +6,7 @@ import MobileNavbar from "../navbar/MobileNavbar";
 // import "../../index.css";
 
 const ExploreLayout = ({ children }) => {
+
   return (
     <div className="flex  flex-col w-full p bg-[#F7F7F7] ">
       <Nav />
@@ -21,9 +22,10 @@ const ExploreLayout = ({ children }) => {
           style={{ height: "90vh" }}
         >
           {children}
+    
         </main>
       </div>
-      <div className="sm:flex md:hidden border py-auto w-full z-40 fixed bottom-0 h-16 sm:h-20">
+      <div className="sm:flex md:hidden border py-auto w-full z-40 fixed bottom-0 h-20 bg-white">
         <MobileNavbar />
       </div>
     </div>
