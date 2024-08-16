@@ -10,10 +10,10 @@ import "./style.css";
 
 const SurveyDisplay = ({ data, closeModal }) => {
   const { data: surveyData, refetch } = useGetSurveyFeedsQuery();
-  console.log(surveyData);
+  console.log(surveyData, "survey");
 
   const [answers, setAnswers] = useState({});
-  const { questions } = data;
+  const { questions } = data || [];
 
   const [currentPage, setCurrentPage] = useState(0);
   const questionsPerPage = 2;
@@ -65,13 +65,13 @@ const SurveyDisplay = ({ data, closeModal }) => {
     }
   }, [isSuccess, error, closeModal, refetch]);
 
-  const paginatedQuestions = questions.slice(
+  const paginatedQuestions = questions?.slice(
     currentPage * questionsPerPage,
     currentPage * questionsPerPage + questionsPerPage
   );
 
   const handleNext = () => {
-    if (currentPage < Math.ceil(questions.length / questionsPerPage) - 1) {
+    if (currentPage < Math.ceil(questions?.length / questionsPerPage) - 1) {
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
@@ -253,15 +253,19 @@ const SurveyDisplay = ({ data, closeModal }) => {
     }
   };
 
+  // if (!data) {
+  //   return <p>no data</p>;
+  // }
+
   return (
     <div className="flex items-center justify-center rounded-lg mb-5 z-50">
       <div className="bg-white rounded-lg w-full p-10">
         <h2 className="pb-10 survey-question-header">Survey Questions</h2>
-        {paginatedQuestions.map((question, index) => (
+        {paginatedQuestions?.map((question, index) => (
           <div key={question._id} className="mb-8 font-Inter">
             <h3 className="font-semibold text-md mb-2 survey-question-text">
               {currentPage * questionsPerPage + index + 1}.{" "}
-              {question.question_text}
+              {question?.question_text}
             </h3>
             {renderQuestion(question, handleAnswer, index)}
           </div>
@@ -275,7 +279,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
               Previous
             </button>
           )}
-          {currentPage < Math.ceil(questions.length / questionsPerPage) - 1 ? (
+          {currentPage < Math.ceil(questions?.length / questionsPerPage) - 1 ? (
             <button
               onClick={handleNext}
               className="bg-[#3D7100] hover:bg-[#2e5900] rounded-md p-3 text-white text-sm transition-all ml-auto"
@@ -287,7 +291,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
               onClick={handleSubmit}
               className={`bg-[#3D7100] hover:bg-[#2e5900] rounded-md p-3 w-auto text-white text-sm transition-all ml-auto`}
               disabled={
-                isLoading || Object.keys(answers).length < questions.length
+                isLoading || Object.keys(answers).length < questions?.length
               }
             >
               {isLoading ? (

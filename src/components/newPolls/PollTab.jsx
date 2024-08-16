@@ -16,10 +16,7 @@ const PollTab = () => {
     <div className=" mt-8 px-5">
       <h2 className="font-semibold text-2xl mb-10">Polls</h2>
       <div className="flex flex-col mt-3 items-center">
-        <ul
-          className="flex items-center gap-10 w-full"
-          role="tablist"
-        >
+        <ul className="flex items-center gap-10 w-full" role="tablist">
           <li
             className={`pb-1  ${
               selected?.pathname === "/polls"
@@ -38,10 +35,10 @@ const PollTab = () => {
               } `}
               to="/polls"
             >
-             Active Polls
+              Active Polls
             </Link>
           </li>
-          <li
+          {/* <li
             className={`pb-1  ${
               selected?.pathname?.includes("poll_history")
                 ? "border-[#3D7100] text-[#3D7100] border-b-4 px-3 font-semibold"
@@ -61,10 +58,10 @@ const PollTab = () => {
             >
               Poll History
             </Link>
-          </li>
+          </li> */}
         </ul>
       </div>
-        <hr className="divider" />
+      <hr className="divider" />
     </div>
   );
 };
