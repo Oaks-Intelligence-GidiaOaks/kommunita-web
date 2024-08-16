@@ -7,7 +7,7 @@ const StoryList = () => {
   console.log(data);
   return (
     <div className="flex w-full space-x-4 p-4 overflow-x-auto custom-scrollbar">
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center cursor-pointer">
         <div className="w-24 h-24 rounded-full p-[2px]">
           <div
             className="w-full h-full text-3xl flex flex-col items-center justify-center rounded-full bg-white p-1"
@@ -20,7 +20,7 @@ const StoryList = () => {
       </div>
       {data?.data?.map((story) => (
         <div key={story?._id} 
-        className="flex flex-col items-center" 
+        className="flex flex-col items-center cursor-pointer" 
         // onClick={() =>{navigate("/stories/create")}}
 
         >

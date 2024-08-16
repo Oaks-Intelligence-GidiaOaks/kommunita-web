@@ -1,8 +1,8 @@
 import { FaRegImage, FaTimes } from "react-icons/fa";
 import Modals from "../../components/modals/Modal";
-import React, { useEffect, useRef, useState } from "react";
+import {  useRef, useState } from "react";
 import UploadStories from "./UploadStories";
-import { useAddStoriesMutation, useGetStoriesQuery } from "../../service/stories.service";
+import { useGetStoriesFeedQuery, useGetStoriesQuery } from "../../service/stories.service";
 import { showAlert } from "../../static/alert";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -14,12 +14,13 @@ const AddStories = () => {
   const [selectedPostMedia, setSelectedPostMedia] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [addStories, { data:story, isSuccess, isError, error }] = useAddStoriesMutation();
+  // const [addStories, { data:story, isSuccess, isError, error }] = useAddStoriesMutation();
   const { data: stories } = useGetStoriesQuery();
   const user = useSelector((state) => state.user.user);
   const [caption, setCaption] = useState("");
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
+  const { refetch } = useGetStoriesFeedQuery()
 
 
   const handleSchedulePostMediaChange = async (event) => {
@@ -28,11 +29,11 @@ const AddStories = () => {
     setUploadPreview((prev) => !prev);
   };
 
-  const handleRemove = (item) => {
-    if (selectedPostMedia.includes(item)) {
-      setSelectedPostMedia(selectedPostMedia.filter((media) => media !== item));
-    }
-  };
+  // const handleRemove = (item) => {
+  //   if (selectedPostMedia.includes(item)) {
+  //     setSelectedPostMedia(selectedPostMedia.filter((media) => media !== item));
+  //   }
+  // };
 
   // TODO: STORY LIST, DISPLAY STORIES ETC
 
@@ -84,6 +85,7 @@ const AddStories = () => {
         setUploadPreview((prev) =>!prev);
         setSubmitting((prev) =>!prev);
         navigate("/");
+        refetch()
       }else{
         showAlert("Error", `Failed to add story`, "error");
         setSubmitting((prev) =>!prev);
@@ -101,7 +103,7 @@ const AddStories = () => {
   const storiesUserIds = stories?.data?.map((user) => user?.user_id?._id);
   console.log(storiesUserIds)
   const checkIfUserHasStory = storiesUserIds === user._id;
-  console.log()
+  console.log(checkIfUserHasStory)
 
   return (
     <div className="bg-whit flex justify-between gap-5 item-center">
