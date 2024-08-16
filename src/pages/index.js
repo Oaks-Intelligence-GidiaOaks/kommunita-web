@@ -33,4 +33,5 @@ export { default as Komunity_Diaries } from "./explore2/Explore_Dairies";
 export { default as StoriesHome } from "./stories/StoriesHome";
 export { default as AddStories } from "./stories/AddStories";
 export { default as ViewStories } from "./stories/ViewStories";
+export { default as MyStories } from "./stories/MyStories";
 

@@ -1,14 +1,33 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useGetCategoriesQuery } from "../../service/categories.service";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { resetParams, setFilterParams } from "../../redux/slices/filter.slice";
 
 function Category() {
   const { data: Category } = useGetCategoriesQuery();
   const category = Category?.data;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const params = new URLSearchParams();
+  const [activeCategory, setActiveCategory] = useState('all');
+
 
   const location = useLocation()
   if(location.pathname.includes('/explore') || location.pathname.includes('/profile')){
     return null
   }
+
+  console.log(category)
+
+
+  const handleCategoryClick = (category) => {
+    const newParams = new URLSearchParams(params.toString());
+    newParams.append('category', category);
+    dispatch(setFilterParams(newParams.toString()));
+   navigate('/explore')
+console.log(category)
+  };
 
   return (
     <>
@@ -29,6 +48,7 @@ function Category() {
                 <div
                   key={id}
                   className="category-card relative border shadow-lg rounded-sm"
+                  onClick={()=>handleCategoryClick(cat?.name)}
                 >
                   <img
                     src={cat?.photo_url}

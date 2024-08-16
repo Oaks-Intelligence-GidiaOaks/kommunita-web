@@ -32,6 +32,7 @@ import {
   StoriesHome,
   AddStories,
   ViewStories,
+  MyStories,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -100,6 +101,10 @@ const Config = () => {
           <Route
             path={routes.CREATE}
             element={<ProtectedRoute component={AddStories} />}
+          />
+          <Route
+            path={routes.MYSTORY}
+            element={<ProtectedRoute component={MyStories} />}
           />
         </Route>
 

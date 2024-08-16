@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { useEffect, useRef, useState } from "react";
 import { FaHeart, FaCommentAlt, FaShare, FaRetweet } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
