@@ -91,9 +91,20 @@ const LoginPage = () => {
         </div>
       </div> */}
 
-<div className="w-full flex-1">
+      <div className="w-full flex-1">
         <div className="relative">
-          <div className="h-screen w-full flex justify-center items-center bg-[#001900] bg-no-repeat overflow-hidden relative">
+          <div className="lg:hidden bg-[#001900] h-20">
+            <img
+              className="lg:hidden absolute top-0 left-10 transform text-white mt-5"
+              style={{
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+              src={logo}
+            />
+          </div>
+          <div className="h-0 lg:h-screen w-full flex justify-center items-center bg-[#001900] bg-no-repeat overflow-hidden relative">
             <Link to={INDEX} className="flex">
               {/* <motion.img
                 initial={{ opacity: 0 }}
@@ -134,7 +145,7 @@ const LoginPage = () => {
             <img
               src={user_phone}
               alt="Background"
-              className="absolute z-40 bg-cover bottom-0 left-1/2 transform -translate-x-1/2 w-[20rem]"
+              className="hidden lg:block absolute z-40 bg-cover bottom-0 left-1/2 transform -translate-x-1/2 w-[20rem]"
             />
           </div>
 
@@ -155,20 +166,20 @@ const LoginPage = () => {
               transition={{ duration: 3, ease: "easeOut" }}
               src={world_2}
               alt=""
-              className="mt-24 w- mx-auto   "
+              className="hidden lg:block mt-24 w- mx-auto   "
             />
           </div>
         </div>
       </div>
 
       <div className="w-full h-screen flex-1 flex flex-col justify-center items-center rounded-tl-[10%]  lg:rounded-tl-[20%]  mx-auto pt-20 px-8 lg:p-16 bg-white">
-      {/* <div className="w-full h-screen rounded-tl-[10%]  lg:rounded-tl-[20%]  mx-auto pt-20 px-8 lg:p-16 bg-white"> */}
+        {/* <div className="w-full h-screen rounded-tl-[10%]  lg:rounded-tl-[20%]  mx-auto pt-20 px-8 lg:p-16 bg-white"> */}
         {/* <div className="flex justify-end">
           <img src={logo} alt="Logo" />
         </div> */}
         <div className="sm:mt-20 lg:mt-0 2xl:mt-40 mx-auto w-[80%]">
           <div className="">
-          <h1 className="font-Inter mb-7 lg:py-0 mx-auto flex justify-center items-center  text-primary-dark-green font-bold text-3xl">
+            <h1 className="font-Inter mb-7 lg:py-0 mx-auto flex justify-center items-center  text-primary-dark-green font-bold text-3xl">
               Hello, Welcome Back
             </h1>
             <Form
@@ -289,9 +300,9 @@ const LoginPage = () => {
 
           <div className="flex items-center justify-center mt-4">
             <button className="font-Inter font-medium text-base text-primary-gray ">
-            Don’t have an account?  
+              Don’t have an account?
               <Link to={REGISTER} className=" text-[#3D7100]">
-              Register Here 
+                Register Here
               </Link>
             </button>
           </div>

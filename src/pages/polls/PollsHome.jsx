@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import PollDisplay from "../../components/polls/PollDisplay";
 import {
   useGetActivPollQuery,
-  useGetPollsQuery
+  useGetPollsQuery,
 } from "../../service/polls.service";
 import getTimeAgoString from "../../utils/getTimeAgoString";
 import { useGetFeedsQuery } from "../../service/feeds.service";
@@ -17,7 +17,7 @@ const PollsHome = () => {
   const {
     data: polls,
     isLoading: isLoadingPolls,
-    isFetching
+    isFetching,
   } = useGetActivPollQuery();
   const { refetch } = useGetFeedsQuery();
   console.log(polls?.data, "polls data");
@@ -34,7 +34,9 @@ const PollsHome = () => {
           ) : !polls?.data?.length || polls?.data == undefined ? (
             <div className="flex items-center flex-col mt-10 justify-center h-auto">
               <img src={search} alt="Search icon" />
-              <h2 className="font-bold text-4xl mt-5 mb-5">NO ACTIVE POLL</h2>
+              <h2 className="font-bold text-4xl mt-5 mb-5 text-center">
+                NO ACTIVE POLL
+              </h2>
             </div>
           ) : (
             polls?.data.map((poll) => (

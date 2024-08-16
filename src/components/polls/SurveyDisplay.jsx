@@ -20,13 +20,13 @@ const SurveyDisplay = ({ data, closeModal }) => {
 
   const [submitSurvey, { error, isSuccess, isLoading }] =
     useSubmitSurveyMutation({
-      provideTag: ["Survey"]
+      provideTag: ["Survey"],
     });
 
   const handleAnswer = (answer, questionId) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [questionId]: answer
+      [questionId]: answer,
     }));
   };
 
@@ -34,7 +34,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
     const answersArray = Object.entries(answers).map(
       ([questionId, answer]) => ({
         question_id: questionId,
-        ...answer
+        ...answer,
       })
     );
 
@@ -45,7 +45,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
 
     const response = {
       survey_id: data._id,
-      answers: answersArray
+      answers: answersArray,
     };
 
     console.log(response);
@@ -103,7 +103,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
                     handleAnswer(
                       {
                         answer_type: "single_choice",
-                        selected_options: [option]
+                        selected_options: [option],
                       },
                       question._id
                     )
@@ -127,7 +127,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
                   handleAnswer(
                     {
                       answer_type: "true_or_false",
-                      true_or_false: true
+                      true_or_false: true,
                     },
                     question._id
                   )
@@ -145,7 +145,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
                   handleAnswer(
                     {
                       answer_type: "true_or_false",
-                      true_or_false: false
+                      true_or_false: false,
                     },
                     question._id
                   )
@@ -167,7 +167,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
                 handleAnswer(
                   {
                     answer_type: "text",
-                    text: e.target.value
+                    text: e.target.value,
                   },
                   question._id
                 )
@@ -186,7 +186,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
                 handleAnswer(
                   {
                     answer_type: "time",
-                    time: e.target.value
+                    time: e.target.value,
                   },
                   question._id
                 )
@@ -205,7 +205,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
                 handleAnswer(
                   {
                     answer_type: "date",
-                    date: e.target.value
+                    date: e.target.value,
                   },
                   question._id
                 )
@@ -235,7 +235,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
                     handleAnswer(
                       {
                         answer_type: "multiple_choice",
-                        selected_options: updatedOptions
+                        selected_options: updatedOptions,
                       },
                       question._id
                     );
@@ -260,7 +260,9 @@ const SurveyDisplay = ({ data, closeModal }) => {
   return (
     <div className="flex items-center justify-center rounded-lg mb-5 z-50">
       <div className="bg-white rounded-lg w-full p-10">
-        <h2 className="pb-10 survey-question-header">Survey Questions</h2>
+        <h2 className="pb-10 survey-question-header text-2xl">
+          Survey Questions
+        </h2>
         {paginatedQuestions?.map((question, index) => (
           <div key={question._id} className="mb-8 font-Inter">
             <h3 className="font-semibold text-md mb-2 survey-question-text">
@@ -309,7 +311,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
 
 SurveyDisplay.propTypes = {
   data: PropTypes.object.isRequired,
-  closeModal: PropTypes.func.isRequired
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default SurveyDisplay;
