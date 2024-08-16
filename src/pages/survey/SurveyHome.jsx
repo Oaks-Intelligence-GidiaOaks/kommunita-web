@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import MainLayout from "../../components/main/MainLayout";
 import Story from "../../components/main/Story";
 import { Link } from "react-router-dom";
-import SurveyDisplay from "../../components/polls/SurveyDisplay";
+import ActiveSurvey from "../../components/polls/ActiveSurvey";
 import { useSelector } from "react-redux";
 import { useGetSurveyFeedsQuery } from "../../service/survey.service";
 import { Spinner } from "flowbite-react";
@@ -71,7 +71,7 @@ const SurveyHome = () => {
           ) : filteredSurveyFeeds && filteredSurveyFeeds?.length > 0 ? (
             filteredSurveyFeeds?.map((row, idx) => (
               <>
-                <SurveyDisplay key={idx} data={row} />
+                <ActiveSurvey key={idx} data={row} />
               </>
             ))
           ) : (

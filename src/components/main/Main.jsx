@@ -1,64 +1,40 @@
 import "../main/style.css";
-// import Story from "./Story";
 import MakePost from "./MakePost";
-// import Posts from "./Posts";
 import search from "../../assets/images/Home/Search.png";
-// import avatar4 from "../../assets/images/sidebar/avatar4.svg";
 import { useGetFeedsQuery } from "../../service/feeds.service";
-// import getTimeAgoString from "./../../utils/getTimeAgoString";
-// import PollDisplay from "../polls/PollDisplay";
 import { Link } from "react-router-dom";
 import { Spinner } from "flowbite-react";
 import StoryList from "../stories/StoryList";
 import NewPost2 from "../posts/NewPost2";
-// import RepostNew from "../posts/RepostNew";
-// import PollList from "../newPolls/PollList";
 import NewPollssss from "../newPolls/NewPollssss";
 import Repost2 from "../posts/Repost2";
 import Diary from "../diary/Diary";
 import { useSelector } from "react-redux";
-import { io } from "socket.io-client";
-import { useRef, useEffect } from "react";
+import { useState } from "react";
 
 function Main() {
-  const { data, isLoading, refetch } = useGetFeedsQuery();
-  const posts = data?.data || [];
-  // console.log(posts, "posts");
-  // console.log(posts?.map(item => item.action_type && item), "posts");
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const {
+    data: postdata,
+    isLoading,
+    refetch,
+    isFetching
+  } = useGetFeedsQuery({
+    page,
+    page_size: pageSize
+  });
+
   const features = useSelector(
     (state) => state?.user?.user?.organization_features
   );
 
-  const user = useSelector((state) => state.user?.user);
-  const socket = useRef(null);
-  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
-
-  useEffect(() => {
-    const socketUrl = `${BASE_URL}?userId=${user._id}`;
-    socket.current = io(socketUrl);
-
-    socket.current.on("connect", () => {
-      console.log("Connected to the socket server");
-    });
-
-    socket.current.on("error", (error) => {
-      console.error("Socket error:", error);
-    });
-
-    socket.current.on("fetch_feed", (newMessageData) => {
-      // Handle the fetched message data here
-      console.log("New feed received:", newMessageData);
-    });
-
-    return () => {
-      if (socket.current) {
-        socket.current.disconnect();
-      }
-    };
-  }, [user, BASE_URL]);
+  const posts = postdata?.data?.data;
+  // console.log(posts, "posts");
 
   return (
-    <div className=" pt-4 main-wrapper w-full pb-10">
+    <div className="pt-4 main-wrapper w-full pb-10">
       {features.includes("Story") && <StoryList />}
       {features.includes("Post") && <MakePost />}
 
@@ -66,7 +42,7 @@ function Main() {
         <div className="flex justify-center pt-10">
           <Spinner />
         </div>
-      ) : posts.length === 0 ? (
+      ) : posts?.length === 0 ? (
         <div className="flex items-center flex-col mt-10 justify-center h-auto">
           <img src={search} alt="Search icon" />
           <h2 className="font-bold text-4xl mt-5 mb-5">NO POST</h2>
@@ -78,7 +54,7 @@ function Main() {
           </Link>
         </div>
       ) : (
-        data?.data.map((post) => {
+        posts?.map((post) => {
           if (post.type === "post") {
             return <NewPost2 key={post?._id} post={post} />;
           } else if (post.action_type === "Repost") {

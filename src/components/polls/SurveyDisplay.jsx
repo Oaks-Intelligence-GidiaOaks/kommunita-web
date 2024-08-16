@@ -5,7 +5,6 @@ import { BeatLoader } from "react-spinners";
 import rtkMutation from "../../utils/rtkMutation";
 import { showAlert } from "../../static/alert";
 import { useGetSurveyFeedsQuery } from "../../service/survey.service";
-import { Spinner } from "flowbite-react";
 import "./style.css";
 
 const SurveyDisplay = ({ data, closeModal }) => {
@@ -308,8 +307,7 @@ const SurveyDisplay = ({ data, closeModal }) => {
 };
 
 SurveyDisplay.propTypes = {
-  data: PropTypes.object.isRequired,
-  closeModal: PropTypes.func.isRequired
+  data: PropTypes.object.isRequired
 };
 
 export default SurveyDisplay;

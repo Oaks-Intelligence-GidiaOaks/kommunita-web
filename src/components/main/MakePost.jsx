@@ -32,8 +32,9 @@ import { CgPoll } from "react-icons/cg";
 import { media, profile_placeholder } from "../../assets/images";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import CreateDiary from "../diary/CreateDiary";
+import { io } from "socket.io-client";
 
-function MakePost() {
+function MakePost({ onPostContent }) {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
   const [openScheduleModal, setOpenScheduleModal] = useState(false);
   const [selectedPostMedia, setSelectedPostMedia] = useState([]);
@@ -133,6 +134,34 @@ function MakePost() {
 
   const token = useSelector((state) => state.user?.token);
 
+  const user = useSelector((state) => state.user?.user);
+  const socket = useRef(null);
+  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
+
+  useEffect(() => {
+    const socketUrl = `${BASE_URL}?userId=${user?._id}`;
+    socket.current = io(socketUrl);
+
+    socket.current.on("connect", () => {
+      console.log("Connected to the socket server");
+    });
+
+    socket.current.on("fetch_feed", (newMessageData) => {
+      // Handle the fetched message data here
+      console.log("New feed received:", newMessageData);
+    });
+
+    socket.current.on("error", (error) => {
+      console.error("Socket error:", error);
+    });
+
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+  }, [user?._id, BASE_URL]);
+
   const handleSubmit = async () => {
     setSubmitting(true);
 
@@ -156,11 +185,10 @@ function MakePost() {
       const response = await axios.post(`${apiUrl}/user/post`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
+          ...(token && { Authorization: `Bearer ${token}` })
+        }
       });
 
-      console.log("Post submitted successfully:", response.data);
       setSelectedPostMedia([]);
       setContent("");
       setCategory("");
@@ -168,6 +196,11 @@ function MakePost() {
       setScheduleTime("");
       showAlert("Great!", "Post created successfully", "success");
       refetch();
+
+      const msg = {
+        organizationId: user?.current_organization || user?.organization_id[0]
+      };
+      socket.current.emit("fetch_feed", msg);
     } catch (error) {
       console.error("Error submitting post:", error);
       showAlert(
@@ -201,8 +234,8 @@ function MakePost() {
       const response = await axios.post(`${apiUrl}/user/diary`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          ...(token && { Authorization: `Bearer ${token}` }),
-        },
+          ...(token && { Authorization: `Bearer ${token}` })
+        }
       });
 
       console.log("Diary created successfully:", response.data);

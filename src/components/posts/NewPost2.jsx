@@ -8,7 +8,7 @@ import {
   left,
   profile_placeholder,
   right,
-  verified,
+  verified
 } from "../../assets/images";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
@@ -18,7 +18,7 @@ import {
   useFavoritePostsMutation,
   useLovePostMutation,
   usePostCommentMutation,
-  useRepostPostMutation,
+  useRepostPostMutation
 } from "../../service/post.service";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import { showAlert } from "../../static/alert";
@@ -26,7 +26,7 @@ import rtkMutation from "../../utils/rtkMutation";
 import MainComment from "../profile/comments/MainComment";
 import {
   useDeleteFeedMutation,
-  useGetFeedsQuery,
+  useGetFeedsQuery
 } from "../../service/feeds.service";
 import { RxDotsHorizontal } from "react-icons/rx";
 import Modals from "../modals/Modal";
@@ -44,8 +44,8 @@ const NewPost2 = ({ post }) => {
     {
       isLoading: isLoadingDeleteFeeds,
       isSuccess: isSuccessDeleteFeed,
-      isError: isErrorFeedError,
-    },
+      isError: isErrorFeedError
+    }
   ] = useDeleteFeedMutation();
   const [selectedFeedId, setSelectedFeedId] = useState(null);
   const [deleteDiary] = useDeleteDiaryMutation();
