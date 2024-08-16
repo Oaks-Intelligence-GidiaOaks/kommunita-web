@@ -1,4 +1,4 @@
-import { POST } from "./constants";
+import { ADMIN_POST, POST } from "./constants";
 import apiSlice from "./api/apiSlice";
 
 export const organizationApiSlice = apiSlice.injectEndpoints({
@@ -7,6 +7,13 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
     getPost: builder.query({
       query: () => ({
         url: POST,
+        method: "GET",
+      }),
+      providesTags: ["Post"],
+    }),
+    getAdminPost: builder.query({
+      query: () => ({
+        url: ADMIN_POST,
         method: "GET",
       }),
       providesTags: ["Post"],
@@ -125,4 +132,5 @@ export const {
   useLoveRepostMutation,
   useFavoriteRepostsMutation,
   usePostCommentOnRepostMutation,
+  useGetAdminPostQuery,
 } = organizationApiSlice;

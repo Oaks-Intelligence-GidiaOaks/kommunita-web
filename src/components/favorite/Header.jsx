@@ -12,7 +12,7 @@ const Header = ({ setFilter }) => {
   };
   return (
     <div className="w-full relative flex items-center justify-between text-[#51546C] z-50">
-      <p className="font-semibold text-lg text-[18px]">Bookmarks</p>
+      <p className="font-semibold text-lg text-[18px]">Favourites</p>
       <div className="flex items-center gap-2">
         {category && (
           <svg

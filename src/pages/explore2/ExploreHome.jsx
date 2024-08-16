@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import ExploreLayout from "../../components/main/ExploreLayout";
 import ExploreHeader from "../../components/community/ExploreHeader";
@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 import { AdsSection } from "../../components/ads";
 
 const ExploreHome = () => {
-  const { data, isLoading, refetch } = useGetFeedsQuery();
+  const { data, refetch } = useGetFeedsQuery();
   console.log(data?.data);
 
   useEffect(() => {

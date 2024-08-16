@@ -247,38 +247,84 @@ const NewPost2 = ({ post }) => {
   const [isRepostOpen, setIsRepostOpen] = useState(false);
   const repostRef = useRef(null);
 
+  // console.log(post)
+
   return (
     <div className="mx-auto bg-white border rounded-lg shadow-md p-4 my-4">
       <div className="flex items-center mb-4 relative">
-        <Link to={`/profile/${post?.user_id?._id}`}>
-          <div className={`rounded-full border-4 w-[3rem] h-[3rem]`}>
-            <img
-              src={post?.user_id?.photo_url || profile_placeholder}
-              alt="profile"
-              className="w-[3rem] h-[3rem] rounded-full object-cover"
-            />
-          </div>
-        </Link>
+        {
+          post?.is_admin ? (
+            <Link to={`/profile/${post?.admin_id?._id}`}>
+            <div className={`rounded-full border-4 w-[3rem] h-[3rem]`}>
+              <img
+                src={post?.admin_id?.photo_url || profile_placeholder}
+                alt="profile"
+                className="w-[3rem] h-[3rem] rounded-full object-cover"
+              />
+            </div>
+          </Link>
+          ) : (
+            <Link to={`/profile/${post?.user_id?._id}`}>
+            <div className={`rounded-full border-4 w-[3rem] h-[3rem]`}>
+              <img
+                src={post?.user_id?.photo_url || profile_placeholder}
+                alt="profile"
+                className="w-[3rem] h-[3rem] rounded-full object-cover"
+              />
+            </div>
+          </Link>
+          )
+        }
+       
         <div className=" flex justify-between w-full items-center">
           <div className="">
-            <div className="flex gap-2 items-center">
-              <Link to={`/profile/${post?.user_id?._id}`}>
-                <h4 className="font-semibold post-name">
-                  {post?.user_id?.display_name}
-                </h4>
-                {verifiedUser && (
-                  <span>
-                    <img src={verified} alt="" className="pb-1" />
-                  </span>
-                )}
-              </Link>
-            </div>
-            <p className="text-gray-500">
+            {
+              post?.is_admin ? (
+                <div className="flex gap-2 items-center">
+                <Link to={`/profile/${post?.admin_id?._id}`}>
+                  <h4 className="font-semibold post-name">
+                    {post?.admin_id?.display_name}
+                  </h4>
+                  {verifiedUser && (
+                    <span>
+                      <img src={verified} alt="" className="pb-1" />
+                    </span>
+                  )}
+                </Link>
+              </div>
+              ) : (
+                <div className="flex gap-2 items-center">
+                <Link to={`/profile/${post?.user_id?._id}`}>
+                  <h4 className="font-semibold post-name">
+                    {post?.user_id?.display_name}
+                  </h4>
+                  {verifiedUser && (
+                    <span>
+                      <img src={verified} alt="" className="pb-1" />
+                    </span>
+                  )}
+                </Link>
+              </div>
+              )
+            }
+          {
+            post?.is_admin ? (
+              <p className="text-gray-500">
+              @{post?.admin_id?.username} ·{" "}
+              <span className="post-time ml-2 font-bold">
+                {getTimeAgoString(post?.createdAt)}
+              </span>
+            </p>
+            ) : (
+              <p className="text-gray-500">
               @{post?.user_id?.username} ·{" "}
               <span className="post-time ml-2 font-bold">
                 {getTimeAgoString(post?.createdAt)}
               </span>
             </p>
+            )
+          }
+           
           </div>
           {post?.user_id?._id === login_user_id ? (
             <RxDotsHorizontal
@@ -454,7 +500,7 @@ const NewPost2 = ({ post }) => {
               <EditMyPost
                 content={post?.content}
                 medias={post?.media_urls}
-                avatar={post?.user_id.photo_url || profile_placeholder}
+                avatar={post?.user_id?.photo_url || profile_placeholder}
                 userId={post?.user_id}
                 // badgeColor={badgeColor}
                 onClose={() => setShowEditModal(false)}

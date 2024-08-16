@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState,  } from "react";
 import { showAlert } from "../../static/alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetUserProfiileQuery } from "../../service/user.service";
@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import { toggleComment } from "../../redux/slices/comment.slice";
 
+// eslint-disable-next-line no-unused-vars
 const Comment = ({ id, onComment, reply, placeholder }) => {
   const { data: profile } = useGetUserProfiileQuery();
   const { refetch } = useGetFeedsQuery();

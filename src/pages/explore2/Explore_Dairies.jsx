@@ -1,12 +1,14 @@
 import Diary from '../../components/diary/Diary';
 import { useGetExploreDiaryQuery } from '../../service/explore.service';
 import { Spinner } from 'flowbite-react';
-import React from 'react'
 import search from "../../assets/images/Home/Search.png";
+import { useSelector } from 'react-redux';
 
 
 const Explore_Dairies = () => {
-  const { data: diaries, isLoading: diariesLoading } =   useGetExploreDiaryQuery();
+  const filterParams = useSelector((state)=>state.filter)
+  const { data: diaries, isLoading: diariesLoading } =   useGetExploreDiaryQuery(filterParams);
+// console.log(filterParams)
 
 
   return (

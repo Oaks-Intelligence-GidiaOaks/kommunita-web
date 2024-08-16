@@ -8,7 +8,7 @@ import {
   ProfileLikes,
   ProfileMedia,
   FavoriteHome,
-  Explore,
+  // Explore,
   Diaries,
   Settings,
   Messages,
@@ -28,7 +28,10 @@ import {
   ExploreHome,
   KommunityHome,
   PollsContainer,
-  SingleDiaryPage
+  SingleDiaryPage,
+  StoriesHome,
+  AddStories,
+  ViewStories,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -86,6 +89,17 @@ const Config = () => {
           <Route
             path={routes.E_IMAGES}
             element={<ProtectedRoute component={Komunity_Images} />}
+          />
+        </Route>
+
+        <Route
+          path={routes.STORIES}
+          element={<ProtectedRoute component={StoriesHome} />}
+        >
+          <Route index element={<ProtectedRoute component={ViewStories} />} />
+          <Route
+            path={routes.CREATE}
+            element={<ProtectedRoute component={AddStories} />}
           />
         </Route>
 
