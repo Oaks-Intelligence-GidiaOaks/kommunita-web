@@ -7,7 +7,7 @@ import { showAlert } from "../../static/alert";
 import { useGetSurveyFeedsQuery } from "../../service/survey.service";
 import "./style.css";
 
-const SurveyDisplay = ({ data, closeModal }) => {
+const ActiveSurvey = ({ data }) => {
   const { data: surveyData, refetch } = useGetSurveyFeedsQuery();
   console.log(surveyData, "survey");
 
@@ -58,11 +58,10 @@ const SurveyDisplay = ({ data, closeModal }) => {
     if (isSuccess) {
       showAlert("", "Survey completed successfully!", "success");
       refetch();
-      closeModal();
     } else if (error) {
       showAlert("Oops", error.data.message || "An error occurred", "error");
     }
-  }, [isSuccess, error, closeModal, refetch]);
+  }, [isSuccess, error, refetch]);
 
   const paginatedQuestions = questions?.slice(
     currentPage * questionsPerPage,
@@ -306,8 +305,8 @@ const SurveyDisplay = ({ data, closeModal }) => {
   );
 };
 
-SurveyDisplay.propTypes = {
+ActiveSurvey.propTypes = {
   data: PropTypes.object.isRequired
 };
 
-export default SurveyDisplay;
+export default ActiveSurvey;
