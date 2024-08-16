@@ -19,7 +19,7 @@ import favoriteActive from "../../assets/images/sidebar/favoriteActive.svg";
 import { handleLogout } from "../../static/logout";
 import {
   // useGetAUserProfileQuery,
-  useGetUserProfiileQuery,
+  useGetUserProfiileQuery
 } from "../../service/user.service";
 import { backToOak } from "../../assets/images";
 import { MdOutlineLibraryBooks, MdOutlineSettings } from "react-icons/md";
@@ -40,7 +40,7 @@ function MenuItems() {
         activeIcon: homeActive,
         text: "Home",
         to: "/",
-        feature: "",
+        feature: ""
       },
       {
         id: 2,
@@ -48,7 +48,7 @@ function MenuItems() {
         activeIcon: notificationsActive,
         text: "Favourites",
         to: "/bookmarks",
-        feature: "",
+        feature: ""
       },
       {
         id: 3,
@@ -56,7 +56,7 @@ function MenuItems() {
         activeIcon: favoriteActive,
         text: "Polls",
         to: "/polls",
-        feature: "Poll",
+        feature: "Poll"
       },
       {
         id: 8,
@@ -64,7 +64,7 @@ function MenuItems() {
         activeIcon: profileActive,
         text: "Survey",
         to: "/survey",
-        feature: "Survey",
+        feature: "Survey"
       },
       {
         id: 6,
@@ -72,8 +72,8 @@ function MenuItems() {
         activeIcon: mailActive,
         text: "Messages",
         to: "/messages",
-        feature: "Direct Messaging",
-      },
+        feature: "Direct Messaging"
+      }
       // IF PROFILE IS LOGGED IN USER PROFILE
       //  ...(login_user_id === profile?.data._id &&
       //  location.pathname === "/profile"
@@ -112,7 +112,7 @@ function MenuItems() {
     (state) => state?.user?.user?.organization_features
   );
 
-  console.log(features);
+  // console.log(features);
 
   const filteredItems = links.filter((item) => {
     if (item.feature) {

@@ -4,7 +4,7 @@ import {
   REGISTER,
   ALL_ORGANIZATIONS,
   GET_CODE,
-  RESET_PASSWORD,
+  RESET_PASSWORD
 } from "./constants";
 import apiSlice from "./api/apiSlice";
 import { updateUser } from "../redux/slices/user.slice";
@@ -16,11 +16,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (userData) => ({
         url: LOGIN,
         body: userData,
-        method: "POST",
+        method: "POST"
       }),
       onQueryStarted: async (credentials, { dispatch, queryFulfilled }) => {
         try {
           const data = await queryFulfilled;
+          console.log(data);
           // const { accessToken, user } = data;
           const accessToken = data.data.data.accessToken;
           const user = data.data.data.user;
@@ -29,7 +30,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
           dispatch(
             updateUser({
               token: accessToken,
-              user,
+              user
             })
           );
         } catch (error) {
@@ -41,7 +42,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         // console.log(response, "rtk");
         return response;
       },
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User"]
     }),
 
     // Register users route
@@ -49,35 +50,35 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (userData) => ({
         url: REGISTER,
         body: userData,
-        method: "POST",
+        method: "POST"
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User"]
     }),
 
     // Get user route
     getUserProfiile: builder.query({
       query: () => ({
         url: GETUSER,
-        method: "GET",
+        method: "GET"
       }),
-      providesTags: ["User"],
+      providesTags: ["User"]
     }),
-    
+
     getAUserProfile: builder.query({
       query: (id) => ({
         url: `/user/profile/${id}`,
-        method: "GET",
+        method: "GET"
       }),
-      providesTags: ["User"],
+      providesTags: ["User"]
     }),
 
     // Get other user route
     getOtherUserProfile: builder.mutation({
       query: (id) => ({
         url: `user/profile/${id}`,
-        method: "GET",
+        method: "GET"
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User"]
     }),
 
     // // update user route
@@ -103,29 +104,29 @@ export const userApiSlice = apiSlice.injectEndpoints({
     getOrganization: builder.query({
       query: () => ({
         url: ALL_ORGANIZATIONS,
-        method: "GET",
+        method: "GET"
       }),
-      providesTags: ["Organization"],
+      providesTags: ["Organization"]
     }),
 
     getCode: builder.mutation({
       query: (data) => ({
         url: GET_CODE,
         method: "POST",
-        body: data,
+        body: data
       }),
-      providesTags: ["User"],
+      providesTags: ["User"]
     }),
 
     updatePassword: builder.mutation({
       query: (data) => ({
         url: RESET_PASSWORD,
         method: "POST",
-        body: data,
+        body: data
       }),
-      providesTags: ["User"],
-    }),
-  }),
+      providesTags: ["User"]
+    })
+  })
 });
 
 export const {

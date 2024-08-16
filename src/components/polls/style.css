@@ -1,0 +1,14 @@
+.survey-question-text {
+  font-family: Inter;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 19.36px;
+  color: #838383;
+}
+.survey-question-header {
+  font-family: Inter;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 14.16px;
+  color: #2d2b2b;
+}

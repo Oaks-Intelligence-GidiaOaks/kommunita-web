@@ -73,14 +73,12 @@ const Carousel = ({ surveys, left, right }) => {
         ))}
       </div>
 
-      <Modals openModal={openModal} modalSize="4xl" onClose={closeModal}>
-        <div className="border shadow-lg rounded-md">
-          {surveyData ? (
-            <SurveyDisplay data={surveyData} closeModal={closeModal} />
-          ) : (
-            ""
-          )}
-        </div>
+      <Modals openModal={openModal} modalSize="xl" onClose={closeModal}>
+        {surveyData ? (
+          <SurveyDisplay data={surveyData} closeModal={closeModal} />
+        ) : (
+          ""
+        )}
       </Modals>
     </>
   );
@@ -91,11 +89,11 @@ Carousel.propTypes = {
   surveys: PropTypes.arrayOf(
     PropTypes.shape({
       topic: PropTypes.string,
-      description: PropTypes.string,
+      description: PropTypes.string
     })
   ).isRequired,
   left: PropTypes.string.isRequired,
-  right: PropTypes.string.isRequired,
+  right: PropTypes.string.isRequired
 };
 
 export default Carousel;
