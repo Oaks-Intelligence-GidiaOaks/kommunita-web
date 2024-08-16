@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import MainLayout from "../../components/main/MainLayout";
 import Story from "../../components/main/Story";
 import { Link } from "react-router-dom";
@@ -70,14 +70,14 @@ const SurveyHome = () => {
             </div>
           ) : filteredSurveyFeeds && filteredSurveyFeeds?.length > 0 ? (
             filteredSurveyFeeds?.map((row, idx) => (
-              <>
+              <Fragment key={idx}>
                 <SurveyDisplay key={idx} data={row} />
-              </>
+              </Fragment>
             ))
           ) : (
             <div className="flex items-center flex-col mt-10 justify-center h-auto">
               <img src={search} alt="Search icon" />
-              <h2 className="font-bold text-4xl mt-5 mb-5">
+              <h2 className="font-bold text-4xl mt-5 mb-5 text-center">
                 No Active Surveys
               </h2>
             </div>

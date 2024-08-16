@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import {
   InputField,
   PasswordField,
-  DropDownMenu
+  DropDownMenu,
 } from "../../components/auth-form";
 import { Form, Field } from "react-final-form";
 // import logo from "../../assets/images/new-logo.svg";
@@ -124,7 +124,7 @@ const RegisterPage = () => {
   };
 
   const [registerUser, { error, isSuccess }] = useRegisterUserMutation({
-    provideTag: ["User"]
+    provideTag: ["User"],
   });
 
   const onSubmit = async (values) => {
@@ -133,7 +133,7 @@ const RegisterPage = () => {
 
       const formData = {
         ...values,
-        organization_id: organizationId
+        organization_id: organizationId,
       };
 
       console.log(formData);
@@ -186,7 +186,18 @@ const RegisterPage = () => {
       </div> */}
       <div className="w-full flex-1">
         <div className="relative">
-          <div className="h-screen w-full flex justify-center items-center bg-[#001900] bg-no-repeat overflow-hidden relative">
+          <div className="lg:hidden bg-[#001900] h-20">
+            <img
+              className="lg:hidden absolute top-0 left-10 transform  text-white  mt-5"
+              style={{
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+              src={logo}
+            />
+          </div>
+          <div className="mt-10 lg:mt-0 h-0 lg:h-screen w-full flex justify-center items-center bg-[#001900] bg-no-repeat overflow-hidden relative">
             <Link to={INDEX} className="flex" smooth={true}>
               {/* <motion.img
                 initial={{ opacity: 0 }}
@@ -208,7 +219,7 @@ const RegisterPage = () => {
                 style={{
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
-                  color: "transparent"
+                  color: "transparent",
                 }}
                 src={logo}
               />
@@ -227,7 +238,7 @@ const RegisterPage = () => {
             <img
               src={user_phone}
               alt="Background"
-              className="absolute z-40 bg-cover bottom-0 left-1/2 transform -translate-x-1/2 w-[20rem]"
+              className="hidden lg:block absolute z-40 bg-cover bottom-0 left-1/2 transform -translate-x-1/2 w-[20rem]"
             />
           </div>
 
@@ -244,7 +255,11 @@ const RegisterPage = () => {
               alt=""
               className="mt-24 w- mx-auto   "
             /> */}
-            <img src={world_2} alt="" className="mt-24 w- mx-auto   " />
+            <img
+              src={world_2}
+              alt=""
+              className="hidden lg:block mt-24 w- mx-auto   "
+            />
           </div>
         </div>
       </div>
