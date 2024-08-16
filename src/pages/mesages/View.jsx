@@ -15,9 +15,8 @@ import { Spinner } from "flowbite-react";
 import "./style.css";
 import avatar from "../../assets/images/user.png";
 import { FaUser } from "react-icons/fa6";
-import { ArrowLeft } from "lucide-react";
 
-function View({ chat, currentUserId, setCurrentChat }) {
+function View({ chat, currentUserId }) {
   const socket = useRef(null);
   const conversationId = chat?.last_message?.conversation_id;
   const user = useSelector((state) => state.user?.user);
@@ -216,47 +215,39 @@ function View({ chat, currentUserId, setCurrentChat }) {
   }
 
   return (
-    <div className="relative h-full">
-      <div className="w-full overflow-y-auto blank relative">
+    <>
+      <div className="w-full overflow-y-auto blank">
         <div className="flex flex-col">
-          <div className="flex items-center gap-2 p-4 py-0 pt-2.5 justify-between w-full h-[74px] z-0 bg-[#D8E3CC] rounded-tr-md overflow-hidden sticky top-0 shadow-md">
-            <div className="flex gap-4 items-center justify-start">
-              <ArrowLeft
-                onClick={() => {
-                  setCurrentChat(null);
-                }}
-                className="cursor-pointer hover:bg-[#efece7] md:hidden rounded-full"
-              />
-              <div className="flex items-center gap-3">
-                {chat.participants.find((user) => user._id === otherUserId)
-                  ?.photo_url ? (
-                  <img
-                    className="h-[35px] w-[35px] rounded-full border object-cover"
-                    src={
-                      chat.participants.find((user) => user._id === otherUserId)
-                        ?.photo_url
-                    }
-                    alt=""
-                  />
-                ) : (
-                  <div className="h-[35px] w-[35px] flex justify-center items-center rounded-lg bg-[#efece7] border">
-                    {/* <img
+          <div className="flex items-center gap-2 p-4 py-0 pt-2.5 justify-between z-5 w-full h-[74px] bg-[#D8E3CC] rounded-tr-md overflow-hidden sticky top-0 shadow-md">
+            <div className="flex items-center gap-3">
+              {chat.participants.find((user) => user._id === otherUserId)
+                ?.photo_url ? (
+                <img
+                  className="h-[35px] w-[35px] rounded-full border object-cover"
+                  src={
+                    chat.participants.find((user) => user._id === otherUserId)
+                      ?.photo_url
+                  }
+                  alt=""
+                />
+              ) : (
+                <div className="h-[35px] w-[35px] flex justify-center items-center rounded-lg bg-[#efece7] border">
+                  {/* <img
                     className="rounded-lg object-cover"
                     src={avatar}
                     alt=""
                   /> */}
-                    <FaUser size={24} className="text-gray-950/40" />
-                  </div>
-                )}
-                <p className="message-name">
-                  {
-                    chat.participants.find((user) => user._id === otherUserId)
-                      ?.display_name
-                  }
-                </p>
-              </div>
+                  <FaUser size={24} className="text-gray-950/40" />
+                </div>
+              )}
+              <p className="message-name">
+                {
+                  chat.participants.find((user) => user._id === otherUserId)
+                    ?.display_name
+                }
+              </p>
             </div>
-            {/* <div className="flex gap-3 items-center">
+            <div className="flex gap-3 items-center">
               <div className="cursor-pointer flex items-center justify-center bg-white rounded-lg p-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -292,19 +283,19 @@ function View({ chat, currentUserId, setCurrentChat }) {
                   />
                 </svg>
               </div>
-            </div> */}
+            </div>
           </div>
           {/* <div className=""> */}
-          <div className="overflow-y-auto px-2 pb-20">
+          <div className="overflow-y-auto px-2">
             <div className="">{messageContent}</div>
           </div>
           {/* </div> */}
         </div>
       </div>
 
-      <div className="bg-white h-auto flex items-center px-2 sm:px-4 mt-5 absolute md:bottom-0 bottom-16 left-0 w-full">
+      <div className="bg-white h-auto flex items-center px-2 sm:px-4 mt-5 absolute bottom-0 left-0 w-full">
         <div className="flex w-full items-center gap-2 justify-evenly p-2 px-0">
-          {/* <img src={add} alt="add" className="cursor-pointer mt-1" /> */}
+          <img src={add} alt="add" className="cursor-pointer mt-1" />
           <InputEmoji
             value={newMessage}
             onChange={handleChange}
@@ -330,7 +321,7 @@ function View({ chat, currentUserId, setCurrentChat }) {
           }
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

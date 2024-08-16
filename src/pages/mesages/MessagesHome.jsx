@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import {
   useGetConversationsQuery,
-  useReadMessageMutation,
+  useReadMessageMutation
 } from "../../service/message.service";
 import { Spinner } from "flowbite-react";
 import chat from "../../assets/images/chat.gif";
@@ -63,16 +63,9 @@ const MessagesHome = () => {
 
   return (
     <MainLayout>
-      <div className="chat-container w-full h-full">
-        <div className="h-full w-full flex pt-4 pr-0 ">
-          <div
-            className={
-              ("bg-white w-full flex-1 md:flex-[0.4] md:max-w-[380px] point border-r",
-              currentChat
-                ? "hidden md:flex md:flex-col bg-white"
-                : "flex flex-col flex-1 md:flex-[0.4] md:max-w-[380px] bg-white")
-            }
-          >
+      <div className="chat-container w-full">
+        <div className="h-auto w-full flex pt-4 pr-4">
+          <div className="bg-white w-full max-w-[380px] flex flex-col point border-r">
             <Header />
             <div className="overflow-y-auto bg-transparent">
               {isLoading ? (
@@ -124,32 +117,16 @@ const MessagesHome = () => {
             </div>
           </div>
 
-          <div
-            className={
-              ("flex border border-l-0 chat-window relative point",
-              !currentChat
-                ? "hidden md:flex-col md:flex-1 md:min-w-[380px] h-full"
-                : "flex-1 w-full h-full")
-            }
-          >
+          <div className="w-full flex flex-col border border-l-0 chat-window relative point">
             {currentChat ? (
-              <View
-                chat={currentChat}
-                currentUserId={user._id}
-                setCurrentChat={setCurrentChat}
-              />
+              <View chat={currentChat} currentUserId={user._id} />
             ) : (
-              <div
-                className={
-                  ("items-center justify-center h-full flex-col px-4 text-center",
-                  !currentChat && "hidden md:flex md:flex-1")
-                }
-              >
+              <div className="flex items-center justify-center h-full w-full flex-col">
                 <img src={chat} alt="chat gif" />
                 <strong className="empty-strong">
                   Pick up where you left off
                 </strong>
-                <small className="empty-small px-4">
+                <small className="empty-small">
                   Search or select a conversation and chat away.
                 </small>
               </div>

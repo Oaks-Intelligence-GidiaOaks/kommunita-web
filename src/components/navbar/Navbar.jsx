@@ -208,7 +208,6 @@ import { KOMMUNITY, PROFILE } from "../../routes/routes";
 import NotificationModal from "../../pages/notifications/NotificationModal";
 import MobileSidebar from "../sidebar/MobileSidebar";
 import { useSelector } from "react-redux";
-import { Bell, Search } from "lucide-react";
 
 const NavItem = ({ to, icon: Icon, label, exact }) => {
   const location = useLocation();
@@ -327,13 +326,13 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed h-auto flex justify- items-center py-4 px-4 md:px-4 lg:px-4 w-full top-0 left-0 right-0 z-10 mb-10 bg-white">
+      <nav className="fixed h-auto flex justify- items-center py-4 px-4 md:px-0 lg:px-12 w-full top-0 left-0 right-0 z-10 mb-10 bg-white">
         <div className="mr-auto">
           <Link to={"/"}>
             <img src={dark_logo} alt="logo" width="152" height="40" />
           </Link>
         </div>
-        <div className="hidden md:flex items-center md:space-x-5 xl:space-x-12">
+        <div className="hidden md:flex items-center md:space-x-5  xl:space-x-12">
           <NavItem to="/" icon={RiHome5Line} label="My Feed" exact={true} />
           <NavItem
             to={KOMMUNITY}
@@ -454,17 +453,16 @@ const Navbar = () => {
                 />
               </div>
               <div>
-                <Bell
+                <BsBell
                   size={20}
-                  className="inline-block text-gray-500"
+                  className="inline-block"
                   onClick={() => {
                     setNotificationBox((prev) => !prev);
                   }}
                 />
-                <Search
-                  size={22}
-                  strokeWidth={2}
-                  className="inline-block xl:hidden text-gray-500"
+                <CiSearch
+                  size={30}
+                  className="inline-block xl:hidden"
                   onClick={() => {
                     setSearchOnSmallScreen(!searchOnSmallScreen);
                     console.log("clicked me");
@@ -503,10 +501,10 @@ const Navbar = () => {
                     title={""}
                     openModal={reloadPage}
                     modalSize="2xl"
-                    onClose={() => {
-                      window.location.reload();
-                      setReloadPage(!reloadPage);
-                    }}
+                    onClose={() => { 
+                      window.location.reload()
+                      setReloadPage(!reloadPage)
+                     }}
                   >
                     <div className="flex flex-col text-center gap-4 justify-center rounded w-full">
                       <h1 className="font-semibold text-3xl">Great</h1>
