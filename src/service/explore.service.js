@@ -5,8 +5,8 @@ export const exploreOrganizationApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // Get all post route
     getExplorePost: builder.query({
-      query: () => ({
-        url: `${POST}/organization`,
+      query: (params) => ({
+        url: `${POST}/organization?${params}`,
         method: "GET",
       }),
       providesTags: ["Post"],
@@ -26,13 +26,13 @@ export const exploreOrganizationApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Post"],
     }),
     getExploreDiary: builder.query({
-      query: () => ({
-        url: `${DIARY}/organization`,
+      query: (params) => ({
+        url: `${DIARY}/organization?${params}`,
         method: "GET",
       }),
       providesTags: ["Diary"],
     }),
-    getExploreDiaryCategory: builder.mutation({
+    getExploreDiaryCategory: builder.query({
       query: (cat) => ({
         url: `${DIARY}/organization?category=${cat}`,
         method: "GET",
@@ -46,13 +46,6 @@ export const exploreOrganizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Diary"],
     }),
-    // getOtherUserPost: builder.mutation({
-    //   query: (id) => ({
-    //     url: `user/post/user/${id}`,
-    //     method: "GET",
-    //   }),
-    //   providesTags: ["Post"],
-    // }),
   }),
 });
 
@@ -61,6 +54,6 @@ export const {
   useGetExploreDiaryQuery,
   useGetExplorePostImagesQuery,
   useGetExplorePostVideosQuery,
-  useGetExploreDiaryCategoryMutation,
+  useGetExploreDiaryCategoryQuery,
   useGetExplorePostCategoryMutation,
 } = exploreOrganizationApiSlice;

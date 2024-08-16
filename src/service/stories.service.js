@@ -1,4 +1,4 @@
-import { STORIES } from "./constants";
+import { STORIES, STORYFEEDS } from "./constants";
 import apiSlice from "./api/apiSlice";
 
 export const organizationApiSlice = apiSlice.injectEndpoints({
@@ -7,6 +7,13 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
     getStories: builder.query({
       query: () => ({
         url: STORIES,
+        method: "GET",
+      }),
+      providesTags: ["Story"],
+    }),
+    getStoriesFeed: builder.query({
+      query: () => ({
+        url: STORYFEEDS,
         method: "GET",
       }),
       providesTags: ["Story"],
@@ -22,4 +29,4 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetStoriesQuery, useAddStoriesMutation } = organizationApiSlice;
+export const { useGetStoriesQuery, useGetStoriesFeedQuery, useAddStoriesMutation } = organizationApiSlice;

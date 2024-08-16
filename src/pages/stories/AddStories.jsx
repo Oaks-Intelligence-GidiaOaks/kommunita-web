@@ -76,7 +76,7 @@ const AddStories = () => {
           ...(token && { Authorization: `Bearer ${token}` }),
         },
       });
-      if(response.status === true){
+      if(response.data.success === true){
         showAlert("Great!", `Story added successfully`, "success");
         setCaption("");
         setSelectedPostMedia([]);

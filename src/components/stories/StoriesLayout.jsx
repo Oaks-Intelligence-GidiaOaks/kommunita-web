@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 
 const StoriesLayout = ({children}) => {
   return (
@@ -9,5 +9,7 @@ const StoriesLayout = ({children}) => {
     </div>
   )
 }
+
+
 
 export default StoriesLayout

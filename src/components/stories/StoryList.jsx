@@ -1,10 +1,9 @@
-import { useGetStoriesQuery } from "../../service/stories.service";
-import React from "react";
+import { useGetStoriesFeedQuery, } from "../../service/stories.service";
 import { useNavigate } from "react-router-dom";
 
 const StoryList = () => {
   const navigate = useNavigate();
-  const { data, isLoading } = useGetStoriesQuery();
+  const { data,  } = useGetStoriesFeedQuery();
   console.log(data);
   return (
     <div className="flex w-full space-x-4 p-4 overflow-x-auto custom-scrollbar">
@@ -20,18 +19,22 @@ const StoryList = () => {
         <p className="text-sm font-semibold text-center mt-2">Post Story</p>
       </div>
       {data?.data?.map((story) => (
-        <div key={story?._id} className="flex flex-col items-center">
+        <div key={story?._id} 
+        className="flex flex-col items-center" 
+        // onClick={() =>{navigate("/stories/create")}}
+
+        >
           <div className="w-24 h-24 rounded-full p-[2px] bg-gradient-to-r from-[#34B53A] via-[#2CC84A] to-[#A6B953CC]">
             <div className="w-full h-full rounded-full bg-white p-1">
               <img
                 className="w-full h-full rounded-full"
-                src={story?.media_url?.media_url}
-                alt={story?.user_id?.display_name}
+                src={story.stories[0]?.media_url?.media_url}
+                alt={story.stories[0]?.user_id?.display_name}
               />
             </div>
           </div>
           <p className="text-sm font-semibold text-center mt-2">
-            {story?.user_id?.display_name}
+            {story?.display_name}
           </p>
         </div>
       ))}
@@ -41,30 +44,4 @@ const StoryList = () => {
 
 export default StoryList;
 
-const storiesData = [
-  {
-    id: 1,
-    username: "john_doe",
-    image: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    id: 2,
-    username: "jane_smith",
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-  {
-    id: 3,
-    username: "mike_jones",
-    image: "https://randomuser.me/api/portraits/men/58.jpg",
-  },
-  {
-    id: 4,
-    username: "anna_karen",
-    image: "https://randomuser.me/api/portraits/women/68.jpg",
-  },
-  {
-    id: 5,
-    username: "bob_lee",
-    image: "https://randomuser.me/api/portraits/men/70.jpg",
-  },
-];
+

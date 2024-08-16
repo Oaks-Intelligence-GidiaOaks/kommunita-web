@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useRef, useState } from "react";
 import { FaHeart, FaCommentAlt, FaShare, FaRetweet } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
@@ -144,9 +145,9 @@ const Diary = ({ post }) => {
   };
 
   const repostUserIds = post?.repost?.map((user) => user._id);
-  console.log(repostUserIds)
+  // console.log(repostUserIds)
   const isRepostedByCurrentUser = repostUserIds?.includes(user._id);
-  console.log(isRepostedByCurrentUser)
+  // console.log(isRepostedByCurrentUser)
 
   const handleRespost = async () => {
     const repostUserIds = post?.repost?.map((user) => user._id);
@@ -237,7 +238,7 @@ const Diary = ({ post }) => {
   const [isRepostOpen, setIsRepostOpen] = useState(false);
   const repostRef = useRef(null);
 
-  console.log(post?.pages);
+  // console.log(post?.pages);
 
   const navigatePage = (direction) => {
     if (direction === "next" && currentPageIndex < post?.pages.length - 1) {

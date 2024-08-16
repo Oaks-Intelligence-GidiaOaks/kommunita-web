@@ -8,7 +8,7 @@ import {
   ProfileLikes,
   ProfileMedia,
   FavoriteHome,
-  Explore,
+  // Explore,
   Diaries,
   Settings,
   Messages,
@@ -31,7 +31,7 @@ import {
   SingleDiaryPage,
   StoriesHome,
   AddStories,
-  ViewStories,
+  // ViewStories,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -96,7 +96,7 @@ const Config = () => {
           path={routes.STORIES}
           element={<ProtectedRoute component={StoriesHome} />}
         >
-          <Route index element={<ProtectedRoute component={ViewStories} />} />
+          {/* <Route index element={<ProtectedRoute component={ViewStories} />} /> */}
           <Route
             path={routes.CREATE}
             element={<ProtectedRoute component={AddStories} />}
