@@ -24,11 +24,16 @@ import NewPollssss from "../newPolls/NewPollssss";
 import Diary from "../diary/Diary";
 
 function Favourites() {
-  const { data, isLoading, refetch } = useGetFavoritesQuery();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const { data, isLoading, refetch } = useGetFavoritesQuery({
+    page,
+    page_size: pageSize
+  });
 
 
-  const posts = data?.data || [];
-  console.log(data?.data.action_type);
+  const posts = data?.data?.data || [];
+  console.log(data);
 
   const [filterString, setFilterString] = useState("");
   const [filterData, setFilterData] = useState("");
@@ -63,7 +68,7 @@ function Favourites() {
             </Link>
           </div>
         ) : (
-            data?.data.map((post) => {
+          posts?.map((post) => {
                 if (post.type === "post") {
                   return <NewPost2 key={post?._id} post={post} />;
                 } else if (post.action_type === "Repost") {
