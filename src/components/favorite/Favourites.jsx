@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import "./style.css";
 import Header from "./Header";
 import Posts from "../main/Posts";

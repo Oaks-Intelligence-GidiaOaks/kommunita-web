@@ -8,13 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import axios from "axios";
+import imageCompression from 'browser-image-compression';
 
 const AddStories = () => {
   const [uploadPreview, setUploadPreview] = useState(false);
   const [selectedPostMedia, setSelectedPostMedia] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
-  // const [addStories, { data:story, isSuccess, isError, error }] = useAddStoriesMutation();
   const { data: stories } = useGetStoriesQuery();
   const user = useSelector((state) => state.user.user);
   const [caption, setCaption] = useState("");
@@ -23,17 +23,37 @@ const AddStories = () => {
   const { refetch } = useGetStoriesFeedQuery()
 
 
+  // const handleSchedulePostMediaChange = async (event) => {
+  //   const files = Array.from(event.target.files);
+  //   setSelectedPostMedia(files);
+  //   setUploadPreview((prev) => !prev);
+  // };
+
   const handleSchedulePostMediaChange = async (event) => {
     const files = Array.from(event.target.files);
-    setSelectedPostMedia(files);
+    const compressedFiles = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      const options = {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+      };
+
+      try {
+        const compressedFile = await imageCompression(file, options);
+        compressedFiles.push(compressedFile);
+      } catch (error) {
+        console.error("Error compressing file:", error);
+        compressedFiles.push(file);
+      }
+    }
+
+    setSelectedPostMedia(compressedFiles);
     setUploadPreview((prev) => !prev);
   };
-
-  // const handleRemove = (item) => {
-  //   if (selectedPostMedia.includes(item)) {
-  //     setSelectedPostMedia(selectedPostMedia.filter((media) => media !== item));
-  //   }
-  // };
 
   // TODO: STORY LIST, DISPLAY STORIES ETC
 

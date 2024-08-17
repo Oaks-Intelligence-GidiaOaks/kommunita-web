@@ -11,6 +11,14 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Story"],
     }),
+    viewAStory: builder.mutation({
+      query: (data) => ({
+        url:`user/stories/view` ,
+        method: "POST",
+        body: data,
+      }),
+      providesTags: ["Story"],
+    }),
     getStoriesFeed: builder.query({
       query: () => ({
         url: STORYFEEDS,
@@ -29,4 +37,4 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetStoriesQuery, useGetStoriesFeedQuery, useAddStoriesMutation } = organizationApiSlice;
+export const { useGetStoriesQuery, useGetStoriesFeedQuery, useAddStoriesMutation, useViewAStoryMutation } = organizationApiSlice;

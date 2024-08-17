@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Link, useLocation } from "react-router-dom";
 import "./style.css";
 import { RiHome5Line } from "react-icons/ri";
@@ -5,6 +6,7 @@ import { TbUsersGroup } from "react-icons/tb";
 import { LuSquareStack } from "react-icons/lu";
 import { MdOutlineLibraryBooks } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { BsMegaphone } from "react-icons/bs";
 
 const NavItem = ({ to, icon: Icon, label, exact }) => {
   const location = useLocation();
@@ -37,10 +39,10 @@ const MobileNavbar = () => {
   );
   return (
     <nav className="w-full mx-auto flex items-center py-auto">
-      <div className=" flex items-center space-y-1 space-x-10">
+      <div className=" flex items-center space-y-1 space-x-2 mt-2 mx-auto">
         <NavItem to="/" icon={RiHome5Line} label="My Feed" exact={true} />
         <NavItem
-          to="/community"
+          to="/kommunity"
           icon={TbUsersGroup}
           label="Community"
           exact={true}
@@ -49,6 +51,12 @@ const MobileNavbar = () => {
           to="/explore"
           icon={LuSquareStack}
           label="Explore"
+          exact={true}
+        />
+        <NavItem
+          to="/announcement"
+          icon={BsMegaphone}
+          label="Announcement"
           exact={true}
         />
         {features.includes("Diary") && (

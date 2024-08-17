@@ -1,6 +1,5 @@
-import StoryList from "../stories/StoryList";
 import { useNavigate, useParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FaHeart, FaCommentAlt, FaShare, FaRetweet } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
 import Comment from "../main/Comment";
@@ -19,7 +18,6 @@ import {
   useFavoritePostsMutation,
   useGetSinglePostQuery,
   useLovePostMutation,
-  usePostCommentMutation,
   useRepostPostMutation,
 } from "../../service/post.service";
 import { useGetUserProfiileQuery } from "../../service/user.service";
@@ -45,7 +43,7 @@ const SinglePost = () => {
     triggerOnce: true,
     threshold: 0.1,
   });
-  const { data: singlepost, isLoading, isError } = useGetSinglePostQuery(id);
+  const { data: singlepost, isLoading, } = useGetSinglePostQuery(id);
   const [
     deleteFeeds,
     {

@@ -1,10 +1,19 @@
 import { useGetStoriesFeedQuery, } from "../../service/stories.service";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setNewStories } from "../../redux/slices/stories.slice";
 
 const StoryList = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const { data,  } = useGetStoriesFeedQuery();
-  console.log(data);
+
+  const handleStoryClick = (storyId) => {
+    const storyIndex = data?.data?.findIndex(story => story._id === storyId);
+    const newStoriesArray = data?.data?.slice(storyIndex);
+    dispatch(setNewStories(newStoriesArray));
+    navigate(`/stories/${storyId}`);
+  };
   return (
     <div className="flex w-full space-x-4 p-4 overflow-x-auto custom-scrollbar">
       <div className="flex flex-col items-center cursor-pointer">
@@ -21,8 +30,12 @@ const StoryList = () => {
       {data?.data?.map((story) => (
         <div key={story?._id} 
         className="flex flex-col items-center cursor-pointer" 
-        // onClick={() =>{navigate("/stories/create")}}
-
+        onClick={() =>{ 
+          // On Click of this button, a new Array of the story objects should be created starting from the id of the story Where it was triggered
+          // setStory([story,...newStory]) 
+          // navigate(`/stories/${story?._id}`)  // Navigate to the story detail page with the id of the story clicked on
+          handleStoryClick(story?._id)
+         }}
         >
           <div className="w-24 h-24 rounded-full p-[2px] bg-gradient-to-r from-[#34B53A] via-[#2CC84A] to-[#A6B953CC]">
             <div className="w-full h-full rounded-full bg-white p-1">

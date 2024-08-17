@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import "../main/style.css";
 import MakePost from "./MakePost";
 import search from "../../assets/images/Home/Search.png";

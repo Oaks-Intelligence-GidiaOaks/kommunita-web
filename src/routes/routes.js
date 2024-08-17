@@ -33,9 +33,10 @@ export const SURVEY = "/survey";
 export const STORIES = "/stories";
 export const CREATE = "create";
 export const MYSTORY = "mystories";
-// export const STORIES = "/stories";
+export const SINGLESTORY = "singlestory";
 
 
+export const ANNOUNCEMENT = "/announcement";
 export const KOMMUNITY = "/kommunity";
 export const E_VIDEOS = "k_videos";
 export const E_IMAGES = "k_images";

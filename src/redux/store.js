@@ -16,10 +16,12 @@ import user from "./slices/user.slice";
 import hardSet from "redux-persist/es/stateReconciler/hardSet";
 import logoutMiddleware from "./middleware/logoutMiddleware";
 import filterSlice from "./slices/filter.slice";
+import storiesSlice from './slices/stories.slice'
 
 const rootReducer = combineReducers({
   user,
   filter: filterSlice,
+  stories: storiesSlice,
   [apiSlice.reducerPath]: apiSlice.reducer
 });
 
