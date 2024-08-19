@@ -47,16 +47,16 @@ const MobileNavbar = () => {
           label="Community"
           exact={true}
         />
+          <NavItem
+          to="/announcement"
+          icon={BsMegaphone}
+          label="Announcement"
+          exact={true}
+        />
         <NavItem
           to="/explore"
           icon={LuSquareStack}
           label="Explore"
-          exact={true}
-        />
-        <NavItem
-          to="/announcement"
-          icon={BsMegaphone}
-          label="Announcement"
           exact={true}
         />
         {features.includes("Diary") && (

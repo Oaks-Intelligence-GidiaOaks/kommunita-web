@@ -169,16 +169,16 @@ const Navbar = () => {
             label="Kommunity"
             exact={true}
           />
+            <NavItem
+            to="/announcement"
+            icon={BsMegaphone}
+            label="Announcement"
+            exact={true}
+          />
           <NavItem
             to="/explore"
             icon={LuSquareStack}
             label="Explore"
-            exact={true}
-          />
-          <NavItem
-            to="/announcement"
-            icon={BsMegaphone}
-            label="Announcement"
             exact={true}
           />
 
