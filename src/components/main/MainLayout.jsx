@@ -3,7 +3,6 @@ import { Nav } from "../navbar";
 import { SideNav } from "../sidebar";
 import { AdsSection } from "../ads";
 import { useLocation } from "react-router-dom";
-import Story from "./Story";
 import MobileNavbar from "../navbar/MobileNavbar";
 import { KOMMUNITY } from "../../routes/routes";
 // import "../../index.css";

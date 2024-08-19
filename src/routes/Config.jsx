@@ -33,6 +33,8 @@ import {
   AddStories,
   ViewStories,
   MyStories,
+  AnnouncementHome,
+  SingleStory,
 } from "../pages";
 import * as routes from "./routes";
 import ProtectedRoute from "../components/protected/ProtectedRoute";
@@ -106,6 +108,10 @@ const Config = () => {
             path={routes.MYSTORY}
             element={<ProtectedRoute component={MyStories} />}
           />
+          <Route
+            path={routes.STORIES + '/:id'}
+            element={<ProtectedRoute component={SingleStory} />}
+          />
         </Route>
 
         <Route
@@ -148,10 +154,10 @@ const Config = () => {
           path={routes.FOLLOW}
           element={<ProtectedRoute component={FollowHome} />}
         />
-        {/* <Route
-          path={routes.EXPLORE}
-          element={<ProtectedRoute component={Explore} />}
-        /> */}
+        <Route
+          path={routes.ANNOUNCEMENT}
+          element={<ProtectedRoute component={AnnouncementHome} />}
+        />
         <Route
           path={routes.SETTINGS}
           element={<ProtectedRoute component={Settings} />}

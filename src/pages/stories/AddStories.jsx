@@ -8,13 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BeatLoader } from "react-spinners";
 import axios from "axios";
+import imageCompression from 'browser-image-compression';
 
 const AddStories = () => {
   const [uploadPreview, setUploadPreview] = useState(false);
   const [selectedPostMedia, setSelectedPostMedia] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
-  // const [addStories, { data:story, isSuccess, isError, error }] = useAddStoriesMutation();
   const { data: stories } = useGetStoriesQuery();
   const user = useSelector((state) => state.user.user);
   const [caption, setCaption] = useState("");
@@ -23,17 +23,37 @@ const AddStories = () => {
   const { refetch } = useGetStoriesFeedQuery()
 
 
+  // const handleSchedulePostMediaChange = async (event) => {
+  //   const files = Array.from(event.target.files);
+  //   setSelectedPostMedia(files);
+  //   setUploadPreview((prev) => !prev);
+  // };
+
   const handleSchedulePostMediaChange = async (event) => {
     const files = Array.from(event.target.files);
-    setSelectedPostMedia(files);
+    const compressedFiles = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      const options = {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 800,
+        useWebWorker: true,
+      };
+
+      try {
+        const compressedFile = await imageCompression(file, options);
+        compressedFiles.push(compressedFile);
+      } catch (error) {
+        console.error("Error compressing file:", error);
+        compressedFiles.push(file);
+      }
+    }
+
+    setSelectedPostMedia(compressedFiles);
     setUploadPreview((prev) => !prev);
   };
-
-  // const handleRemove = (item) => {
-  //   if (selectedPostMedia.includes(item)) {
-  //     setSelectedPostMedia(selectedPostMedia.filter((media) => media !== item));
-  //   }
-  // };
 
   // TODO: STORY LIST, DISPLAY STORIES ETC
 
@@ -113,13 +133,14 @@ const AddStories = () => {
         className="bg-white rounded-lg p-4 flex-1 w-[20.27rem] cursor-pointer"
         onClick={handleUpload}
       >
-        <div className="flex text-center flex-col my-auto justify-center items-center gap-2 w-24 h-32 rounded-md">
+        <div className="flex text-center flex-col my-auto justify-center items-center gap-2 w-32 h-36 rounded-md">
           <FaRegImage size={30} />
           <label className="text-sm cursor-pointer">
             <input
               type="file"
               onChange={handleSchedulePostMediaChange}
-              accept="image/*"
+              // accept="image/*"
+              accept="image/jpeg, image/png, image/svg+xml"
               ref={fileInputRef}
               multiple
               className="hidden"

@@ -2,7 +2,7 @@
 import "../main/style.css";
 import MakePost from "./MakePost";
 import search from "../../assets/images/Home/Search.png";
-import { useGetFeedsQuery } from "../../service/feeds.service";
+import { useGetMyFeedsQuery } from "../../service/feeds.service";
 import { Link } from "react-router-dom";
 import { Spinner } from "flowbite-react";
 import StoryList from "../stories/StoryList";
@@ -13,7 +13,7 @@ import Diary from "../diary/Diary";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 
-function Main() {
+function MyFeeds() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -22,7 +22,7 @@ function Main() {
     isLoading,
     refetch,
     isFetching
-  } = useGetFeedsQuery({
+  } = useGetMyFeedsQuery({
     page,
     page_size: pageSize
   });
@@ -75,4 +75,4 @@ function Main() {
   );
 }
 
-export default Main;
+export default MyFeeds;

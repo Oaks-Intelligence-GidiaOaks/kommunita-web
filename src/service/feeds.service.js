@@ -22,6 +22,29 @@ export const feedsApiSlice = apiSlice.injectEndpoints({
       },
       providesTags: ["Feeds"]
     }),
+    getMyFeeds: builder.query({
+      query: ({ page = 1, page_size = 10 } = {}) => ({
+        url: `${FEEDS}/following?page=${page}&page_size=${page_size}`,
+        method: "GET",
+      }),
+      serializeQueryArgs: ({ queryArgs }) => {
+        return queryArgs;
+      },
+      merge: (currentCache, newItems) => {
+        console.log(newItems.data.data, "rtk");
+    
+        if (!Array.isArray(currentCache)) {
+          currentCache = [];
+        }
+        const newData = newItems.data.data;
+        currentCache.push(...newData);
+      },
+      forceRefetch({ currentArg, previousArg }) {
+        return currentArg !== previousArg;
+      },
+      providesTags: ["Feeds"],
+    }),
+    
 
     getOtherFeeds: builder.mutation({
       query: (id) => ({
@@ -44,5 +67,6 @@ export const {
   useGetFeedsQuery,
   useDeleteFeedMutation,
   useGetOtherFeedsMutation,
-  useLazyGetFeedsQuery
+  useLazyGetFeedsQuery,
+  useGetMyFeedsQuery,
 } = feedsApiSlice;

@@ -1,8 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useGetCategoriesQuery } from "../../service/categories.service";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { resetParams, setFilterParams } from "../../redux/slices/filter.slice";
+import { setFilterParams } from "../../redux/slices/filter.slice";
 
 function Category() {
   const { data: Category } = useGetCategoriesQuery();
@@ -10,7 +9,6 @@ function Category() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const params = new URLSearchParams();
-  const [activeCategory, setActiveCategory] = useState('all');
 
 
   const location = useLocation()

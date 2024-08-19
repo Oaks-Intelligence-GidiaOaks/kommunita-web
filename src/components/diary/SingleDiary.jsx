@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useRef, useState } from "react";
 import { FaHeart, FaCommentAlt, FaShare, FaRetweet } from "react-icons/fa";
 import { CiBookmark } from "react-icons/ci";
@@ -35,14 +37,13 @@ import { GoShareAndroid } from "react-icons/go";
 import { CiEdit } from "react-icons/ci";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import DiaryComment from "../main/DiaryComment";
-import StoryList from "../stories/StoryList";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { Spinner } from "flowbite-react";
 import CustomCarousel2 from "../main/CustomCarousel2";
 
 const SingleDiary = () => {
   const { id } = useParams();
-  const { data: singleDiary, isLoading, isError } = useGetADiaryQuery(id);
+  const { data: singleDiary, isLoading, } = useGetADiaryQuery(id);
   const diary = singleDiary?.data || [];
   console.log(diary)
 
