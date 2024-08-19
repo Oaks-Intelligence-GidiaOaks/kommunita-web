@@ -34,7 +34,15 @@ export const organizationApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ["Story"],
     }),
+    addStoriesComment: builder.mutation({
+      query: (data) => ({
+        url:"user/comment/stories",
+        method: "POST",
+        body: data,
+      }),
+      providesTags: ["Story"],
+    }),
   }),
 });
 
-export const { useGetStoriesQuery, useGetStoriesFeedQuery, useAddStoriesMutation, useViewAStoryMutation } = organizationApiSlice;
+export const { useGetStoriesQuery, useGetStoriesFeedQuery, useAddStoriesMutation, useViewAStoryMutation, useAddStoriesCommentMutation } = organizationApiSlice;

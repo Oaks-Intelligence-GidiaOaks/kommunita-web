@@ -1,4 +1,6 @@
-import React, { useEffect, memo } from "react";
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
+import { useEffect, memo } from "react";
 
 const DropdownMenu = memo(({ aria_label, onClick, display_value, isDropdownOpen, listItem, dropdownRef }) => {
   useEffect(() => {

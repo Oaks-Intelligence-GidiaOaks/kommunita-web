@@ -14,14 +14,11 @@ const ViewStories = () => {
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const navigate = useNavigate();
 
-  // const handleNextUser = () => {
-  //   if (activeStoryIndex < stories.length - 1) {
-  //     setActiveStoryIndex(activeStoryIndex + 1);
-  //     setCurrentStoryIndex(0);
-  //   } else {
-  //     navigate("/"); 
-  //   }
-  // };
+  console.log(stories[activeStoryIndex])
+
+  if(stories?.length === 0){
+    navigate('/')
+  }
 
   const handleNextUser = () => {
     if (activeStoryIndex < stories.length - 1) {
@@ -42,7 +39,7 @@ const ViewStories = () => {
   const currentUserStories = stories[activeStoryIndex]?.stories || [];
   const currentStory = currentUserStories[currentStoryIndex] || {};
 
-  console.log(currentUserStories.map(story => story.media_url.media_url));
+  console.log(currentUserStories.map(story => story?.media_url?.media_url));
 
   return (
     <div className="text-white slider-container relative">
@@ -57,7 +54,7 @@ const ViewStories = () => {
                 <div className="rounded-full border-4 border-white w-[3rem] h-[3rem] overflow-hidden">
                   <img
                     src={
-                      stories[activeStoryIndex].photo_url || profile_placeholder
+                      stories[activeStoryIndex]?.photo_url || profile_placeholder
                     }
                     alt="profile"
                     className="w-full h-full object-cover"
@@ -65,14 +62,14 @@ const ViewStories = () => {
                 </div>
                 <div className="ml-4">
                   <h4 className="font-semibold text-white">
-                    {stories[activeStoryIndex].display_name}
+                    {stories[activeStoryIndex]?.display_name}
                   </h4>
                   <p className="text-gray-400 text-sm">
-                    @{stories[activeStoryIndex].username ? stories[activeStoryIndex].username : 'undefined'}{" "}
+                    @{stories[activeStoryIndex]?.username}{" "}
                     ·{" "}
                     {/* stories[activeStoryIndex].display_name.replace(/\s+/g, "") */}
                     <span className="ml-1">
-                      {getTimeAgoString(currentStory.createdAt)}
+                      {getTimeAgoString(currentStory?.createdAt)}
                     </span>
                   </p>
                 </div>
@@ -84,16 +81,16 @@ const ViewStories = () => {
               <div className="mx-auto w-full h-[25rem] rounded-lg overflow-hidden">
                 <Stories
                  key={activeStoryIndex}
-                  stories={currentUserStories.map((story) => ({
+                  stories={currentUserStories?.map((story) => ({
                     url: story.media_url.media_url,
                     type:
-                      story.media_url.media_type === "jpeg" ||
-                      story.media_url.media_type === "png"
+                      story?.media_url?.media_type === "jpeg" ||
+                      story?.media_url?.media_type === "png"
                         ? "image"
                         : "video",
                     duration:
-                      story.media_url.media_type === "jpeg" ||
-                      story.media_url.media_type === "png"
+                      story?.media_url?.media_type === "jpeg" ||
+                      story?.media_url?.media_type === "png"
                         ? 5000
                         : 30, // durations in seconds
                   }))}
@@ -107,7 +104,7 @@ const ViewStories = () => {
               </div>
             </div>
 
-            <p className="text-center mt-4">{currentStory.caption || ""}</p>
+            <p className="text-center mt-4">{currentStory?.caption || ""}</p>
 
             <div className="mt-4">
               <input
@@ -126,7 +123,7 @@ const ViewStories = () => {
                 <AiOutlineArrowLeft className="text-3xl text-white" />
               </div>
             )}
-            {activeStoryIndex < stories.length - 1 && (
+            {activeStoryIndex < stories?.length - 1 && (
               <div
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
                 onClick={handleNextUser}

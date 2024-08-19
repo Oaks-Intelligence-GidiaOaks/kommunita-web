@@ -133,13 +133,14 @@ const AddStories = () => {
         className="bg-white rounded-lg p-4 flex-1 w-[20.27rem] cursor-pointer"
         onClick={handleUpload}
       >
-        <div className="flex text-center flex-col my-auto justify-center items-center gap-2 w-24 h-32 rounded-md">
+        <div className="flex text-center flex-col my-auto justify-center items-center gap-2 w-32 h-36 rounded-md">
           <FaRegImage size={30} />
           <label className="text-sm cursor-pointer">
             <input
               type="file"
               onChange={handleSchedulePostMediaChange}
-              accept="image/*"
+              // accept="image/*"
+              accept="image/jpeg, image/png, image/svg+xml"
               ref={fileInputRef}
               multiple
               className="hidden"
