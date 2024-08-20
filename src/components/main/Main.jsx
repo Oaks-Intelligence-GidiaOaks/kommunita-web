@@ -12,6 +12,7 @@ import NewPost2 from "../posts/NewPost2";
 import NewPollssss from "../newPolls/NewPollssss";
 import Repost2 from "../posts/Repost2";
 import Diary from "../diary/Diary";
+import { CiCircleChevUp } from "react-icons/ci";
 
 function Main() {
   const [page, setPage] = useState(1);
@@ -27,6 +28,16 @@ function Main() {
   const features = useSelector(
     (state) => state?.user?.user?.organization_features
   );
+
+  const scrollToTop = () => {
+    const scrollableDiv = document.getElementById("scrollableDiv");
+    if (scrollableDiv) {
+      scrollableDiv.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+  };
 
   useEffect(() => {
     // Fetch data when the component loads or when the page changes
@@ -65,7 +76,7 @@ function Main() {
   return (
     <>
       <div
-        className="pt-4 main-wrapper w-full pb-10 h-[90vh] overflow-auto"
+        className="pt-4 main-wrapper w-full pb-10 h-[90vh] overflow-auto relative"
         id="scrollableDiv"
         style={{
           scrollbarWidth: "none",
@@ -124,6 +135,16 @@ function Main() {
             <Spinner />
           </div>
         ) : null}
+
+        {page > 1 && (
+          <div className="flex justify-end">
+            <CiCircleChevUp
+              size={30}
+              className="text-green-500 rounded-full hover:bg-green-500 hover:text-white fixed bottom-3 z-50 cursor-pointer"
+              onClick={scrollToTop}
+            />
+          </div>
+        )}
       </div>
     </>
   );
