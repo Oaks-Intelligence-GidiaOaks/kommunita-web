@@ -1,4 +1,4 @@
-import { useState,  } from "react";
+import { useEffect, useState,  } from "react";
 import { showAlert } from "../../static/alert";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetUserProfiileQuery } from "../../service/user.service";
@@ -15,7 +15,7 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
   const [content, setContent] = useState("");
   const [posting, setPosting] = useState(false);
   const [comments, setComments] = useState([]);
-  const [postComment] = usePostCommentMutation();
+  const [postComment, {isSuccess}] = usePostCommentMutation();
   const name = useSelector((state) => state.user?.user?.display_name);
   const dispatch = useDispatch()
 
@@ -47,7 +47,7 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
       );
     setPosting(false)
         refetch()
-      showAlert("Great!", "Comment added successfully", "success");
+      // showAlert("Great!", "Comment added successfully", "success");
     } catch (error) {
       console.error("Error submitting comment:", error);
       showAlert("Error", error.message, "error");
@@ -57,6 +57,12 @@ const Comment = ({ id, onComment, reply, placeholder }) => {
       );
     }
   };
+
+  useEffect(()=>{
+    if(isSuccess){
+      refetch()
+    }
+  }, [isSuccess])
 
   return (
     <div className="w-full flex flex-col items-center gap-2 mt-3">

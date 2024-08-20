@@ -15,11 +15,14 @@ const StoryList = () => {
 
   const handleStoryClick = (storyId) => {
     const storyIndex = data?.data?.findIndex(story => story._id === storyId);
-    const newStoriesArray = data?.data?.slice(storyIndex);
+    const newStoriesArray = JSON.parse(JSON.stringify(data?.data?.slice(storyIndex)));
+dispatch(setNewStories(newStoriesArray));
+    // const newStoriesArray = data?.data?.slice(storyIndex);
     dispatch(setNewStories(newStoriesArray));
     navigate(`/stories/${storyId}`);
   };
 
+  console.log(data?.data)
 
   return (
     <div className="flex w-full space-x-4 p-4 overflow-x-auto custom-scrollbar">

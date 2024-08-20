@@ -14,6 +14,7 @@ import DropdownMenu from "../../components/ui/DropdownMenu";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { IoLinkOutline, IoSettingsOutline } from "react-icons/io5";
 import Modals from "../../components/modals/Modal";
+import CustomStories from "../../components/stories/CustomStories";
 
 // import StorySkeleton from "./StorySkeleton";
 
@@ -31,20 +32,44 @@ const SingleStory = () => {
 
   const storiesRef = useRef(null);
 
+  // const handleNextUser = () => {
+  //   if (activeStoryIndex < stories.length - 1) {
+  //     setActiveStoryIndex((prevIndex) => prevIndex + 1);
+  //     setCurrentStoryIndex(0);
+  //   } else {
+  //     navigate("/");
+  //   }
+  // };
+
   const handleNextUser = () => {
     if (activeStoryIndex < stories.length - 1) {
       setActiveStoryIndex((prevIndex) => prevIndex + 1);
-      setCurrentStoryIndex(0); 
+      setCurrentStoryIndex(0);  // Reset current story index for the next user
     } else {
       navigate("/");
     }
   };
 
+  // const handlePrevUser = () => {
+  //   if (activeStoryIndex > 0) {
+  //     setActiveStoryIndex(activeStoryIndex - 1);
+  //     setCurrentStoryIndex(0);
+  //   }
+  // };
+
   const handlePrevUser = () => {
     if (activeStoryIndex > 0) {
       setActiveStoryIndex(activeStoryIndex - 1);
-      setCurrentStoryIndex(0);
+      setCurrentStoryIndex(0);  // Reset current story index for the previous user
     }
+  };
+
+  const handleStoryStart = (story, index) => {
+    setCurrentStoryIndex(index);  // Track the current story index
+  };
+  
+  const handleAllStoriesEnd = () => {
+    handleNextUser();  // Move to the next user's stories
   };
 
   const handleMouseEnter = () => {
@@ -58,6 +83,8 @@ const SingleStory = () => {
   const handleChange = (newMessage) => {
     setNewMessage(newMessage);
   };
+
+ console.log(stories)
 
   const currentUserStories = stories[activeStoryIndex]?.stories || [];
   const currentStory = currentUserStories[currentStoryIndex] || {};
@@ -82,157 +109,181 @@ const SingleStory = () => {
       console.error("Error adding comment", error);
     }
   };
-  useEffect(()=>{
-    if(storySettings){
-      setIsPaused(true)
+  useEffect(() => {
+    if (storySettings) {
+      setIsPaused(true);
     }
-  }, [storySettings])
+  }, [storySettings]);
 
   return (
     <div className="text-white slider-container relative">
-      {stories.length > 0 && (
-        <div className="stories-container flex justify-center items-center">
-          <div
-            className="w-[25rem] flex flex-col bg-black text-white rounded-lg p-4 relative z-20"
-            key={stories[activeStoryIndex]?._id}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center">
-                <div className="rounded-full border-4 border-white w-[3rem] h-[3rem] overflow-hidden">
-                  <img
-                    src={
-                      stories[activeStoryIndex]?.photo_url ||
-                      profile_placeholder
+      <div className="text-white slider-container relative">
+        {stories.length > 0 && (
+          <div className="stories-container flex justify-center items-center">
+            <div
+              className="w-[25rem] flex flex-col bg-black text-white rounded-lg p-4 relative z-20"
+              key={stories[activeStoryIndex]?._id}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center">
+                  <div className="rounded-full border-4 border-white w-[3rem] h-[3rem] overflow-hidden">
+                    <img
+                      src={
+                        stories[activeStoryIndex]?.photo_url ||
+                        profile_placeholder
+                      }
+                      alt="profile"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="font-semibold text-white">
+                      {stories[activeStoryIndex]?.display_name}
+                    </h4>
+                    <p className="text-gray-400 text-sm">
+                      @{stories[activeStoryIndex]?.username} ·{" "}
+                      <span className="ml-1">{timeAgo}</span>
+                    </p>
+                  </div>
+                </div>
+                <div className=" flex justify-center items-center">
+                  <DropdownMenu
+                    aria_label={"stories"}
+                    dropdownRef={storyRef}
+                    onClick={() => {
+                      setIsStoryOpen(!isStoryOpen);
+                    }}
+                    display_value={
+                      <>
+                        <RxDotsHorizontal className="text-white text-2xl" />
+                      </>
                     }
-                    alt="profile"
-                    className="w-full h-full object-cover"
+                    isDropdownOpen={isStoryOpen}
+                    listItem={
+                      <div className="py-1 px-4 text-black mx-auto try relative ">
+                        <button className="flex items-center gap-3 mb-2 text-xl">
+                          <RiDeleteBin5Line /> Delete
+                        </button>
+                        <button className="flex items-center gap-3 mb-2 text-xl">
+                          <IoLinkOutline /> Copy Link
+                        </button>
+                        <span
+                          className="flex items-center gap-3 mb-2 text-xl"
+                          onClick={() => {
+                            setStorySettings(true);
+                            console.log("u clicked");
+                          }}
+                        >
+                          <IoSettingsOutline /> Settings
+                        </span>
+                      </div>
+                    }
                   />
                 </div>
-                <div className="ml-4">
-                  <h4 className="font-semibold text-white">
-                    {stories[activeStoryIndex]?.display_name}
-                  </h4>
-                  <p className="text-gray-400 text-sm">
-                    @{stories[activeStoryIndex]?.username} ·{" "}
-                    <span className="ml-1">{timeAgo}</span>
-                  </p>
+              </div>
+
+              <div className="relative">
+                <div className="mx-auto w-full h-[25rem] rounded-lg overflow-hidden">
+                  {/* <Stories
+                    ref={storiesRef}
+                    key={activeStoryIndex}
+                    stories={currentUserStories?.map((story) => ({
+                      url: story?.media_url?.media_url,
+                      type:
+                        story?.media_url?.media_type === "jpeg" ||
+                        story?.media_url?.media_type === "png"
+                          ? "image"
+                          : "video",
+                      duration:
+                        story?.media_url?.media_type === "jpeg" ||
+                        story?.media_url?.media_type === "png"
+                          ? 5000
+                          : 30,
+                    }))}
+                    defaultInterval={5000}
+                    width="100%"
+                    height="100%"
+                    onStoryStart={(_s, st) => setCurrentStoryIndex(st)}
+                    onAllStoriesEnd={handleNextUser}
+                    preloadCount={5}
+                    isPaused={isPaused}
+                  /> */}
+ <CustomStories
+  ref={storiesRef}
+  stories={currentUserStories.map((story) => ({
+    url: story?.media_url?.media_url,
+    type:
+      story?.media_url?.media_type === "jpeg" ||
+      story?.media_url?.media_type === "png"
+        ? "image"
+        : "video",
+    duration:
+      story?.media_url?.media_type === "jpeg" ||
+      story?.media_url?.media_type === "png"
+        ? 5000
+        : 30000,  // 30 seconds for videos
+  }))}
+  defaultInterval={5000}
+  width="100%"
+  height="100%"
+  onStoryStart={handleStoryStart}
+  onAllStoriesEnd={handleAllStoriesEnd}
+  preloadCount={5}
+  isPaused={isPaused}
+/>
+
                 </div>
               </div>
-              <div className=" flex justify-center items-center">
-                <DropdownMenu
-                  aria_label={"stories"}
-                  dropdownRef={storyRef}
-                  onClick={() => {
-                    setIsStoryOpen(!isStoryOpen);
-                  }}
-                  display_value={
-                    <>
-                      <RxDotsHorizontal className="text-white text-2xl" />
-                    </>
-                  }
-                  isDropdownOpen={isStoryOpen}
-                  listItem={
-                    <div className="py-1 px-4 text-black mx-auto try relative ">
-                      <button className="flex items-center gap-3 mb-2 text-xl">
-                        <RiDeleteBin5Line /> Delete
-                      </button>
-                      <button className="flex items-center gap-3 mb-2 text-xl">
-                        <IoLinkOutline /> Copy Link
-                      </button>
-                      <span
-                        className="flex items-center gap-3 mb-2 text-xl"
-                        onClick={() =>{
-                           setStorySettings(true)
-                           console.log("u clicked")
-                          }}
-                      >
-                        <IoSettingsOutline /> Settings
-                      </span>
-                    </div>
-                  }
-                />
-              </div>
-            </div>
 
-            <div className="relative">
-              <div className="mx-auto w-full h-[25rem] rounded-lg overflow-hidden">
-                <Stories
-                  ref={storiesRef}
-                  key={activeStoryIndex}
-                  stories={currentUserStories?.map((story) => ({
-                    url: story?.media_url?.media_url,
-                    type:
-                      story?.media_url?.media_type === "jpeg" ||
-                      story?.media_url?.media_type === "png"
-                        ? "image"
-                        : "video",
-                    duration:
-                      story?.media_url?.media_type === "jpeg" ||
-                      story?.media_url?.media_type === "png"
-                        ? 5000
-                        : 30,
-                  }))}
-                  defaultInterval={5000}
-                  width="100%"
-                  height="100%"
-                  onStoryStart={(_s, st) => setCurrentStoryIndex(st)}
-                  onAllStoriesEnd={handleNextUser}
-                  preloadCount={5}
-                  isPaused={isPaused}
-                />
-              </div>
-            </div>
+              <p className="text-center mt-4">{currentStory?.caption || ""}</p>
 
-            <p className="text-center mt-4">{currentStory?.caption || ""}</p>
-
-            <div className="flex w-full rounded-full border items-center ">
-              <div className=" w-full">
-                <InputEmoji
-                  value={newMessage}
-                  onChange={handleChange}
-                  placeholder="Reply to this story"
-                  background="#8181A41F"
-                  borderColor="#8181A41F"
-                  borderRadius={0}
-                  color="white"
-                />
+              <div className="flex w-full rounded-full border items-center ">
+                <div className=" w-full">
+                  <InputEmoji
+                    value={newMessage}
+                    onChange={handleChange}
+                    placeholder="Reply to this story"
+                    background="#8181A41F"
+                    borderColor="#8181A41F"
+                    borderRadius={0}
+                    color="white"
+                  />
+                </div>
+                <IoMdHeartEmpty size={30} />
+                {newMessage ? (
+                  <button
+                    className="p-2 border-none text-white rounded-md"
+                    disabled={isLoading || !newMessage}
+                    onClick={handleSendComment}
+                  >
+                    {isLoading ? "Sending..." : <BsSend />}
+                  </button>
+                ) : null}
               </div>
-              <IoMdHeartEmpty size={30} />
-              {newMessage ? (
-                <button
-                  className="p-2 border-none text-white rounded-md"
-                  disabled={isLoading || !newMessage}
-                  onClick={handleSendComment}
+
+              {/* Navigation Arrows */}
+              {activeStoryIndex > 0 && (
+                <div
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  onClick={handlePrevUser}
                 >
-                  {isLoading ? "Sending..." : <BsSend />}
-                </button>
-              ) : null}
+                  <AiOutlineArrowLeft className="text-3xl text-white" />
+                </div>
+              )}
+              {activeStoryIndex < stories?.length - 1 && (
+                <div
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                  onClick={handleNextUser}
+                >
+                  <AiOutlineArrowRight className="text-3xl text-red-700" />
+                </div>
+              )}
             </div>
-
-            {/* Navigation Arrows */}
-            {activeStoryIndex > 0 && (
-              <div
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                onClick={handlePrevUser}
-              >
-                <AiOutlineArrowLeft className="text-3xl text-white" />
-              </div>
-            )}
-            {activeStoryIndex < stories?.length - 1 && (
-              <div
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                onClick={handleNextUser}
-              >
-                <AiOutlineArrowRight className="text-3xl text-red-700" />
-              </div>
-            )}
           </div>
-        </div>
-      )}
-      
-
+        )}
+      </div>
       {storySettings && (
         <Modals
           title={"Settings"}
@@ -240,13 +291,15 @@ const SingleStory = () => {
           modalSize="2xl"
           onClose={() => setStorySettings(false)}
         >
-          <div className="w-full  mx-auto">Story Settings
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus nisi velit hic ullam aliquam debitis assumenda! Eaque voluptas cumque quibusdam maxime architecto alias. Non cum at magni itaque? Sapiente ipsa ratione facere autem soluta itaque pariatur, iste eaque voluptates expedita, velit dignissimos veritatis ipsum? Quidem sunt nobis nostrum quos officia?
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. In, est molestias ducimus ipsum unde iste nulla omnis sint maxime doloremque totam quam at accusantium voluptatibus ullam eius dignissimos incidunt aut voluptates possimus eum soluta dolorum. Totam dolorum quis, sint assumenda architecto quo aut maxime quae porro cupiditate culpa cumque accusantium, eligendi nam molestiae laudantium veritatis aliquam fugit, ad soluta facilis consequuntur error! Rem perspiciatis beatae, eaque facilis ab culpa incidunt voluptates assumenda tempora repellendus aperiam ipsa ut, totam quasi dolore cum quam? Commodi voluptatibus deleniti, ipsum, sit porro magni quaerat error delectus sunt aliquam facere ducimus expedita iure distinctio recusandae!
+          <div className="w-full  mx-auto">
+            Story Settings Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Possimus nisi velit hic ullam aliquam debitis assumenda! Eaque
+            voluptas cumque quibusdam maxime architecto alias. Non cum at magni
+            itaque? Sapiente ipsa ratione facere autem soluta itaque pariatur,
+            iste eaque voluptates expedita, velit dignissimos
           </div>
         </Modals>
       )}
-
     </div>
   );
 };

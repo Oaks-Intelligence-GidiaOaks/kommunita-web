@@ -136,7 +136,7 @@ const SinglePost = () => {
     }
   };
 
-  const [addComment, setAddComment] = useState(false);
+  const [addComment, setAddComment] = useState(true);
   const onComment = () => {
     setAddComment(!addComment);
   };

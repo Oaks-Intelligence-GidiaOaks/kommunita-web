@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { RxDotsHorizontal } from "react-icons/rx";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
@@ -6,6 +6,7 @@ import Stories from "react-insta-stories";
 import { useGetStoriesFeedQuery } from "../../service/stories.service";
 import { profile_placeholder } from "../../assets/images";
 import getTimeAgoString from "../../utils/getTimeAgoString";
+import CustomStories from "../../components/stories/CustomStories";
 
 const ViewStories = () => {
   const { data } = useGetStoriesFeedQuery();
@@ -13,6 +14,10 @@ const ViewStories = () => {
   const [activeStoryIndex, setActiveStoryIndex] = useState(0);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
   const navigate = useNavigate();
+  const storiesRef = useRef(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+
 
   console.log(stories[activeStoryIndex])
 
@@ -36,6 +41,21 @@ const ViewStories = () => {
     }
   };
 
+  const handleStoryStart = (story, index) => {
+    setCurrentStoryIndex(index);  // Track the current story index
+  };
+  
+  const handleAllStoriesEnd = () => {
+    handleNextUser();  // Move to the next user's stories
+  };
+  const handleMouseEnter = () => {
+    setIsPaused((prev) => !prev);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPaused((prev) => !prev);
+  };
+
   const currentUserStories = stories[activeStoryIndex]?.stories || [];
   const currentStory = currentUserStories[currentStoryIndex] || {};
 
@@ -48,6 +68,8 @@ const ViewStories = () => {
           <div
             className="w-[25rem] flex flex-col bg-black text-white rounded-lg p-4 relative"
             key={stories[activeStoryIndex]._id}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center">
@@ -79,7 +101,7 @@ const ViewStories = () => {
 
             <div className="relative">
               <div className="mx-auto w-full h-[25rem] rounded-lg overflow-hidden">
-                <Stories
+                {/* <Stories
                  key={activeStoryIndex}
                   stories={currentUserStories?.map((story) => ({
                     url: story.media_url.media_url,
@@ -100,7 +122,30 @@ const ViewStories = () => {
                   onStoryStart={(_s, st) => setCurrentStoryIndex(st)}
                   onAllStoriesEnd={handleNextUser}
                   preloadCount={5}
-                />
+                /> */}
+                 <CustomStories
+  ref={storiesRef}
+  stories={currentUserStories.map((story) => ({
+    url: story?.media_url?.media_url,
+    type:
+      story?.media_url?.media_type === "jpeg" ||
+      story?.media_url?.media_type === "png"
+        ? "image"
+        : "video",
+    duration:
+      story?.media_url?.media_type === "jpeg" ||
+      story?.media_url?.media_type === "png"
+        ? 5000
+        : 30000,  // 30 seconds for videos
+  }))}
+  defaultInterval={5000}
+  width="100%"
+  height="100%"
+  onStoryStart={handleStoryStart}
+  onAllStoriesEnd={handleAllStoriesEnd}
+  preloadCount={5}
+  isPaused={isPaused}
+/>
               </div>
             </div>
 

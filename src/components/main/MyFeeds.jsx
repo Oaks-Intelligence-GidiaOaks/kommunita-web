@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { useEffect, useState } from "react";
 import "../main/style.css";
 import MakePost from "./MakePost";
 import search from "../../assets/images/Home/Search.png";
@@ -11,39 +12,63 @@ import NewPollssss from "../newPolls/NewPollssss";
 import Repost2 from "../posts/Repost2";
 import Diary from "../diary/Diary";
 import { useSelector } from "react-redux";
-import { useState } from "react";
 
 function MyFeeds() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [allPosts, setAllPosts] = useState([]); // State to store all fetched posts
 
   const {
     data: postdata,
     isLoading,
     refetch,
-    isFetching
+    isFetching,
   } = useGetMyFeedsQuery({
     page,
-    page_size: pageSize
+    page_size: pageSize,
   });
 
   const features = useSelector(
     (state) => state?.user?.user?.organization_features
   );
 
+
+  console.log(postdata?.data)
   const posts = postdata?.data?.data;
-  // console.log(posts, "posts");
+
+  // Append new posts to the existing list of posts
+  useEffect(() => {
+    if (posts) {
+      setAllPosts((prevPosts) => [...prevPosts, ...posts]);
+    }
+  }, [posts]);
+
+  // Infinite scroll handler
+  const handleScroll = () => {
+    if (
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
+      !isFetching
+    ) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  // Attach scroll event listener
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isFetching]);
 
   return (
     <div className="pt-4 main-wrapper w-full pb-10">
       {features.includes("Story") && <StoryList />}
       {features.includes("Post") && <MakePost />}
 
-      {isLoading ? (
+      {isLoading && page === 1 ? (
         <div className="flex justify-center pt-10">
           <Spinner />
         </div>
-      ) : posts?.length === 0 ? (
+      ) : allPosts.length === 0 && page === 1 ? (
         <div className="flex items-center flex-col mt-10 justify-center h-auto">
           <img src={search} alt="Search icon" />
           <h2 className="font-bold text-4xl mt-5 mb-5">NO POST</h2>
@@ -55,7 +80,7 @@ function MyFeeds() {
           </Link>
         </div>
       ) : (
-        posts?.map((post) => {
+        allPosts.map((post) => {
           if (post.type === "post") {
             return <NewPost2 key={post?._id} post={post} />;
           } else if (post.action_type === "Repost") {
@@ -70,6 +95,12 @@ function MyFeeds() {
             return null;
           }
         })
+      )}
+
+      {isFetching && (
+        <div className="flex justify-center pt-4">
+          <Spinner />
+        </div>
       )}
     </div>
   );
