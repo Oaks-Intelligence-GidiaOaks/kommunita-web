@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import rtkMutation from "../../utils/rtkMutation";
 import {
   useFollowUserMutation,
-  useUnfollowUserMutation,
+  useUnfollowUserMutation
 } from "../../service/whotofollow.service";
 // import noimage from "../../assets/images/sidebar/noImage.png";
 import noimage from "../../assets/images/sidebar/avatar4.svg";
@@ -11,6 +11,7 @@ import { BeatLoader } from "react-spinners";
 import { showAlert } from "../../static/alert";
 import actions from "../../assets/images/sidebar/action.svg";
 import actionPlus from "../../assets/images/sidebar/action-plus.svg";
+import { useGetMyFeedsQuery } from "../../service/feeds.service";
 
 const LikeContainer = (like) => {
   const [following, setFollowing] = useState(false);
@@ -21,23 +22,23 @@ const LikeContainer = (like) => {
   //   console.log(like.like.followers);
   const { data: user } = useGetUserProfiileQuery();
 
+  const { refetch } = useGetMyFeedsQuery();
+
   const handleFollow = async (id) => {
     console.log("Follow ID: ", id);
     // setSubmitId(id);
     // setSubmitting(true);
     const postData = {
-      user_to_follow_id: id,
+      user_to_follow_id: id
     };
     try {
-      await rtkMutation(followUser, postData);
       setFollowing((prevIsLoved) => !prevIsLoved);
+      await rtkMutation(followUser, postData);
     } catch (error) {
       console.error("Error liking post:", error);
       showAlert("Oops", "An error occurred while following this user", error);
     } finally {
-      //   setSubmitId("");
-      //   setSubmitting(false);
-      //   refetch();
+      refetch();
     }
   };
 
@@ -46,18 +47,16 @@ const LikeContainer = (like) => {
     // setSubmitId(id);
     // setSubmitting(true);
     const postData = {
-      user_to_unfollow_id: id,
+      user_to_unfollow_id: id
     };
     try {
-      await rtkMutation(unfollowUser, postData);
       setFollowing((prevIsLoved) => !prevIsLoved);
+      await rtkMutation(unfollowUser, postData);
     } catch (error) {
       console.error("Error liking post:", error);
       showAlert("Oops", "An error occurred while unfollowing this user", error);
     } finally {
-      //   setSubmitId("");
-      //   setSubmitting(false);
-      //   refetch();
+      refetch();
     }
   };
 
