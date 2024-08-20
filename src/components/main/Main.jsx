@@ -13,6 +13,7 @@ import NewPollssss from "../newPolls/NewPollssss";
 import Repost2 from "../posts/Repost2";
 import Diary from "../diary/Diary";
 import { CiCircleChevUp } from "react-icons/ci";
+import io from "socket.io-client";
 
 function Main() {
   const [page, setPage] = useState(1);
@@ -20,6 +21,8 @@ function Main() {
   const [posts, setPosts] = useState([]);
   const pageSize = 10;
   const isInitialLoad = useRef(true);
+  const socket = useRef(null); // Socket reference
+  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
 
   // Using useLazyGetFeedsQuery for manual triggering
   const [triggerGetFeeds, { data: postdata, isLoading, isFetching, refetch }] =
@@ -38,6 +41,34 @@ function Main() {
       });
     }
   };
+
+  const user = useSelector((state) => state.user?.user);
+
+  useEffect(() => {
+    // Setup socket connection
+    const socketUrl = `${BASE_URL}?userId=${user?._id}`;
+    socket.current = io(socketUrl);
+
+    socket.current.on("connect", () => {
+      console.log("Connected to the socket server");
+    });
+
+    socket.current.on("fetch_feed", (newMessageData) => {
+      // Handle the fetched message data here
+      console.log("New feed received:", newMessageData);
+      setPosts((prevPosts) => [newMessageData, ...prevPosts]);
+    });
+
+    socket.current.on("error", (error) => {
+      console.error("Socket error:", error);
+    });
+
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+  }, [user?._id, BASE_URL]);
 
   useEffect(() => {
     // Fetch data when the component loads or when the page changes
@@ -73,6 +104,10 @@ function Main() {
     }
   };
 
+  const handleNewPost = (newPost) => {
+    setPosts((prevPosts) => [newPost, ...prevPosts]);
+  };
+
   return (
     <>
       <div
@@ -90,7 +125,9 @@ function Main() {
           scrollableTarget="scrollableDiv"
         >
           {features.includes("Story") && <StoryList />}
-          {features.includes("Post") && <MakePost />}
+          {features.includes("Post") && (
+            <MakePost socket={socket.current} onNewPost={handleNewPost} />
+          )}
 
           {isLoading && page === 1 ? (
             <div className="flex justify-center pt-10">

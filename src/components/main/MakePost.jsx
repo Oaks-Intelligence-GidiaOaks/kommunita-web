@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Modals from "../modals/Modal";
 import Date from "../../assets/images/modals/date.svg";
 import time from "../../assets/images/modals/time.svg";
@@ -14,9 +14,7 @@ import { useGetCategoriesQuery } from "../../service/categories.service";
 import { BeatLoader } from "react-spinners";
 import { useGetFeedsQuery } from "../../service/feeds.service";
 import PollSchedule from "../polls/PollSchedule";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { Spinner } from "flowbite-react";
 import "./style.css";
 import { MdAddAPhoto } from "react-icons/md";
 import { CiCalendarDate } from "react-icons/ci";
@@ -27,18 +25,15 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import DropdownMenu from "../ui/DropdownMenu";
 import { LuCalendarClock } from "react-icons/lu";
 import { GiBlackBook } from "react-icons/gi";
-import { HiOutlineDocumentDuplicate } from "react-icons/hi2";
 import { CgPoll } from "react-icons/cg";
 import { media, profile_placeholder } from "../../assets/images";
 import { useGetUserProfiileQuery } from "../../service/user.service";
 import CreateDiary from "../diary/CreateDiary";
-import { io } from "socket.io-client";
 
-function MakePost({ onPostContent }) {
+function MakePost({ onPostContent, socket, onNewPost }) {
   const [openDiaryModal, setOpenDiaryModal] = useState(false);
   const [openScheduleModal, setOpenScheduleModal] = useState(false);
   const [selectedPostMedia, setSelectedPostMedia] = useState([]);
-  const [selectedDiaryMedia, setSelectedDiaryMedia] = useState([]);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [content, setContent] = useState("");
@@ -50,16 +45,7 @@ function MakePost({ onPostContent }) {
   const { refetch } = useGetFeedsQuery();
   const viewMoreRef = useRef(null);
   const { data: profile } = useGetUserProfiileQuery();
-
-  const [editorHtml, setEditorHtml] = useState("");
   const [viewMore, setIsViewMore] = useState(false);
-  const [pageNumber, setPageNumber] = useState(null);
-
-  // console.log(editorHtml);
-
-  const toggleCollapse = () => {
-    setIsExpanded(!isExpanded);
-  };
 
   const [submitting, setSubmitting] = useState(false);
   const { data: Category } = useGetCategoriesQuery();
@@ -74,35 +60,15 @@ function MakePost({ onPostContent }) {
     setOpenPoll(false);
   };
 
-  // Handle image change
-  const handlePostMediaChange = async (event) => {
-    setIsVisible(!isVisible);
-    const files = Array.from(event.target.files);
-    setSelectedPostMedia([...selectedPostMedia, ...files]);
-  };
-
   const handleSchedulePostMediaChange = async (event) => {
     const files = Array.from(event.target.files);
     setSelectedPostMedia([...selectedPostMedia, ...files]);
-  };
-
-  const handleDiaryMediaChange = async (event) => {
-    const files = Array.from(event.target.files);
-    setSelectedDiaryMedia([...selectedDiaryMedia, ...files]);
   };
 
   // Remove selected item
   const handleRemove = (item) => {
     if (selectedPostMedia.includes(item)) {
       setSelectedPostMedia(selectedPostMedia.filter((media) => media !== item));
-    }
-  };
-
-  const handleDiaryRemove = (item) => {
-    if (selectedDiaryMedia.includes(item)) {
-      setSelectedDiaryMedia(
-        selectedDiaryMedia.filter((media) => media !== item)
-      );
     }
   };
 
@@ -135,32 +101,6 @@ function MakePost({ onPostContent }) {
   const token = useSelector((state) => state.user?.token);
 
   const user = useSelector((state) => state.user?.user);
-  const socket = useRef(null);
-  const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL_DOMAIN;
-
-  useEffect(() => {
-    const socketUrl = `${BASE_URL}?userId=${user?._id}`;
-    socket.current = io(socketUrl);
-
-    socket.current.on("connect", () => {
-      console.log("Connected to the socket server");
-    });
-
-    socket.current.on("fetch_feed", (newMessageData) => {
-      // Handle the fetched message data here
-      console.log("New feed received:", newMessageData);
-    });
-
-    socket.current.on("error", (error) => {
-      console.error("Socket error:", error);
-    });
-
-    return () => {
-      if (socket.current) {
-        socket.current.disconnect();
-      }
-    };
-  }, [user?._id, BASE_URL]);
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -182,7 +122,7 @@ function MakePost({ onPostContent }) {
     const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
     try {
-      const response = await axios.post(`${apiUrl}/user/post`, formData, {
+      await axios.post(`${apiUrl}/user/post`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           ...(token && { Authorization: `Bearer ${token}` })
@@ -200,7 +140,7 @@ function MakePost({ onPostContent }) {
       const msg = {
         organizationId: user?.current_organization || user?.organization_id[0]
       };
-      socket.current.emit("fetch_feed", msg);
+      socket.emit("fetch_feed", msg);
     } catch (error) {
       console.error("Error submitting post:", error);
       showAlert(
@@ -213,60 +153,24 @@ function MakePost({ onPostContent }) {
     }
   };
 
-  const handleDiarySubmit = async () => {
-    setSubmitting(true);
-
-    const formData = new FormData();
-    selectedDiaryMedia.forEach((media) => formData.append("media", media));
-    formData.append("content", editorHtml);
-    formData.append("category", category);
-    formData.append("pages", pageNumber);
-
-    if (!editorHtml.trim()) {
-      showAlert("", "Diary content cannot be empty", "error");
-      setSubmitting(false);
-      return;
-    }
-
-    const apiUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
-
-    try {
-      const response = await axios.post(`${apiUrl}/user/diary`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          ...(token && { Authorization: `Bearer ${token}` })
-        }
+  useEffect(() => {
+    if (socket) {
+      socket.on("new_post", (newPost) => {
+        onNewPost(newPost); // Pass the new post to the Main component
       });
-
-      console.log("Diary created successfully:", response.data);
-      setSelectedDiaryMedia([]);
-      setContent("");
-      setCategory("");
-      setEditorHtml("");
-      // setTempHtml("");
-      setOpenDiaryModal(false);
-
-      showAlert("Great!", "Diary created successfully", "success");
-      refetch();
-    } catch (error) {
-      console.error("Error submitting Diary:", error);
-      showAlert(
-        "Oops!",
-        error?.response?.data?.message || "An error occurred",
-        "error"
-      );
-    } finally {
-      setSubmitting(false);
     }
-  };
+
+    return () => {
+      if (socket) {
+        socket.off("new_post");
+      }
+    };
+  }, [socket, onNewPost]);
 
   const adjustTextareaHeight = (event) => {
     event.target.style.height = "auto";
     event.target.style.height = event.target.scrollHeight + "px";
   };
-
-  const photo = useSelector((state) => state.user?.user?.photo_url);
-  // console.log(photo);
 
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => {
@@ -452,93 +356,6 @@ function MakePost({ onPostContent }) {
                   )}
                 </button>
               </div>
-
-              {/* <div className="flex justify-end gap-3">
-              {isVisible && (
-                <>
-                  <div className="bg-[#fbf8f8] rounded-md w-35 h-10">
-                    <select
-                      value={category}
-                      onChange={handleCategoryChange}
-                      className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full px-2 make-post-input"
-                    >
-                      <option value="">Category</option>
-                      {Category?.data?.map((data, index) => (
-                        <option value={data?.name} key={index}>
-                          {data.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="bg-[#fbf8f8] rounded-md h-10 flex items-center px-3">
-                    <div className="flex items-center space-x-2 w-35">
-                      <div className="text-gray-600 ">
-                        {audience === "Public" ? (
-                          <BiGlobe size={20} />
-                        ) : audience === "Private" ? (
-                          <BiLock size={20} />
-                        ) : (
-                          <BiGroup size={20} />
-                        )}
-                      </div>
-                      <select
-                        value={audience}
-                        onChange={handleAudienceChange}
-                        className="focus:outline-none focus:ring-0 border-0 bg-transparent w-full h-full make-post-input"
-                      >
-                        <option value="Public">Public</option>
-                        <option value="Private">Private</option>
-                        <option value="Followers">Followers</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handleSubmit}
-                    disabled={submitting || !content}
-                    className={`${
-                      !content
-                        ? "bg-gray-200 text-gray-600"
-                        : "bg-[#2CC84A] text-white"
-                    } w-[121px] h-10 rounded-md`}
-                  >
-                    {submitting ? (
-                      <BeatLoader color="#ffffff" loading={true} />
-                    ) : (
-                      "Post"
-                    )}
-                  </button>
-
-                  <button
-                    onClick={toggleVisibility}
-                    className="h-10 w-[121px] text-[#2CC84A] border border-[#2CC84A] bg-white rounded-md"
-                  >
-                    Cancel{" "}
-                  </button>
-                </>
-              )}
-            </div> */}
-
-              {/* <div className="pb-5 pt-5">
-              {!isVisible && (
-                <div className="flex justify-center">
-                  <button className="mb-2" onClick={toggleCollapse}>
-                    {isExpanded ? (
-                      <div className="flex justify-center items-center">
-                        <p className="see-more-text">See less</p>{" "}
-                        <BiChevronUp size={20} />
-                      </div>
-                    ) : (
-                      <div className="flex justify-center items-center ">
-                        <p className="see-more-text">See more</p>{" "}
-                        <BiChevronDown size={20} />
-                      </div>
-                    )}
-                  </button>
-                </div>
-              )}
-            </div> */}
             </div>
 
             {isExpanded && (
@@ -674,22 +491,6 @@ function MakePost({ onPostContent }) {
 
           <div className="flex justify-between pb-5 pt-5">
             <div className="text-add-post">Add to your post</div>
-
-            {/* <div className="buttons flex flex-row flex-wrap items-center justify-start gap-3 pb-5">
-            <label className="shadow-md hover:shadow-lg">
-              <div className="flex gap-3 items-center">
-                <MdAddAPhoto className="text-[#34B53A]" size={30} />
-                <p>Photo/Video</p>
-              </div>
-              <input
-                type="file"
-                onChange={handleSchedulePostMediaChange}
-                accept="image/*,video/*"
-                multiple
-                style={{ display: "none" }}
-              />
-            </label>
-          </div> */}
 
             <div className="border flex w-[130px] rounded-md ml-3">
               <label className="flex gap-2 items-center p-1 text-sm cursor-pointer">
