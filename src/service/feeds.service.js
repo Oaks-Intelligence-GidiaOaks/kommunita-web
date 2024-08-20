@@ -1,50 +1,24 @@
+// feedsApiSlice.js
 import { FEEDS, POST } from "./constants";
 import apiSlice from "./api/apiSlice";
 
 export const feedsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    // Get all feeds route
     getFeeds: builder.query({
       query: ({ page = 1, page_size = 10 } = {}) => ({
         url: `${FEEDS}?page=${page}&page_size=${page_size}`,
         method: "GET"
       }),
-      serializeQueryArgs: ({ queryArgs }) => {
-        return queryArgs;
-      },
-      merge: (currentCache, newItems) => {
-        console.log(newItems.data.data, "rtk");
-        const d = newItems.data.data;
-        currentCache.push(...d);
-      },
-      forceRefetch({ currentArg, previousArg }) {
-        return currentArg !== previousArg;
-      },
       providesTags: ["Feeds"]
     }),
+
     getMyFeeds: builder.query({
       query: ({ page = 1, page_size = 10 } = {}) => ({
         url: `${FEEDS}/following?page=${page}&page_size=${page_size}`,
-        method: "GET",
+        method: "GET"
       }),
-      serializeQueryArgs: ({ queryArgs }) => {
-        return queryArgs;
-      },
-      merge: (currentCache, newItems) => {
-        console.log(newItems.data.data, "rtk");
-    
-        if (!Array.isArray(currentCache)) {
-          currentCache = [];
-        }
-        const newData = newItems.data.data;
-        currentCache.push(...newData);
-      },
-      forceRefetch({ currentArg, previousArg }) {
-        return currentArg !== previousArg;
-      },
-      providesTags: ["Feeds"],
+      providesTags: ["Feeds"]
     }),
-    
 
     getOtherFeeds: builder.mutation({
       query: (id) => ({
@@ -69,4 +43,5 @@ export const {
   useGetOtherFeedsMutation,
   useLazyGetFeedsQuery,
   useGetMyFeedsQuery,
+  useLazyGetMyFeedsQuery
 } = feedsApiSlice;

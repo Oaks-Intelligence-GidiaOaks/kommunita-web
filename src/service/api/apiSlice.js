@@ -19,11 +19,11 @@ const apiSlice = createApi({
     "Survey",
     "Notification",
     "Favourite",
-    "Message",
+    "Message"
   ],
 
   endpoints: (builder) => ({}),
-  keepUnusedDataFor: 50000,
+  keepUnusedDataFor: 60
 });
 
 export default apiSlice;
