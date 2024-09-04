@@ -9,10 +9,10 @@ function Ads() {
   const { data } = useGetSurveyFeedsQuery();
   const surveyFeeds = data?.data;
   const user_id = useSelector((state) => state.user.user._id);
-  // console.log(surveyFeeds);
+  console.log(surveyFeeds);
 
   // Filter out surveys where the user ID already exists in the list of respondents
-  const filteredSurveyFeeds = surveyFeeds?.filter((survey) => {
+  const filteredSurveyFeeds = surveyFeeds?.data?.filter((survey) => {
     // Check if any respondent has the same user ID
     const isUserRespondent = survey?.respondents?.some(
       (respondent) => respondent?.respondent?._id === user_id

@@ -96,6 +96,7 @@ function Main() {
         setHasMore(false);
       }
     }
+    console.log(posts, "posts");
   }, [postdata]);
 
   const fetchNew = () => {
